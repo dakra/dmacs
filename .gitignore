@@ -1,0 +1,5 @@
+/init.el
+*.elc
+*:tangle
+dakra-*.gpg
+var/
