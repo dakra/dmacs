@@ -31,14 +31,14 @@ help:
 
 build:
 	@rm -f init.elc
-	@$(EMACS) -Q --batch -L lib/borg --load borg -L lib/org-mode --load org $(SILENCIO) \
+	@$(EMACS) -Q --batch -L lib/borg --load borg -L lib/org --load org $(SILENCIO) \
         --eval '(org-babel-tangle-file (expand-file-name "init.org" user-emacs-directory))' \
 	--funcall borg-initialize \
 	--funcall borg-batch-rebuild 2>&1
 
 build-init:
 	@rm -f init.elc
-	@$(EMACS) -Q --batch -L lib/borg --load borg -L lib/org-mode --load org \
+	@$(EMACS) -Q --batch -L lib/borg --load borg -L lib/org --load org \
         --eval '(org-babel-tangle-file (expand-file-name "init.org" user-emacs-directory))' \
 	--funcall borg-initialize \
 	--funcall borg-batch-rebuild-init 2>&1

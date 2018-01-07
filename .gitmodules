@@ -452,8 +452,8 @@
 [submodule "org-mime"]
 	path = lib/org-mime
 	url = git@github.com:org-mime/org-mime.git
-[submodule "org-mode"]
-	path = lib/org-mode
+[submodule "org"]
+	path = lib/org
 	url = git@code.orgmode.org:bzg/org-mode.git
 	build-step = make all
 	load-path = lisp
