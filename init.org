@@ -1879,7 +1879,6 @@ instead."
                                 ;;(setq-local company-backends '(company-capf company-eshell-autosuggest))
                                 ;; (setq-local company-backends '(company-capf))
                                 ;; (setq-local company-frontends '(company-preview-frontend))
-                                (company-eshell-autosuggest-mode)
                                 ))
   ;; Functions starting with `eshell/' can be called directly from eshell
   ;; with only the last part. E.g. (eshell/foo) will call `$ foo'
@@ -2012,11 +2011,8 @@ file to edit."
   :config (global-fish-completion-mode))
 
 ;; `company-mode' backend to provide eshell history suggestion
-(use-package company-eshell-autosuggest
-  :disabled t  ; FIXME: Package got renamed
-  :bind (:map company-eshell-autosuggest-active-map
-         ("C-f" . company-complete-selection))
-  :commands company-eshell-autosuggest-mode)
+(use-package esh-autosuggest
+  :hook (eshell-mode . esh-autosuggest-mode))
 
 ;; Autocomplete for git commands in shell and
 ;; the git command from magit ('!')

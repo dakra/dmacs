@@ -72,9 +72,9 @@
 [submodule "company-anaconda"]
 	path = lib/company-anaconda
 	url = git@github.com:proofit404/company-anaconda.git
-[submodule "company-eshell-autosuggest"]
-	path = lib/company-eshell-autosuggest
-	url = git@github.com:dieggsy/company-eshell-autosuggest.git
+[submodule "esh-autosuggest"]
+	path = lib/esh-autosuggest
+	url = git@github.com:dieggsy/esh-autosuggest.git
 [submodule "company-go"]
 	path = lib/company-go
 	url = git@github.com:emacsmirror/company-go.git
