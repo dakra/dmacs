@@ -1,0 +1,7 @@
+alias ee find-file $1
+alias emacs find-file $1
+alias e find-file-other-window $1
+alias up eshell-up $1
+alias pk eshell-up-peek $1
+alias la ls -al
+alias l ls -al

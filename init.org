@@ -1784,6 +1784,7 @@ instead."
          ;;("M-R" . eshell-list-history)
          ;;("M-r" . dakra-eshell-read-history)
          )
+  :init (setq eshell-aliases-file (no-littering-expand-etc-file-name "eshell-aliases"))
   :config
   (defun dakra-eshell-always ()
     "Start a regular shell if you prefer that."
@@ -1794,21 +1795,21 @@ instead."
   ;; use native 'sudo', system sudo asks for password every time.
   (require 'em-tramp)
   (setq eshell-modules-list
-   '(eshell-alias
-    eshell-basic
-    eshell-cmpl
-    eshell-dirs
-    eshell-glob
-    eshell-hist
-    eshell-ls
-    eshell-pred
-    eshell-prompt
-    eshell-script
-    eshell-term
-    eshell-tramp
-    eshell-unix))
-    ;;(delq 'eshell-banner eshell-modules-list)
-    ;;(push 'eshell-tramp eshell-modules-list))
+        '(eshell-alias
+          eshell-basic
+          eshell-cmpl
+          eshell-dirs
+          eshell-glob
+          eshell-hist
+          eshell-ls
+          eshell-pred
+          eshell-prompt
+          eshell-script
+          eshell-term
+          eshell-tramp
+          eshell-unix))
+  ;;(delq 'eshell-banner eshell-modules-list)
+  ;;(push 'eshell-tramp eshell-modules-list))
 
   (require 'em-smart)
   (setq-default eshell-where-to-jump 'begin)
