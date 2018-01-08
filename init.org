@@ -6886,17 +6886,12 @@ It only works for frames with exactly two windows."
                                      transmission-peers-mode)))
 #+end_src
 * Multimedia
-** Brain.fm: Stream music from brain.fm
-:PROPERTIES:
-:ID:       30659e68-140a-4ff2-a65a-dc27605e72f6
-:END:
+** Brain-fm: Stream music from brain.fm
 #+begin_src emacs-lisp
-(use-package brain.fm
-  # FIXME: Doesn't work without specifying load-path directly
-  :load-path "lib/brain.fm"
+(use-package brain-fm
   :config
   ;; Station 35 is "Focus"
-  (setq brain.fm-station-id 35))
+  (setq brain-fm-station-id 35))
 #+end_src
 ** Emms
 #+BEGIN_SRC emacs-lisp

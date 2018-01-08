@@ -45,9 +45,9 @@
 [submodule "borg"]
 	path = lib/borg
 	url = git@github.com:emacscollective/borg.git
-[submodule "brain.fm"]
-	path = lib/brain.fm
-	url = git@github.com:dakra/brain.fm.git
+[submodule "brain-fm"]
+	path = lib/brain-fm
+	url = git@github.com:dakra/brain-fm.git
 [submodule "browse-at-remote"]
 	path = lib/browse-at-remote
 	url = git@github.com:rmuslimov/browse-at-remote.git
