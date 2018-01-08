@@ -1826,13 +1826,6 @@ instead."
                                          "tmux" "screen" "top" "htop" "less" "more" "ncftp")
                 eshell-prefer-lisp-functions nil)
 
-  ;; (eshell/alias "e" "find-file-other-window $1")
-  ;; (eshell/alias "emacs" "find-file $1")
-  ;; (eshell/alias "ee" "find-file $1")
-
-  ;; (eshell/alias "gd" "magit-diff-unstaged")
-  ;; (eshell/alias "gds" "magit-diff-staged")
-
   (defun dakra-eshell-read-history ()
     (interactive)
     (insert
