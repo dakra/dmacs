@@ -581,6 +581,7 @@
 	path = lib/rainbow-mode
 	url = git@github.com:emacsmirror/rainbow-mode.git
 [submodule "realgud"]
+	disabled = true
 	path = lib/realgud
 	url = git@github.com:rocky/emacs-dbgr.git
 	build-step = make

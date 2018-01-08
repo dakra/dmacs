@@ -2222,6 +2222,7 @@ and when called with 2 prefix arguments only open in browser."
 ** Debugging
 #+BEGIN_SRC emacs-lisp
 (use-package realgud
+  :disabled t  ; Needs borg fixing first
   :commands (realgud:ipdb))
 #+END_SRC
 ** Markup Languages
