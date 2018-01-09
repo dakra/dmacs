@@ -2303,7 +2303,6 @@ and when called with 2 prefix arguments only open in browser."
          ("\\.xsh\\'" . python-mode))  ; Xonsh script files
   :interpreter ("python" . python-mode)
   :bind (:map python-mode-map
-         ("C-M-." . projectile-find-sql-file)
          ("C-c C-p" . hydra-python/body)
          ("C-c C-t" . hydra-python/body)
          )
@@ -2374,21 +2373,30 @@ and when called with 2 prefix arguments only open in browser."
                  (string-equal name file))) project-files)))
       (when candidates
         ;; Just take the first candidate
-        (find-file (expand-file-name (car candidates) (projectile-project-root))))
-      (run-hooks 'projectile-find-file-hook)))
+        (find-file (expand-file-name (car candidates) (projectile-project-root)))
+        (run-hooks 'projectile-find-file-hook))))
 
   (defun python-flat-imenu-index ()
     (setq-local imenu-create-index-function
                 #'python-imenu-create-flat-index)))
 
 (use-package anaconda-mode
-  :commands (anaconda-mode anaconda-eldoc-mode)
+  :bind (:map anaconda-mode-map
+         ("M-." . python-goto-sql-file-or-definition))
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode))
   :config
-  (use-package company-anaconda
-    :config (add-to-list 'company-backends 'company-anaconda))
+  (defun python-goto-sql-file-or-definition (&optional arg)
+    "First try to jump to sql file and if non, goto definition.
+With prefix argument ARG don't find sql file and just goto definition."
+    (interactive "P")
+    (when (or arg (not (projectile-find-sql-file)))
+      (anaconda-mode-find-definitions)))
   :diminish anaconda-mode)
+
+(use-package company-anaconda
+  :after anaconda-mode
+  :config (add-to-list 'company-backends 'company-anaconda))
 
 ;; Generate Python function/method stub for a call-like symbol under point
 (use-package elpygen  ; FIXME: not in epkg?
