@@ -2482,6 +2482,9 @@ and when called with 2 prefix arguments only open in browser."
   :commands flycheck-mode
   :hook ((prog-mode ledger-mode) . flycheck-mode)
   :config
+  ;; Use the load-path from running Emacs when checking elisp files
+  (setq flycheck-emacs-lisp-load-path 'inherit)
+
   ;; Only do flycheck when I actually safe the buffer
   (setq flycheck-check-syntax-automatically '(save mode-enable))
 
