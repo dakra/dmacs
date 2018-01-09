@@ -2302,6 +2302,12 @@ and when called with 2 prefix arguments only open in browser."
   :mode (("\\.py\\'" . python-mode)
          ("\\.xsh\\'" . python-mode))  ; Xonsh script files
   :interpreter ("python" . python-mode)
+  :bind (:map python-mode-map
+         ("C-M-." . projectile-find-sql-file)
+         ("C-c C-p" . hydra-python/body)
+         ("C-c C-t" . hydra-python/body)
+         )
+  :hook (python-mode . python-flat-imenu-index)
   :config
   (defhydra hydra-python-test (python-mode-map "C-c C-t" :color blue)
     "Run Python Tests"
@@ -2311,7 +2317,6 @@ and when called with 2 prefix arguments only open in browser."
     ("F" python-test-file "File")
     ("p" python-test-project "Project")
     ("q" nil "Cancel"))
-  (define-key python-mode-map (kbd "C-c C-t") 'hydra-python/body)
 
   (defun py-isort-add-import-whole-line-or-region ()
     "Import module(s) from region or whole line."
@@ -2351,21 +2356,30 @@ and when called with 2 prefix arguments only open in browser."
     ("R" python-run-server)
     ("d" elpygen-implement)
     ("q" nil))
-  (define-key python-mode-map (kbd "C-c C-p") 'hydra-python/body)
 
-  :init
-  (add-hook 'python-mode-hook
-            '(lambda ()
-               (setq-local imenu-create-index-function
-                           #'python-imenu-create-flat-index)
-               (subword-mode)
-               ))
-  ;;(add-hook 'python-mode-hook 'subword-mode)
-  ;;(add-hook 'python-mode-hook 'which-function-mode)
-  ;;(add-hook 'python-mode-hook 'anaconda-mode)
-  ;; Enable eldoc for python
-  ;;(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-  )
+  (require 'thingatpt)
+  (require 'projectile)
+  (defun projectile-find-sql-file (&optional invalidate-cache)
+    "Find sql file for symbol at point."
+    (interactive)
+    (let* ((project-files (projectile-current-project-files))
+           (file (if (region-active-p)
+                     (format "%s.sql" (buffer-substring (region-beginning) (region-end)))
+                   (when (thing-at-point 'symbol)
+                     (format "%s.sql" (thing-at-point 'symbol)))))
+           (candidates
+            (cl-remove-if-not
+             (lambda (f)
+               (let ((name (file-name-nondirectory f)))
+                 (string-equal name file))) project-files)))
+      (when candidates
+        ;; Just take the first candidate
+        (find-file (expand-file-name (car candidates) (projectile-project-root))))
+      (run-hooks 'projectile-find-file-hook)))
+
+  (defun python-flat-imenu-index ()
+    (setq-local imenu-create-index-function
+                #'python-imenu-create-flat-index)))
 
 (use-package anaconda-mode
   :commands (anaconda-mode anaconda-eldoc-mode)
