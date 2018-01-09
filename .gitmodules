@@ -581,10 +581,9 @@
 	path = lib/rainbow-mode
 	url = git@github.com:emacsmirror/rainbow-mode.git
 [submodule "realgud"]
-	disabled = true
 	path = lib/realgud
 	url = git@github.com:rocky/emacs-dbgr.git
-	build-step = make
+	build-step = git checkout realgud-recursive-autoloads.el
 [submodule "redis"]
 	path = lib/redis
 	url = git@github.com:emacs-pe/redis.el.git
