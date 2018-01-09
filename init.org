@@ -356,6 +356,11 @@ Allow some commands as safe by default
 (message "Loading early birds...done (%.3fs)"
          (float-time (time-subtract (current-time) before-user-init-time)))
 #+end_src
+** Subword: CamelCase aware editing operations
+#+begin_src emacs-lisp
+(use-package subword
+  :hook ((python-mode yaml-mode go-mode) . subword-mode))
+#+end_src
 ** Help
 #+begin_src emacs-lisp
 (use-package help
@@ -2262,7 +2267,6 @@ and when called with 2 prefix arguments only open in browser."
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
   (add-hook 'yaml-mode-hook #'dakra-prog-mode-init)
-  (add-hook 'yaml-mode-hook #'subword-mode)
   (add-hook 'yaml-mode-hook
             (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t))))
 #+END_SRC
@@ -3337,9 +3341,6 @@ $ sbcl
 
                ;; stop whitespace being highlighted
                (whitespace-toggle-options '(tabs))
-
-               ;; CamelCase aware editing operations
-               (subword-mode +1)
 
                ;; El-doc for Go
                (go-eldoc-setup))))
