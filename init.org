@@ -1501,16 +1501,15 @@ split via i3 and create a new Emacs frame."
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :diminish
-  :bind (("C-x b" . ivy-switch-buffer)
-         ("C-x B" . ivy-switch-buffer-other-window)
-         ("C-c C-r"   . ivy-resume)
-         ("M-H"   . ivy-resume)
+  :bind (("C-x b"   . ivy-switch-buffer)
+         ("C-x B"   . ivy-switch-buffer-other-window)
+         ("C-c C-r" . ivy-resume)
+         ("M-H"     . ivy-resume)
          :map ivy-minibuffer-map
          ("C-j" . ivy-partial-or-done)
          ("<S-return>" . ivy-call)
          ("C-r" . ivy-previous-line-or-history)
          ("M-r" . ivy-reverse-i-search))
-
   :config
   ;; Extend searching to bookmarks and recentf
   (setq ivy-use-virtual-buffers t)
@@ -1557,15 +1556,16 @@ split via i3 and create a new Emacs frame."
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
   :diminish
-  :bind (("C-o" . nil)  ; Remove old keybinding (open-line)
-         ("C-o o" . counsel-org-agenda-headlines)
-         ("C-o g" . counsel-org-agenda-headlines)
-         ("C-o G" . counsel-org-goto)
+  :bind (("C-o"     . nil)  ; Remove old keybinding (open-line)
+         ("C-o o"   . counsel-org-agenda-headlines)
+         ("C-o g"   . counsel-org-agenda-headlines)
+         ("C-o G"   . counsel-org-goto)
          ("C-c o o" . counsel-org-agenda-headlines)
          ("C-c o g" . counsel-org-agenda-headlines)
          ("C-c o G" . counsel-org-goto)
-         ("M-i" . counsel-imenu)
-         ("M-x" . counsel-M-x))
+         ("C-x C-f" . counsel-find-file)
+         ("M-i"     . counsel-imenu)
+         ("M-x"     . counsel-M-x))
   :commands counsel-minibuffer-history
   :init
   (define-key minibuffer-local-map (kbd "M-r")
