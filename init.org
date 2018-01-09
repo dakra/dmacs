@@ -6964,6 +6964,33 @@ It only works for frames with exactly two windows."
   :config
   (setq wolfram-alpha-app-id "KTKV36-2LRW2LELV8"))
 #+END_SRC
+** Tea timer
+FIXME: Add modeline support and package this
+#+begin_src emacs-lisp
+(require 'alert)
+(setq tea-timer-default-duration 120)
+(setq tea-timer-message "Tea ready!")
+(setq tea-timer-timer nil)
+(defun tea-timer-tea-ready ()
+  "Display tea ready message and reset timer."
+  (alert tea-timer-message)
+  (setq tea-timer-timer nil))
+(defun tea-timer (&optional duration)
+  "Set a tea timer to DURATION in seconds or tea-timer-default-duration."
+  (interactive "P")
+  (when tea-timer-timer
+    (when (y-or-n-p "Another tea timer already running. Cancel the old one?")
+      (tea-timer-cancel)))
+  (unless tea-timer-timer
+    (setq tea-timer-timer
+          (run-at-time (or duration tea-timer-default-duration) nil 'tea-timer-tea-ready))))
+(defun tea-timer-cancel ()
+  "Cancel running tea timer"
+  (interactive)
+  (when tea-timer-timer
+    (cancel-timer tea-timer-timer)
+    (setq tea-timer-timer nil)))
+#+end_src
 ** Debug emacs init startup time
 Run ~M-x esup~ to see where the time is spend during emacs startup.
 #+BEGIN_SRC emacs-lisp
