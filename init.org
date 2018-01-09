@@ -1172,7 +1172,9 @@ split via i3 and create a new Emacs frame."
 #+BEGIN_SRC emacs-lisp
 ;; dired config mostly from https://github.com/Fuco1/.emacs.d/blob/master/files/dired-defs.org
 (use-package dired
-  :bind ("C-x d" . dired)
+  :bind (("C-x d" . dired)
+         :map dired-mode-map
+         ("e" . dired-ediff-files))
   :config
   ;; dired - reuse current buffer by pressing 'a'
   (put 'dired-find-alternate-file 'disabled nil)
@@ -1190,7 +1192,29 @@ split via i3 and create a new Emacs frame."
     "Media files.")
 
   ;; dired list size in human-readable format and list directories first
-  (setq dired-listing-switches "-hal --group-directories-first"))
+  (setq dired-listing-switches "-hal --group-directories-first")
+
+  ;; Easily diff 2 marked files in dired
+  ;; https://oremacs.com/2017/03/18/dired-ediff/
+  (defun dired-ediff-files ()
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (wnd (current-window-configuration)))
+      (if (<= (length files) 2)
+          (let ((file1 (car files))
+                (file2 (if (cdr files)
+                           (cadr files)
+                         (read-file-name
+                          "file: "
+                          (dired-dwim-target-directory)))))
+            (if (file-newer-than-file-p file1 file2)
+                (ediff-files file2 file1)
+              (ediff-files file1 file2))
+            (add-hook 'ediff-after-quit-hook-internal
+                      (lambda ()
+                        (setq ediff-after-quit-hook-internal nil)
+                        (set-window-configuration wnd))))
+        (error "no more than 2 files should be marked")))))
 
 (use-package wdired
   :after dired
@@ -1213,11 +1237,13 @@ split via i3 and create a new Emacs frame."
   ;; Show details by default  (diredp hides it)
   (setq diredp-hide-details-initially-flag nil)
 
-  ;; FIXME
-  ;;(diredp-toggle-find-file-reuse-dir 1)  ; reuse dired buffers
   (setq diredp-dwim-any-frame-flag t)
 
   :config
+  ;; Reuse dired buffers
+  ;; We use dired-open and also overwrite the dired-find-file there
+  (diredp-toggle-find-file-reuse-dir 1)
+
   ;; Remove stupid font-locking
   (setf (nth 3 diredp-font-lock-keywords-1)
         ;; Properly handle the extensions
@@ -1237,8 +1263,7 @@ split via i3 and create a new Emacs frame."
                  "[*]?\\|")
                 "[*]?")        ; Allow for executable flag (*).
                "\\)\\)$") ; Do not treat compressed files as garbage... why the hell!
-              1 diredp-ignored-file-name t))
-  )
+              1 diredp-ignored-file-name t)))
 
 ;; Display the recursive size of directories in Dired
 (use-package dired-du
@@ -1246,29 +1271,6 @@ split via i3 and create a new Emacs frame."
   :config
   ;; human readable size format
   (setq dired-du-size-format t))
-
-;; Easily diff 2 marked files in dired
-(defun ora-ediff-files ()
-  (interactive)
-  (let ((files (dired-get-marked-files))
-        (wnd (current-window-configuration)))
-    (if (<= (length files) 2)
-        (let ((file1 (car files))
-              (file2 (if (cdr files)
-                         (cadr files)
-                       (read-file-name
-                        "file: "
-                        (dired-dwim-target-directory)))))
-          (if (file-newer-than-file-p file1 file2)
-              (ediff-files file2 file1)
-            (ediff-files file1 file2))
-          (add-hook 'ediff-after-quit-hook-internal
-                    (lambda ()
-                      (setq ediff-after-quit-hook-internal nil)
-                      (set-window-configuration wnd))))
-      (error "no more than 2 files should be marked"))))
-;; FIXME: use use-package and bind
-;;(define-key dired-mode-map "e" 'ora-ediff-files)
 
 (use-package async)
 (use-package dired-async  ; Part of async
@@ -1348,6 +1350,8 @@ split via i3 and create a new Emacs frame."
          ([return] . dired-open-file)
          ("f" . dired-open-file))
   :config
+  ;; Reuse existing dired buffer
+  (setq dired-open-find-file-function 'diredp-find-file-reuse-dir-buffer)
   (setq dired-open-functions '(dired-open-by-extension dired-open-guess-shell-alist dired-open-subdir)))
 
 (use-package dired-ranger
