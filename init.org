@@ -3786,9 +3786,12 @@ displayed anywhere else."
 ;;(global-set-key (kbd "C-@") 'er/expand-region)
 
 (use-package selected
-  :defer 1
+  ;; Setting the hooks here manually instead of (selected-global-mode)
+  ;; So use-package creates autoloads for us and only loads this package
+  ;; if we really use it (i.e. mark anything)
+  :hook ((activate-mark . selected--on)
+         (deactivate-mark . selected-off))
   :init (defvar selected-org-mode-map (make-sparse-keymap))
-  :config (selected-global-mode)
   :bind (:map selected-keymap
          ("q" . selected-off)
          ("u" . upcase-region)
@@ -3807,26 +3810,14 @@ displayed anywhere else."
          ("s" . mc/skip-to-next-like-this)
          ("r" . mc/edit-lines)
          :map selected-org-mode-map
-         ("t" . org-table-convert-region))
-  :diminish selected-minor-mode)
-;; Change to selected? https://github.com/Kungsgeten/selected.el
-;; https://www.reddit.com/r/emacs/comments/63mx6f/how_do_you_use_the_selectel_package_share_some/
-;; (require 'region-bindings-mode)
-;; (region-bindings-mode-enable)
-
-;; (define-key region-bindings-mode-map "\M-a" 'mc/mark-all-dwim)
-;; (define-key region-bindings-mode-map "\M-A" 'mc/mark-all-like-this)
-;; (define-key region-bindings-mode-map "\M-p" 'mc/mark-previous-like-this)
-;; (define-key region-bindings-mode-map "\M-P" 'mc/unmark-previous-like-this)
-;; (define-key region-bindings-mode-map "\M-n" 'mc/mark-next-like-this)
-;; (define-key region-bindings-mode-map "\M-N" 'mc/unmark-next-like-this)
-;; (define-key region-bindings-mode-map "\M-m" 'mc/mark-more-like-this-extended)
+         ("t" . org-table-convert-region)))
 
 (use-package multiple-cursors
   :bind (("C-c m" . mc/mark-all-dwim)
          ("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this))
-  ;;:init (setq mc/list-file "~/.emacs.d/personal/.mc-lists.el")
+         ("C-<" . mc/mark-previous-like-this)
+         :map mc/keymap
+         ("C-x n" . mc-hide-unmatched-lines-mode))
   :config
   (global-unset-key (kbd "M-<down-mouse-1>"))
   (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
