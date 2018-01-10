@@ -2360,7 +2360,8 @@ and when called with 2 prefix arguments only open in browser."
       (when candidates
         ;; Just take the first candidate
         (find-file (expand-file-name (car candidates) (projectile-project-root)))
-        (run-hooks 'projectile-find-file-hook))))
+        (run-hooks 'projectile-find-file-hook)
+        t)))
 
   (defun python-flat-imenu-index ()
     (setq-local imenu-create-index-function
