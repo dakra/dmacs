@@ -2374,10 +2374,10 @@ and when called with 2 prefix arguments only open in browser."
          (python-mode . anaconda-eldoc-mode))
   :config
   (defun python-goto-sql-file-or-definition (&optional arg)
-    "First try to jump to sql file and if non, goto definition.
-With prefix argument ARG don't find sql file and just goto definition."
+    "Call anaconda find-definitions or with prefix ARG find sql file."
     (interactive "P")
-    (when (or arg (not (projectile-find-sql-file)))
+    (if arg
+        (projectile-find-sql-file)
       (anaconda-mode-find-definitions)))
   :diminish anaconda-mode)
 
