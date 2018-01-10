@@ -601,7 +601,8 @@ different face
 
 #+BEGIN_SRC emacs-lisp
 (use-package fancy-narrow
-  :bind (("C-x n" . fancy-narrow-or-widen-dwim))
+  :bind (("C-x n" . fancy-narrow-or-widen-dwim)
+         ("C-x N" . narrow-or-widen-dwim))
   :config
     ;;; toggle narrow or widen (region or defun) with C-x n
   (defun fancy-narrow-or-widen-dwim (p)
@@ -622,8 +623,7 @@ is already narrowed."
            ;; `org-edit-src-code' is not a real narrowing
            ;; command. Remove this first conditional if
            ;; you don't want it.
-           (cond ((ignore-errors (org-edit-src-code) t)
-                  (delete-other-windows))
+           (cond ((ignore-errors (org-edit-src-code) t))
                  ((ignore-errors (org-fancy-narrow-to-block) t))
                  (t (org-narrow-to-subtree))))
           ((derived-mode-p 'latex-mode)
@@ -631,34 +631,32 @@ is already narrowed."
           (t (fancy-narrow-to-defun))))
 
   ;; Make swiper work with fancy-narow
-  (fancy-narrow--advise-function 'swiper))
+  (fancy-narrow--advise-function 'swiper)
 
-(defun narrow-or-widen-dwim (p)
-  "Widen if buffer is narrowed, narrow-dwim otherwise.
+  (defun narrow-or-widen-dwim (p)
+    "Widen if buffer is narrowed, narrow-dwim otherwise.
 Dwim means: region, org-src-block, org-subtree, or
 defun, whichever applies first.  Narrowing to
 org-src-block actually calls `org-edit-src-code'.
 
 With prefix P, don't widen, just narrow even if buffer
 is already narrowed."
-  (interactive "P")
-  (declare (interactive-only))
-  (cond ((and (buffer-narrowed-p) (not p)) (widen))
-        ((region-active-p)
-         (narrow-to-region (region-beginning)
-                           (region-end)))
-        ((derived-mode-p 'org-mode)
-         ;; `org-edit-src-code' is not a real narrowing
-         ;; command. Remove this first conditional if
-         ;; you don't want it.
-         (cond ((ignore-errors (org-edit-src-code) t)
-                (delete-other-windows))
-               ((ignore-errors (org-narrow-to-block) t))
-               (t (org-narrow-to-subtree))))
-        ((derived-mode-p 'latex-mode)
-         (LaTeX-narrow-to-environment))
-        (t (narrow-to-defun))))
-(define-key ctl-x-map "N" #'narrow-or-widen-dwim)
+    (interactive "P")
+    (declare (interactive-only))
+    (cond ((and (buffer-narrowed-p) (not p)) (widen))
+          ((region-active-p)
+           (narrow-to-region (region-beginning)
+                             (region-end)))
+          ((derived-mode-p 'org-mode)
+           ;; `org-edit-src-code' is not a real narrowing
+           ;; command. Remove this first conditional if
+           ;; you don't want it.
+           (cond ((ignore-errors (org-edit-src-code) t))
+                 ((ignore-errors (org-narrow-to-block) t))
+                 (t (org-narrow-to-subtree))))
+          ((derived-mode-p 'latex-mode)
+           (LaTeX-narrow-to-environment))
+          (t (narrow-to-defun)))))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 ;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
@@ -4066,7 +4064,9 @@ displayed anywhere else."
          ("M-p" . org-previous-visible-heading)
          ("M-n" . org-next-visible-heading)
          ("<M-up>" . org-metaup)
-         ("<M-down>" . org-metadown))
+         ("<M-down>" . org-metadown)
+         :map org-src-mode-map
+         ("C-x n" . org-edit-src-exit))
   :init
   ;; FIXME: If there is a org-clock to resume (forgot to clock out before shutting down)
   ;;        then there will be a *blocking* minibuffer with the question to resume the
