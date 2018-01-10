@@ -548,7 +548,6 @@ different face
 
 (use-package smartparens
   :demand  ;; FIXME: with :defer 2; sp keybindings will overwrite org-metup/down
-  :commands smartparens-mode
   :hook ((emacs-lisp-mode lisp-mode hy-mode) . smartparens-strict-mode)
   :bind (:map smartparens-mode-map  ;; Remove sp keybinding for org-metaup/down to work
          ("<M-up>" . nil)
@@ -1221,7 +1220,6 @@ split via i3 and create a new Emacs frame."
 
 (use-package wdired
   :after dired
-  :commands wdired-change-to-wdired-mode
   :bind (:map dired-mode-map
          ("C-c C-e" . dired-toggle-read-only)))
 
@@ -1573,7 +1571,6 @@ split via i3 and create a new Emacs frame."
          ("C-x C-f" . counsel-find-file)
          ("M-i"     . counsel-imenu)
          ("M-x"     . counsel-M-x))
-  :commands counsel-minibuffer-history
   :init
   (define-key minibuffer-local-map (kbd "M-r")
     'counsel-minibuffer-history)
@@ -1777,7 +1774,6 @@ instead."
 ;; Fixme eshell-mode-map maps to global keybindings? Check "C-d"
 ;; Isssue: https://github.com/jwiegley/use-package/issues/332
 (use-package eshell
-  :commands eshell
   :bind (("C-x m" . eshell)
          ("C-x M" . dakra-eshell-always)
          ;;:map eshell-mode-map
@@ -1940,8 +1936,7 @@ file to edit."
   )
 
 (use-package eshell-bookmark
-  :after eshell
-  :commands eshell-bookmark-setup)
+  :after eshell)
 #+END_SRC
 ** Prompt
 #+begin_src emacs-lisp
@@ -2014,12 +2009,10 @@ file to edit."
 ;; Autocomplete for git commands in shell and
 ;; the git command from magit ('!')
 (use-package pcmpl-git
-  :after pcomplete
-  :commands pcomplete/git)
+  :after pcomplete)
 
 (use-package pcmpl-pip
-  :after pcomplete
-  :commands pcomplete/pip)
+  :after pcomplete)
 #+END_SRC
 * Version Control
 ** Emacs vc settings
@@ -2038,7 +2031,6 @@ file to edit."
 ;; bug-reference-url-format has to be set in dir-locals (S-p E)
 ;; E.g. for github: (bug-reference-url-format . "https://github.com/atomx/api/issues/%s")
 (use-package bug-reference
-  :commands (bug-reference-mode bug-reference-prog-mode)
   :hook ((prog-mode . bug-reference-prog-mode)
          ((log-view-mode git-commit-setup) . bug-reference-mode))
   :init (add-hook 'prog-mode-hook 'bug-reference-prog-mode)
@@ -2398,8 +2390,7 @@ With prefix argument ARG don't find sql file and just goto definition."
   :commands elpygen-implement)
 
 ;; package-list-packages like interface for python packages
-(use-package pippel
-  :commands (pippel-list-packages pippel-install-package))
+(use-package pippel :defer t)
 
 ;; Syntax highlighting for requirements.txt files
 (use-package pip-requirements
@@ -2407,8 +2398,7 @@ With prefix argument ARG don't find sql file and just goto definition."
          ("requirements.*\\.txt\\'" . pip-requirements-mode)
          ("requirements\\.in" . pip-requirements-mode)))
 
-(use-package sphinx-mode
-  :commands sphinx-mode)
+(use-package sphinx-mode :defer t)
 
 
 (defgroup python-django nil
@@ -2424,9 +2414,7 @@ With prefix argument ARG don't find sql file and just goto definition."
 
 
 (use-package python-test
-  :commands (python-test-function
-             python-test-method python-test-class python-test-file python-test-project
-             python-django-manage-runserver)
+  :defer t
   :init (setq python-test-backend 'pytest)
   :config
   ;; Django stuff
@@ -2481,8 +2469,7 @@ With prefix argument ARG don't find sql file and just goto definition."
 
 (use-package pydoc
   :bind (:map anaconda-mode-map
-         ("M-?" . pydoc-at-point))
-  :commands (pydoc-at-point pydoc-browse))
+         ("M-?" . pydoc-at-point)))
 
 ;; Automatically sort and format python imports
 (use-package py-isort
@@ -2498,7 +2485,6 @@ With prefix argument ARG don't find sql file and just goto definition."
 ;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
 
 (use-package flycheck
-  :commands flycheck-mode
   :hook ((prog-mode ledger-mode) . flycheck-mode)
   :config
   ;; Use the load-path from running Emacs when checking elisp files
@@ -2904,13 +2890,11 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 ;; XXX: Maybe add autoload for web and js2 mode?
 ;; (eval-after-load 'js2-mode
 ;;   '(add-hook 'js2-mode-hook #'add-node-modules-path))
-(use-package add-node-modules-path
-  :commands add-node-modules-path)
+(use-package add-node-modules-path :defer t)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package ng2-mode :defer t)
-
 #+END_SRC
 ** Typescript
 #+BEGIN_SRC emacs-lisp
@@ -2959,11 +2943,10 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
   (use-package helm-emmet :after helm :disabled t))
 
 (use-package rainbow-mode
-  :commands rainbow-mode
   :hook (css-mode scss-mode sass-mode emacs-lisp-mode hy-mode))
 
 (use-package scss-mode
-  :commands scss-mode
+  :defer t
   :config
   ;;(setq css-indent-offset 2)
   ;; turn off annoying auto-compile on save
@@ -3289,6 +3272,7 @@ $ sbcl
 
 #+BEGIN_SRC emacs-lisp
 (use-package slime
+  :defer t
   :config
   (setq slime-contribs '(slime-fancy))
   (setq inferior-lisp-program "sbcl")
@@ -3346,15 +3330,10 @@ $ sbcl
   (add-hook 'go-mode-hook
             '(lambda ()
                (setq tab-width 4)
-
                ;; gofmt on save
                (add-hook 'before-save-hook 'gofmt-before-save nil t)
-
                ;; stop whitespace being highlighted
-               (whitespace-toggle-options '(tabs))
-
-               ;; El-doc for Go
-               (go-eldoc-setup))))
+               (whitespace-toggle-options '(tabs)))))
 
 (use-package helm-go-package
   :disabled t
@@ -3375,15 +3354,11 @@ $ sbcl
 
 (use-package gotest
   :after go-mode
-  :commands (
-             go-test-current-test go-test-current-file go-test-current-project go-test-current-coverage
-             go-test-current-benchmark go-test-current-file-benchmarks go-test-current-project-benchmarks
-             )
   :bind (:map go-mode-map
          ("C-x t" . go-test-current-test)))
 
 (use-package go-eldoc
-  :commands go-eldoc-setup)
+  :hook (go-mode . go-eldoc-setup))
 
 (use-package go-projectile
   :after (projectile go-mode))
@@ -3454,8 +3429,7 @@ $ sbcl
 * personal.el
 #+BEGIN_SRC emacs-lisp
 (use-package discover-my-major
-  :bind (("C-h C-m" . discover-my-major))
-  :commands discover-my-major)
+  :bind (("C-h C-m" . discover-my-major)))
 
 (use-package origami
   :disabled t  ;; Just use outline mode (with outline-magic)
@@ -4052,7 +4026,6 @@ displayed anywhere else."
 * Org
 #+BEGIN_SRC emacs-lisp  :tangle yes
 (use-package org
-  :commands (org-agenda)
   :mode ("\\.org\\'"  . org-mode)
   :bind (("C-c a"   . org-agenda)
          ("C-c l"   . org-store-link)
@@ -5187,7 +5160,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
           'append)
 
 ;; Global key bindings
-(global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "<f5>") 'bh/org-todo)
 (global-set-key (kbd "<S-f5>") 'bh/widen)
 (global-set-key (kbd "<f6>") 'org-agenda)
@@ -5234,7 +5206,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;;(advice-add 'package-menu--find-upgrades :around #'package-menu--remove-excluded-packages)
 
 (use-package org-jira
-  :defer t
   :config
   (setq jiralib-url "https://jira.paesslergmbh.de")
   ;; Don't sync anything back to jira
@@ -5303,7 +5274,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;; org-capture chrome plugin: https://chrome.google.com/webstore/detail/org-capture/kkkjlfejijcjgjllecmnejhogpbcigdc?hl=en
 
 (use-package org-capture
-  :commands org-capture
+  :bind ("C-c c" . org-capture)
   :config
   ;; Capture/refile new items to the top of the list
   (setq org-reverse-note-order t)
@@ -5474,7 +5445,7 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;; Set to  (("d" . nil) (special . h:mm)) if you want to show days
 
 (use-package org-agenda
-  :commands org-agenda
+  :after org
   :config
   (setq org-agenda-files '("~/org"))
 
@@ -6878,7 +6849,7 @@ It only works for frames with exactly two windows."
 * Transmission: Bittorent
 #+begin_src emacs-lisp
 (use-package transmission
-  :commands (transmission transmission-add)
+  :defer t
   :config
   ;; Auto refresh for all transmission buffers
   (setq transmission-refresh-modes '(transmission-mode
