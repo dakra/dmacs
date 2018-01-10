@@ -1639,7 +1639,9 @@ instead."
             ("\M-S" . (lambda () (interactive) (insert "SS")))))
 
 (use-package hydra
-  :defer 5
+  :bind (("C-c S" . hydra-scratchpad/body)
+         ("C-x t" . hydra-toggle-stuff/body)
+         ("C-x 9" . hydra-unicode/body))
   :config
   (defhydra hydra-folding (:color red)
     "
@@ -1673,49 +1675,43 @@ instead."
     ("r" mc/mark-all-in-region-regexp :exit t)
     ("q" nil))
 
-  (global-set-key
-   (kbd "C-c S")
-   (defhydra hydra-scratchpad (:hint nil)
-     "
+  (defhydra hydra-scratchpad (:hint nil)
+    "
      _p_ython    _e_lisp        _s_ql
      _g_o        _j_avascript   _t_ypescript
      _r_ust      _R_est-client  _h_tml
      _o_rg-mode  _T_ext         _m_arkdown
      "
-     ("p" (switch-to-buffer "*python*scratchpad.py"))
-     ("e" (switch-to-buffer "*elisp*scratchpad.el"))
-     ("s" (switch-to-buffer "*sql*scratchpad.sql"))
-     ("g" (switch-to-buffer "*go*scratchpad.go"))
-     ("j" (switch-to-buffer "*js*scratchpad.js"))
-     ("t" (switch-to-buffer "*ts*scratchpad.ts"))
-     ("r" (switch-to-buffer "*rust*scratchpad.rs"))
-     ("R" (switch-to-buffer "*rest*scratchpad.rest"))
-     ("h" (switch-to-buffer "*html*scratchpad.html"))
-     ("o" (switch-to-buffer "*org*scratchpad.org"))
-     ("T" (switch-to-buffer "*text*scratchpad.txt"))
-     ("m" (switch-to-buffer "*markdown*scratchpad.md"))))
+    ("p" (switch-to-buffer "*python*scratchpad.py"))
+    ("e" (switch-to-buffer "*elisp*scratchpad.el"))
+    ("s" (switch-to-buffer "*sql*scratchpad.sql"))
+    ("g" (switch-to-buffer "*go*scratchpad.go"))
+    ("j" (switch-to-buffer "*js*scratchpad.js"))
+    ("t" (switch-to-buffer "*ts*scratchpad.ts"))
+    ("r" (switch-to-buffer "*rust*scratchpad.rs"))
+    ("R" (switch-to-buffer "*rest*scratchpad.rest"))
+    ("h" (switch-to-buffer "*html*scratchpad.html"))
+    ("o" (switch-to-buffer "*org*scratchpad.org"))
+    ("T" (switch-to-buffer "*text*scratchpad.txt"))
+    ("m" (switch-to-buffer "*markdown*scratchpad.md")))
 
   (defun my/insert-unicode (unicode-name)
     "Same as C-x 8 enter UNICODE-NAME."
     (insert-char (cdr (assoc-string unicode-name (ucs-names)))))
 
-  (global-set-key
-   (kbd "C-x t")
-   (defhydra hydra-toggle-stuff (:color blue :hint nil)
-     "Toggle"
-     ("c" column-number-mode "column-number-mode")
-     ("d" toggle-debug-on-error "debug-on-error")
-     ("f" auto-fill-mode "fill-mode")
-     ("l" toggle-truncate-lines "truncate-lines")
-     ("ol" org-toggle-link-display "org link-display")
-     ("op" org-toggle-pretty-entities "org pretty-entities")
-     ("oi" org-toggle-inline-images "org inline-images")
-     ("w" whitespace-mode "whitespace-mode")))
+  (defhydra hydra-toggle-stuff (:color blue :hint nil)
+    "Toggle"
+    ("c" column-number-mode "column-number-mode")
+    ("d" toggle-debug-on-error "debug-on-error")
+    ("f" auto-fill-mode "fill-mode")
+    ("l" toggle-truncate-lines "truncate-lines")
+    ("ol" org-toggle-link-display "org link-display")
+    ("op" org-toggle-pretty-entities "org pretty-entities")
+    ("oi" org-toggle-inline-images "org inline-images")
+    ("w" whitespace-mode "whitespace-mode"))
 
-  (global-set-key
-   (kbd "C-x 9")
-   (defhydra hydra-unicode (:hint nil)
-     "
+  (defhydra hydra-unicode (:hint nil)
+    "
      Unicode  _c_ €   _a_ ä   _A_ Ä
               _d_ °   _o_ ö   _O_ Ö
               _e_ €   _u_ Ü   _U_ Ü
@@ -1723,19 +1719,19 @@ instead."
               _m_ µ
               _r_ →
      "
-     ("a" (my/insert-unicode "LATIN SMALL LETTER A WITH DIAERESIS"))
-     ("A" (my/insert-unicode "LATIN CAPITAL LETTER A WITH DIAERESIS"))
-     ("o" (my/insert-unicode "LATIN SMALL LETTER O WITH DIAERESIS")) ;;
-     ("O" (my/insert-unicode "LATIN CAPITAL LETTER O WITH DIAERESIS"))
-     ("u" (my/insert-unicode "LATIN SMALL LETTER U WITH DIAERESIS")) ;;
-     ("U" (my/insert-unicode "LATIN CAPITAL LETTER U WITH DIAERESIS"))
-     ("s" (my/insert-unicode "LATIN SMALL LETTER SHARP S"))
-     ("c" (my/insert-unicode "COPYRIGHT SIGN"))
-     ("d" (my/insert-unicode "DEGREE SIGN"))
-     ("e" (my/insert-unicode "EURO SIGN"))
-     ("p" (my/insert-unicode "POUND SIGN"))
-     ("r" (my/insert-unicode "RIGHTWARDS ARROW"))
-     ("m" (my/insert-unicode "MICRO SIGN"))))
+    ("a" (my/insert-unicode "LATIN SMALL LETTER A WITH DIAERESIS"))
+    ("A" (my/insert-unicode "LATIN CAPITAL LETTER A WITH DIAERESIS"))
+    ("o" (my/insert-unicode "LATIN SMALL LETTER O WITH DIAERESIS")) ;;
+    ("O" (my/insert-unicode "LATIN CAPITAL LETTER O WITH DIAERESIS"))
+    ("u" (my/insert-unicode "LATIN SMALL LETTER U WITH DIAERESIS")) ;;
+    ("U" (my/insert-unicode "LATIN CAPITAL LETTER U WITH DIAERESIS"))
+    ("s" (my/insert-unicode "LATIN SMALL LETTER SHARP S"))
+    ("c" (my/insert-unicode "COPYRIGHT SIGN"))
+    ("d" (my/insert-unicode "DEGREE SIGN"))
+    ("e" (my/insert-unicode "EURO SIGN"))
+    ("p" (my/insert-unicode "POUND SIGN"))
+    ("r" (my/insert-unicode "RIGHTWARDS ARROW"))
+    ("m" (my/insert-unicode "MICRO SIGN")))
   )
 #+END_SRC
 * Tramp
