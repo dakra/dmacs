@@ -1591,21 +1591,37 @@ split via i3 and create a new Emacs frame."
   ;; Always use ripgrep instead of ag
   (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg)
 
+  (defun parent-directory (dir &optional l)
+    "Go up L many directories from DIR. Go 1 parent up when L is nil."
+    (let ((l (or l 1)))
+      (if (or (equal "/" dir) (<= l 0))
+          dir
+        (parent-directory (file-name-directory (directory-file-name dir)) (1- l)))))
+
   ;; https://github.com/purcell/emacs.d/blob/4e487d4ef2ab39875d96fd413fca3b075faf9612/lisp/init-ivy.el#L49
   (defun dakra/counsel-search-project (initial-input &optional use-current-dir)
     "Search using `counsel-rg' from the project root for INITIAL-INPUT.
-If there is no project root, or if the prefix argument
-USE-CURRENT-DIR is set, then search from the current directory
-instead."
+If there is no project root, or if the prefix argument USE-CURRENT-DIR is set,
+then search from the current directory instead.
+With multiple prefix arguments, or a numeric prefix argument
+go up multiple parent directories."
     (interactive (list (thing-at-point 'symbol)
                        current-prefix-arg))
     (let ((current-prefix-arg)
-          (dir (if use-current-dir
-                   default-directory
+          (dir (cond
+                ((equal use-current-dir nil) ; no prefix: use project root
                  (condition-case err
                      (projectile-project-root)
-                   (error default-directory)))))
-      (counsel-rg initial-input dir)))
+                   (error default-directory)))
+                ((equal use-current-dir '(4)) ; C-u: use current dir
+                 (parent-directory default-directory 0))
+                ((equal use-current-dir '(16)) ; C-u C-u: use parent dir
+                 (parent-directory default-directory 1))
+                ((equal use-current-dir '(64)) ; C-u C-u C-u: go 2 up
+                 (parent-directory default-directory 2))
+                (t  ; Numeric prefix: Go specified prefix up
+                 (parent-directory default-directory use-current-dir)))))
+      (counsel-rg initial-input dir))))
 
   (defun counsel-projectile-find-file-occur ()
     (cd (projectile-project-root))
