@@ -1579,10 +1579,21 @@ split via i3 and create a new Emacs frame."
   ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
   (setq counsel-async-filter-update-time 10000)
   (setq ivy-dynamic-exhibit-delay-ms 20)
-  ;; FIXME: add keybinding
+
+  (counsel-mode 1))
+
+(use-package counsel-projectile
+  :bind-keymap (("s-p"   . counsel-projectile-command-map)
+                ("C-c p" . counsel-projectile-command-map))
+  :bind (:map counsel-projectile-command-map
+         (("s s" . dakra/counsel-search-project)))
+  :config
+  ;; Always use ripgrep instead of ag
+  (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg)
+
   ;; https://github.com/purcell/emacs.d/blob/4e487d4ef2ab39875d96fd413fca3b075faf9612/lisp/init-ivy.el#L49
   (defun dakra/counsel-search-project (initial-input &optional use-current-dir)
-    "Search using `counsel-ag' from the project root for INITIAL-INPUT.
+    "Search using `counsel-rg' from the project root for INITIAL-INPUT.
 If there is no project root, or if the prefix argument
 USE-CURRENT-DIR is set, then search from the current directory
 instead."
@@ -1595,14 +1606,6 @@ instead."
                      (projectile-project-root)
                    (error default-directory)))))
       (counsel-rg initial-input dir)))
-
-  (counsel-mode 1))
-
-(use-package counsel-projectile
-  :bind-keymap (("s-p"   . counsel-projectile-command-map)
-                ("C-c p" . counsel-projectile-command-map))
-  :config
-  (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg)
 
   (defun counsel-projectile-find-file-occur ()
     (cd (projectile-project-root))
