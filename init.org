@@ -1621,7 +1621,7 @@ go up multiple parent directories."
                  (parent-directory default-directory 2))
                 (t  ; Numeric prefix: Go specified prefix up
                  (parent-directory default-directory use-current-dir)))))
-      (counsel-rg initial-input dir))))
+      (counsel-rg initial-input dir)))
 
   (defun counsel-projectile-find-file-occur ()
     (cd (projectile-project-root))
@@ -3451,15 +3451,6 @@ $ sbcl
 (use-package discover-my-major
   :bind (("C-h C-m" . discover-my-major)))
 
-(use-package origami
-  :disabled t  ;; Just use outline mode (with outline-magic)
-  :bind (:map origami-mode-map
-         ("C-c C-o" . hydra-folding/body))
-  :init (add-hook 'prog-mode-hook (lambda () (origami-mode))))
-;;(require 'origami)
-;;(define-key origami-mode-map (kbd "C-c C-o") 'origami-recursively-toggle-node)
-;;(global-origami-mode)
-
 ;; auto kill buffer when closing window
 (defun maybe-delete-frame-buffer (frame)
   "When a dedicated FRAME is deleted, also kill its buffer.
@@ -3486,26 +3477,26 @@ displayed anywhere else."
   ;; https://stackoverflow.com/questions/4079648/combine-python-mode-with-org-mode-for-emacs/29057808#29057808
   (defun python-outline-minor-mode ()
     (outline-minor-mode)
-    (setq outline-level 'python-outline-level)
-    (setq outline-regexp
-          (rx (or
-               ;; Commented outline heading
-               (group
-                (* space)  ; 0 or more spaces
-                (one-or-more (syntax comment-start))
-                (one-or-more space)
-                ;; Heading level
-                (group (repeat 1 8 "\*"))  ; Outline stars
-                (one-or-more space))
+    (setq-local outline-level 'python-outline-level)
+    (setq-local outline-regexp
+                (rx (or
+                     ;; Commented outline heading
+                     (group
+                      (* space)  ; 0 or more spaces
+                      (one-or-more (syntax comment-start))
+                      (one-or-more space)
+                      ;; Heading level
+                      (group (repeat 1 8 "\*"))  ; Outline stars
+                      (one-or-more space))
 
-               ;; Python keyword heading
-               (group
-                ;; Heading level
-                (group (* space)) ; 0 or more spaces
-                bow
-                ;; Keywords
-                (or "class" "def" "else" "elif" "except" "for" "if" "try" "while")
-                eow)))))
+                     ;; Python keyword heading
+                     (group
+                      ;; Heading level
+                      (group (* space)) ; 0 or more spaces
+                      bow
+                      ;; Keywords
+                      (or "class" "def" "else" "elif" "except" "for" "if" "try" "while")
+                      eow)))))
 
   (defun python-outline-level ()
     (or
@@ -3524,79 +3515,9 @@ displayed anywhere else."
      (+ 8 (- (match-end 0) (match-beginning 0))))))
 
 ;; use outline-cycle (from outline-magic) in outline-minor-mode
-;; Tried outshine (and navi) but seems buggy and all
-;; features I don't use
 (use-package outline-magic
   :after outline
-  ;;:disabled nil  ; outshine is the newer version
   :bind (:map outline-minor-mode-map ("<C-tab>" . outline-cycle)))
-
-(use-package navi-mode
-  :disabled t
-  :commands navi-mode)
-(use-package outshine
-  :disabled t
-  :bind (:map outline-minor-mode-map ("<C-tab>" . outline-cycle))
-  :init
-  ;;(defvar outline-minor-mode-prefix "\M-#")
-
-  (add-hook 'outline-minor-mode-hook 'outshine-hook-function)
-
-  (add-hook 'emacs-lisp-mode-hook 'outline-minor-mode)
-  (add-hook 'clojure-mode-hook 'outline-minor-mode)
-  (add-hook 'ledger-mode-hook 'outline-minor-mode)
-  (add-hook 'message-mode-hook 'outline-minor-mode)
-
-  (defun restclient-mode-outline-hook ()
-    (outline-minor-mode)
-    (setq outline-regexp "#+"))
-  (add-hook 'restclient-mode-hook 'restclient-mode-outline-hook)
-
-  ;; https://stackoverflow.com/questions/4079648/combine-python-mode-with-org-mode-for-emacs/29057808#29057808
-  (defun python-mode-outline-hook ()
-    (outline-minor-mode)
-    (setq outline-level 'python-outline-level)
-    (setq outline-regexp
-          (rx (or
-               ;; Commented outline heading
-               (group
-                (* space)  ; 0 or more spaces
-                (one-or-more (syntax comment-start))
-                (one-or-more space)
-                ;; Heading level
-                (group (repeat 1 8 "\*"))  ; Outline stars
-                (one-or-more space))
-
-               ;; Python keyword heading
-               (group
-                ;; Heading level
-                (group (* space)) ; 0 or more spaces
-                bow
-                ;; Keywords
-                (or "class" "def" "else" "elif" "except" "for" "if" "try" "while")
-                eow)))))
-
-  (defun python-outline-level ()
-    (or
-     ;; Commented outline heading
-     (and (string-match (rx
-                         (* space)
-                         (one-or-more (syntax comment-start))
-                         (one-or-more space)
-                         (group (one-or-more "\*"))
-                         (one-or-more space))
-                        (match-string 0))
-          (- (match-end 0) (match-beginning 0)))
-
-     ;; Python keyword heading, set by number of indentions
-     ;; Add 8 (the highest standard outline level) to every Python keyword heading
-     (+ 8 (- (match-end 0) (match-beginning 0)))))
-
-  (add-hook 'python-mode-hook 'python-mode-outline-hook)
-  ;;:config
-  ;; Call `outshine-speed-command-help' to get an overview of speed commands
-  ;;(setq outshine-use-speed-commands t)
-  )
 
 (use-package restclient
   :mode ("\\.rest\\'" . restclient-mode)
@@ -3604,7 +3525,7 @@ displayed anywhere else."
   :config
   (defun restclient-outline-mode ()
     (outline-minor-mode)
-    (setq outline-regexp "##+")))
+    (setq-local outline-regexp "##+")))
 
 (use-package restclient-helm
   :disabled t
@@ -3676,7 +3597,7 @@ displayed anywhere else."
 ;; ledger-mode for bookkeeping
 (defun ledger-mode-outline-hook ()
   (outline-minor-mode)
-  (setq outline-regexp "[#;]+"))
+  (setq-local outline-regexp "[#;]+"))
 
 (use-package hledger-mode
   :disabled t  ;; Think ledger-mode is better.. needs more experimenting
