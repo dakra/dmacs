@@ -1,3 +1,6 @@
+/.cask
+/.hive-maint
+/elpa
 /init.el
 *.elc
 *:tangle
