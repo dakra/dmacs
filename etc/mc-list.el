@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         comment-dwim-2
+        counsel-yank-pop
         crux-move-beginning-of-line
         crux-smart-open-line
         dakra-capitalize-dwim
