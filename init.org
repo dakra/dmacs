@@ -1844,6 +1844,9 @@ go up multiple parent directories."
                                          "tmux" "screen" "top" "htop" "less" "more" "ncftp")
                 eshell-prefer-lisp-functions nil)
 
+  ;; Increase eshell history size from default of only 128
+  (setq eshell-history-size 2048)
+
   (defun dakra-eshell-read-history ()
     (interactive)
     (insert
