@@ -72,9 +72,6 @@
 [submodule "company-anaconda"]
 	path = lib/company-anaconda
 	url = git@github.com:proofit404/company-anaconda.git
-[submodule "esh-autosuggest"]
-	path = lib/esh-autosuggest
-	url = git@github.com:dieggsy/esh-autosuggest.git
 [submodule "company-go"]
 	path = lib/company-go
 	url = git@github.com:emacsmirror/company-go.git
@@ -183,6 +180,9 @@
 [submodule "epl"]
 	path = lib/epl
 	url = git@github.com:cask/epl.git
+[submodule "esh-autosuggest"]
+	path = lib/esh-autosuggest
+	url = git@github.com:dieggsy/esh-autosuggest.git
 [submodule "eshell-bookmark"]
 	path = lib/eshell-bookmark
 	url = git@github.com:Fuco1/eshell-bookmark.git
@@ -443,6 +443,13 @@
 [submodule "orca"]
 	path = lib/orca
 	url = git@github.com:abo-abo/orca.git
+[submodule "org"]
+	path = lib/org
+	url = git@code.orgmode.org:bzg/org-mode.git
+	build-step = make all
+	load-path = lisp
+	load-path = contrib/lisp
+	info-path = doc
 [submodule "org-bullets"]
 	path = lib/org-bullets
 	url = git@github.com:emacsorphanage/org-bullets.git
@@ -452,13 +459,6 @@
 [submodule "org-mime"]
 	path = lib/org-mime
 	url = git@github.com:org-mime/org-mime.git
-[submodule "org"]
-	path = lib/org
-	url = git@code.orgmode.org:bzg/org-mode.git
-	build-step = make all
-	load-path = lisp
-	load-path = contrib/lisp
-	info-path = doc
 [submodule "org-pocket"]
 	path = lib/org-pocket
 	url = git@github.com:alphapapa/org-pocket.git
