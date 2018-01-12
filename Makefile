@@ -6,13 +6,11 @@ bootstrap-borg:
 	@cd lib/borg; git symbolic-ref HEAD refs/heads/master
 	@cd lib/borg; git reset --hard HEAD
 
-# Abuse `SILENCIO` variable to tangle our init org file first
-SILENCIO += -L lib/org --load org
-SILENCIO += --eval '(org-babel-tangle-file (expand-file-name "init.org" user-emacs-directory))'
+tangle-init:
+	@rm -f init.el
+	@$(EMACS) -Q --batch --load org \
+	--eval '(org-babel-tangle-file (expand-file-name "init.org" user-emacs-directory))' 2>&1
 
-build-init:
-	@rm -f init.elc
-	@$(EMACS) -Q --batch -L lib/borg --load borg -L lib/org --load org \
-        --eval '(org-babel-tangle-file (expand-file-name "init.org" user-emacs-directory))' \
-	--funcall borg-initialize \
-	--funcall borg-batch-rebuild-init 2>&1
+build: tangle-init
+build-init: tangle-init
+quick: tangle-init
