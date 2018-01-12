@@ -413,6 +413,14 @@
 [submodule "move-text"]
 	path = lib/move-text
 	url = git@github.com:emacsfodder/move-text.git
+[submodule "mu4e"]
+	path = lib/mu4e
+	url = git@github.com:djcb/mu.git
+	build-step = test -e ./configure || autoreconf -i
+        build-step = ./configure
+        build-step = make -C mu4e > /dev/null
+        build-step = "(borg-update-autoloads \"mu4e\")"
+        load-path = mu4e
 [submodule "mu4e-maildirs-extension"]
 	path = lib/mu4e-maildirs-extension
 	url = git@github.com:agpchil/mu4e-maildirs-extension.git

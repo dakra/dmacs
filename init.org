@@ -5867,8 +5867,7 @@ session as the current block. ARG has same meaning as in
 * Email
 #+BEGIN_SRC emacs-lisp
 ;; mu package (includes mu4e) must be installed in the system
-(use-package mu4e  :load-path "/usr/share/emacs/site-lisp/mu4e"
-  :commands mu4e
+(use-package mu4e
   ;; Open mu4e with the 'Mail' key (if your keyboard has one)
   :bind (("<XF86Mail>" . mu4e)
          :map mu4e-headers-mode-map
@@ -6457,7 +6456,6 @@ there are no attachments."
 
   (setq gnus-dired-mail-mode 'mu4e-user-agent)
   (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode))
-
 
 ;; display html messages
 (use-package mu4e-contrib
