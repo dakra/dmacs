@@ -857,8 +857,9 @@ Move current line or region with M-up or M-down.
   :config (setq bookmark-save-flag 1))
 ;; Nicer mark ring navigation (C-x C-SPC or C-x C-Left/Right)
 (use-package back-button
-  :diminish back-button-mode
-  :config (back-button-mode 1))
+  :defer 2
+  :config (back-button-mode)
+  :diminish back-button-mode)
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 ;; Goto last change
