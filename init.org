@@ -21,10 +21,12 @@ Other configs I looked at a lot include (but not only):
 ** Installation
 This config doesn't use ~package.el~ as package management but
 [[https://emacsmirror.net/manual/borg/][borg]] which uses git submodules.
-After first cloning this repository you have to call ~make bootstrap~
+After first cloning this repository you have to call ~make bootstrap-borg~
+to download the `borg` library and the you can execute ~make bootstrap~
 to tangle this file and initialize all packages.
 After that you can just call ~make~ to tangle and rebuild the packages
-each time you make a change.
+each time you make a change or ~make build-init~ if you only made
+changes to this file.
 * Emacs Initialization
 We want to use lexical scoping
 #+begin_src emacs-lisp
