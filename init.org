@@ -1660,38 +1660,6 @@ go up multiple parent directories."
          ("C-x t" . hydra-toggle-stuff/body)
          ("C-x 9" . hydra-unicode/body))
   :config
-  (defhydra hydra-folding (:color red)
-    "
-  _o_pen node    _n_ext fold       toggle _f_orward
-  _c_lose node   _p_revious fold   toggle _a_ll
-  "
-    ("o" origami-open-node)
-    ("c" origami-close-node)
-    ("n" origami-next-fold)
-    ("p" origami-previous-fold)
-    ("f" origami-forward-toggle-node)
-    ("a" origami-toggle-all-nodes))
-
-  (defhydra hydra-multiple-cursors (:hint nil)
-    "
-         ^Up^            ^Down^        ^Other^
-    ----------------------------------------------
-    [_p_]   Next    [_n_]   Next    [_l_] Edit lines
-    [_P_]   Skip    [_N_]   Skip    [_a_] Mark all
-    [_M-p_] Unmark  [_M-n_] Unmark  [_r_] Mark by regexp
-    ^ ^             ^ ^             [_q_] Quit
-    "
-    ("l" mc/edit-lines :exit t)
-    ("a" mc/mark-all-like-this :exit t)
-    ("n" mc/mark-next-like-this)
-    ("N" mc/skip-to-next-like-this)
-    ("M-n" mc/unmark-next-like-this)
-    ("p" mc/mark-previous-like-this)
-    ("P" mc/skip-to-previous-like-this)
-    ("M-p" mc/unmark-previous-like-this)
-    ("r" mc/mark-all-in-region-regexp :exit t)
-    ("q" nil))
-
   (defhydra hydra-scratchpad (:hint nil)
     "
      _p_ython    _e_lisp        _s_ql
@@ -1712,10 +1680,6 @@ go up multiple parent directories."
     ("T" (switch-to-buffer "*text*scratchpad.txt"))
     ("m" (switch-to-buffer "*markdown*scratchpad.md")))
 
-  (defun dakra/insert-unicode (unicode-name)
-    "Same as C-x 8 enter UNICODE-NAME."
-    (insert-char (gethash unicode-name (ucs-names))))
-
   (defhydra hydra-toggle-stuff (:color blue :hint nil)
     "Toggle"
     ("c" column-number-mode "column-number-mode")
@@ -1726,6 +1690,10 @@ go up multiple parent directories."
     ("op" org-toggle-pretty-entities "org pretty-entities")
     ("oi" org-toggle-inline-images "org inline-images")
     ("w" whitespace-mode "whitespace-mode"))
+
+  (defun dakra/insert-unicode (unicode-name)
+    "Same as C-x 8 enter UNICODE-NAME."
+    (insert-char (gethash unicode-name (ucs-names))))
 
   (defhydra hydra-unicode (:hint nil)
     "
@@ -1748,8 +1716,7 @@ go up multiple parent directories."
     ("e" (dakra/insert-unicode "EURO SIGN"))
     ("p" (dakra/insert-unicode "POUND SIGN"))
     ("r" (dakra/insert-unicode "RIGHTWARDS ARROW"))
-    ("m" (dakra/insert-unicode "MICRO SIGN")))
-  )
+    ("m" (dakra/insert-unicode "MICRO SIGN"))))
 #+END_SRC
 * Tramp
 #+BEGIN_SRC emacs-lisp
