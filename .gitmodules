@@ -243,18 +243,12 @@
 [submodule "flycheck-rust"]
 	path = lib/flycheck-rust
 	url = git@github.com:flycheck/flycheck-rust.git
-[submodule "gh"]
-	path = lib/gh
-	url = git@github.com:sigma/gh.el.git
 [submodule "ghub"]
 	path = lib/ghub
 	url = git@github.com:magit/ghub.git
 [submodule "ghub+"]
 	path = lib/ghub+
 	url = git@github.com:vermiculus/ghub-plus.git
-[submodule "gist"]
-	path = lib/gist
-	url = git@github.com:defunkt/gist.el.git
 [submodule "git-modes"]
 	path = lib/git-modes
 	url = git@github.com:magit/git-modes.git
@@ -404,9 +398,6 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = git@github.com:jrblevin/markdown-mode.git
-[submodule "marshal"]
-	path = lib/marshal
-	url = git@github.com:sigma/marshal.el.git
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el.git
@@ -503,9 +494,6 @@
 [submodule "packed"]
 	path = lib/packed
 	url = git@github.com:emacscollective/packed.git
-[submodule "pcache"]
-	path = lib/pcache
-	url = git@github.com:sigma/pcache.git
 [submodule "pcmpl-git"]
 	path = lib/pcmpl-git
 	url = git@github.com:leoliu/pcmpl-git-el.git

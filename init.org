@@ -2174,8 +2174,56 @@ file to edit."
   (setq magit-wip-after-apply-mode-lighter "")
   (setq magit-wip-after-save-local-mode-lighter ""))
 
-
-(use-package gist :defer t)
+(use-package ghub+
+  :commands dakra-github-issue-to-org
+  :config
+  ;; FIXME:
+  ;; - Get gh user/project from org filename/header? or properties?
+  ;; - Set more properties in org properties drawer
+  ;; - Make comments "nicer"
+  ;; - Always insert TODO even when on NEXT header
+  ;; - Make package?
+  ;; ...
+  (setq dakra-github-repo '((owner (login . "atomx"))
+                            (name . "api")))
+  (defun dakra-github-issue-to-org (issue-number)
+    (interactive "NGithub issue number:")
+    (let* ((start-point)
+           (issue (ghubp-get-repos-owner-repo-issues-number
+                   dakra-github-repo `((number . ,issue-number))))
+           (title (cdr (assoc 'title issue)))
+           (url (cdr (assoc 'url issue)))
+           (body (cdr (assoc 'body issue)))
+           (repo-name (cdadr (assoc 'owner dakra-github-repo)))
+           (comments (when (cdr (assoc 'comments issue))
+                       (ghubp-get-repos-owner-repo-issues-number-comments
+                        dakra-github-repo `((number . ,issue-number))))))
+      (org-insert-todo-heading-respect-content)
+      (insert title)
+      (org-set-tags-to (format ":%s_%s:" (upcase repo-name) issue-number))
+      (org-set-tags-command t t)  ; realign tags
+      (forward-line 3)  ; Move 3 lines down to the last PROPERTIES drawer line
+      (move-end-of-line 1)
+      (insert (format "\n[[%s][%s]]\n"
+                      url (format "#%s: %s" issue-number title)))
+      (setq start-point (point))
+      (insert body)
+      (shell-command-on-region start-point (point) "pandoc -f gfm -t org" :replace t)
+      (org-indent-refresh-maybe (point) (mark) nil)
+      (when comments
+        (org-insert-todo-heading-respect-content)
+        (insert "Comments\n")
+        (org-do-demote)
+        (setq start-point (point))
+        (dolist (comment comments)
+          (let* ((author (cdr (assoc 'login (cdr (assoc 'user comment)))))
+                 (updated_at (cdr (assoc 'updated_at comment)))
+                 (body (cdr (assoc 'body comment))))
+            (insert (format "- *Comment from %s on %s*\n\n" author updated_at))
+            (insert body)
+            (insert "\n\n")))
+        (shell-command-on-region start-point (point) "pandoc -f gfm -t org" :replace t)
+        (org-indent-refresh-maybe (point) (mark) nil)))))
 
 (use-package magithub
   :disabled t
@@ -3241,7 +3289,6 @@ Lisp function does not specify a special indentation."
 (use-package dash  :defer t
   :config (dash-enable-font-lock))
 
-(use-package marshal  :defer t)
 (use-package s  :defer t)
 #+end_src
 ***** Request
@@ -5556,37 +5603,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
                   (push (list link desc) org-stored-links)))
               t t)))
 
-;;; Create org TODO from github issue
-;; FIXME:
-;; get gh user/project from org filename/header? or properties?
-;; replace ^M chars with \n
-;; always insert TODO even when on NEXT header
-;; ...
-(use-package gh
-  :commands dakra/org-insert-gh-issue
-  :config
-  (setq dakra-gh-issue-project "api")
-  (defun dakra/org-insert-gh-issue (issue-number)
-    (interactive "N Github issue number:")
-    (let (api raw-issue issue issue-title issue-body start-point)
-      (setf api (gh-issues-api "api" :sync nil :cache nil :num-retries 1))
-      (setf raw-issue (gh-issues-issue-get api "atomx" dakra-gh-issue-project issue-number))
-      (setf issue (oref raw-issue :data))
-      (setf issue-title (oref issue :title))
-      (setf issue-body (oref issue :body))
-      (org-insert-todo-heading-respect-content)
-      (insert (format "%s" issue-title))
-      (org-set-tags-to (format ":%s_%s:" (upcase dakra-gh-issue-project) issue-number))
-      (org-set-tags-command t t)  ; realign tags
-      (forward-line 3)  ; Move 3 lines down to the last PROPERTIES drawer line
-      (move-end-of-line 1)
-      (insert (format "\n[[%s][%s]]\n"
-                      (format "https://github.com/atomx/api/issues/%s" issue-number)
-                      (format "#%s: %s" issue-number issue-title)))
-      (setq start-point (point))
-      (insert (format "%s" issue-body))
-      (shell-command-on-region start-point (point) "pandoc -f gfm -t org" :replace t)
-      (org-indent-refresh-maybe (point) (mark) nil))))
 
 ;;; automatically create github issues from org-mode
 ;; You have to set 'GH-PROJECT' property
