@@ -1798,7 +1798,7 @@ go up multiple parent directories."
          ("C-x M" . dakra-eshell-always)
          ;;:map eshell-mode-map
          ;;("M-P" . eshell-previous-prompt)
-         ;;("C-d" . ha/eshell-quit-or-delete-char)
+         ;;("C-d" . dakra-eshell-quit-or-delete-char)
          ;;("M-N" . eshell-next-prompt)
          ;;("M-R" . eshell-list-history)
          ;;("M-r" . dakra-eshell-read-history)
@@ -1858,17 +1858,18 @@ go up multiple parent directories."
   ;; Used to C-d exiting from a shell? Want it to keep working, but still allow deleting a character?
   ;; We can have it both
   (require 'em-prompt)
-  (defun ha/eshell-quit-or-delete-char (arg)
+  (defun dakra-eshell-quit-or-delete-char (arg)
     (interactive "p")
     (if (and (eolp) (looking-back eshell-prompt-regexp nil))
         (progn
           (eshell-life-is-too-much) ; Why not? (eshell/exit)
           (ignore-errors
-            (progn
-              ;; Remove frame if eshell is only window (otherwise just close window)
-              (if (one-window-p)
-                  (delete-frame)
-                (delete-window)))))
+            (when (= arg 4)  ; With prefix argument, also remove eshell frame/window
+              (progn
+                ;; Remove frame if eshell is only window (otherwise just close window)
+                (if (one-window-p)
+                    (delete-frame)
+                  (delete-window))))))
       (delete-char arg)))
 
   ;; Fixme eshell-mode-map maps to global keybindings? Check "C-d"
@@ -1878,7 +1879,7 @@ go up multiple parent directories."
                                 (local-set-key (kbd "M-N") 'eshell-next-prompt)
                                 (local-set-key (kbd "M-R") 'eshell-list-history)
                                 (local-set-key (kbd "M-r") 'dakra-eshell-read-history)
-                                (local-set-key (kbd "C-d") 'ha/eshell-quit-or-delete-char)
+                                (local-set-key (kbd "C-d") 'dakra-eshell-quit-or-delete-char)
                                 ;; Use helm as completion menu
                                 ;;(local-set-key [remap eshell-pcomplete] 'helm-esh-pcomplete)
                                 ;; or ivy
