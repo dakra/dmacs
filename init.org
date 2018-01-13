@@ -6893,13 +6893,19 @@ FIXME: Add modeline support and package this
       (tea-timer-cancel)
       (setq tea-timer-timer nil)))
   (if tea-timer-timer
+      (tea-timer-display-remaining-time)
+    (message "Setting tea timer to %s seconds." (or duration tea-timer-default-duration))
+    (setq tea-timer-timer
+          (run-at-time (or duration tea-timer-default-duration) nil 'tea-timer-tea-ready))))
+(defun tea-timer-display-remaining-time ()
+  "Displays remaining time in the Minibuffer."
+  (interactive)
+  (if tea-timer-timer
       (let* ((remaining-time (decode-time (time-subtract (timer--time tea-timer-timer) (current-time)) t))
              (minutes (nth 1 remaining-time))
              (seconds (nth 0 remaining-time)))
         (message "%s minutes and %s seconds left" minutes seconds))
-    (message "Setting tea timer to %s seconds." (or duration tea-timer-default-duration))
-    (setq tea-timer-timer
-          (run-at-time (or duration tea-timer-default-duration) nil 'tea-timer-tea-ready))))
+    (message "No tea timer active")))
 (defun tea-timer-cancel ()
   "Cancel running tea timer"
   (interactive)
