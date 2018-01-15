@@ -6843,6 +6843,12 @@ It only works for frames with exactly two windows."
 #+END_SRC
 
 * Misc
+** Nov: Read EPUBs
+#+begin_src emacs-lisp
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
+#+end_src
+** Pocket reader
 #+BEGIN_SRC emacs-lisp
 ;; Read and manage your pocket (getpocket.com) list
 (use-package pocket-reader
@@ -6854,7 +6860,7 @@ It only works for frames with exactly two windows."
   :after (pocket-reader org)
   :config (setq org-pocket-capture-file "org/pocket.org"))
 #+END_SRC
-
+** Eww
 #+BEGIN_SRC emacs-lisp
 ;; Use 'C-c S' or 'M-s M-w' for 'eww-search-words' current region
 ;;(define-key prelude-mode-map (kbd "C-c S") nil)  ; remove default crux find-shell-init keybinding
@@ -6868,6 +6874,7 @@ It only works for frames with exactly two windows."
   :defer t
   :config (setq eww-search-prefix "https://google.com/search?q="))
 #+END_SRC
+** Wolfram alpha
 #+BEGIN_SRC emacs-lisp
 ;; wolfram alpha queries (M-x wolfram-alpha)
 (use-package wolfram

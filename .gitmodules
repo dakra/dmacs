@@ -201,6 +201,9 @@
 [submodule "esup"]
 	path = lib/esup
 	url = git@github.com:jschaf/esup.git
+[submodule "esxml"]
+	path = lib/esxml
+	url = git@github.com:tali713/esxml.git
 [submodule "expand-region"]
 	path = lib/expand-region
 	url = git@github.com:magnars/expand-region.el.git
@@ -430,6 +433,9 @@
 [submodule "noflet"]
 	path = lib/noflet
 	url = git@github.com:nicferrier/emacs-noflet.git
+[submodule "nov"]
+	path = lib/nov
+	url = git@github.com:wasamasa/nov.el.git
 [submodule "ob-ipython"]
 	path = lib/ob-ipython
 	url = git@github.com:gregsexton/ob-ipython.git
