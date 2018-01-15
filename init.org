@@ -4017,12 +4017,8 @@ displayed anywhere else."
   ;;  (org-clock-load))
   (add-hook 'org-mode-hook
             (lambda ()
-              ;; use utf-8 characters instead of `*` as bullet points
-              (org-bullets-mode 1)
               ;; Automatic line-wrapping in org-mode
-              (auto-fill-mode 1)
-              ;; Indent text according to outline structure.
-              (org-indent-mode 1)
+              ;;(auto-fill-mode 1)
 
               (setq completion-at-point-functions
                     '(org-completion-symbols
@@ -4158,6 +4154,96 @@ prepended to the element after the #+HEADERS: tag."
       ("r" jk/unlinkify "remove link")
       ("q" nil "cancel" :color blue)))
   )
+#+END_SRC
+*** Org Packages
+**** Org-indent: Indent text according to outline structure.
+#+BEGIN_SRC emacs-lisp
+(use-package org-indent
+  :hook (org-mode . org-indent-mode))
+#+END_SRC
+**** Org-bullets: Use utf-8 characters instead of `*` as bullet points
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode))
+#+END_SRC
+**** Org-crypt: Encrypt parts in org file tagged with ~CRYPT~
+#+BEGIN_SRC emacs-lisp
+(use-package org-crypt
+  :config
+  ;; Encrypt all entries before saving
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
+  ;; GPG key to use for encryption
+  (setq org-crypt-key "C1C8D63F884EF9C9")
+  ;; don't ask to disable auto-save
+  (setq org-crypt-disable-auto-save nil))
+#+END_SRC
+**** Org-export
+#+BEGIN_SRC emacs-lisp
+(use-package ox
+  :commands org-formatted-copy
+  ;;:bind ("C-c e" . org-formatted-copy)
+  :config
+  ;; copy org text as rich text
+  (defun org-formatted-copy ()
+    "Export region to HTML, and copy it to the clipboard."
+    (interactive)
+    (save-window-excursion
+      (let* ((buf (org-export-to-buffer 'html "*Formatted Copy*" nil nil t t))
+             (html (with-current-buffer buf (buffer-string))))
+        (with-current-buffer buf
+          (shell-command-on-region
+           (point-min)
+           (point-max)
+           "xclip -selection clipboard -t 'text/html' -i"))
+        (kill-buffer buf)))))
+
+;; Export blog posts to hugo
+(use-package ox-hugo
+  :after ox)
+
+;; For jira export (then copy&paste to ticket)
+(use-package ox-jira
+  :after ox)
+
+;; For github markdown
+(use-package ox-gfm
+  :after ox)
+#+END_SRC
+**** Org-habit: Track habits
+#+BEGIN_SRC emacs-lisp
+(use-package org-habit
+  :after org)
+#+END_SRC
+**** Org-man: Make org-links work with man pages
+#+BEGIN_SRC emacs-lisp
+(use-package org-man
+  :after org
+  :config
+  (setq org-man-command 'woman))  ; open org-link man pages with woman
+#+END_SRC
+**** Org-expiry: Automatically add a CREATED property when inserting a new headline
+#+BEGIN_SRC emacs-lisp
+(use-package org-expiry
+  :after org
+  :config
+  (setq org-expiry-inactive-timestamps t)
+  (org-expiry-insinuate))
+#+END_SRC
+**** Org-id: Create ID property with new task
+#+BEGIN_SRC emacs-lisp
+(use-package org-id
+  :after org
+  :config (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
+#+END_SRC
+**** Org-jira: Sync issues with Jira
+#+BEGIN_SRC emacs-lisp
+(use-package org-jira
+  :config
+  (setq jiralib-url "https://jira.paesslergmbh.de")
+  ;; Don't sync anything back to jira
+  (setq org-jira-deadline-duedate-sync-p nil)
+  (setq org-jira-worklog-sync-p nil))
 #+END_SRC
 ** bh.el TODO: remove???
 #+BEGIN_SRC emacs-lisp  :tangle yes
@@ -5054,43 +5140,12 @@ Late deadlines first, then scheduled, then non-late deadlines"
 #+END_SRC
 ** Rest dakra-org.el
 #+BEGIN_SRC emacs-lisp  :tangle yes
-;; track habits
-(use-package org-habit
-  :after org)
-
-(use-package org-man  ; make org-links work with man pages
-  :after org
-  :config
-  (setq org-man-command 'woman))  ; open org-link man pages with woman
-
-;; org export
-
-;; Export blog posts to hugo
-(use-package ox-hugo
-  :after ox)
-
-;; for jira export (then copy&paste to ticket)
-(use-package ox-jira
-  :after ox)
-
-;; for github markdown
-(use-package ox-gfm
-  :after ox)
-
-
-;; Automatically add a CREATED property when inserting a new headline
-(use-package org-expiry
-  :after org
-  :config
-  (setq org-expiry-inactive-timestamps t)
-  (org-expiry-insinuate))
-
 ;;(setq org-list-indent-offset 1)
 
 ;; Show headings up to level 2 by default when opening an org files
 (setq org-startup-folded 'content)
 ;; overwrite org function to only show 'org-content' of level 2
-(defun org-set-startup-visibility ()
+(defun XXX-org-set-startup-visibility ()
   "Set the visibility required by startup options and properties."
   (cond
    ((eq org-startup-folded t)
@@ -5167,13 +5222,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 ;;    (funcall orig)))
 ;;(advice-add 'package-menu--find-upgrades :around #'package-menu--remove-excluded-packages)
 
-(use-package org-jira
-  :config
-  (setq jiralib-url "https://jira.paesslergmbh.de")
-  ;; Don't sync anything back to jira
-  (setq org-jira-deadline-duedate-sync-p nil)
-  (setq org-jira-worklog-sync-p nil))
-
 ;; Enter key follows links (= C-c C-o)
 (setq org-return-follows-link t)
 
@@ -5227,10 +5275,6 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
 (setq org-refile-use-outline-path 'file)  ; Show filename for refiling
 (setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-
-(use-package org-id
-  :after org
-  :config (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 
 (use-package org-protocol :after org)
 ;; org-capture chrome plugin: https://chrome.google.com/webstore/detail/org-capture/kkkjlfejijcjgjllecmnejhogpbcigdc?hl=en
@@ -5515,26 +5559,11 @@ Late deadlines first, then scheduled, then non-late deadlines"
 (setq org-show-hierarchy-above t)
 (setq org-show-siblings (quote ((default))))
 
-(use-package org-crypt
-  :config
-  ;; Encrypt all entries before saving
-  (org-crypt-use-before-save-magic)
-  (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-  ;; GPG key to use for encryption
-  (setq org-crypt-key "C1C8D63F884EF9C9")
-  ;; don't ask to disable auto-save
-  (setq org-crypt-disable-auto-save nil))
-
-
 ;; don't show * / = etc
 (setq org-hide-emphasis-markers t)
 
 ;; leave highlights in sparse tree after edit. C-c C-c removes highlights
 (setq org-remove-highlights-with-change nil)
-
-(use-package org-bullets
-  :commands org-bullets-mode)
-
 
 (use-package org-pomodoro
   :commands (org-pomodoro org-pomodoro-active-p)
@@ -5681,21 +5710,6 @@ This function is called by `org-babel-execute-src-block'."
                    (->> result (assoc 'image/svg+xml) cdr (ob-ipython--write-string-to-file file)))
                   (file (error "%s is currently an unsupported file extension." (f-ext file)))
                   (t (->> result (assoc 'text/plain) cdr)))))))))
-
-;; copy org text as rich text
-(defun org-formatted-copy ()
-  "Export region to HTML, and copy it to the clipboard."
-  (interactive)
-  (save-window-excursion
-    (let* ((buf (org-export-to-buffer 'html "*Formatted Copy*" nil nil t t))
-           (html (with-current-buffer buf (buffer-string))))
-      (with-current-buffer buf
-        (shell-command-on-region
-         (point-min)
-         (point-max)
-         "xclip -selection clipboard -t 'text/html' -i"))
-      (kill-buffer buf))))
-;;(global-set-key (kbd "C-c e") 'org-formatted-copy)
 
 ;; Tab should do indent in code blocks
 (setq org-src-tab-acts-natively t)
