@@ -1555,6 +1555,9 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
 
   ;; Extend searching to bookmarks and recentf
   (setq ivy-use-virtual-buffers t)
+  ;; Show full path for virtual buffers
+  (setq ivy-virtual-abbreviate 'full)
+
   ;; Display count displayed and total
   (setq ivy-count-format "%d/%d ")
   (setq ivy-height 18)
@@ -1582,8 +1585,9 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   :config
   (ivy-set-display-transformer 'ivy-switch-buffer
                                'ivy-rich-switch-buffer-transformer)
-  (setq ivy-virtual-abbreviate 'full
-        ivy-rich-switch-buffer-align-virtual-buffer t
+  ;; Show only basic info for tramp buffers to make it faster
+  (setq ivy-rich-parse-remote-buffer nil)
+  (setq ivy-rich-switch-buffer-align-virtual-buffer t
         ivy-rich-path-style 'abbrev))
 #+END_SRC
 ** Swiper: Search with ivy
