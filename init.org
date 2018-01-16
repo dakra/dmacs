@@ -1509,7 +1509,7 @@ split via i3 and create a new Emacs frame."
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :diminish
-  :bind (("C-x b"   . ivy-switch-buffer)
+  :bind (("C-x b"   . dakra-ivy-switch-buffer)
          ("C-x B"   . ivy-switch-buffer-other-window)
          ("C-c C-r" . ivy-resume)
          ("M-H"     . ivy-resume)
@@ -1519,6 +1519,40 @@ split via i3 and create a new Emacs frame."
          ("C-r" . ivy-previous-line-or-history)
          ("M-r" . ivy-reverse-i-search))
   :config
+  (defun ivy-ignore-exwm-buffers (str)
+    (let ((buf (get-buffer str)))
+      (when buf
+        (with-current-buffer buf
+          (eq major-mode 'exwm-mode)))))
+
+  (defun ivy-ignore-non-exwm-buffers (str)
+    (let ((buf (get-buffer str)))
+      (if buf
+          (with-current-buffer buf
+            (not (eq major-mode 'exwm-mode)))
+        t)))
+
+  (defun ivy-switch-buffer-exwm ()
+    "Like ivy-switch-buffer but only shows EXWM buffers."
+    (interactive)
+    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-non-exwm-buffers))))
+      (ivy-switch-buffer)))
+
+  (defun ivy-switch-buffer-non-exwm ()
+    "Like ivy-switch-buffer but hides all EXWM buffers."
+    (interactive)
+    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-exwm-buffers))))
+      (ivy-switch-buffer)))
+
+  (defun dakra-ivy-switch-buffer (p)
+    "Like ivy-switch-buffer but by defaults hides all EXWM buffers.
+With one prefix arg, show only EXWM buffers. With two, show all buffers."
+    (interactive "p")
+    (case p
+      (1 (ivy-switch-buffer-non-exwm))
+      (4 (ivy-switch-buffer-exwm))
+      (16 (ivy-switch-buffer))))
+
   ;; Extend searching to bookmarks and recentf
   (setq ivy-use-virtual-buffers t)
   ;; Display count displayed and total
