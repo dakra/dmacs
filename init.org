@@ -2182,65 +2182,6 @@ file to edit."
   (setq magit-wip-after-apply-mode-lighter "")
   (setq magit-wip-after-save-local-mode-lighter ""))
 
-(use-package ghub+
-  :commands dakra-github-issue-to-org
-  :config
-  ;; FIXME:
-  ;; - Set more properties in org properties drawer
-  ;; - Make comments "nicer"
-  ;; - Always insert TODO even when on NEXT header
-  ;; - Make package?
-  ;; ...
-  (setq org-github-default-owner "atomx")
-  (setq org-github-default-name "api")
-
-  (defun org-github-repo-info ()
-    "Get github repo info from org properties."
-    (let* ((org-properties (org-entry-properties))
-           (owner (or (cdr (assoc-string "GITHUB-OWNER" org-properties)) org-github-default-owner))
-           (name (or (cdr (assoc-string "GITHUB-NAME" org-properties)) org-github-default-name)))
-      `((owner (login . ,owner))
-        (name . ,name))))
-
-  (defun org-github-issue-to-org (issue-number)
-    (interactive "NGithub issue number:")
-    (let* ((start-point)
-           (issue (ghubp-get-repos-owner-repo-issues-number
-                   (org-github-repo-info) `((number . ,issue-number))))
-           (title (cdr (assoc 'title issue)))
-           (url (cdr (assoc 'url issue)))
-           (body (cdr (assoc 'body issue)))
-           (repo-name (cdadr (assoc 'owner dakra-github-repo)))
-           (comments (when (cdr (assoc 'comments issue))
-                       (ghubp-get-repos-owner-repo-issues-number-comments
-                        dakra-github-repo `((number . ,issue-number))))))
-      (org-insert-todo-heading-respect-content)
-      (insert title)
-      (org-set-tags-to (format ":%s_%s:" (upcase repo-name) issue-number))
-      (org-set-tags-command t t)  ; realign tags
-      (forward-line 3)  ; Move 3 lines down to the last PROPERTIES drawer line
-      (move-end-of-line 1)
-      (insert (format "\n[[%s][%s]]\n"
-                      url (format "#%s: %s" issue-number title)))
-      (setq start-point (point))
-      (insert body)
-      (shell-command-on-region start-point (point) "pandoc -f gfm -t org" :replace t)
-      (org-indent-refresh-maybe (point) (mark) nil)
-      (when comments
-        (org-insert-todo-heading-respect-content)
-        (insert "Comments\n")
-        (org-do-demote)
-        (setq start-point (point))
-        (dolist (comment comments)
-          (let* ((author (cdr (assoc 'login (cdr (assoc 'user comment)))))
-                 (updated_at (cdr (assoc 'updated_at comment)))
-                 (body (cdr (assoc 'body comment))))
-            (insert (format "- *Comment from %s on %s*\n\n" author updated_at))
-            (insert body)
-            (insert "\n\n")))
-        (shell-command-on-region start-point (point) "pandoc -f gfm -t org" :replace t)
-        (org-indent-refresh-maybe (point) (mark) nil)))))
-
 (use-package magithub
   :disabled t
   :after magit
@@ -4292,6 +4233,14 @@ prepended to the element after the #+HEADERS: tag."
   (setq org-jira-deadline-duedate-sync-p nil)
   (setq org-jira-worklog-sync-p nil))
 #+END_SRC
+**** Org-github: Sync issues with GitHub
+#+begin_src emacs-lisp
+(use-package org-github
+  :defer t
+  :config
+  (setq org-github-default-owner "atomx")
+  (setq org-github-default-name "api"))
+#+end_src
 ** bh.el TODO: remove???
 #+BEGIN_SRC emacs-lisp  :tangle yes
 ;;; Commentary:
