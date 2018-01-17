@@ -2185,19 +2185,27 @@ file to edit."
   :commands dakra-github-issue-to-org
   :config
   ;; FIXME:
-  ;; - Get gh user/project from org filename/header? or properties?
   ;; - Set more properties in org properties drawer
   ;; - Make comments "nicer"
   ;; - Always insert TODO even when on NEXT header
   ;; - Make package?
   ;; ...
-  (setq dakra-github-repo '((owner (login . "atomx"))
-                            (name . "api")))
-  (defun dakra-github-issue-to-org (issue-number)
+  (setq org-github-default-owner "atomx")
+  (setq org-github-default-name "api")
+
+  (defun org-github-repo-info ()
+    "Get github repo info from org properties."
+    (let* ((org-properties (org-entry-properties))
+           (owner (or (cdr (assoc-string "GITHUB-OWNER" org-properties)) org-github-default-owner))
+           (name (or (cdr (assoc-string "GITHUB-NAME" org-properties)) org-github-default-name)))
+      `((owner (login . ,owner))
+        (name . ,name))))
+
+  (defun org-github-issue-to-org (issue-number)
     (interactive "NGithub issue number:")
     (let* ((start-point)
            (issue (ghubp-get-repos-owner-repo-issues-number
-                   dakra-github-repo `((number . ,issue-number))))
+                   (org-github-repo-info) `((number . ,issue-number))))
            (title (cdr (assoc 'title issue)))
            (url (cdr (assoc 'url issue)))
            (body (cdr (assoc 'body issue)))
