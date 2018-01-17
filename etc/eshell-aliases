@@ -1,9 +1,11 @@
 alias gds magit-diff-staged
 alias gd magit-diff-unstaged
 alias ee find-file $1
+alias vim find-file $1
 alias emacs find-file $1
 alias e find-file-other-window $1
 alias up eshell-up $1
 alias pk eshell-up-peek $1
 alias la ls -al
-alias l ls -al
+alias l ls -l
+alias ll ls -al
