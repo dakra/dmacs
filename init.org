@@ -6932,7 +6932,7 @@ It only works for frames with exactly two windows."
 FIXME: Add modeline support and package this
 #+begin_src emacs-lisp
 (require 'alert)
-(setq tea-timer-default-duration 120)
+(setq tea-timer-default-duration 2.5)
 (setq tea-timer-message "Tea ready!")
 (setq tea-timer-timer nil)
 (defun tea-timer-tea-ready ()
@@ -6948,9 +6948,9 @@ FIXME: Add modeline support and package this
       (setq tea-timer-timer nil)))
   (if tea-timer-timer
       (tea-timer-display-remaining-time)
-    (message "Setting tea timer to %s seconds." (or duration tea-timer-default-duration))
+    (message "Setting tea timer to %s minutes." (or duration tea-timer-default-duration))
     (setq tea-timer-timer
-          (run-at-time (or duration tea-timer-default-duration) nil 'tea-timer-tea-ready))))
+          (run-at-time (* 60 (or duration tea-timer-default-duration)) nil 'tea-timer-tea-ready))))
 (defun tea-timer-display-remaining-time ()
   "Displays remaining time in the Minibuffer."
   (interactive)
