@@ -1854,7 +1854,7 @@ go up multiple parent directories."
                 eshell-prefer-lisp-functions nil)
 
   ;; Increase eshell history size from default of only 128
-  (setq eshell-history-size 2048)
+  (setq eshell-history-size 8192)
 
   (defun dakra-eshell-read-history ()
     (interactive)
