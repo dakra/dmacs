@@ -797,6 +797,7 @@ Move current line or region with M-up or M-down.
   :init
   ;; Allow all file-local values for project root
   (put 'projectile-project-root 'safe-local-variable 'stringp)
+  (put 'projectile-project-type 'safe-local-variable 'stringp)
   :config
   (add-to-list 'projectile-other-file-alist '("py" "sql" "py"))
   (add-to-list 'projectile-other-file-alist '("sql" "py"))
