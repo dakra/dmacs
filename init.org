@@ -2126,6 +2126,8 @@ file to edit."
   :defines (magit-ediff-dwim-show-on-hunks)
   :commands (magit-status magit-list-repositories magit-log magit-log-buffer-file magit-list-submodules)
   :config
+  (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
+
   (setq magit-repository-directories
         '(("~/atomx" . 5)
           ("~/e5" . 5)
@@ -2148,6 +2150,19 @@ file to edit."
                           'magit-insert-modules
                           'magit-insert-stashes
                           'append)
+
+  ;; Disable safety nets
+  (setq magit-commit-squash-confirm nil)
+  (setq magit-save-repository-buffers 'dontask)
+  (setf (nth 2 (assq 'magit-stash-pop  magit-dwim-selection)) t)
+  (setf (nth 2 (assq 'magit-stash-drop magit-dwim-selection)) t)
+  ;;(add-to-list 'magit-no-confirm 'safe-with-wip t)
+  (add-to-list 'magit-no-confirm 'rename t)
+  (add-to-list 'magit-no-confirm 'resurrect t)
+  (add-to-list 'magit-no-confirm 'trash t)
+
+  ;; Set remote.pushDefault
+  (setq magit-push-current-set-remote-if-missing 'default)
 
   ;; Show color and graph in magit-log. Since color makes it a bit slow, only show the last 128 commits
   (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n128"))
@@ -2173,15 +2188,12 @@ file to edit."
     ?R "Rockstar" 'magit-rockstar))
 
 (use-package magit-wip
-  :disabled t
   :after magit
   :config
   (magit-wip-before-change-mode)
   (magit-wip-after-apply-mode)
   (magit-wip-after-save-mode)
-  (setq magit-wip-before-change-mode-lighter "")
-  (setq magit-wip-after-apply-mode-lighter "")
-  (setq magit-wip-after-save-local-mode-lighter ""))
+  :diminish (magit-wip-before-change-mode magit-wip-after-apply-mode magit-wip-after-save-mode))
 
 (use-package magithub
   :disabled t
