@@ -213,6 +213,9 @@ Let's set some variables with basic user information.
 ;; Newline at end of file
 (setq require-final-newline t)
 
+;; Default to utf-8 unix encoding
+(prefer-coding-system 'utf-8-unix)
+
 ;; delete the selection with a keypress
 (delete-selection-mode t)
 
