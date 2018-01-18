@@ -140,6 +140,8 @@ We use borg for package management and disable ~package.el~.
   :config
   ;; Put custom.el in no-littering etc folder
   (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+  ;; Treat all themes as safe
+  (setf custom-safe-themes t)
   (when (file-exists-p custom-file)
     (load custom-file)))
 #+END_SRC
@@ -152,8 +154,10 @@ We use borg for package management and disable ~package.el~.
 (use-package smart-mode-line-powerline-theme :after powerline)
 (use-package smart-mode-line :after smart-mode-line-powerline-theme
   ;;:demand t
-  :init (setq sml/theme 'powerline)
-  :custom (sml/name-width '(12 . 42) "Smaller min-width for buffer names")
+  :init
+  (setq sml/theme 'powerline)
+  ;; Smaller min-width for buffer names
+  (setq sml/name-width '(12 . 42))
   :config
   (setq sml/no-confirm-load-theme t)
   (sml/setup))
@@ -351,7 +355,9 @@ Allow some commands as safe by default
 #+BEGIN_SRC emacs-lisp
 (use-package comint
   :defer t
-  :custom (comint-buffer-maximum-size 5000 "Increase comint buffer size."))
+  :config
+  ;; Increase comint buffer size.
+  (setq comint-buffer-maximum-size 8192))
 #+END_SRC
 
 #+begin_src emacs-lisp
