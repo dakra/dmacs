@@ -2222,17 +2222,15 @@ file to edit."
   :bind (("C-c G" . dakra-browse-at-remote))
   :config
   (defun dakra-browse-at-remote (p)
-    "Like (browse-at-remote) but when called will also copy the url
-in the kill ring and when called with one prefix argument
-copy the url in the kill ring instead of opening in the brower
-and when called with 2 prefix arguments only open in browser."
-    (interactive "P*")
-    (if (eq (car p) 4)
-        (browse-at-remote-kill)
-      (if (eq (car p) 16)
-          (browse-at-remote)
-        (browse-at-remote-kill)
-        (browse-at-remote))))
+    "Like browse-at-remote but will also copy the url in the kill ring.
+When called with one prefix argument only copy the url in the kill ring
+and don't open in the brower.
+When called with 2 prefix arguments only open in browser and don't copy."
+    (interactive "p")
+    (case p
+      (4  (browse-at-remote-kill))
+      (16 (browse-at-remote))
+      (t  (browse-at-remote-kill) (browse-at-remote))))
 
   (add-to-list 'browse-at-remote-remote-type-domains '("gitlab.bis" . "gitlab"))
   (add-to-list 'browse-at-remote-remote-type-domains '("gitlab.paesslergmbh.de" . "gitlab"))
