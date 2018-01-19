@@ -2949,6 +2949,9 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 ** Typescript
 #+BEGIN_SRC emacs-lisp
 ;; TypeScript
+(use-package typescript-mode
+  :mode "\\.ts\\'")
+
 (use-package tide
   :commands (setup-tide-mode tide-mode company-tide)
   ;; https://github.com/ananthakumaran/tide#javascript
