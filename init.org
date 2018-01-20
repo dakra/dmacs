@@ -1191,6 +1191,9 @@ split via i3 and create a new Emacs frame."
          :map dired-mode-map
          ("e" . dired-ediff-files))
   :config
+  ;; When point is on a file name only search file names
+  (setq dired-isearch-filenames 'dwim)
+
   ;; dired - reuse current buffer by pressing 'a'
   (put 'dired-find-alternate-file 'disabled nil)
 
