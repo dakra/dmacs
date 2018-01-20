@@ -2464,8 +2464,10 @@ When called with 2 prefix arguments only open in browser and don't copy."
 
 (use-package python-test
   :defer t
-  :init (setq python-test-backend 'pytest)
   :config
+  ;; Set default test backend to pytest
+  (setq python-test-backend 'pytest)
+
   ;; Django stuff
   (defun python-django-get-manage.py ()
     (format "%smanage.py"
