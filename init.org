@@ -3450,17 +3450,15 @@ $ sbcl
   :mode ("CMakeLists.txt" "\\.cmake\\'"))
 
 (use-package irony
-  :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-  :config
-  (use-package company-irony
-    :after company
-    :config (add-to-list 'company-backends 'company-irony))
-  (use-package irony-eldoc
-    :init (add-hook 'irony-mode-hook 'irony-eldoc)))
+  :hook (((c++-mode c-mode objc-mode) . irony-mode)
+         (irony-mode . irony-cdb-autosetup-compile-options)))
+
+(use-package company-irony
+  :after irony
+  :config (add-to-list 'company-backends 'company-irony))
+
+(use-package irony-eldoc
+  :hook (irony-mode))
 #+END_SRC
 ** Ruby
 #+BEGIN_SRC emacs-lisp
