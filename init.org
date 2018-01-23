@@ -6844,6 +6844,11 @@ It only works for frames with exactly two windows."
 #+END_SRC
 
 * Misc
+** Info-beamer
+#+begin_src emacs-lisp
+(use-package info-beamer
+  :defer t)
+#+end_src
 ** Nov: Read EPUBs
 #+begin_src emacs-lisp
 (use-package nov

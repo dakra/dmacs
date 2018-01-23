@@ -312,6 +312,9 @@
 [submodule "indium"]
 	path = lib/indium
 	url = git@github.com:NicolasPetton/Indium.git
+[submodule "info-beamer"]
+	path = lib/info-beamer
+	url = git@github.com:dakra/info-beamer.el.git
 [submodule "irony"]
 	path = lib/irony
 	url = git@github.com:Sarcasm/irony-mode.git
