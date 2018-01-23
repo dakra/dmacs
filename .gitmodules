@@ -78,6 +78,9 @@
 [submodule "company-irony"]
 	path = lib/company-irony
 	url = git@github.com:Sarcasm/company-irony.git
+[submodule "company-lua"]
+	path = lib/company-lua
+	url = git@github.com:ptrv/company-lua.git
 [submodule "company-restclient"]
 	path = lib/company-restclient
 	url = git@github.com:iquiw/company-restclient.git
