@@ -485,6 +485,9 @@
 [submodule "orgit"]
 	path = lib/orgit
 	url = git@github.com:magit/orgit.git
+[submodule "osc"]
+	path = lib/osc
+	url = git@github.com:emacsmirror/osc.git
 [submodule "outline-magic"]
 	path = lib/outline-magic
 	url = git@github.com:emacsattic/outline-magic.git
