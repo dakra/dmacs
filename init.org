@@ -2342,11 +2342,18 @@ When called with 2 prefix arguments only open in browser and don't copy."
          ("\\.xsh\\'" . python-mode))  ; Xonsh script files
   :interpreter ("python" . python-mode)
   :bind (:map python-mode-map
+         ("C-x C-e" . python-shell-send-whole-line-or-region)
          ("C-c C-p" . hydra-python/body)
          ("C-c C-t" . hydra-python/body)
          )
   :hook (python-mode . python-flat-imenu-index)
   :config
+  (defun python-shell-send-whole-line-or-region ()
+    "Send whole line or region to inferior Python process."
+    (interactive)
+    (whole-line-or-region-call-with-region 'python-shell-send-region)
+    (deactivate-mark))
+
   (defhydra hydra-python-test (python-mode-map "C-c C-t" :color blue)
     "Run Python Tests"
     ("f" python-test-function "Function")
@@ -2364,7 +2371,8 @@ When called with 2 prefix arguments only open in browser and don't copy."
   (defun python-run-server ()
     "Start pyramid pserve or django runserver."
     (interactive)
-    (if (pyramid-project-root) (pyramid-serve t)
+    (if (pyramid-project-root)
+        (pyramid-serve t)
       (python-django-manage-runserver)))
 
   (defhydra hydra-python (python-mode-map "C-c C-p" :color blue :hint nil)
