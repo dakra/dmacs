@@ -6384,7 +6384,7 @@ there are no attachments."
 
 ;; for org capture
 (use-package org-mu4e
-  :after mu4e
+  :defer t
   :config
   ;; when mail is sent, automatically convert org body to HTML
   (setq-default org-mu4e-convert-to-html t)
@@ -6418,7 +6418,8 @@ there are no attachments."
                                   :with-toc nil)))
 
 ;; Auto sign mails
-(add-hook 'mu4e-compose-mode-hook 'mml-secure-message-sign-pgpmime)
+(use-package mml-sec
+  :hook (mu4e-compose-mode . mml-secure-message-sign-pgpmime))
 ;; Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 
 ;; use helm-mu for search
