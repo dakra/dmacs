@@ -1769,14 +1769,17 @@ go up multiple parent directories."
     ("w" whitespace-mode "whitespace-mode"))
 
   (defhydra hydra-launcher (:color blue :hint nil)
-    "Start different programms."
+    "Start different programs."
+    ("b" brain-fm-play "brain.fm - Stream music")
     ("c" quick-calc "calc - Quick calc")
+    ("C" calendar "calendar")
     ("e" elisp-index-search "elisp-index-search")
     ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
     ("m" mu4e "mu4e - Mail")
     ("p" proced "proced")
     ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
     ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" )
+    ("T" display-time-world "time - Display world time")
     ("w" woman "woman - Man page viewer")
     ("z" zone "Zone - Screensaver"))
 
