@@ -1734,7 +1734,8 @@ go up multiple parent directories."
 (use-package hydra
   :bind (("C-c S" . hydra-scratchpad/body)
          ("C-x t" . hydra-toggle-stuff/body)
-         ("C-x 9" . hydra-unicode/body))
+         ("C-x 9" . hydra-unicode/body)
+         ("C-x l" . hydra-launcher/body))
   :config
   (defhydra hydra-scratchpad (:hint nil)
     "
@@ -1766,6 +1767,18 @@ go up multiple parent directories."
     ("op" org-toggle-pretty-entities "org pretty-entities")
     ("oi" org-toggle-inline-images "org inline-images")
     ("w" whitespace-mode "whitespace-mode"))
+
+  (defhydra hydra-launcher (:color blue :hint nil)
+    "Start different programms."
+    ("c" quick-calc "calc - Quick calc")
+    ("e" elisp-index-search "elisp-index-search")
+    ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
+    ("m" mu4e "mu4e - Mail")
+    ("p" proced "proced")
+    ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
+    ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" )
+    ("w" woman "woman - Man page viewer")
+    ("z" zone "Zone - Screensaver"))
 
   (defun dakra/insert-unicode (unicode-name)
     "Same as C-x 8 enter UNICODE-NAME."
