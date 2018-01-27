@@ -531,6 +531,33 @@ different face
   (setq whitespace-line-column nil)
   :diminish whitespace-mode)
 #+END_SRC
+** Zone: Emacs screen saver
+#+begin_src emacs-lisp
+(use-package zone
+  :defer t
+  :config
+  (defvar zone--window-config nil
+    "Window configuration before running `zone'.")
+
+  ;; Zone advice idea from `zone-matrix' package
+  (defadvice zone (before zone-ad-clean-ui)
+    "Maximize window before `zone' starts."
+    (setq zone--window-config (current-window-configuration))
+    (delete-other-windows))
+  (defadvice zone (after zone-ad-restore-ui)
+    "Restore window configuration."
+    (when zone--window-config
+      (set-window-configuration zone--window-config)
+      (setq zone--window-config nil)))
+  (ad-activate 'zone))
+
+(use-package zone-matrix
+  :disabled t  ; Too slow on big screens
+  :defer t
+  :config
+  (setq zone-programs (vconcat zone-programs [zone-matrix]))
+  (setq zmx-unicode-mode t))
+#+end_src
 * Editor
 #+BEGIN_SRC emacs-lisp
 (use-package hippie-exp
