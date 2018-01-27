@@ -2208,8 +2208,7 @@ file to edit."
   (setq magit-commit-squash-confirm nil)
   (setq magit-save-repository-buffers 'dontask)
   (setf (nth 2 (assq 'magit-stash-pop  magit-dwim-selection)) t)
-  (setf (nth 2 (assq 'magit-stash-drop magit-dwim-selection)) t)
-  ;;(add-to-list 'magit-no-confirm 'safe-with-wip t)
+  ;;(setf (nth 2 (assq 'magit-stash-drop magit-dwim-selection)) t)
   (add-to-list 'magit-no-confirm 'rename t)
   (add-to-list 'magit-no-confirm 'resurrect t)
   (add-to-list 'magit-no-confirm 'trash t)
@@ -2243,6 +2242,15 @@ file to edit."
 (use-package magit-wip
   :after magit
   :config
+  ;; Disable more safety nets that can be reverted with WIP mode
+  (add-to-list 'magit-no-confirm 'safe-with-wip t)
+
+  ;; Access WIP logs from log popup
+  (magit-define-popup-action 'magit-log-popup
+    ?w "Log WIP current" 'magit-wip-log-current)
+  (magit-define-popup-action 'magit-log-popup
+    ?W "Log WIP" 'magit-wip-log)
+
   (magit-wip-before-change-mode)
   (magit-wip-after-apply-mode)
   (magit-wip-after-save-mode)
