@@ -3176,23 +3176,15 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 (use-package octave
   :mode ("\\.m\\'" . octave-mode)
   :interpreter ("octave" . octave-mode)
-  :bind (:map octave-mode-map ("C-x C-e" . octave-send-region-or-line))
+  :bind (:map octave-mode-map
+         ("C-x C-e" . octave-send-region-or-line))
   :config
   (setq octave-block-offset 4)
   (defun octave-send-region-or-line ()
     (interactive)
     (if (region-active-p)
         (octave-send-region (region-beginning) (region-end))
-      (octave-send-line)))
-  (add-hook 'octave-mode-hook
-            (lambda ()
-              (abbrev-mode 1)
-              (auto-fill-mode 1)
-              (show-paren-mode 1)
-              ;;(define-key octave-mode-map (kbd "C-x C-e") 'octave-send-region-or-line)
-              ;;(eldoc-mode 1)
-              (if (eq window-system 'x)
-                  (font-lock-mode 1)))))
+      (octave-send-line))))
 #+END_SRC
 ** Lua
 #+BEGIN_SRC emacs-lisp
