@@ -538,12 +538,13 @@ different face
   :config
   (defvar zone--window-config nil
     "Window configuration before running `zone'.")
-
-  ;; Zone advice idea from `zone-matrix' package
   (defadvice zone (before zone-ad-clean-ui)
     "Maximize window before `zone' starts."
     (setq zone--window-config (current-window-configuration))
-    (delete-other-windows))
+    (delete-other-windows)
+    ;; Lock screen when we're in X and `xtrlock' is installed
+    (when (and (eq window-system 'x) (executable-find "xtrlock"))
+      (start-process "xtrlock" nil "xtrlock")))
   (defadvice zone (after zone-ad-restore-ui)
     "Restore window configuration."
     (when zone--window-config
