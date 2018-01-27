@@ -50,8 +50,7 @@ will result in long GC pauses during normal usage.
 
 #+BEGIN_SRC emacs-lisp
 (eval-and-compile
-  (setq gc-cons-threshold 402653184
-        gc-cons-percentage 0.6))
+  (setq gc-cons-threshold (* 256 1024 1024)))
 #+END_SRC
 
 Disable certain byte compiler warnings to cut down on the noise. This is a
@@ -6982,12 +6981,8 @@ Run ~M-x esup~ to see where the time is spend during emacs startup.
             (message
              "Loading %s...done (%.3fs) [after-init]" user-init-file
              (float-time (time-subtract (current-time)
-                                        before-user-init-time))))
+                                        before-user-init-time)))
+            ;; Let's lower our GC thresholds back down to a sane level.
+            (setq gc-cons-threshold (* 20 1024 1024)))
           t)
 #+end_src
-Let's lower our GC thresholds back down to a sane level.
-
-#+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold 16777216
-      gc-cons-percentage 0.1)
-#+END_SRC
