@@ -141,8 +141,9 @@ We use borg for package management and disable ~package.el~.
   (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
   ;; Treat all themes as safe
   (setf custom-safe-themes t)
-  (when (file-exists-p custom-file)
-    (load custom-file)))
+  ;;(when (file-exists-p custom-file)
+  ;;  (load custom-file))
+)
 #+END_SRC
 
 * Moe theme:
@@ -327,6 +328,7 @@ Allow some commands as safe by default
 ** Savehist: Keep track of minibuffer history
 #+begin_src emacs-lisp
 (use-package savehist
+  :defer 1
   :config
   (setq savehist-additional-variables '(compile-command regexp-search-ring))
   (savehist-mode 1))
@@ -726,6 +728,7 @@ is already narrowed."
 (use-package operate-on-number
   :defer t)
 (use-package smartrep
+  :defer 5
   :config
   (smartrep-define-key global-map "C-c ."
     '(("+" . apply-operation-to-number-at-point)
@@ -890,6 +893,7 @@ Move current line or region with M-up or M-down.
 * Navigation
 #+BEGIN_SRC emacs-lisp
 (use-package bookmark
+  :defer t
   :config (setq bookmark-save-flag 1))
 ;; Nicer mark ring navigation (C-x C-SPC or C-x C-Left/Right)
 (use-package back-button
@@ -914,6 +918,7 @@ Move current line or region with M-up or M-down.
 ** Imenu
 #+BEGIN_SRC emacs-lisp
 (use-package imenu
+  :defer t
   ;;:hook (emacs-lisp-mode . imenu-use-package)
   :config
   ;; Recenter window after imenu jump so cursor doesn't end up on the last line
@@ -933,7 +938,7 @@ Move current line or region with M-up or M-down.
 ** Recentf
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
-  :defer 5
+  :defer 2
   :config
   (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
   (add-to-list 'recentf-exclude no-littering-var-directory)
@@ -2110,6 +2115,7 @@ file to edit."
 (setq vc-git-diff-switches '("--indent-heuristic"))
 
 (use-package ediff
+  :defer t
   :config
   ;; Do everything in one frame
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -2588,6 +2594,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
 
 ;; Automatically sort and format python imports
 (use-package py-isort
+  :defer t
   :config
   ;;(add-hook 'before-save-hook 'py-isort-before-save)
   (setq py-isort-options '("--line-width=100"
@@ -4034,7 +4041,7 @@ displayed anywhere else."
   :bind ("M-SPC" . shrink-whitespace))
 
 (use-package editorconfig
-  :demand t
+  :defer 1
   :config (editorconfig-mode 1)
   :diminish editorconfig-mode)
 
@@ -4851,6 +4858,7 @@ NAME may be nil for unnamed sessions."
 #+begin_src emacs-lisp
 ;;; Clock Setup
 (use-package org-clock
+  :defer t
   :init
   ;; FIXME: remove unused bh functions?
   ;; Capturing task often is <1min and results in empty drawer.
@@ -5033,6 +5041,7 @@ as the default task."
 **** Org-crypt: Encrypt parts in org file tagged with ~CRYPT~
 #+BEGIN_SRC emacs-lisp
 (use-package org-crypt
+  :defer t
   :config
   ;; Encrypt all entries before saving
   (org-crypt-use-before-save-magic)
@@ -5154,7 +5163,7 @@ as the default task."
 **** Org-pomodoro
 #+begin_src emacs-lisp
 (use-package org-pomodoro
-  :commands (org-pomodoro org-pomodoro-active-p)
+  :defer t
   :init
   ;; called with i3status-rs in ~/.config/i3/status.toml with
   ;; command = "emacsclient --eval '(dakra/org-pomodoro-i3-bar-time)' || echo 'Emacs daemon not started'"
@@ -5175,6 +5184,7 @@ as the default task."
 **** Org-jira: Sync issues with Jira
 #+BEGIN_SRC emacs-lisp
 (use-package org-jira
+  :defer t
   :config
   (setq jiralib-url "https://jira.paesslergmbh.de")
   ;; Don't sync anything back to jira
@@ -5922,7 +5932,6 @@ so change the default 'F' binding in the agenda to allow both"
 (use-package org-tempo :after org)
 ;;(add-to-list 'org-structure-template-alist '("sp" "#+BEGIN_SRC python\n?\n#+END_SRC"))
 ;;(add-to-list 'org-structure-template-alist '("si" "#+BEGIN_SRC ipython\n?\n#+END_SRC"))
-
 #+END_SRC
 
 * Email
@@ -6868,6 +6877,7 @@ It only works for frames with exactly two windows."
 ** Brain-fm: Stream music from brain.fm
 #+begin_src emacs-lisp
 (use-package brain-fm
+  :defer t
   :config
   ;; Station 35 is "Focus"
   (setq brain-fm-station-id 35))
