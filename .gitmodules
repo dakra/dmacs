@@ -673,6 +673,9 @@
 [submodule "tablist"]
 	path = lib/tablist
 	url = git@github.com:politza/tablist.git
+[submodule "tea-timer"]
+	path = lib/tea-timer
+	url = git@github.com:dakra/dmacs.git
 [submodule "tide"]
 	path = lib/tide
 	url = git@github.com:ananthakumaran/tide.git
