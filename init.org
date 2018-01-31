@@ -991,8 +991,7 @@ Move current line or region with M-up or M-down.
     (setq del-end-point (line-end-position))
     (delete-region del-start-point del-end-point)
     (insert new-auth-token)
-    (goto-char current-point)
-    ))
+    (goto-char current-point)))
 
 (defun atomx-update-restclient-auth-token ()
   "Update the current buffer with a new api auth-token."
@@ -1007,7 +1006,6 @@ Move current line or region with M-up or M-down.
         current-point
         del-start-point
         auth-token
-        api-buffer
         api-endpoint
         api-url
         api-password
@@ -1023,13 +1021,11 @@ Move current line or region with M-up or M-down.
     (setq atomx-restclient-api-buffer (current-buffer))
     (goto-char current-point)
     (url-retrieve api-url
-                  (lambda (status)
+                  (lambda (_status)
                     (search-forward "\"auth_token\":\"")
                     (setq del-start-point (point))
                     (skip-chars-forward "^\"")
                     (setq auth-token (buffer-substring del-start-point (point)))
-                    ;;(kill-buffer (current-buffer))
-                    ;;(set-buffer api-buffer)
                     (atomx-replace-restclient-auth-token auth-token)))))
 #+END_SRC
 ** Company
@@ -1715,7 +1711,7 @@ go up multiple parent directories."
     (let ((current-prefix-arg)
           (dir (cond
                 ((equal use-current-dir nil) ; no prefix: use project root
-                 (condition-case err
+                 (condition-case _err
                      (projectile-project-root)
                    (error default-directory)))
                 ((equal use-current-dir '(4)) ; C-u: use current dir
@@ -2038,12 +2034,14 @@ file to edit."
       (shell-command-to-string cmd)))
 
   (defun execute-command-on-file-buffer (cmd)
+    "Execute command on current buffer file."
     (interactive "sCommand to execute: ")
     (let* ((file-name (buffer-file-name))
            (full-cmd (concat cmd " " file-name)))
       (shell-command full-cmd)))
 
   (defun execute-command-on-file-directory (cmd)
+    "Execute command on current buffer directory."
     (interactive "sCommand to execute: ")
     (let* ((dir-name (file-name-directory (buffer-file-name)))
            (full-cmd (concat "cd " dir-name "; " cmd)))
@@ -2483,7 +2481,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
 
   (require 'thingatpt)
   (require 'projectile)
-  (defun projectile-find-sql-file (&optional invalidate-cache)
+  (defun projectile-find-sql-file ()
     "Find sql file for symbol at point."
     (interactive)
     (let* ((project-files (projectile-current-project-files))
@@ -3787,21 +3785,20 @@ displayed anywhere else."
         `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t)
 
+  ;; Keep region when undoing in region
+  (defadvice undo-tree-undo (around keep-region activate)
+    (if (use-region-p)
+        (let ((m (set-marker (make-marker) (mark)))
+              (p (set-marker (make-marker) (point))))
+          ad-do-it
+          (goto-char p)
+          (set-mark m)
+          (set-marker p nil)
+          (set-marker m nil))
+      ad-do-it))
+
   (global-undo-tree-mode)
   :diminish undo-tree-mode)
-
-
-;; Keep region when undoing in region
-(defadvice undo-tree-undo (around keep-region activate)
-  (if (use-region-p)
-      (let ((m (set-marker (make-marker) (mark)))
-            (p (set-marker (make-marker) (point))))
-        ad-do-it
-        (goto-char p)
-        (set-mark m)
-        (set-marker p nil)
-        (set-marker m nil))
-    ad-do-it))
 
 
 ;; Smart region guesses what you want to select by one command:
@@ -4247,69 +4244,6 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
       (push `(prelude-mode . ,newmap) minor-mode-overriding-map-alist)))
   (add-hook 'org-mode-hook 'prelude-org-mode-defaults)
 
-  ;; FIXME: Sort??
-  (require 'hydra)
-  (defhydra hydra-org-template (:color blue :hint nil)
-    "
-    _c_enter  _q_uote     _e_macs-lisp    _L_aTeX:
-    _l_atex   _E_xample   _p_ython        inde_x_:
-    _a_scii   _v_erse     _P_yton session _I_NCLUDE:
-    _s_rc     _n_ote      _i_python       _H_TML:
-    _h_tml    ^ ^         plant_u_ml      _A_SCII:
-    "
-    ("s" (hot-expand "<s"))
-    ("E" (hot-expand "<e"))
-    ("q" (hot-expand "<q"))
-    ("v" (hot-expand "<v"))
-    ("n" (let (text) ; org-reveal speaker notes
-           (when (region-active-p)
-             (setq text (buffer-substring (region-beginning) (region-end)))
-             (delete-region (region-beginning) (region-end)))
-           (insert "#+BEGIN_NOTES\n\n#+END_NOTES")
-           (forward-line -1)
-           (when text (insert text))))
-    ("c" (hot-expand "<c"))
-    ("l" (hot-expand "<l"))
-    ("h" (hot-expand "<h"))
-    ("a" (hot-expand "<a"))
-    ("L" (hot-expand "<L"))
-    ("x" (hot-expand "<i"))
-    ("e" (hot-expand "<s" "emacs-lisp"))
-    ("t" (hot-expand "<s" "emacs-lisp :tangle yes"))
-    ("p" (hot-expand "<s" "python"))
-    ("P" (hot-expand "<s" "python :session :exports both"))
-    ("i" (hot-expand "<s" "ipython :session"))
-    ("u" (hot-expand "<s" "plantuml :file CHANGE.png"))
-    ("I" (hot-expand "<I"))
-    ("H" (hot-expand "<H"))
-    ("A" (hot-expand "<A"))
-    ("<" self-insert-command "ins")
-    ("o" nil "quit"))
-
-  (defun hot-expand (str &optional mod header)
-    "Expand org template.
-
-STR is a structure template string recognised by org like <s. MOD is a
-string with additional parameters to add the begin line of the
-structure element. HEADER string includes more parameters that are
-prepended to the element after the #+HEADERS: tag."
-    (let (text)
-      (when (region-active-p)
-        (setq text (buffer-substring (region-beginning) (region-end)))
-        (delete-region (region-beginning) (region-end))
-        (deactivate-mark))
-      (when header (insert "#+HEADERS: " header) (org-return))
-      (insert str)
-      ;; FIXME: (org-tempo)
-      ;;(org-try-structure-completion)
-      (when mod (insert mod) (forward-line))
-      (when text (insert text))))
-
-  ;;(define-key org-mode-map "<"
-  ;;  (lambda () (interactive)
-  ;;    (if (or (region-active-p) (looking-back "^" nil))
-  ;;        (hydra-org-template/body)
-  ;;      (self-insert-command 1))))
   (require 'org-link-edit)
   (defun jk/unlinkify ()
     "Replace an org-link with the description, or if this is absent, the path."
@@ -4744,8 +4678,8 @@ This function is called by `org-babel-execute-src-block'."
     "Return if src-block is in a session of NAME.
 NAME may be nil for unnamed sessions."
     (let* ((info (org-babel-get-src-block-info))
-           (lang (nth 0 info))
-           (body (nth 1 info))
+           ;;(lang (nth 0 info))
+           ;;(body (nth 1 info))
            (params (nth 2 info))
            (session (cdr (assoc :session params))))
 
@@ -5081,7 +5015,7 @@ as the default task."
     (interactive)
     (save-window-excursion
       (let* ((buf (org-export-to-buffer 'html "*Formatted Copy*" nil nil t t))
-             (html (with-current-buffer buf (buffer-string))))
+             (_html (with-current-buffer buf (buffer-string))))
         (with-current-buffer buf
           (shell-command-on-region
            (point-min)
@@ -5973,7 +5907,12 @@ so change the default 'F' binding in the agenda to allow both"
   (setq mail-user-agent 'mu4e-user-agent)
 
   ;; Always use local smtp server (msmtp in my case) to send mails
-  (setq send-mail-function 'sendmail-send-it)
+  (setq send-mail-function 'sendmail-send-it
+        sendmail-program "~/bin/msmtp-enqueue.sh"
+        mail-specify-envelope-from t
+        message-sendmail-f-is-evil nil
+        mail-envelope-from 'header
+        message-sendmail-envelope-from 'header)
   :config
   ;; gmail delete == move mail to trash folder
   (fset 'my-move-to-trash "mt")
@@ -6397,15 +6336,6 @@ so change the default 'F' binding in the agenda to allow both"
   ;;  (concat
   ;;   "regards,\n"
   ;;   "  Daniel\n"))
-
-  ;; sending mail (with msmtp)
-  (setq send-mail-function 'sendmail-send-it
-        sendmail-program "~/bin/msmtp-enqueue.sh"
-        mail-specify-envelope-from t
-        message-sendmail-f-is-evil nil
-        mail-envelope-from 'header
-        message-sendmail-envelope-from 'header)
-
 
   ;; If there's 'attach' 'file' 'pdf' in the message warn when sending w/o attachment
   (defun mbork/message-attachment-present-p ()
