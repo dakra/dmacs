@@ -49,9 +49,19 @@ initialization has completed. We don't want to keep this value too high or it
 will result in long GC pauses during normal usage.
 
 #+BEGIN_SRC emacs-lisp
-(eval-and-compile
-  (setq gc-cons-threshold (* 256 1024 1024)))
+(setq gc-cons-threshold (* 256 1024 1024))
 #+END_SRC
+
+Temporarily disable file name handlers as it's not needed on initialization
+#+begin_src emacs-lisp
+(defvar file-name-handler-alist-old file-name-handler-alist)
+(setq file-name-handler-alist nil)
+#+end_src
+
+Increase max number of log messages
+#+begin_src emacs-lisp
+(setq message-log-max 16384)
+#+end_src
 
 Disable certain byte compiler warnings to cut down on the noise. This is a
 personal choice and can be removed if you would like to see any and all byte
@@ -97,9 +107,9 @@ calls ~make~ every time you save this file.
 We use borg for package management and disable ~package.el~.
 
 #+BEGIN_SRC emacs-lisp
-  (setq package-enable-at-startup nil)
-  ;; (package-initialize)
-  (setq load-prefer-newer t)
+(setq package-enable-at-startup nil)
+;; (package-initialize)
+;;(setq load-prefer-newer t)
 #+END_SRC
 *** Borg
 #+begin_src emacs-lisp
@@ -113,7 +123,14 @@ We use borg for package management and disable ~package.el~.
 #+BEGIN_SRC emacs-lisp
 ;;(defvar use-package-enable-imenu-support t)
 (require 'use-package)
-(setq use-package-verbose t)
+(if nil  ; Toggle init debug
+      (setq use-package-verbose t
+            use-package-expand-minimally nil
+            use-package-compute-statistics t
+            debug-on-error t)
+    (setq use-package-verbose nil
+          use-package-expand-minimally t))
+
 ;; For the :diminish keyword
 (use-package diminish :defer t)
 ;; For the :bind keyword
@@ -163,6 +180,7 @@ We use borg for package management and disable ~package.el~.
   (sml/setup))
 
 (use-package moe-theme
+  :unless noninteractive
   :demand t
   :config
   ;; Show highlighted buffer-id as decoration. (Default: nil)
@@ -323,11 +341,13 @@ Allow some commands as safe by default
 ** Saveplace: Remember your location in a file
 #+begin_src emacs-lisp
 (use-package saveplace
+  :unless noninteractive
   :config (save-place-mode))
 #+end_src
 ** Savehist: Keep track of minibuffer history
 #+begin_src emacs-lisp
 (use-package savehist
+  :unless noninteractive
   :defer 1
   :config
   (setq savehist-additional-variables '(compile-command regexp-search-ring))
@@ -483,6 +503,7 @@ different face
 ** Nicer buffer name for buffers with same name
 #+BEGIN_SRC emacs-lisp
 (use-package uniquify
+  :defer 5
   :config
   (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
   (setq uniquify-buffer-name-style 'forward)
@@ -3320,6 +3341,7 @@ Lisp function does not specify a special indentation."
 *** Elisp
 #+BEGIN_SRC emacs-lisp
 (use-package subr-x
+  :defer t
   :config
   (put 'if-let   'byte-obsolete-info nil)
   (put 'when-let 'byte-obsolete-info nil))
@@ -4818,13 +4840,14 @@ NAME may be nil for unnamed sessions."
         (delete-frame)))
   )
 
-(use-package noflet)  ; let you locally overwrite functions
+(use-package noflet :defer t)  ; let you locally overwrite functions
 (defun make-capture-frame ()
   "Create a new frame and run org-capture."
   (interactive)
   (make-frame '((name . "capture")))
   (select-frame-by-name "capture")
   (delete-other-windows)
+  (require 'noflet)
   (noflet ((switch-to-buffer-other-window (buf) (switch-to-buffer buf)))
     (org-capture)))
 
@@ -7000,6 +7023,8 @@ Run ~M-x esup~ to see where the time is spend during emacs startup.
              "Loading %s...done (%.3fs) [after-init]" user-init-file
              (float-time (time-subtract (current-time)
                                         before-user-init-time)))
+            ;; Restore original file name handlers
+            (setq file-name-handler-alist file-name-handler-alist-old)
             ;; Let's lower our GC thresholds back down to a sane level.
             (setq gc-cons-threshold (* 20 1024 1024)))
           t)
