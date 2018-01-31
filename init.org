@@ -6555,9 +6555,21 @@ FIXME: Create hydra
              pulseaudio-control-toggle-current-sink-mute)
   :bind (("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
          ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
-         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute))
-  :bind-keymap ("C-c v" . pulseaudio-control-map)
+         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute)
+         ("C-c v" . hydra-pulseaudio-control/body))
+  ;;:bind-keymap ("C-c v" . pulseaudio-control-map)
   :config
+  ;; XXX: Maybe -set-volume (1-9 keys sets 10%, 20% etc)?
+  ;;      Maybe show selected sink and volume
+  (defhydra hydra-pulseaudio-control (:hint nil)
+    "Pulseaudio Control"
+    ("+" pulseaudio-control-increase-volume "Increase Volume")
+    ("i" pulseaudio-control-increase-volume "Increase Volume")
+    ("-" pulseaudio-control-decrease-volume "Decrease Volume")
+    ("d" pulseaudio-control-decrease-volume "Decrease Volume")
+    ("m" pulseaudio-control-toggle-current-sink-mute "Toggle Mute")
+    ("s" pulseaudio-control-select-sink-by-name "Select Sink")
+    ("q" nil "quit"))
   (setq pulseaudio-control-volume-step "5%")
   (when (daemonp)
     (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") #'pulseaudio-control-increase-volume)
