@@ -608,17 +608,17 @@ different face
          ([(control shift return)] . crux-smart-open-line-above)))
 
 (use-package smartparens
-  :demand  ;; FIXME: with :defer 2; sp keybindings will overwrite org-metup/down
+  :defer 1
   :hook ((emacs-lisp-mode lisp-mode hy-mode) . smartparens-strict-mode)
-  :bind (:map smartparens-mode-map  ;; Remove sp keybinding for org-metaup/down to work
-         ("<M-up>" . nil)
-         ("<M-down>" . nil))
   :config
   (require 'smartparens-config)
   (setq sp-base-key-bindings 'paredit)
   (setq sp-autoskip-closing-pair 'always)
   (setq sp-hybrid-kill-entire-symbol nil)
   (sp-use-paredit-bindings)
+  ;; Remove sp keybinding for org-metaup/down to work
+  (unbind-key "<M-up>" smartparens-mode-map)
+  (unbind-key "<M-down>" smartparens-mode-map)
 
   ;; Always highlight matching parens
   (show-smartparens-global-mode +1)
