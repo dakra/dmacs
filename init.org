@@ -6768,11 +6768,22 @@ It only works for frames with exactly two windows."
                         `(lambda ()
                            (interactive)
                            (exwm-workspace-switch-create ,i))))
-  ;; 's-&': Launch application
-  (exwm-input-set-key (kbd "s-d")
+  (exwm-input-set-key (kbd "s-d") #'counsel-linux-app)
+  ;; 's-D': Launch application
+  (exwm-input-set-key (kbd "s-D")
                       (lambda (command)
                         (interactive (list (read-shell-command "$ ")))
                         (start-process-shell-command command nil command)))
+
+  (exwm-input-set-key (kbd "<XF86MonBrightnessUp>")
+                      (lambda ()
+                        (interactive)
+                        (async-start-process "xbacklight" "xbacklight" nil "-inc" "10")))
+
+  (exwm-input-set-key (kbd "<XF86MonBrightnessDown>")
+                      (lambda ()
+                        (interactive)
+                        (async-start-process "xbacklight" "xbacklight" nil "-dec" "10")))
 
   ;; Line-editing shortcuts
   (exwm-input-set-simulation-keys
