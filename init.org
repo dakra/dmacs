@@ -6750,17 +6750,29 @@ It only works for frames with exactly two windows."
   (setq exwm-workspace-show-all-buffers t)
   (setq exwm-layout-show-all-buffers t)
 
+  ;; This setup needs `autorandr' installed (AUR package `autorandr-git')
+  ;; as I let the udev rules of autorandr pick and choose the
+  ;; correct xrandr layout and only dynamically set here which
+  ;; workspaces map to which output
   (require 'exwm-randr)
-  ;;(setq ex-monitor-output "HDMI1")
-  (setq ex-monitor-output "DP1-1")
-  (setq exwm-randr-workspace-output-plist `(0 "eDP1" 1 ,ex-monitor-output 2 ,ex-monitor-output))
-  (add-hook 'exwm-randr-screen-change-hook
-            (lambda ()
-              (start-process-shell-command
-               "xrandr" nil
-               (format "xrandr --output eDP1 --auto --pos 3072x288 --output %s --auto --scale 0.75x0.75 --output DP1 --off" ex-monitor-output))))
-  ;;"xrandr" nil "xrandr --output eDP1 --auto --pos 3072x288 --output HDMI1 --auto --primary --scale 0.75x0.75 --output DP1 --off")))
-  ;;"xrandr" nil "xrandr --output VGA1 --left-of LVDS1 --auto")))
+  ;; Dynamic xrandr config ideas from https://github.com/ch11ng/exwm/issues/202
+
+  ;; Update exwm-randr-workspace-output-plist with two outputs named
+  ;; 'default' and 'other'.  If the 'other' output is same as 'default'
+  ;; then all workspaces will be redirected to the 'default' output.
+  (defun dakra-exwm-randr-screen-change ()
+    (let* ((connected-cmd "xrandr -q|awk '/ connected/ {print $1}'")
+           (connected (process-lines "bash" "-lc" connected-cmd))
+           (primary (car connected))  ; Primary display is always first in list
+           (other (cadr connected)))
+      (setq exwm-randr-workspace-output-plist
+            (append (list 0 primary)
+                    (mapcan (lambda (i) (list i (or other primary)))
+                            (number-sequence 1 exwm-workspace-number))))
+      (exwm-randr--refresh)
+      (message "Display: %s refreshed." (string-join connected ", "))))
+
+  (add-hook 'exwm-randr-screen-change-hook #'dakra-exwm-randr-screen-change)
   (exwm-randr-enable)
 
   (require 'exwm-systemtray)
