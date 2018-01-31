@@ -149,7 +149,7 @@ We use borg for package management and disable ~package.el~.
 * Moe theme:
 #+BEGIN_SRC emacs-lisp
 (custom-set-faces
- '(default ((t (:family "Operator Mono" :foundry "H&Co" :slant normal :weight normal :height 44 :width normal)))))  ;; ex height 69
+ '(default ((t (:family "Operator Mono" :foundry "H&Co" :slant normal :weight normal :height 69 :width normal)))))  ;; ex height 44
 (use-package powerline :defer 1)
 (use-package smart-mode-line-powerline-theme :after powerline)
 (use-package smart-mode-line :after smart-mode-line-powerline-theme
