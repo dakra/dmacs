@@ -2533,7 +2533,8 @@ When called with 2 prefix arguments only open in browser and don't copy."
 
 
 (use-package python-test
-  :defer t
+  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
+  :after python
   :config
   ;; Set default test backend to pytest
   (setq python-test-backend 'pytest)
@@ -2545,20 +2546,19 @@ When called with 2 prefix arguments only open in browser and don't copy."
 
   (define-compilation-mode python-django-mode "python-django"
     "Django management compilation mode"
-    (add-hook 'compilation-filter-hook 'comint-truncate-buffer)
+    ;;(add-hook 'compilation-filter-hook 'comint-truncate-buffer)
     (add-hook 'compilation-filter-hook 'python-test-track-pdb-prompt t t)
     (add-hook 'compilation-filter-hook 'python-test-ansi-color-filter nil t))
 
   (define-key python-django-mode-map (kbd "p") #'compilation-previous-error)
   (define-key python-django-mode-map (kbd "n") #'compilation-next-error)
 
-  ;;(setq python-django-settings "paessler_com2.config.cms_local")
-
   (defun python-django-manage-command (command)
     "Run Django manage.py COMMAND."
     (interactive
      (list (completing-read "python manage.py "
-                            '("check" "makemessages" "makemigrations" "migrate" "showmigrations"))))
+                            '("check" "clearsessions" "collectstatic"
+                              "makemessages" "makemigrations" "migrate" "showmigrations"))))
     (python-test-with-environment
       (compilation-start (format "python %s %s %s"
                                  (python-django-get-manage.py)
@@ -2566,18 +2566,13 @@ When called with 2 prefix arguments only open in browser and don't copy."
                                  (if python-django-settings
                                      (format "--settings=%s" python-django-settings)
                                    ""))
-                         #'python-django-mode)))
+                         #'python-django-mode
+                         (lambda (_mode) (format "*django manage.py %s*" command)))))
 
   (defun python-django-manage-runserver ()
     "Run Django command `python manage.py runserver'"
     (interactive)
-    (python-test-with-environment
-      (compilation-start (format "python %s runserver %s"
-                                 (python-django-get-manage.py)
-                                 (if python-django-settings
-                                     (format "--settings=%s" python-django-settings)
-                                   ""))
-                         #'python-django-mode))))
+    (python-django-manage-command "runserver")))
 
 (use-package pyramid :load-path "repos/pyramid.el"
   :commands (pyramid-project-root pyramid-serve pyramid-tweens))
