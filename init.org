@@ -427,12 +427,12 @@ Allow some commands as safe by default
 
 ** Dimmer: Visually highlight the selected buffer
 #+begin_src emacs-lisp
-(use-package dimmer  ; FIXME: not in epkg?
-  :disabled t
-  :if (daemonp)
+(use-package dimmer
+  :unless noninteractive
   :defer 10
   :config
-  ;;(setq dimmer-percent 0.2)
+  (setq dimmer-fraction 0.25)
+  ;;(setq dimmer-use-colorspace ':rgb)
   (dimmer-mode))
 #+end_src
 ** Hl-todo: Highlight and navigate TODO keywords
