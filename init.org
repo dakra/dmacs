@@ -3660,7 +3660,6 @@ displayed anywhere else."
 ;;(setq sp-escape-quotes-after-insert nil
 ;;      sp-escape-wrapped-region nil)
 
-
 (use-package helpful
   :bind (("C-h f" . helpful-function)
          ("C-h v" . helpful-variable)
@@ -3671,6 +3670,8 @@ displayed anywhere else."
          ("C-c h m" . helpful-macro)
          ("<C-tab>" . backward-button)
          :map emacs-lisp-mode-map
+         ("M-?" . helpful-at-point)
+         :map lisp-interaction-mode-map  ; Scratch buffer
          ("M-?" . helpful-at-point)))
 
 (use-package symbol-overlay
