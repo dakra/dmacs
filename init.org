@@ -3183,6 +3183,12 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
   (add-hook 'web-mode-hook 'web-mode-hook-setup)
   ;; } flyspell setup
 
+  ;; Enable current element highlight
+  (setq web-mode-enable-current-element-highlight t)
+  ;; Show column for current element
+  ;; Like highlight-indent-guide but only one line for current element
+  (setq web-mode-enable-current-column-highlight t)
+
   ;; Don't indent directly after a <script> or <style> tag
   (setq web-mode-script-padding 0)
   (setq web-mode-style-padding 0)
