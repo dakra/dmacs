@@ -2241,6 +2241,10 @@ file to edit."
   (add-to-list 'magit-no-confirm 'resurrect t)
   (add-to-list 'magit-no-confirm 'trash t)
 
+  ;; Don't override date for extend or reword
+  (setq magit-commit-extend-override-date nil)
+  (setq magit-commit-reword-override-date nil)
+
   ;; Set remote.pushDefault
   (setq magit-push-current-set-remote-if-missing 'default)
 
@@ -2262,6 +2266,8 @@ file to edit."
   :after magit
   :functions (magit-define-popup-action)
   :config
+  (magit-define-popup-action 'magit-revert-popup
+    ?e "Revert & edit HEAD" 'magit-uncommit-extend)
   (magit-define-popup-action 'magit-commit-popup
     ?n "Reshelve" 'magit-reshelve)
   (magit-define-popup-action 'magit-rebase-popup
