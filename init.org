@@ -6925,8 +6925,8 @@ It only works for frames with exactly two windows."
   :bind (:map elfeed-show-mode-map
          ("d" . elfeed-search-youtube-dl)
          :map elfeed-search-mode-map
-         ("M" . elfeed-mark-all-as-read)
-         ("R" . elfeed-reset-filter)
+         ("R" . elfeed-mark-all-as-read)
+         ("x" . elfeed-reset-filter)
          ("t" . elfeed-toggle-youtube)
          ("l" . elfeed-show-log)
          ("d" . elfeed-search-youtube-dl)
@@ -7045,7 +7045,6 @@ It only works for frames with exactly two windows."
   (elfeed-config
     ("http://www.bildblog.de/wp-rss2.php" news german)
     ("http://blog.fefe.de/rss.xml?html" news german)
-    ("http://www.wired.com/news/feeds/rss2/0,2610,,00.xml" news)
     ("http://www.gruenderszene.de/feed" news german)
     ("http://www.tagesschau.de/xml/rss2" news german)
     ("http://blog.chromium.org/feeds/posts/default" dev web)
@@ -7066,7 +7065,7 @@ It only works for frames with exactly two windows."
     ("http://suppversity.blogspot.com/feeds/posts/default" health)
     ("http://mountaindogdiet.com/feed/" health)
     ("http://www.examine.com/blog/rss/" health)
-    ("http://chessbase.com/DesktopModules/LiveBlog/Handlers/Syndication.ashx?PortalId=4&amp;tid=211&amp;mid=971&amp;ItemCount=20&amp;description=summary" chess)
+    ;;("https://en.chessbase.com/feed" chess)  ; FIXME: elfeed says "Unknown feed type"
     ("http://blog.angularjs.org/feeds/posts/default" dev web js)
     ("http://www.heise.de/newsticker/heise-atom.xml" dev)
     ("http://www.archlinux.org/feeds/news/" dev important)
