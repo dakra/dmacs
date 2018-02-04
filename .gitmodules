@@ -161,6 +161,9 @@
 [submodule "eldoc-overlay-mode"]
 	path = lib/eldoc-overlay-mode
 	url = git@github.com:stardiviner/eldoc-overlay-mode.git
+[submodule "elfeed"]
+	path = lib/elfeed
+	url = git@github.com:skeeto/elfeed.git
 [submodule "elisp-refs"]
 	path = lib/elisp-refs
 	url = git@github.com:Wilfred/refs.el.git
@@ -751,6 +754,9 @@
 [submodule "yasnippet"]
 	path = lib/yasnippet
 	url = git@github.com:joaotavora/yasnippet.git
+[submodule "youtube-dl"]
+	path = lib/youtube-dl
+	url = git@github.com:skeeto/youtube-dl-emacs.git
 [submodule "zop-to-char"]
 	path = lib/zop-to-char
 	url = git@github.com:thierryvolpiatto/zop-to-char.git

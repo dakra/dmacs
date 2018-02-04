@@ -6913,6 +6913,190 @@ It only works for frames with exactly two windows."
 #+END_SRC
 
 * Misc
+** Elfeed: Atomx/RSS news reader
+#+begin_src emacs-lisp
+(use-package youtube-dl
+  :defer t
+  :init
+  (setq youtube-dl-directory "~/videos/youtube"))
+
+(use-package elfeed
+  :defer t
+  :bind (:map elfeed-show-mode-map
+         ("d" . elfeed-search-youtube-dl)
+         :map elfeed-search-mode-map
+         ("M" . elfeed-mark-all-as-read)
+         ("R" . elfeed-reset-filter)
+         ("t" . elfeed-toggle-youtube)
+         ("l" . elfeed-show-log)
+         ("d" . elfeed-search-youtube-dl)
+         ("D" . elfeed-search-youtube-dl-slow)
+         ("L" . youtube-dl-list))
+  :config
+  ;; Config from https://github.com/skeeto/.emacs.d/blob/master/etc/feed-setup.el
+  (setq-default elfeed-search-filter "@1-week-ago +unread")
+
+  (defun elfeed-mark-all-as-read ()
+    "Mark all as read."
+    (interactive)
+    (mark-whole-buffer)
+    (elfeed-search-untag-all-unread))
+
+  (defun elfeed-reset-filter ()
+    "Reset filter."
+    (interactive)
+    (elfeed-search-set-filter (default-value 'elfeed-search-filter)))
+
+  (defun elfeed-show-log ()
+    "Show elfeed log buffer."
+    (interactive)
+    (switch-to-buffer (elfeed-log-buffer)))
+
+  (defun elfeed-toggle-youtube ()
+    "Toggle youtube filter"
+    (interactive)
+    (cl-macrolet ((re (re rep str) `(replace-regexp-in-string ,re ,rep ,str)))
+      (elfeed-search-set-filter
+       (cond
+        ((string-match-p "-youtube" elfeed-search-filter)
+         (re " *-youtube" " +youtube" elfeed-search-filter))
+        ((string-match-p "\\+youtube" elfeed-search-filter)
+         (re " *\\+youtube" " -youtube" elfeed-search-filter))
+        ((concat elfeed-search-filter " -youtube"))))))
+
+  (defun elfeed-show-youtube-dl ()
+    "Download the current entry with youtube-dl."
+    (interactive)
+    (pop-to-buffer (youtube-dl (elfeed-entry-link elfeed-show-entry))))
+
+  (cl-defun elfeed-search-youtube-dl (&key slow)
+    "Download the current entry with youtube-dl."
+    (interactive)
+    (let ((entries (elfeed-search-selected)))
+      (dolist (entry entries)
+        (if (null (youtube-dl (elfeed-entry-link entry)
+                              :title (elfeed-entry-title entry)
+                              :slow slow))
+            (message "Entry is not a YouTube link!")
+          (message "Downloading %s" (elfeed-entry-title entry)))
+        (elfeed-untag entry 'unread)
+        (elfeed-search-update-entry entry)
+        (unless (use-region-p) (forward-line)))))
+
+  (defalias 'elfeed-search-youtube-dl-slow
+    (elfeed-expose #'elfeed-search-youtube-dl :slow t)
+    "Slowly download the current entry with youtube-dl.")
+
+  ;; Custom faces
+
+  (defface elfeed-comic
+    '((t :foreground "#BFF"))
+    "Marks comics in Elfeed."
+    :group 'elfeed)
+
+  (push '(comic elfeed-comic)
+        elfeed-search-face-alist)
+
+  (defface elfeed-youtube
+    '((t :foreground "#f9f"))
+    "Marks YouTube videos in Elfeed."
+    :group 'elfeed)
+
+  (push '(youtube elfeed-youtube)
+        elfeed-search-face-alist)
+
+  (defface elfeed-important
+    '((t :foreground "#E33"))
+    "Marks important entries in Elfeed."
+    :group 'elfeed)
+
+  (push '(important elfeed-important)
+        elfeed-search-face-alist)
+
+  ;; Special filters
+
+  (add-hook 'elfeed-new-entry-hook
+            (elfeed-make-tagger :before "7 days ago"
+                                :remove 'unread))
+
+  ;; The actual feeds listing
+
+  (defvar youtube-feed-format
+    '(("^UC" . "https://www.youtube.com/feeds/videos.xml?channel_id=%s")
+      ("^PL" . "https://www.youtube.com/feeds/videos.xml?playlist_id=%s")
+      (""    . "https://www.youtube.com/feeds/videos.xml?user=%s")))
+
+  (defun elfeed--expand (listing)
+    "Expand feed URLs depending on their tags."
+    (cl-destructuring-bind (url . tags) listing
+      (cond
+       ((member 'youtube tags)
+        (let* ((case-fold-search nil)
+               (test (lambda (s r) (string-match-p r s)))
+               (format (cl-assoc url youtube-feed-format :test test)))
+          (cons (format (cdr format) url) tags)))
+       (listing))))
+
+  (defmacro elfeed-config (&rest feeds)
+    "Minimizes feed listing indentation without being weird about it."
+    (declare (indent 0))
+    `(setf elfeed-feeds (mapcar #'elfeed--expand ',feeds)))
+
+  (elfeed-config
+    ("http://www.bildblog.de/wp-rss2.php" news german)
+    ("http://blog.fefe.de/rss.xml?html" news german)
+    ("http://www.wired.com/news/feeds/rss2/0,2610,,00.xml" news)
+    ("http://www.gruenderszene.de/feed" news german)
+    ("http://www.tagesschau.de/xml/rss2" news german)
+    ("http://blog.chromium.org/feeds/posts/default" dev web)
+    ("http://www.holgerschurig.de/topics/emacs/index.xml" dev emacs)
+    ("http://planet.emacsen.org/atom.xml" dev emacs)
+    ("http://feeds.feedburner.com/XahsEmacsBlog" dev emacs)
+    ("https://oremacs.com/atom.xml" dev emacs)
+    ("http://feeds.feedburner.com/codinghorror/" dev)
+    ("http://sachachua.com/blog/category/emacs/feed/" dev emacs)
+    ("http://emacsredux.com/atom.xml" dev emacs)
+    ("http://kitchingroup.cheme.cmu.edu/blog/feed" dev emacs)
+    ("http://blog.atomx.com/rss" atomx)
+    ("http://codelike.com/blog/feed" dev friends)
+    ("http://blog.golang.org/feeds/posts/default" dev go)
+    ("http://blog.dubbelboer.com/atom.xml" dev friends)
+    ("http://lisperator.net/atom" dev emacs)
+    ("http://nutrientjournal.com/feed/" health)
+    ("http://suppversity.blogspot.com/feeds/posts/default" health)
+    ("http://mountaindogdiet.com/feed/" health)
+    ("http://www.examine.com/blog/rss/" health)
+    ("http://chessbase.com/DesktopModules/LiveBlog/Handlers/Syndication.ashx?PortalId=4&amp;tid=211&amp;mid=971&amp;ItemCount=20&amp;description=summary" chess)
+    ("http://blog.angularjs.org/feeds/posts/default" dev web js)
+    ("http://www.heise.de/newsticker/heise-atom.xml" dev)
+    ("http://www.archlinux.org/feeds/news/" dev important)
+    ("http://googledevelopers.blogspot.com/atom.xml" dev)
+    ("http://planet.python.org/rss20.xml" dev python)
+    ("http://feeds.doughellmann.com/PyMOTW" dev python)
+    ("https://blogs.msdn.microsoft.com/pythonengineering/feed/" dev python)
+    ("http://anthonypirone.blogspot.com/feeds/posts/default")
+    ("http://www.twoplustwo.com/two-plus-two-magazine-rss.xml" poker)
+    ("http://www.highstakesdb.com/rss.aspx" poker)
+    ("http://www.mmafighting.com/rss.xml" mma)
+    ("http://www.terrencechanpoker.com/feeds/posts/default" mma)
+    ("http://xkcd.com/rss.xml" comic)
+    ("http://googleblog.blogspot.com/atom.xml" google)
+    ("1veritasium" youtube education)
+    ("UCsXVk37bltHxD1rDPwtNM8Q" youtube education) ; Kurzgesagt – In a Nutshell
+    ("Wendoverproductions" youtube education)
+    ("minutephysics" youtube education)
+    ("SciShow" youtube education)
+    ("AsapSCIENCE" youtube education)
+    ("UCAuUUnT6oDeKwE6v1NGQxug" youtube education)  ; TED
+    ("UCsooa4yRKGN_zEE8iknghZA" youtube education)  ; TED-Ed
+    ("Vsauce" youtube education)
+    ("PowerPlayChess" youtube chess)
+    ("UC2TXq_t06Hjdr2g_KdKpHQg" youtube dev)  ; media.ccc.de
+    ("BroScienceLife" youtube comedy)
+    ("cgpgrey" youtube education)
+    ("ufc" youtube mma)
+    ("MMAFightingonSBN" youtube mma)))
+#+end_src
 ** Info-beamer
 #+begin_src emacs-lisp
 (use-package info-beamer
