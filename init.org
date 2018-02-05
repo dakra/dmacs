@@ -92,7 +92,7 @@ scratch buffer by default
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message "daniel")
 (setq initial-buffer-choice t)
-(setq initial-scratch-message "")
+(setq initial-scratch-message nil)
 #+end_src
 
 ** Package Management
