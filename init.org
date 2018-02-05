@@ -3680,6 +3680,7 @@ displayed anywhere else."
   :bind (("C-h f" . helpful-function)
          ("C-h v" . helpful-variable)
          ("C-h s" . helpful-symbol)
+         ("C-h k" . helpful-key)
          ("C-c h f" . helpful-function)
          ("C-c h v" . helpful-variable)
          ("C-c h c" . helpful-command)
