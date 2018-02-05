@@ -1801,6 +1801,7 @@ go up multiple parent directories."
     ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
     ("m" mu4e "mu4e - Mail")
     ("p" proced "proced")
+    ("P" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
     ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
     ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" )
     ("T" display-time-world "time - Display world time")
