@@ -5904,6 +5904,19 @@ so change the default 'F' binding in the agenda to allow both"
 #+END_SRC
 
 * Email
+You also need to configure and install mu in the system.
+Borg does only build mu4e as building mu every time is
+unnecessary.
+#+begin_src sh :tangle no :var mudir=(expand-file-name "mu4e" borg-drone-directory)
+# Install mu for mu4e
+pushd .
+echo cd $mudir
+test -e ./configure || autoreconf -i
+./configure
+make
+sudo make install
+popd
+#+end_src
 #+BEGIN_SRC emacs-lisp
 ;; mu package (includes mu4e) must be installed in the system
 (use-package mu4e
