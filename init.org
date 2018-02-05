@@ -1795,7 +1795,8 @@ go up multiple parent directories."
     ("b" brain-fm-play "brain.fm - Stream music")
     ("c" quick-calc "calc - Quick calc")
     ("C" calendar "calendar")
-    ("e" elisp-index-search "elisp-index-search")
+    ("e" elfeed "Elfeed - RSS/Atom Newsreader")
+    ("E" elisp-index-search "elisp-index-search")
     ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
     ("m" mu4e "mu4e - Mail")
     ("p" proced "proced")
@@ -1803,6 +1804,7 @@ go up multiple parent directories."
     ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" )
     ("T" display-time-world "time - Display world time")
     ("w" woman "woman - Man page viewer")
+    ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
     ("z" zone "Zone - Screensaver"))
 
   (defun dakra/insert-unicode (unicode-name)
@@ -6925,6 +6927,9 @@ It only works for frames with exactly two windows."
   :bind (:map elfeed-show-mode-map
          ("d" . elfeed-search-youtube-dl)
          :map elfeed-search-mode-map
+         ;; M for unread like in mu4e where R is for reply
+         ("m" . elfeed-search-untag-all-unread)
+         ("M" . elfeed-mark-all-as-read)
          ("R" . elfeed-mark-all-as-read)
          ("x" . elfeed-reset-filter)
          ("t" . elfeed-toggle-youtube)
@@ -6952,6 +6957,22 @@ It only works for frames with exactly two windows."
     (interactive)
     (switch-to-buffer (elfeed-log-buffer)))
 
+  ;; Directly download content for some sites (like heise.de)
+  (setq elfeed-fetch-readability-content-script "~/bin/read_url.py")
+
+  (defun elfeed-fetch-readability-content (entry)
+    "Replace entry content with actual article.
+Some feeds (like heise.de) only provide a summary and not the full article.
+This uses a python script to fetch the original article content."
+    (let* ((url (elfeed-entry-link entry))
+           ;; XXX: use (async-start-process)
+           (content (shell-command-to-string (format "%s %s" elfeed-fetch-readability-content-script url))))
+      (setf (elfeed-entry-content entry) (elfeed-ref content))))
+
+  (add-hook 'elfeed-new-entry-hook
+            (elfeed-make-tagger :feed-url "www\\.heise\\.de"
+                                :callback #'elfeed-fetch-readability-content))
+  ;; Some youtube helpers
   (defun elfeed-toggle-youtube ()
     "Toggle youtube filter"
     (interactive)
@@ -7043,43 +7064,59 @@ It only works for frames with exactly two windows."
     `(setf elfeed-feeds (mapcar #'elfeed--expand ',feeds)))
 
   (elfeed-config
+    ("http://blog.atomx.com/rss" atomx)
+
     ("http://www.bildblog.de/wp-rss2.php" news german)
     ("http://blog.fefe.de/rss.xml?html" news german)
     ("http://www.gruenderszene.de/feed" news german)
     ("http://www.tagesschau.de/xml/rss2" news german)
+
     ("http://blog.chromium.org/feeds/posts/default" dev web)
+    ("http://blog.angularjs.org/feeds/posts/default" dev web js)
+
+    ("http://www.archlinux.org/feeds/news/" dev important)
+    ("http://www.heise.de/newsticker/heise-atom.xml" dev)
+    ("http://feeds.feedburner.com/codinghorror/" dev)
+    ("http://googledevelopers.blogspot.com/atom.xml" dev)
+    ("http://blog.dubbelboer.com/atom.xml" dev friends)
+
+    ("http://blog.golang.org/feeds/posts/default" dev go)
+
+    ("http://codelike.com/blog/feed" dev friends python)
+    ("http://planet.python.org/rss20.xml" dev python)
+    ("http://planet.scipy.org/rss20.xml" dev python)
+    ("http://feeds.doughellmann.com/PyMOTW" dev python)
+    ("https://blogs.msdn.microsoft.com/pythonengineering/feed/" dev python)
+
     ("http://www.holgerschurig.de/topics/emacs/index.xml" dev emacs)
     ("http://planet.emacsen.org/atom.xml" dev emacs)
     ("http://feeds.feedburner.com/XahsEmacsBlog" dev emacs)
     ("https://oremacs.com/atom.xml" dev emacs)
-    ("http://feeds.feedburner.com/codinghorror/" dev)
     ("http://sachachua.com/blog/category/emacs/feed/" dev emacs)
     ("http://emacsredux.com/atom.xml" dev emacs)
     ("http://kitchingroup.cheme.cmu.edu/blog/feed" dev emacs)
-    ("http://blog.atomx.com/rss" atomx)
-    ("http://codelike.com/blog/feed" dev friends)
-    ("http://blog.golang.org/feeds/posts/default" dev go)
-    ("http://blog.dubbelboer.com/atom.xml" dev friends)
     ("http://lisperator.net/atom" dev emacs)
+    ("http://planet.lisp.org/rss20.xml" dev lisp)
+    ("https://emacs.stackexchange.com/feeds" dev stackexchange emacs)
+
     ("http://nutrientjournal.com/feed/" health)
     ("http://suppversity.blogspot.com/feeds/posts/default" health)
     ("http://mountaindogdiet.com/feed/" health)
     ("http://www.examine.com/blog/rss/" health)
+
     ;;("https://en.chessbase.com/feed" chess)  ; FIXME: elfeed says "Unknown feed type"
-    ("http://blog.angularjs.org/feeds/posts/default" dev web js)
-    ("http://www.heise.de/newsticker/heise-atom.xml" dev)
-    ("http://www.archlinux.org/feeds/news/" dev important)
-    ("http://googledevelopers.blogspot.com/atom.xml" dev)
-    ("http://planet.python.org/rss20.xml" dev python)
-    ("http://feeds.doughellmann.com/PyMOTW" dev python)
-    ("https://blogs.msdn.microsoft.com/pythonengineering/feed/" dev python)
-    ("http://anthonypirone.blogspot.com/feeds/posts/default")
+    ("http://feeds.feedburner.com/chessbase/mNmu" chess)
+
     ("http://www.twoplustwo.com/two-plus-two-magazine-rss.xml" poker)
     ("http://www.highstakesdb.com/rss.aspx" poker)
+
     ("http://www.mmafighting.com/rss.xml" mma)
     ("http://www.terrencechanpoker.com/feeds/posts/default" mma)
+
     ("http://xkcd.com/rss.xml" comic)
+
     ("http://googleblog.blogspot.com/atom.xml" google)
+
     ("1veritasium" youtube education)
     ("UCsXVk37bltHxD1rDPwtNM8Q" youtube education) ; Kurzgesagt – In a Nutshell
     ("Wendoverproductions" youtube education)
