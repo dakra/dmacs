@@ -1781,6 +1781,7 @@ go up multiple parent directories."
 
   (defhydra hydra-toggle-stuff (:color blue :hint nil)
     "Toggle"
+    ("b" dakra-toggle-browser "browser - toggle eww/firefox")
     ("c" column-number-mode "column-number-mode")
     ("d" toggle-debug-on-error "debug-on-error")
     ("f" auto-fill-mode "fill-mode")
