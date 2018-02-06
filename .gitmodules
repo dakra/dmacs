@@ -31,6 +31,7 @@
 	path = lib/async
 	url = git@github.com:jwiegley/emacs-async.git
 [submodule "auto-compile"]
+	disabled = true
 	path = lib/auto-compile
 	url = git@github.com:emacscollective/auto-compile.git
 [submodule "avy"]

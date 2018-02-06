@@ -3386,6 +3386,7 @@ Lisp function does not specify a special indentation."
 **** Auto-compile
 #+begin_src emacs-lisp
 (use-package auto-compile
+  :disable t  ; I rather trigger a new compile by hand
   :defer 10
   :config
   (auto-compile-on-load-mode)
