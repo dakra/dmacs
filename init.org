@@ -3432,7 +3432,9 @@ $ sbcl
 
 #+BEGIN_SRC emacs-lisp
 (use-package slime
-  :defer t
+  :hook (lisp-mode slime-lisp-mode-hook)
+  :bind (:map slime-mode-indirect-map
+         ("M-?" . slime-describe-symbol))
   :config
   (setq slime-contribs '(slime-fancy))
   (setq inferior-lisp-program "sbcl")
