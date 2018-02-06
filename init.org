@@ -3686,6 +3686,8 @@ displayed anywhere else."
          ("C-c h c" . helpful-command)
          ("C-c h m" . helpful-macro)
          ("<C-tab>" . backward-button)
+         :map helpful-mode-map
+         ("M-?" . helpful-at-point)
          :map emacs-lisp-mode-map
          ("M-?" . helpful-at-point)
          :map lisp-interaction-mode-map  ; Scratch buffer
