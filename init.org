@@ -6942,6 +6942,11 @@ It only works for frames with exactly two windows."
   :defer t
   :bind (:map elfeed-show-mode-map
          ("d" . elfeed-search-youtube-dl)
+         ;; Make n/p scroll and N/P switch articles
+         ("N" . elfeed-show-next)
+         ("P" . elfeed-show-prev)
+         ("n" . scroll-up-line)
+         ("p" . scroll-down-line)
          :map elfeed-search-mode-map
          ;; M for unread like in mu4e where R is for reply
          ("m" . elfeed-search-untag-all-unread)
@@ -6986,7 +6991,7 @@ This uses a python script to fetch the original article content."
       (setf (elfeed-entry-content entry) (elfeed-ref content))))
 
   (add-hook 'elfeed-new-entry-hook
-            (elfeed-make-tagger :feed-url "www\\.heise\\.de"
+            (elfeed-make-tagger :feed-url "www\\.heise\\.de" ; "www\\.\\(heise\\|tagesschau\\)\\.de"
                                 :callback #'elfeed-fetch-readability-content))
   ;; Some youtube helpers
   (defun elfeed-toggle-youtube ()
