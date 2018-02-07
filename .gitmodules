@@ -30,6 +30,9 @@
 [submodule "async"]
 	path = lib/async
 	url = git@github.com:jwiegley/emacs-async.git
+[submodule "atomx"]
+	path = lib/atomx
+	url = git@github.com:atomx/atomx-api-elisp.git
 [submodule "auto-compile"]
 	disabled = true
 	path = lib/auto-compile
