@@ -6738,7 +6738,7 @@ It only works for frames with exactly two windows."
   (setq exwm-layout-show-all-buffers t)
 
   ;; This setup needs `autorandr' installed.
-  ;; AUR package `autorandr-git' and enable with `systemctl enable autorandr`
+  ;; AUR package `autorandr' and enable with `systemctl enable autorandr`
   ;; Autorandr uses udev rules to pick and choose the correct xrandr layout so here
   ;; in exwm we only need to set dynamically which workspaces map to which output.
   (require 'exwm-randr)
