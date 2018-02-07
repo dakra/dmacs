@@ -3063,6 +3063,7 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
   :mode ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.tpl\\'" "\\.blade\\.php\\'" "\\.jsp\\'" "\\.as[cp]x\\'"
          "\\.erb\\'" "\\.html.?\\'" "/\\(views\\|html\\|theme\\|templates\\)/.*\\.php\\'"
          "\\.jinja2?\\'" "\\.mako\\'" "\\.vue\\'" "_template\\.txt")
+  :init (add-to-list 'safe-local-eval-forms '(web-mode-set-engine "django"))
   :config
   ;;(setq web-mode-engines-alist '(("django"  . "/templates/.*\\.html\\'")))
   (setq web-mode-engines-alist '(("django" . "\\.jinja2?\\'")))
