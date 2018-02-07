@@ -6906,6 +6906,7 @@ It only works for frames with exactly two windows."
          ;; M for unread like in mu4e where R is for reply
          ("m" . elfeed-search-untag-all-unread)
          ("M" . elfeed-mark-all-as-read)
+         ("U" . elfeed-search-fetch)
          ("R" . elfeed-mark-all-as-read)
          ("x" . elfeed-reset-filter)
          ("t" . elfeed-toggle-youtube)
