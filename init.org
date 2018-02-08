@@ -6372,7 +6372,7 @@ there are no attachments."
 
 ;; for org capture
 (use-package org-mu4e
-  :defer t
+  :after (:any org mu4e)
   :config
   ;; when mail is sent, automatically convert org body to HTML
   (setq-default org-mu4e-convert-to-html t)
