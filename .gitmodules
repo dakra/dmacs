@@ -513,6 +513,9 @@
 [submodule "ox-jira"]
 	path = lib/ox-jira
 	url = git@github.com:stig/ox-jira.el.git
+[submodule "ox-rst"]
+	path = lib/ox-rst
+	url = git@github.com:msnoigrs/ox-rst.git
 [submodule "package-build"]
 	path = lib/package-build
 	url = git@github.com:melpa/package-build.git

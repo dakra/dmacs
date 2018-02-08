@@ -5002,12 +5002,16 @@ as the default task."
 (use-package ox-hugo
   :after ox)
 
-;; For jira export (then copy&paste to ticket)
+;; Jira export (then copy&paste to ticket)
 (use-package ox-jira
   :after ox)
 
-;; For github markdown
+;; Github markdown
 (use-package ox-gfm
+  :after ox)
+
+;; reStructuredText
+(use-package ox-rst
   :after ox)
 #+END_SRC
 **** Org-habit: Track habits
