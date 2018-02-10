@@ -1706,7 +1706,8 @@ go up multiple parent directories."
   :bind (("C-c S" . hydra-scratchpad/body)
          ("C-x t" . hydra-toggle-stuff/body)
          ("C-x 9" . hydra-unicode/body)
-         ("C-x l" . hydra-launcher/body))
+         ("C-x l" . hydra-emacs-launcher/body)
+         ("C-x L" . hydra-external-launcher/body))
   :config
   (defhydra hydra-scratchpad (:hint nil)
     "
@@ -1740,23 +1741,28 @@ go up multiple parent directories."
     ("oi" org-toggle-inline-images "org inline-images")
     ("w" whitespace-mode "whitespace-mode"))
 
-  (defhydra hydra-launcher (:color blue :hint nil)
-    "Start different programs."
+  (defhydra hydra-emacs-launcher (:color blue :hint nil)
+    "Start different emacs packages (like elfeed or mu4e)."
     ("b" brain-fm-play "brain.fm - Stream music")
     ("c" quick-calc "calc - Quick calc")
     ("C" calendar "calendar")
     ("e" elfeed "Elfeed - RSS/Atom Newsreader")
+    ("t" transmission "Transmission - Torrent")
     ("E" elisp-index-search "elisp-index-search")
-    ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
     ("m" mu4e "mu4e - Mail")
     ("p" proced "proced")
-    ("P" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
-    ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
-    ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" )
     ("T" display-time-world "time - Display world time")
     ("w" woman "woman - Man page viewer")
     ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
     ("z" zone "Zone - Screensaver"))
+
+  (defhydra hydra-external-launcher (:color blue :hint nil)
+    "Start different external programs (like Termite or Firefox)."
+    ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
+    ("f" (start-process-shell-command "firefox-developer-edition" nil "firefox-developer-edition") "Firefox Developer Edition")
+    ("P" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
+    ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
+    ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" ))
 
   (defun dakra/insert-unicode (unicode-name)
     "Same as C-x 8 enter UNICODE-NAME."
