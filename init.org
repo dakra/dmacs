@@ -1946,7 +1946,21 @@ go up multiple parent directories."
   ;; Functions starting with `eshell/' can be called directly from eshell
   ;; with only the last part. E.g. (eshell/foo) will call `$ foo'
   (defun eshell/d (&rest args)
+    "Open dired in current directory."
     (dired (pop args) "."))
+
+  (defun eshell/ccat (file)
+    "Like `cat' but output with Emacs syntax highlighting."
+    (with-temp-buffer
+      (insert-file-contents file)
+      (let ((buffer-file-name file))
+        (delay-mode-hooks
+          (set-auto-mode)
+          (if (fboundp 'font-lock-ensure)
+              (font-lock-ensure)
+            (with-no-warnings
+              (font-lock-fontify-buffer)))))
+      (buffer-string)))
 
   (defun eshell/lcd (&optional directory)
     "Like regular 'cd' but don't jump out of a tramp directory.
