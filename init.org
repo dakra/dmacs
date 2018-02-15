@@ -4977,8 +4977,8 @@ as the default task."
   (setq org-time-stamp-rounding-minutes (quote (1 1)))
   ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
   (setq org-clock-out-remove-zero-time-clocks t)
-  ;; Clock out when moving task to a done state
-  (setq org-clock-out-when-done t)
+  ;; Don't clock out when moving task to a done state
+  (setq org-clock-out-when-done nil)
 
   ;; Enable auto clock resolution for finding open clocks
   (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
