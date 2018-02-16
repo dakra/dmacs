@@ -6943,17 +6943,19 @@ It only works for frames with exactly two windows."
          ;; M for unread like in mu4e where R is for reply
          ("m" . elfeed-search-untag-all-unread)
          ("M" . elfeed-mark-all-as-read)
+         ("N" . elfeed-mark-all-read-and-next-tag)
          ("U" . elfeed-search-fetch)
          ("R" . elfeed-mark-all-as-read)
          ("x" . elfeed-reset-filter)
-         ("t" . elfeed-toggle-youtube)
+         ("t" . elfeed-toggle-tags)
+         ("y" . elfeed-toggle-youtube)
          ("l" . elfeed-show-log)
          ("d" . elfeed-search-youtube-dl)
          ("D" . elfeed-search-youtube-dl-slow)
          ("L" . youtube-dl-list))
   :config
   ;; Config from https://github.com/skeeto/.emacs.d/blob/master/etc/feed-setup.el
-  (setq-default elfeed-search-filter "@1-week-ago +unread")
+  (setq-default elfeed-search-filter "@1-week-ago +unread -youtube")
 
   (defun elfeed-mark-all-as-read ()
     "Mark all as read."
@@ -7002,6 +7004,58 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     (when (string-match-p elfeed-readability-url-regex (elfeed-entry-link entry))
       (elfeed-readability-content entry))
     (elfeed-search-show-entry entry))
+
+  (defun elfeed-mark-all-read-and-next-tag ()
+    "Marks all as read and filters by another tag."
+    (interactive)
+    ;; Only toggle all as read if we're not in the overview
+    (unless (eq elfeed-search-filter (default-value 'elfeed-search-filter))
+      (elfeed-mark-all-as-read))
+    (elfeed-toggle-tags))
+
+  (defun elfeed-toggle-tags ()
+    "Iterate over taglist and set filter for each tag."
+    (interactive)
+    ;; FIXME: simplify list
+    (cl-macrolet ((re (re rep str) `(replace-regexp-in-string ,re ,rep ,str)))
+      (elfeed-search-set-filter
+       (cond
+        ((string-match-p "-youtube" elfeed-search-filter)
+         (re " *-youtube" " +emacs" elfeed-search-filter))
+        ((string-match-p "\\+emacs" elfeed-search-filter)
+         (re " *\\+emacs" " +python" elfeed-search-filter))
+        ((string-match-p "\\+python" elfeed-search-filter)
+         (re " *\\+python" " +dev" elfeed-search-filter))
+        ((string-match-p "\\+dev" elfeed-search-filter)
+         (re " *\\+dev" " +fefe" elfeed-search-filter))
+        ((string-match-p "\\+fefe" elfeed-search-filter)
+         (re " *\\+fefe" " +mma" elfeed-search-filter))
+        ((string-match-p "\\+mma" elfeed-search-filter)
+         (re " *\\+mma" " +chess" elfeed-search-filter))
+        ((string-match-p "\\+chess" elfeed-search-filter)
+         (re " *\\+chess" " +poker" elfeed-search-filter))
+        ((string-match-p "\\+poker" elfeed-search-filter)
+         (re " *\\+poker" " +health" elfeed-search-filter))
+        ((string-match-p "\\+health" elfeed-search-filter)
+         (re " *\\+health" " +news" elfeed-search-filter))
+        ((string-match-p "\\+news" elfeed-search-filter)
+         (re " *\\+news" " -youtube" elfeed-search-filter))
+        ((concat elfeed-search-filter " -youtube")))))
+    ;; Skip tags when there's no result
+    (unless (or (string-match-p "-youtube" elfeed-search-filter) (elfeed-search-selected t))
+      (elfeed-toggle-tags)))
+
+  (defun elfeed-toggle-unread ()
+    "Toggle unread filter"
+    (interactive)
+    (cl-macrolet ((re (re rep str) `(replace-regexp-in-string ,re ,rep ,str)))
+      (elfeed-search-set-filter
+       (cond
+        ((string-match-p "-unread" elfeed-search-filter)
+         (re " *-unread" " +unread" elfeed-search-filter))
+        ((string-match-p "\\+unread" elfeed-search-filter)
+         (re " *\\+unread" " -unread" elfeed-search-filter))
+        ((concat elfeed-search-filter " -unread"))))))
 
   ;; Some youtube helpers
   (defun elfeed-toggle-youtube ()
@@ -7098,7 +7152,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("http://blog.atomx.com/rss" atomx)
 
     ("http://www.bildblog.de/wp-rss2.php" news german)
-    ("http://blog.fefe.de/rss.xml?html" news german)
+    ("http://blog.fefe.de/rss.xml?html" news german fefe)
     ("http://www.gruenderszene.de/feed" news german)
     ("http://www.tagesschau.de/xml/rss2" news german)
 
@@ -7147,7 +7201,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 
     ("http://xkcd.com/rss.xml" comic)
 
-    ("http://googleblog.blogspot.com/atom.xml" google)
+    ("http://googleblog.blogspot.com/atom.xml" news google)
 
     ("1veritasium" youtube education)
     ("UCsXVk37bltHxD1rDPwtNM8Q" youtube education) ; Kurzgesagt – In a Nutshell
