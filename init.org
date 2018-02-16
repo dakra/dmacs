@@ -393,6 +393,15 @@ Allow some commands as safe by default
 (use-package subword
   :hook ((python-mode yaml-mode go-mode) . subword-mode))
 #+end_src
+** Shr: Simple html renderer
+#+begin_src emacs-lisp
+(use-package shr
+  :defer t
+  :config
+  (setq shr-width 80)
+  (setq shr-external-browser 'eww-browse-url)
+  (setq shr-color-visible-luminance-min 80))
+#+end_src
 ** Help
 #+begin_src emacs-lisp
 (use-package help
@@ -6504,8 +6513,7 @@ there are no attachments."
             (lambda()
               ;; try to emulate some of the eww key-bindings
               (local-set-key (kbd "<tab>") 'shr-next-link)
-              (local-set-key (kbd "<backtab>") 'shr-previous-link)))
-  (setq shr-color-visible-luminance-min 80))
+              (local-set-key (kbd "<backtab>") 'shr-previous-link))))
 #+END_SRC
 
 * Window Manager
