@@ -1611,7 +1611,7 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
 ** Swiper: Search with ivy
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
-  :bind (("C-s" . swiper)
+  :bind (;;("C-s" . swiper)  ; Use counsel-grep-or-swiper
          :map swiper-map
          ("M-h" . swiper-avy)
          ("M-c" . swiper-mc)))
@@ -1620,7 +1620,8 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
   :diminish
-  :bind (("C-o"     . nil)  ; Remove old keybinding (open-line)
+  :bind (("C-s"     . counsel-grep-or-swiper)
+         ("C-o"     . nil)  ; Remove old keybinding (open-line)
          ("C-o o"   . counsel-org-agenda-headlines)
          ("C-o g"   . counsel-org-agenda-headlines)
          ("C-o G"   . counsel-org-goto)
@@ -1634,6 +1635,9 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   (define-key minibuffer-local-map (kbd "M-r")
     'counsel-minibuffer-history)
   :config
+  ;; Use rg even for single files and show only max 120 characters per line
+  (setq counsel-grep-base-command
+        "rg -i -M 120 --no-heading --line-number --color never %s %s")
   ;; Make ivy faster/more responsive
   ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
   (setq counsel-async-filter-update-time 10000)
