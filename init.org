@@ -1649,7 +1649,8 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   :bind-keymap (("s-p"   . counsel-projectile-command-map)
                 ("C-c p" . counsel-projectile-command-map))
   :bind (:map counsel-projectile-command-map
-         (("s s" . dakra/counsel-search-project)))
+         (("s s" . dakra/counsel-search-project-empty)
+          ("s S" . dakra/counsel-search-project)))
   :config
   ;; Always use ripgrep instead of ag
   (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg)
@@ -1685,6 +1686,11 @@ go up multiple parent directories."
                 (t  ; Numeric prefix: Go specified prefix up
                  (parent-directory default-directory use-current-dir)))))
       (counsel-rg initial-input dir)))
+
+  (defun dakra/counsel-search-project-empty (&optional use-current-dir)
+    "Like dakra/counsel-search-project but with no initial input."
+    (interactive "P")
+    (dakra/counsel-search-project "" use-current-dir))
 
   (defun counsel-projectile-find-file-occur ()
     (cd (projectile-project-root))
