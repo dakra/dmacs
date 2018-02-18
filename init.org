@@ -4099,6 +4099,9 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ("<f6>"    . org-agenda)
          ("<f7>"    . org-clock-goto)
          ("C-c l"   . org-store-link)
+         ("C-c o c" . org-clock-goto)
+         ("C-c o i" . org-clock-in-or-list)
+         ("C-c o o" . org-clock-out)
          ("C-c o l" . org-store-link)
          ("C-c o a" . org-agenda)
          ("C-c o b" . org-switchb)
@@ -4132,6 +4135,13 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
                     '(org-completion-symbols
                       ora-cap-filesystem))))
   :config
+  (defun org-clock-in-or-list (&optional select start-time)
+    "Like org-clock-in but show list of recent clocks when not in org buffer."
+    (interactive "P")
+    (if (eq major-mode 'org-mode)
+        (org-clock-in select start-time)
+      (org-clock-in '(4) start-time)))
+
   ;; Show headings up to level 2 by default when opening an org files
   (setq org-startup-folded 'content)
 
@@ -4278,6 +4288,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
       ("}" org-link-edit-forward-barf "forward barf")
       ("(" org-link-edit-backward-slurp "backward slurp")
       ("{" org-link-edit-backward-barf "backward barf")
+      ("t" org-toggle-link-display "Toggle link display")
       ("r" jk/unlinkify "remove link")
       ("q" nil "cancel" :color blue)))
   )
