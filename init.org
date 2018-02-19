@@ -2199,6 +2199,11 @@ file to edit."
   :defines (magit-ediff-dwim-show-on-hunks)
   :commands (magit-status magit-list-repositories magit-log magit-log-buffer-file magit-list-submodules)
   :config
+
+  ;; Add switch to invert the filter e.g. show all authors but `--author=foo'
+  (magit-define-popup-switch 'magit-log-popup
+    ?i "Invert filter" "--invert-grep")
+
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
   (setq magit-repository-directories
