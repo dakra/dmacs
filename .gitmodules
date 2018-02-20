@@ -220,6 +220,9 @@
 [submodule "expand-region"]
 	path = lib/expand-region
 	url = git@github.com:magnars/expand-region.el.git
+[submodule "extmap"]
+	path = lib/extmap
+	url = git@github.com:doublep/extmap.git
 [submodule "exwm"]
 	path = lib/exwm
 	url = git@github.com:ch11ng/exwm.git
@@ -500,7 +503,7 @@
 	url = git@github.com:emacsmirror/osc.git
 [submodule "outline-magic"]
 	path = lib/outline-magic
-	url = git@github.com:emacsattic/outline-magic.git
+	url = git@github.com:tj64/outline-magic.git
 [submodule "ov"]
 	path = lib/ov
 	url = git@github.com:ShingoFukuyama/ov.el.git
