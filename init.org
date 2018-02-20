@@ -2623,7 +2623,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
   (setq py-isort-options '("--line-width=100"
                            "--multi-line=3"
                            "--trailing-comma"
-                           "--force-grid-wrap"
+                           "--force-grid-wrap=2"
                            "--thirdparty=rethinkdb")))
 
 ;; activate virtualenv for flycheck
