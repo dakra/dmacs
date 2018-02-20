@@ -2253,6 +2253,12 @@ file to edit."
   ;; Only show 2 ediff panes
   (setq magit-ediff-dwim-show-on-hunks t)
 
+  ;; Don't change my window layout after quitting magit
+  ;; Ofter I invoke magit and then do a lot of things in other windows
+  ;; On quitting, magit would then "restore" the window layout like it was
+  ;; when I first invoked magit. Don't do that!
+  (setq magit-bury-buffer-function 'magit-mode-quit-window)
+
   ;; Show magit status in the same window
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   ;; Display magit status in full frame
