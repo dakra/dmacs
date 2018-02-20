@@ -4118,7 +4118,9 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ("C-c l"   . org-store-link)
          ("C-c o c" . org-clock-goto)
          ("C-c o i" . org-clock-in-or-list)
-         ("C-c o o" . org-clock-out)
+         ("C-c C-x C-i" . org-clock-in-or-list)
+         ("C-c C-x C-o" . org-clock-out)
+         ("C-c o O" . org-clock-out)
          ("C-c o l" . org-store-link)
          ("C-c o a" . org-agenda)
          ("C-c o b" . org-switchb)
@@ -5456,26 +5458,13 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
     (org-cycle)
     (org-cycle)))
 
-(defun bh/set-truncate-lines ()
-  "Toggle value of truncate-lines and refresh window display."
-  (interactive)
-  (setq truncate-lines (not truncate-lines))
-  ;; now refresh window display (an idiom from simple.el):
-  (save-excursion
-    (set-window-start (selected-window)
-                      (window-start (selected-window)))))
-
-(defun bh/make-org-scratch ()
-  (interactive)
-  (find-file "/tmp/publish/scratch.org")
-  (gnus-make-directory "/tmp/publish"))
 
 ;; Show 20 minute clocking gaps. Hit "v c" in the agenda view
 (setq org-agenda-clock-consistency-checks
       '(:max-duration "4:00"
-                      :min-duration 0
-                      :max-gap 30
-                      :gap-ok-around ("4:00" "11:00" "19:00" "20:00" "21:00")))
+        :min-duration 0
+        :max-gap 30
+        :gap-ok-around ("4:00" "11:00" "19:00" "20:00" "21:00")))
 
 ;; Exclude DONE state tasks from refile targets
 (defun bh/verify-refile-target ()
@@ -5505,22 +5494,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
-          'append)
-
-(defun bh/restrict-to-file-or-follow (arg)
-  "Set agenda restriction to 'file or with argument invoke follow mode.
-I don't use follow mode very often but I restrict to file all the time
-so change the default 'F' binding in the agenda to allow both"
-  (interactive "p")
-  (if (equal arg 4)
-      (org-agenda-follow-mode)
-    (widen)
-    (bh/set-agenda-restriction-lock 4)
-    (org-agenda-redo)
-    (goto-char (point-min))))
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "F" 'bh/restrict-to-file-or-follow))
           'append)
 
 (defun bh/narrow-to-org-subtree ()
@@ -5592,55 +5565,6 @@ so change the default 'F' binding in the agenda to allow both"
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
           'append)
-
-(defvar bh/project-list nil)
-
-(defun bh/view-next-project ()
-  (interactive)
-  (let (num-project-left current-project)
-    (unless (marker-position org-agenda-restrict-begin)
-      (goto-char (point-min))
-                                        ; Clear all of the existing markers on the list
-      (while bh/project-list
-        (set-marker (pop bh/project-list) nil))
-      (re-search-forward "Tasks to Refile")
-      (forward-visible-line 1))
-
-                                        ; Build a new project marker list
-    (unless bh/project-list
-      (while (< (point) (point-max))
-        (while (and (< (point) (point-max))
-                    (or (not (org-get-at-bol 'org-hd-marker))
-                        (org-with-point-at (org-get-at-bol 'org-hd-marker)
-                          (or (not (bh/is-project-p))
-                              (bh/is-project-subtree-p)))))
-          (forward-visible-line 1))
-        (when (< (point) (point-max))
-          (add-to-list 'bh/project-list (copy-marker (org-get-at-bol 'org-hd-marker)) 'append))
-        (forward-visible-line 1)))
-
-                                        ; Pop off the first marker on the list and display
-    (setq current-project (pop bh/project-list))
-    (when current-project
-      (org-with-point-at current-project
-        (setq bh/hide-scheduled-and-waiting-next-tasks nil)
-        (bh/narrow-to-project))
-                                        ; Remove the marker
-      (setq current-project nil)
-      (org-agenda-redo)
-      (goto-char (point-min))
-      (setq num-projects-left (length bh/project-list))
-      (if (> num-projects-left 0)
-          (message "%s projects left to view" num-projects-left)
-        (goto-char (point-min))
-        (setq bh/hide-scheduled-and-waiting-next-tasks t)
-        (error "All projects viewed.")))))
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "V" 'bh/view-next-project))
-          'append)
-
-(setq org-show-entry-below (quote ((default))))
 
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
