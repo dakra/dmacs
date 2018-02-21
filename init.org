@@ -2200,6 +2200,20 @@ file to edit."
   :commands (magit-status magit-list-repositories magit-log magit-log-buffer-file magit-list-submodules)
   :config
 
+  ;; Ask before pushing to master
+  (setq magit-push-protected-branch "master")
+  (defun magit-push--protected-branch (magit-push-fun &rest args)
+    "Ask for confirmation before pushing a protected branch."
+    (if (equal magit-push-protected-branch (magit-get-current-branch))
+        ;; Arglist is (BRANCH TARGET ARGS)
+        (if (yes-or-no-p (format "Push branch %s? " (magit-get-current-branch)))
+            (apply magit-push-fun args)
+          (error "Push aborted by user"))
+      (apply magit-push-fun args)))
+
+  (advice-add 'magit-push-current-to-pushremote :around #'magit-push--protected-branch)
+  (advice-add 'magit-push-current-to-upstream :around #'magit-push--protected-branch)
+
   ;; Add switch to invert the filter e.g. show all authors but `--author=foo'
   (magit-define-popup-switch 'magit-log-popup
     ?i "Invert filter" "--invert-grep")
