@@ -4139,6 +4139,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ("C-c o a" . org-agenda)
          ("C-c o b" . org-switchb)
          :map org-mode-map
+         ("C-a" . org-beginning-of-line)  ; Overwrite crux-beginning-of-line
          ("M-o" . ace-link-org)
          ("M-p" . org-previous-visible-heading)
          ("M-n" . org-next-visible-heading)
