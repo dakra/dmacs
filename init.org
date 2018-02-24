@@ -1048,14 +1048,12 @@ Move current line or region with M-up or M-down.
 ** View Large Files
 #+BEGIN_SRC emacs-lisp
 ;; View Large Files
-(use-package vlf
-  :defer t
-  :init
-  ;; warn when opening files bigger than 100MB
-  (setq large-file-warning-threshold 100000000)
+(use-package vlf-setup
+  ;; Require vlf-setup which autoloads `vlf'
+  ;; to have vlf offered as choice when opening large files
   :config
-  ;; To have vlf offered as choice when opening large files
-  (require 'vlf-setup))
+  ;; warn when opening files bigger than 30MB
+  (setq large-file-warning-threshold 30000000))
 
 ;; Logview provides syntax highlighting, filtering and other features for various log files
 (use-package logview
