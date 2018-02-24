@@ -6,6 +6,7 @@ alias gds magit-diff-staged
 alias l ls -l $*
 alias la ls -al $*
 alias ll ls -al $*
+alias man woman
 alias pk eshell-up-peek $1
 alias up eshell-up $1
 alias vim find-file $1
