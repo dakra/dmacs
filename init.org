@@ -6948,6 +6948,7 @@ It only works for frames with exactly two windows."
 
   ;; Download the readable part of the original website
   ;; like in Firefox's article view
+  ;; XXX: Instead of external python script use `eww-readable'
   (setq elfeed-readability-script "~/bin/read_url.py")
   (setq elfeed-readability-url-regex "www\\.\\(heise\\|tagesschau\\)\\.de")
 
@@ -7139,7 +7140,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("https://blogs.msdn.microsoft.com/oldnewthing/feed" dev)
     ("http://blog.dubbelboer.com/atom.xml" dev friends)
 
-    ("http://blog.golang.org/feeds/posts/default" dev go)
+    ("https://blog.golang.org/feeds/posts/default" dev go)
 
     ("http://codelike.com/blog/feed" dev friends python)
     ("http://planet.python.org/rss20.xml" dev python)
@@ -7161,9 +7162,9 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("http://nutrientjournal.com/feed/" health)
     ("http://suppversity.blogspot.com/feeds/posts/default" health)
     ("http://mountaindogdiet.com/feed/" health)
-    ("http://www.examine.com/blog/rss/" health)
+    ("https://examine.com/nutrition/rss/" health)
 
-    ;;("https://en.chessbase.com/feed" chess)  ; FIXME: elfeed says "Unknown feed type"
+    ;; "https://en.chessbase.com/feed" is broken: elfeed says "Unknown feed type"
     ("http://feeds.feedburner.com/chessbase/mNmu" chess)
 
     ("http://www.twoplustwo.com/two-plus-two-magazine-rss.xml" poker)
