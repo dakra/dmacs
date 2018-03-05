@@ -6732,17 +6732,16 @@ It only works for frames with exactly two windows."
 
   ;; Line-editing shortcuts
   (setq exwm-input-simulation-keys
-        '(([?\C-b] . left)
-          ([?\C-f] . right)
-          ([?\C-p] . up)
-          ([?\C-n] . down)
-          ([?\C-a] . home)
-          ([?\C-e] . end)
-          ([?\M-v] . prior)
-          ([?\C-v] . next)
-          ([?\C-d] . delete)
-          ;;([?\C-k] . (S-end delete))
-          ))
+        '(([?\C-b] . [left])
+          ([?\C-f] . [right])
+          ([?\C-p] . [up])
+          ([?\C-n] . [down])
+          ([?\C-a] . [home])
+          ([?\C-e] . [end])
+          ([?\M-v] . [prior])
+          ([?\C-v] . [next])
+          ;;([?\C-k] . [S-end delete])
+          ([?\C-d] . [delete])))
 
   (setq exwm-workspace-show-all-buffers t)
   (setq exwm-layout-show-all-buffers t)
@@ -6778,43 +6777,41 @@ It only works for frames with exactly two windows."
   (setq exwm-systemtray-height 18)
   (exwm-systemtray-enable)
 
-;;; Some programs such as 'emacs' are better off being started in char-mode.
+  ;; Some programs such as 'emacs' are better off being started in char-mode.
   (defun exwm-start-in-char-mode ()
     (when (string= exwm-instance-name "emacs")
       (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
   (add-hook 'exwm-manage-finish-hook 'exwm-start-in-char-mode)
 
-  ;; FIXME: needed?
-  ;;(require 'exwm-config)
-  ;;(exwm-config-ido)
+  (setq exwm-manage-configurations
+        '(((equal exwm-class-name "keepassxc")
+           floating t
+           floating-mode-line nil
+           width 0.6
+           height 0.8)
+          ((equal exwm-class-name "Firefox Developer Edition")
+           simulation-keys (([?\C-q] . [?\C-w])  ; close tab instead of quitting Firefox
+                            ([?\C-b] . [left])
+                            ([?\C-f] . [right])
+                            ([?\C-p] . [up])
+                            ([?\C-n] . [down])
+                            ([?\C-a] . [home])
+                            ([?\C-e] . [end])
+                            ([?\M-v] . [prior])
+                            ([?\C-v] . [next])
+                            ([?\C-d] . [delete])))
+          ((equal exwm-class-name "Termite")
+           simulation-keys (([?\C-c ?\C-c] . [?\C-c])  ;; Send C-c with C-c C-c
+                            ([?\C-b] . [left])  ; C-b is default tmux prefix
+                            ([?\C-f] . [right])
+                            ([?\C-p] . [up])
+                            ([?\C-n] . [down])
+                            ([?\C-a] . [home])
+                            ([?\C-e] . [end])
+                            ([?\M-v] . [prior])
+                            ([?\C-v] . [next])
+                            ([?\C-d] . [delete])))))
 
-  ;;(setq exwm-workspace-minibuffer-position 'bottom)
-
-  (add-hook 'exwm-manage-finish-hook
-            (lambda ()
-              (when (and exwm-class-name
-                         (string= exwm-class-name "Firefox Developer Edition"))
-                (exwm-input-set-local-simulation-keys '(([?\C-q] . ?\C-w)  ;; close tab instead of quitting Firefox
-                                                        ([?\C-b] . left)
-                                                        ([?\C-f] . right)
-                                                        ([?\C-p] . up)
-                                                        ([?\C-n] . down)
-                                                        ([?\C-a] . home)
-                                                        ([?\C-e] . end)
-                                                        ([?\M-v] . prior)
-                                                        ([?\C-v] . next)
-                                                        ([?\C-d] . delete))))
-              (when (and exwm-class-name
-                         (string= exwm-class-name "Termite"))
-                (exwm-input-set-local-simulation-keys '(([?\C-c ?\C-c] . ?\C-c)  ;; Send C-c with C-c C-c
-                                                        ;;([?\C-b] . left)   ;; C-b is default tmux prefix
-                                                        ([?\C-f] . right)
-                                                        ([?\C-p] . up)
-                                                        ([?\C-n] . down)
-                                                        ([?\C-a] . home)
-                                                        ([?\C-e] . end)
-                                                        ([?\M-v] . prior)
-                                                        ([?\C-v] . next))))))
   (defun dakra/poweroff ()
     "Clock out, save all Emacs buffers and shut computer down."
     (interactive)
