@@ -6893,6 +6893,38 @@ It only works for frames with exactly two windows."
 
 * Misc
 ** Elfeed: Atomx/RSS news reader
+#+begin_src python :tangle ~/bin/read_url.py
+#!/usr/bin/python3
+"""Script to get the readable text from a website.
+Like in Firefox article view.
+Needs `requests` and `readability-lxml` installed.
+"""
+import sys
+import os
+import requests
+from readability import Document
+
+
+def usage(argv):
+    cmd = os.path.basename(argv[0])
+    print('Usage: %s <url>\n'
+          '(Example: "%s https://domain.com/article.html")' % (cmd, cmd))
+    sys.exit(1)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        usage(sys.argv)
+
+    url = sys.argv[1]
+    response = requests.get(url)
+    if response.ok:
+        doc = Document(response.text)
+        print(doc.summary())
+    else:
+        print('Error fetching {}: {}'.format(url, response.reason))
+#+end_src
+
 #+begin_src emacs-lisp
 (use-package youtube-dl
   :defer t
