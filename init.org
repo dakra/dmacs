@@ -2196,14 +2196,13 @@ file to edit."
          ("s-m b" . magit-blame))
   :defines (magit-ediff-dwim-show-on-hunks)
   :commands (magit-status magit-list-repositories magit-log magit-log-buffer-file magit-list-submodules)
-  :config
-
+  :init
   (defcustom magit-push-protected-branch nil
     "When set, ask for confirmation before pushing to this branch (e.g. master)."
     :type 'string
     :safe #'stringp
     :group 'magit)
-
+  :config
   (defun magit-push--protected-branch (magit-push-fun &rest args)
     "Ask for confirmation before pushing a protected branch."
     (if (equal magit-push-protected-branch (magit-get-current-branch))
