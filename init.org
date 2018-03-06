@@ -5886,6 +5886,7 @@ popd
   ;; Open mu4e with the 'Mail' key (if your keyboard has one)
   :bind (("<XF86Mail>" . mu4e)
          :map mu4e-headers-mode-map
+         ("TAB" . mu4e-headers-next-unread)
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash)
          ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
