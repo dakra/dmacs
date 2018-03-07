@@ -3756,63 +3756,6 @@ displayed anywhere else."
 ;; too often unintentional changes. just use 'M-x crux-sudo-edit' when needed
 ;;(crux-reopen-as-root-mode)
 
-;; ledger-mode for bookkeeping
-(defun ledger-mode-outline-hook ()
-  (outline-minor-mode)
-  (setq-local outline-regexp "[#;]+"))
-
-(use-package hledger-mode
-  :disabled t  ;; Think ledger-mode is better.. needs more experimenting
-  ;;:mode "\\.ledger\\'"
-  :commands (hledger-mode hledger-jentry hledger-run-command)
-  :bind (:map hledger-mode-map
-         ("C-c e" . hledger-jentry)
-         ("C-c j" . hledger-run-command)
-         ("M-p" . hledger/prev-entry)
-         ("M-n" . hledger/next-entry))
-  :init (add-hook 'hledger-mode-hook 'ledger-mode-outline-hook)
-  :config
-  (setq hledger-jfile "/home/daniel/cepheus/finances.ledger")
-  ;; Auto-completion for account names
-  (add-to-list 'company-backends 'hledger-company)
-
-  (defun hledger/next-entry ()
-    "Move to next entry and pulse."
-    (interactive)
-    (hledger-next-or-new-entry)
-    (hledger-pulse-momentary-current-entry))
-
-  (defun hledger/prev-entry ()
-    "Move to last entry and pulse."
-    (interactive)
-    (hledger-backward-entry)
-    (hledger-pulse-momentary-current-entry)))
-
-(use-package ledger-mode
-  ;;:disabled t  ;; try hledger
-  :mode "\\.ledger\\'"
-  :init
-  ;; http://unconj.ca/blog/using-hledger-with-ledger-mode.html
-  ;; Required to use hledger instead of ledger itself.
-  ;;(setq ledger-mode-should-check-version nil
-  ;;      ledger-report-links-in-register nil
-  ;;      ledger-binary-path "hledger")
-
-  (add-hook 'ledger-mode-hook 'ledger-mode-outline-hook)
-  :config
-  (setq ledger-use-iso-dates t)  ; Use YYYY-MM-DD format
-
-  ;;(add-to-list 'ledger-reports
-  ;;             (list "monthly expenses"
-  ;;                   (concat "%(binary) -f %(ledger-file) balance expenses "
-  ;;                           "--tree --no-total --row-total --average --monthly")))
-  ;; disable whitespace-mode in ledger reports
-  (add-hook 'ledger-report-mode-hook (lambda () (whitespace-mode -1)))
-  (setq ledger-post-amount-alignment-column 60))
-
-(use-package flycheck-ledger
-  :after (flycheck ledger-mode))
-
 (use-package aggressive-indent
   :hook ((emacs-lisp-mode lisp-mode hy-mode css js2-mode) . aggressive-indent-mode))
 
@@ -6895,6 +6838,65 @@ It only works for frames with exactly two windows."
 #+END_SRC
 
 * Misc
+** Ledger: Accounting
+#+begin_src emacs-lisp
+;; ledger-mode for bookkeeping
+(defun ledger-mode-outline-hook ()
+  (outline-minor-mode)
+  (setq-local outline-regexp "[#;]+"))
+
+(use-package hledger-mode
+  :disabled t  ;; Think ledger-mode is better.. needs more experimenting
+  ;;:mode "\\.ledger\\'"
+  :commands (hledger-mode hledger-jentry hledger-run-command)
+  :bind (:map hledger-mode-map
+         ("C-c e" . hledger-jentry)
+         ("C-c j" . hledger-run-command)
+         ("M-p" . hledger/prev-entry)
+         ("M-n" . hledger/next-entry))
+  :init (add-hook 'hledger-mode-hook 'ledger-mode-outline-hook)
+  :config
+  (setq hledger-jfile "/home/daniel/cepheus/finances.ledger")
+  ;; Auto-completion for account names
+  (add-to-list 'company-backends 'hledger-company)
+
+  (defun hledger/next-entry ()
+    "Move to next entry and pulse."
+    (interactive)
+    (hledger-next-or-new-entry)
+    (hledger-pulse-momentary-current-entry))
+
+  (defun hledger/prev-entry ()
+    "Move to last entry and pulse."
+    (interactive)
+    (hledger-backward-entry)
+    (hledger-pulse-momentary-current-entry)))
+
+(use-package ledger-mode
+  ;;:disabled t  ;; try hledger
+  :mode "\\.ledger\\'"
+  :init
+  ;; http://unconj.ca/blog/using-hledger-with-ledger-mode.html
+  ;; Required to use hledger instead of ledger itself.
+  ;;(setq ledger-mode-should-check-version nil
+  ;;      ledger-report-links-in-register nil
+  ;;      ledger-binary-path "hledger")
+
+  (add-hook 'ledger-mode-hook 'ledger-mode-outline-hook)
+  :config
+  (setq ledger-use-iso-dates t)  ; Use YYYY-MM-DD format
+
+  ;;(add-to-list 'ledger-reports
+  ;;             (list "monthly expenses"
+  ;;                   (concat "%(binary) -f %(ledger-file) balance expenses "
+  ;;                           "--tree --no-total --row-total --average --monthly")))
+  ;; disable whitespace-mode in ledger reports
+  (add-hook 'ledger-report-mode-hook (lambda () (whitespace-mode -1)))
+  (setq ledger-post-amount-alignment-column 60))
+
+(use-package flycheck-ledger
+  :after (flycheck ledger-mode))
+#+end_src
 ** Elfeed: Atomx/RSS news reader
 #+begin_src python :tangle ~/bin/read_url.py
 #!/usr/bin/python3
