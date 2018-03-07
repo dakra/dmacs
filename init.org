@@ -4564,7 +4564,7 @@ session as the current block. ARG has same meaning as in
      ;;(R . t)
      (asymptote)
      (awk)
-     (calc)
+     (calc . t)
      (clojure)
      (comint)
      (css)
