@@ -291,6 +291,9 @@ Allow some commands as safe by default
 (column-number-mode t)
 (size-indication-mode t)
 
+;; Disable auto vscroll (makes scrolling down a bit faster?)
+(setq auto-window-vscroll nil)
+
 ;; Enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
 
