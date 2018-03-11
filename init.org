@@ -2913,6 +2913,7 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 ;; Smart indentation for SQL files
 (use-package sql-indent
   :hook (sql-mode . sqlind-minor-mode)
+  ;;:config (setq-default sqlind-basic-offset 4)
   :diminish sqlind-minor-mode)
 
 ;; Capitalize keywords in SQL mode
