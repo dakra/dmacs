@@ -6884,6 +6884,15 @@ It only works for frames with exactly two windows."
 
   (add-hook 'ledger-mode-hook 'ledger-mode-outline-hook)
   :config
+  (setq ledger-reports
+        '(("Balance (this year)" "%(binary) -f %(ledger-file) bal -p 'this year'")
+          ("Balance (last year)" "%(binary) -f %(ledger-file) bal -p 'last year'")
+          ("Register (this year)" "%(binary) -f %(ledger-file) reg -p 'this year'")
+          ("Register (last year)" "%(binary) -f %(ledger-file) reg -p 'last year'")
+          ("Account (this year)" "%(binary) -f %(ledger-file) reg %(account) -p 'this year'")
+          ("Account (last year)" "%(binary) -f %(ledger-file) reg %(account) -p 'last year'")
+          ("Payee" "%(binary) -f %(ledger-file) reg @%(payee)")))
+
   (setq ledger-use-iso-dates t)  ; Use YYYY-MM-DD format
 
   ;;(add-to-list 'ledger-reports
