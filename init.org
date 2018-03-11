@@ -411,6 +411,12 @@ Allow some commands as safe by default
   :disabled t  ; I actually prefer larger help windows
   :config (temp-buffer-resize-mode))
 #+end_src
+** Makefile
+#+begin_src emacs-lisp
+(use-package make-mode
+  ;; Files like `Makefile.docker' are also gnu make
+  :mode (("Makefile" . makefile-gmake-mode)))
+#+end_src
 ** Time
 #+BEGIN_SRC emacs-lisp
 (use-package time
