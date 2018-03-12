@@ -167,9 +167,10 @@ We use borg for package management and disable ~package.el~.
 #+BEGIN_SRC emacs-lisp
 (custom-set-faces
  '(default ((t (:family "Operator Mono" :foundry "H&Co" :slant normal :weight normal :height 69 :width normal)))))  ;; ex height 44
-(use-package powerline :defer 1)
-(use-package smart-mode-line-powerline-theme :after powerline)
+(use-package powerline :defer 1 :disabled t)
+(use-package smart-mode-line-powerline-theme :after powerline :disabled t)
 (use-package smart-mode-line :after smart-mode-line-powerline-theme
+  :disabled t
   ;;:demand t
   :init
   (setq sml/theme 'powerline)
@@ -179,7 +180,32 @@ We use borg for package management and disable ~package.el~.
   (setq sml/no-confirm-load-theme t)
   (sml/setup))
 
+(use-package color-theme-sanityinc-tomorrow
+  :unless noninteractive
+  :config
+  (load-theme 'sanityinc-tomorrow-night 'no-confirm)
+  (let ((line (face-attribute 'mode-line :underline)))
+    (set-face-attribute 'mode-line nil :overline line)
+    (set-face-attribute 'mode-line-inactive nil :overline line)
+    (set-face-attribute 'mode-line-inactive nil :underline line)
+    (set-face-attribute 'mode-line nil :box nil)
+    (set-face-attribute 'mode-line-inactive nil :box nil)))
+
+(use-package moody
+  :unless noninteractive
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+
+(use-package minions
+  :unless noninteractive
+  :config
+  (setq minions-mode-line-lighter "+")
+  (minions-mode))
+
 (use-package moe-theme
+  :disabled t
   :unless noninteractive
   :demand t
   :config
@@ -2290,6 +2316,7 @@ file to edit."
   )
 
 (use-package magit-rockstar
+  :disabled t
   :after magit
   :functions (magit-define-popup-action)
   :config

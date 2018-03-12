@@ -67,6 +67,9 @@
 [submodule "cmake-mode"]
 	path = lib/cmake-mode
 	url = git@github.com:emacsmirror/cmake-mode.git
+[submodule "color-theme-sanityinc-tomorrow"]
+	path = lib/color-theme-sanityinc-tomorrow
+	url = git@github.com:purcell/color-theme-sanityinc-tomorrow.git
 [submodule "comment-dwim-2"]
 	path = lib/comment-dwim-2
 	url = git@github.com:remyferre/comment-dwim-2.git
@@ -406,6 +409,7 @@
 	path = lib/magit-popup
 	url = git@github.com:magit/magit-popup.git
 [submodule "magit-rockstar"]
+	disabled = true
 	path = lib/magit-rockstar
 	url = git@github.com:tarsius/magit-rockstar.git
 [submodule "magit-tbdiff"]
@@ -420,9 +424,16 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = git@github.com:jrblevin/markdown-mode.git
+[submodule "minions"]
+	path = lib/minions
+	url = git@github.com:tarsius/minions.git
 [submodule "moe-theme"]
+	disabled = true
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el.git
+[submodule "moody"]
+	path = lib/moody
+	url = git@github.com:tarsius/moody.git
 [submodule "move-text"]
 	path = lib/move-text
 	url = git@github.com:emacsfodder/move-text.git
@@ -568,6 +579,7 @@
 	path = lib/pos-tip
 	url = git@github.com:pitkali/pos-tip.git
 [submodule "powerline"]
+	disabled = true
 	path = lib/powerline
 	url = git@github.com:milkypostman/powerline.git
 [submodule "prettier-js"]
@@ -655,6 +667,7 @@
 	path = lib/slime-company
 	url = git@github.com:anwyn/slime-company.git
 [submodule "smart-mode-line"]
+	disabled = true
 	path = lib/smart-mode-line
 	url = git@github.com:Malabarba/smart-mode-line.git
 	load-path = .
