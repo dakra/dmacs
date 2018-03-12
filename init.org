@@ -6782,7 +6782,7 @@ It only works for frames with exactly two windows."
                             ([?\C-d] . [delete])))
           ((equal exwm-class-name "Termite")
            simulation-keys (([?\C-c ?\C-c] . [?\C-c])  ;; Send C-c with C-c C-c
-                            ([?\C-b] . [left])  ; C-b is default tmux prefix
+                            ;;([?\C-b] . [left])  ; C-b is default tmux prefix
                             ([?\C-f] . [right])
                             ([?\C-p] . [up])
                             ([?\C-n] . [down])
