@@ -181,6 +181,7 @@ We use borg for package management and disable ~package.el~.
   (sml/setup))
 
 (use-package color-theme-sanityinc-tomorrow
+  :disabled t
   :unless noninteractive
   :config
   (load-theme 'sanityinc-tomorrow-night 'no-confirm)
@@ -191,23 +192,8 @@ We use borg for package management and disable ~package.el~.
     (set-face-attribute 'mode-line nil :box nil)
     (set-face-attribute 'mode-line-inactive nil :box nil)))
 
-(use-package moody
-  :unless noninteractive
-  :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
-
-(use-package minions
-  :unless noninteractive
-  :config
-  (setq minions-mode-line-lighter "+")
-  (minions-mode))
-
 (use-package moe-theme
-  :disabled t
   :unless noninteractive
-  :demand t
   :config
   ;; Show highlighted buffer-id as decoration. (Default: nil)
   (setq moe-theme-highlight-buffer-id t)
@@ -226,10 +212,38 @@ We use borg for package management and disable ~package.el~.
    '(diff-added ((t (:foreground "#ffffff" :background "#005f00" :bold t))))
    '(diff-changed ((t (:foreground "#ffffff" :background "#fce94f" :bold t))))
    '(diff-removed ((t (:foreground "#ffffff" :background "#a40000" :bold t))))
-  ;; Don't inherit flyspell from "error" which has red background
+   ;; Don't inherit flyspell from "error" which has red background
    '(flyspell-duplicate ((t (:weight normal :underline (:color "forest green" :style wave)))))
-   '(flyspell-incorrect ((t (:weight normal :underline (:color "forest green" :style wave)))))))
+   '(flyspell-incorrect ((t (:weight normal :underline (:color "forest green" :style wave))))))
+
   ;;(moe-theme-resize-font-size))
+
+  (let ((line (face-attribute 'mode-line :underline)))
+    (set-face-attribute 'mode-line nil
+                        :overline line :box nil
+                        :foreground "#c5c8c6"
+                        :background "#373b41")
+    (set-face-attribute 'mode-line-inactive nil
+                        :overline line :underline line :box nil
+                        :foreground "#969896"
+                        :background "#282a2e")
+    (set-face-attribute 'mode-line-buffer-id nil
+                        :foreground "#b294bb"
+                        :background nil)))
+
+
+(use-package moody
+  :unless noninteractive
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
+
+(use-package minions
+  :unless noninteractive
+  :config
+  (setq minions-mode-line-lighter "+")
+  (minions-mode))
 #+END_SRC
 
 * Personal Information
