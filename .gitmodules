@@ -661,7 +661,12 @@
 [submodule "slime"]
 	path = lib/slime
 	url = git@github.com:slime/slime.git
+	load-path = .
+	load-path = contrib
+	info-path = doc
+	build-step = borg-update-autoloads
 	build-step = make compile contrib-compile
+	build-step = borg-makeinfo
 [submodule "slime-company"]
 	path = lib/slime-company
 	url = git@github.com:anwyn/slime-company.git
@@ -683,6 +688,9 @@
 [submodule "smex"]
 	path = lib/smex
 	url = git@github.com:nonsequitur/smex.git
+[submodule "solidity-mode"]
+	path = lib/solidity-mode
+	url = git@github.com:ethereum/emacs-solidity.git
 [submodule "sphinx-mode"]
 	path = lib/sphinx-mode
 	url = git@github.com:Fuco1/sphinx-mode.git

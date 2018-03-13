@@ -2970,6 +2970,16 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
   (add-to-list 'sqlup-blacklist "type"))
 #+END_SRC
 
+** Solidity (Ethereum)
+Solidity with flycheck integration requires `solc` and `soldium`.
+So for Arch you need to install `solidity-git` and `sodium` from AUR.
+#+begin_src emacs-lisp
+(use-package solidity-mode
+  :mode "\\.sol\\'"
+  :config
+  (setq solidity-flycheck-solc-checker-active t)
+  (setq solidity-flycheck-solium-checker-active t))
+#+end_src
 ** Redis
 #+begin_src emacs-lisp
 ;; Commint for redis
