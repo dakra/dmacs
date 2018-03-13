@@ -6955,8 +6955,7 @@ It only works for frames with exactly two windows."
   :after (flycheck ledger-mode))
 #+end_src
 ** Elfeed: Atomx/RSS news reader
-#+begin_src python :tangle ~/bin/read_url.py
-#!/usr/bin/python3
+#+begin_src python :tangle ~/bin/read_url.py :shebang #!/usr/bin/python3
 """Script to get the readable text from a website.
 Like in Firefox article view.
 Needs `requests` and `readability-lxml` installed.
