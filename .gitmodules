@@ -428,7 +428,6 @@
 	path = lib/minions
 	url = git@github.com:tarsius/minions.git
 [submodule "moe-theme"]
-	disabled = true
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el.git
 [submodule "moody"]

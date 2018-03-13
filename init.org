@@ -218,6 +218,7 @@ We use borg for package management and disable ~package.el~.
 
   ;;(moe-theme-resize-font-size))
 
+  ;; Mode-line config for [[moody]]
   (let ((line (face-attribute 'mode-line :underline)))
     (set-face-attribute 'mode-line nil
                         :overline line :box nil
@@ -236,6 +237,7 @@ We use borg for package management and disable ~package.el~.
   :unless noninteractive
   :config
   (setq x-underline-at-descent-line t)
+  (setq moody-mode-line-height 20)
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 
