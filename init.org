@@ -6177,113 +6177,77 @@ popd
         ;; not a list, check rx
         (string-match rx (mu4e-message-field msg :maildir)))))
 
+  (defmacro mu4e-context-match-fun (maildir)
+    "Return lambda for context switching which checks if a message is in MAILDIR."
+    `(lambda (msg)
+      (when msg
+        (mu4e-message-maildir-matches msg ,maildir))))
 
   (setq mu4e-contexts
         `( ,(make-mu4e-context
              :name "private"
              :enter-func (lambda () (mu4e-message "Switch to the Private context"))
-             ;; leave-func not defined
-             :match-func (lambda (msg)
-                           (when msg
-                             (mu4e-message-maildir-matches msg "^/private")))
-             :vars '(  ( user-mail-address  . "daniel@kraus.my"  )
-                       ( mu4e-maildir-shortcuts . (("/private/Inbox"      . ?i)
-                                                   ("/private/Sent"       . ?s)
-                                                   ("/private/Trash"      . ?t)
-                                                   ("/private/Drafts"     . ?d)
-                                                   ("/private/Archive"   . ?a)))
-                       ( mu4e-drafts-folder . "/private/Drafts" )
-                       ( mu4e-sent-folder   . "/private/Sent" )
-                       ( mu4e-trash-folder  . "/private/Trash" )
-                       ( mu4e-refile-folder . dakra-mu4e-private-refile)
-                       ( user-full-name     . "Daniel Kraus" )
-                       ( XXX-mu4e-compose-signature . (concat
-                                                       "regards,\n"
-                                                       "  Daniel\n"))))
+             :match-func (mu4e-context-match-fun "^/private")
+             :vars '(( user-mail-address  . "daniel@kraus.my" )
+                     ( mu4e-maildir-shortcuts . (("/private/Inbox"      . ?i)
+                                                 ("/private/Sent"       . ?s)
+                                                 ("/private/Trash"      . ?t)
+                                                 ("/private/Drafts"     . ?d)
+                                                 ("/private/Archive"   . ?a)))
+                     ( mu4e-drafts-folder . "/private/Drafts" )
+                     ( mu4e-sent-folder   . "/private/Sent" )
+                     ( mu4e-trash-folder  . "/private/Trash" )
+                     ( mu4e-refile-folder . dakra-mu4e-private-refile)))
            ,(make-mu4e-context
              :name "gmail"
              :enter-func (lambda () (mu4e-message "Switch to the gmail context"))
-             ;; leave-func not defined
-             :match-func (lambda (msg)
-                           (when msg
-                             (mu4e-message-maildir-matches msg "^/gmail")))
-             :vars '(  ( user-mail-address  . "daniel.kraus@gmail.com"  )
-                       ( mu4e-maildir-shortcuts . (("/gmail/inbox"      . ?i)
-                                                   ("/gmail/sent_mail"  . ?s)
-                                                   ("/gmail/trash"      . ?t)
-                                                   ("/gmail/drafts"     . ?d)
-                                                   ("/gmail/all_mail"   . ?a)))
-                       ( mu4e-drafts-folder . "/gmail/drafts" )
-                       ( mu4e-sent-folder   . "/gmail/sent_mail" )
-                       ( mu4e-trash-folder  . "/gmail/trash" )
-                       ( mu4e-refile-folder . "/gmail/all_mail" )
-                       ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-                       ( mu4e-sent-messages-behavior  . delete)
-                       ( user-full-name     . "Daniel Kraus" )
-                       ( XXX-mu4e-compose-signature .
-                                                    (concat
-                                                     "regards,\n"
-                                                     "  Daniel\n"))))
+             :match-func (mu4e-context-match-fun "^/gmail")
+             :vars '(( user-mail-address  . "daniel.kraus@gmail.com"  )
+                     ( mu4e-maildir-shortcuts . (("/gmail/inbox"      . ?i)
+                                                 ("/gmail/sent_mail"  . ?s)
+                                                 ("/gmail/trash"      . ?t)
+                                                 ("/gmail/drafts"     . ?d)
+                                                 ("/gmail/all_mail"   . ?a)))
+                     ( mu4e-drafts-folder . "/gmail/drafts" )
+                     ( mu4e-sent-folder   . "/gmail/sent_mail" )
+                     ( mu4e-trash-folder  . "/gmail/trash" )
+                     ( mu4e-refile-folder . "/gmail/all_mail" )
+                     ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+                     ( mu4e-sent-messages-behavior  . delete)))
            ,(make-mu4e-context
              :name "atomx"
              :enter-func (lambda () (mu4e-message "Switch to the Atomx context"))
-             ;; leave-fun not defined
-             :match-func (lambda (msg)
-                           (when msg
-                             (mu4e-message-maildir-matches msg "^/atomx")))
-             :vars '(  ( user-mail-address  . "daniel@atomx.com" )
-                       ( mu4e-maildir-shortcuts . (("/atomx/inbox"      . ?i)
-                                                   ("/atomx/sent_mail"  . ?s)
-                                                   ("/atomx/trash"      . ?t)
-                                                   ("/atomx/drafts"     . ?d)
-                                                   ("/atomx/all_mail"   . ?a)))
-                       ( mu4e-drafts-folder . "/atomx/drafts" )
-                       ( mu4e-sent-folder   . "/atomx/sent_mail" )
-                       ( mu4e-trash-folder  . "/atomx/trash" )
-                       ( mu4e-refile-folder . "/atomx/all_mail" )
-                       ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-                       ( mu4e-sent-messages-behavior  . delete)
-                       ( user-full-name     . "Daniel Kraus" )
-                       ( XXX-mu4e-compose-signature . (concat
-                                                       "Daniel Kraus\n"
-                                                       "Atomx | https://atomx.com\n"))))
-
+             :match-func (mu4e-context-match-fun "^/atomx")
+             :vars '(( user-mail-address  . "daniel@atomx.com" )
+                     ( mu4e-maildir-shortcuts . (("/atomx/inbox"      . ?i)
+                                                 ("/atomx/sent_mail"  . ?s)
+                                                 ("/atomx/trash"      . ?t)
+                                                 ("/atomx/drafts"     . ?d)
+                                                 ("/atomx/all_mail"   . ?a)))
+                     ( mu4e-drafts-folder . "/atomx/drafts" )
+                     ( mu4e-sent-folder   . "/atomx/sent_mail" )
+                     ( mu4e-trash-folder  . "/atomx/trash" )
+                     ( mu4e-refile-folder . "/atomx/all_mail" )
+                     ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+                     ( mu4e-sent-messages-behavior  . delete)))
            ,(make-mu4e-context
              :name "e5"
              :enter-func (lambda () (mu4e-message "Switch to the e5 context"))
-             ;; leave-fun not defined
-             :match-func (lambda (msg)
-                           (when msg
-                             (mu4e-message-maildir-matches msg "^/e5")))
-             :vars '(  ( user-mail-address  . "daniel.kraus@ebenefuenf.de" )
-                       ( mu4e-maildir-shortcuts . (("/e5/Inbox"      . ?i)
-                                                   ("/e5/Sent"  . ?s)
-                                                   ("/e5/Trash"      . ?t)
-                                                   ("/e5/Drafts"     . ?d)
-                                                   ("/e5/Archive"    . ?a)))
-                       ( mu4e-drafts-folder . "/e5/Drafts" )
-                       ( mu4e-sent-folder   . "/e5/Sent" )
-                       ( mu4e-trash-folder  . "/e5/Trash" )
-                       ( mu4e-refile-folder . "/e5/Archive" )
-                       ( user-full-name     . "Daniel Kraus" )
-                       ( XXX-mu4e-compose-signature . (concat
-                                                       "Daniel Kraus\n"
-                                                       "https://ebenefuenf.de\n"
-                                                       "ebene fünf GmbH\n"
-                                                       "Amselweg 6\n"
-                                                       "96173 Oberhaid/Staffelbach\n"
-                                                       "---\n"
-                                                       "Sitz der Gesellschaft: Staffelbach\n"
-                                                       "Amtsgericht Bamberg - HRB 6233\n"
-                                                       "USt-IdNr. DE 263246988\n"))))
-
+             :match-func (mu4e-context-match-fun "^/e5")
+             :vars '(( user-mail-address  . "daniel.kraus@ebenefuenf.de" )
+                     ( mu4e-maildir-shortcuts . (("/e5/Inbox"      . ?i)
+                                                 ("/e5/Sent"  . ?s)
+                                                 ("/e5/Trash"      . ?t)
+                                                 ("/e5/Drafts"     . ?d)
+                                                 ("/e5/Archive"    . ?a)))
+                     ( mu4e-drafts-folder . "/e5/Drafts" )
+                     ( mu4e-sent-folder   . "/e5/Sent" )
+                     ( mu4e-trash-folder  . "/e5/Trash" )
+                     ( mu4e-refile-folder . "/e5/Archive" )))
            ,(make-mu4e-context
              :name "Paessler"
              :enter-func (lambda () (mu4e-message "Switch to the paessler context"))
-             ;; leave-fun not defined
-             :match-func (lambda (msg)
-                           (when msg
-                             (mu4e-message-maildir-matches msg "^/paessler")))
+             :match-func (mu4e-context-match-fun "^/paessler")
              :vars '(  ( user-mail-address  . "daniel.kraus@paessler.com" )
                        ( mu4e-maildir-shortcuts . (("/paessler/Inbox"         . ?i)
                                                    ("/paessler/Outbox"        . ?s)
@@ -6293,35 +6257,26 @@ popd
                        ( mu4e-drafts-folder . "/paessler/Drafts" )
                        ( mu4e-sent-folder   . "/paessler/Sent" )
                        ( mu4e-trash-folder  . "/paessler/Deleted Items" )
-                       ( mu4e-refile-folder . "/paessler/Archive" )
-                       ( user-full-name     . "Daniel Kraus" )
-                       ( XXX-mu4e-compose-signature . (concat
-                                                       "regards,\n"
-                                                       "  Daniel Kraus"))))
-
+                       ( mu4e-refile-folder . "/paessler/Archive" )))
            ,(make-mu4e-context
              :name "hogaso"
              :enter-func (lambda () (mu4e-message "Switch to the Hogaso context"))
-             ;; leave-fun not defined
-             :match-func (lambda (msg)
-                           (when msg
-                             (mu4e-message-maildir-matches msg "^/hogaso")))
-             :vars '(  ( user-mail-address  . "daniel@hogaso.com" )
-                       ( mu4e-maildir-shortcuts . (("/hogaso/inbox"      . ?i)
-                                                   ("/hogaso/sent_mail"  . ?s)
-                                                   ("/hogaso/trash"      . ?t)
-                                                   ("/hogaso/drafts"     . ?d)
-                                                   ("/hogaso/all_mail"   . ?a)))
-                       ( mu4e-drafts-folder . "/hogaso/drafts" )
-                       ( mu4e-sent-folder   . "/hogaso/sent_mail" )
-                       ( mu4e-trash-folder  . "/hogaso/trash" )
-                       ( mu4e-refile-folder . "/hogaso/all_mail" )
-                       ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-                       ( mu4e-sent-messages-behavior  . delete)
-                       ( user-full-name     . "Daniel Kraus" )
-                       ( mu4e-compose-signature . (concat
-                                                   "Daniel Kraus\n"
-                                                   "Hogaso | https://hogaso.com\n"))))))
+             :match-func (mu4e-context-match-fun "^/hogaso")
+             :vars '(( user-mail-address  . "daniel@hogaso.com" )
+                     ( mu4e-maildir-shortcuts . (("/hogaso/inbox"      . ?i)
+                                                 ("/hogaso/sent_mail"  . ?s)
+                                                 ("/hogaso/trash"      . ?t)
+                                                 ("/hogaso/drafts"     . ?d)
+                                                 ("/hogaso/all_mail"   . ?a)))
+                     ( mu4e-drafts-folder . "/hogaso/drafts" )
+                     ( mu4e-sent-folder   . "/hogaso/sent_mail" )
+                     ( mu4e-trash-folder  . "/hogaso/trash" )
+                     ( mu4e-refile-folder . "/hogaso/all_mail" )
+                     ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+                     ( mu4e-sent-messages-behavior  . delete)
+                     ( mu4e-compose-signature . (concat
+                                                 "Daniel Kraus\n"
+                                                 "Hogaso | https://hogaso.com\n"))))))
 
   ;; start with the first (default) context;
   ;; default is to ask-if-none (ask when there's no context yet, and none match)
