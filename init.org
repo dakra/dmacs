@@ -6500,16 +6500,16 @@ there are no attachments."
 * Window Manager
 FIXME: Brightness
 ** PulseAudio
-FIXME: Create hydra
 #+BEGIN_SRC emacs-lisp
 (use-package pulseaudio-control
-  :commands (pulseaudio-control-increase-volume
-             pulseaudio-control-decrease-volume
-             pulseaudio-control-toggle-current-sink-mute)
   :bind (("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
          ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
          ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute)
-         ("C-c v" . hydra-pulseaudio-control/body))
+         ("C-c v" . hydra-pulseaudio-control/body)
+         :map exwm-mode-map
+         ("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
+         ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
+         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute))
   ;;:bind-keymap ("C-c v" . pulseaudio-control-map)
   :config
   ;; XXX: Maybe -set-volume (1-9 keys sets 10%, 20% etc)?
@@ -6523,11 +6523,7 @@ FIXME: Create hydra
     ("m" pulseaudio-control-toggle-current-sink-mute "Toggle Mute")
     ("s" pulseaudio-control-select-sink-by-name "Select Sink")
     ("q" nil "quit"))
-  (setq pulseaudio-control-volume-step "5%")
-  (when (daemonp)
-    (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") #'pulseaudio-control-increase-volume)
-    (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") #'pulseaudio-control-decrease-volume)
-    (exwm-input-set-key (kbd "<XF86AudioMute>") #'pulseaudio-control-toggle-current-sink-mute)))
+  (setq pulseaudio-control-volume-step "5%"))
 #+END_SRC
 ** Symon
 #+BEGIN_SRC emacs-lisp
@@ -6657,6 +6653,13 @@ It only works for frames with exactly two windows."
 
 (use-package exwm
   :if (daemonp)
+  :demand t
+  :bind (:map exwm-mode-map
+         ;; The following can only apply to EXWM buffers, else it could have unexpected effects.
+         ("s-SPC" . exwm-floating-toggle-floating)
+         ("s-q" . exwm-input-send-next-key)  ; Shorter than the default C-c C-q
+         ("s-t" . exwm-input-toggle-keyboard)
+         ("s-F" . exwm-layout-toggle-fullscreen))
   :config
   ;; Set the initial workspace number.
   (setq exwm-workspace-number 4)
@@ -6671,8 +6674,6 @@ It only works for frames with exactly two windows."
   ;; General exwm commands
   (exwm-input-set-key (kbd "s-R") #'exwm-reset)
   (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
-  (exwm-input-set-key (kbd "s-t") #'exwm-input-toggle-keyboard)
-  (exwm-input-set-key (kbd "s-q") #'exwm-input-send-next-key)  ; Shorter than the default C-c C-q
 
   ;; Moving/editing windows
   (exwm-input-set-key (kbd "s-j") #'windmove-left)
@@ -6692,15 +6693,10 @@ It only works for frames with exactly two windows."
 
   ;; FIXME: switch to winner-mode (C-X 1 and the C-c <left>)
   (exwm-input-set-key (kbd "s-f") #'toggle-single-window)
-  (exwm-input-set-key (kbd "s-F") #'exwm-layout-toggle-fullscreen)
 
   (exwm-input-set-key (kbd "s-D") #'kill-this-buffer)
   (exwm-input-set-key (kbd "s-b") #'ivy-switch-buffer)
   ;;(exwm-input-set-key (kbd "s-f") #'counsel-find-file)
-
-  ;; The following can only apply to EXWM buffers, else it could have unexpected effects.
-  (push ?\s-  exwm-input-prefix-keys)
-  (define-key exwm-mode-map (kbd "s-SPC") #'exwm-floating-toggle-floating)
 
   ;; Switching workspaces
   (defun exwm-workspace-switch-previous (p)
@@ -6712,8 +6708,8 @@ It only works for frames with exactly two windows."
     (interactive "p")
     (exwm-workspace-switch (+ exwm-workspace-current-index p)))
 
-  (exwm-input-set-key (kbd "s-y") #'exwm-workspace-switch-previous)
-  (exwm-input-set-key (kbd "s-u") #'exwm-workspace-switch-next)
+  (exwm-input-set-key (kbd "s-u") #'exwm-workspace-switch-previous)
+  (exwm-input-set-key (kbd "s-o") #'exwm-workspace-switch-next)
 
   ;; 's-N': Switch to certain workspace
   (dotimes (i 8)
@@ -6780,19 +6776,15 @@ It only works for frames with exactly two windows."
   (exwm-randr-enable)
 
   (require 'exwm-systemtray)
-  ;; Pick some height for the system tray. Some applet icons don't appear
-  ;; otherwise.
+  ;; Pick some height for the system tray. Some applet icons don't appear otherwise.
   (setq exwm-systemtray-height 18)
   (exwm-systemtray-enable)
 
-  ;; Some programs such as 'emacs' are better off being started in char-mode.
-  (defun exwm-start-in-char-mode ()
-    (when (string= exwm-instance-name "emacs")
-      (exwm-input-release-keyboard (exwm--buffer->id (window-buffer)))))
-  (add-hook 'exwm-manage-finish-hook 'exwm-start-in-char-mode)
-
   (setq exwm-manage-configurations
-        '(((equal exwm-class-name "keepassxc")
+        '(((string= exwm-instance-name "emacs")
+           ;; Emacs is better off being started in char-mode.
+           char-mode t)
+          ((equal exwm-class-name "keepassxc")
            floating t
            floating-mode-line nil
            width 0.6
