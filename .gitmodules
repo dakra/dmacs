@@ -95,6 +95,9 @@
 [submodule "copy-as-format"]
 	path = lib/copy-as-format
 	url = git@github.com:sshaw/copy-as-format.git
+[submodule "counsel-css"]
+	path = lib/counsel-css
+	url = git@github.com:hlissner/emacs-counsel-css.git
 [submodule "counsel-projectile"]
 	path = lib/counsel-projectile
 	url = git@github.com:ericdanan/counsel-projectile.git

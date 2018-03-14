@@ -3183,6 +3183,10 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   ;; turn off annoying auto-compile on save
   (setq scss-compile-at-save nil))
 
+;; Imenu support for css/scss/less
+(use-package counsel-css
+  :hook (css-mode . counsel-css-imenu-setup))
+
 (use-package sass-mode
   :mode ("\\.sass\\'"))
 #+END_SRC
