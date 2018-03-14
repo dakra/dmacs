@@ -245,6 +245,7 @@ We use borg for package management and disable ~package.el~.
   :unless noninteractive
   :config
   (setq minions-mode-line-lighter "+")
+  (setq minions-direct '(flycheck-mode))
   (minions-mode))
 #+END_SRC
 
