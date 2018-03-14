@@ -992,6 +992,7 @@ Move current line or region with M-up or M-down.
 ** Ace-window: Select/move/swap windows
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window
+  :disabled t
   :bind ("s-o" . ace-window)
   :config
   ;; Show the ace window key in the mode line
