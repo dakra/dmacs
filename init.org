@@ -477,7 +477,7 @@ Allow some commands as safe by default
 
   (setq display-time-24hr-format t)
   ;; Show time in modeline
-  (display-time-mode 1))
+  (display-time-mode))
 #+END_SRC
 ** Calendar
 #+BEGIN_SRC emacs-lisp
