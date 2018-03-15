@@ -6993,7 +6993,7 @@ if __name__ == '__main__':
          ("L" . youtube-dl-list))
   :config
   ;; Config from https://github.com/skeeto/.emacs.d/blob/master/etc/feed-setup.el
-  (setq-default elfeed-search-filter "@1-week-ago +unread -youtube")
+  (setq-default elfeed-search-filter "@1-week-ago -youtube +unread")
 
   (defun elfeed-mark-all-as-read ()
     "Mark all as read."
