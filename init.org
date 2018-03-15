@@ -1682,6 +1682,9 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   (define-key minibuffer-local-map (kbd "M-r")
     'counsel-minibuffer-history)
   :config
+  ;; Use rg as backend for counsel-git
+  (setq counsel-git-cmd "rg --files")
+
   ;; Use rg even for single files and show only max 120 characters per line
   (setq counsel-grep-base-command
         "rg -i -M 120 --no-heading --line-number --color never %s %s")
