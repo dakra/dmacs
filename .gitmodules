@@ -4,7 +4,6 @@
 	path = lib/ace-link
 	url = git@github.com:abo-abo/ace-link.git
 [submodule "ace-window"]
-	disabled = true
 	path = lib/ace-window
 	url = git@github.com:abo-abo/ace-window.git
 [submodule "add-node-modules-path"]
