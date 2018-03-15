@@ -2979,7 +2979,9 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 #+begin_src emacs-lisp
 (use-package solidity-mode
   :mode "\\.sol\\'"
-  :config
+  :init  ; Fix upstream: This should be a config block and path should work w/o setting
+  (setq solidity-solc-path "/usr/bin/solc")
+  (setq solidity-solium-path "/usr/bin/solium")
   (setq solidity-flycheck-solc-checker-active t)
   (setq solidity-flycheck-solium-checker-active t))
 #+end_src
@@ -3641,8 +3643,13 @@ $ sbcl
   :mode ("CMakeLists.txt" "\\.cmake\\'"))
 
 (use-package irony
-  :hook (((c++-mode c-mode objc-mode) . irony-mode)
-         (irony-mode . irony-cdb-autosetup-compile-options)))
+  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
+         (irony-mode . irony-cdb-autosetup-compile-options))
+  :config
+  (defun irony-mode-on-maybe ()
+    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
+    (when (member major-mode irony-supported-major-modes)
+      (irony-mode 1))))
 
 (use-package company-irony
   :after irony
