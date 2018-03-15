@@ -235,6 +235,7 @@ We use borg for package management and disable ~package.el~.
 
 (use-package moody
   :unless noninteractive
+  :defer 1
   :config
   (setq x-underline-at-descent-line t)
   (setq moody-mode-line-height 20)
@@ -243,6 +244,7 @@ We use borg for package management and disable ~package.el~.
 
 (use-package minions
   :unless noninteractive
+  :defer 2
   :config
   (setq minions-mode-line-lighter "+")
   (setq minions-direct '(flycheck-mode))
