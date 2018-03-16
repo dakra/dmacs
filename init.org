@@ -6776,8 +6776,7 @@ It only works for frames with exactly two windows."
                             ([?\C-a] . [home])
                             ([?\C-e] . [end])
                             ([?\M-v] . [prior])
-                            ([?\C-v] . [next])
-                            ([?\C-d] . [delete])))))
+                            ([?\C-v] . [next])))))
 
   (defun dakra/poweroff ()
     "Clock out, save all Emacs buffers and shut computer down."
