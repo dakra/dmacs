@@ -167,18 +167,6 @@ We use borg for package management and disable ~package.el~.
 #+BEGIN_SRC emacs-lisp
 (custom-set-faces
  '(default ((t (:family "Operator Mono" :foundry "H&Co" :slant normal :weight normal :height 69 :width normal)))))  ;; ex height 44
-(use-package powerline :defer 1 :disabled t)
-(use-package smart-mode-line-powerline-theme :after powerline :disabled t)
-(use-package smart-mode-line :after smart-mode-line-powerline-theme
-  :disabled t
-  ;;:demand t
-  :init
-  (setq sml/theme 'powerline)
-  ;; Smaller min-width for buffer names
-  (setq sml/name-width '(12 . 42))
-  :config
-  (setq sml/no-confirm-load-theme t)
-  (sml/setup))
 
 (use-package color-theme-sanityinc-tomorrow
   :disabled t

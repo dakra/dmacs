@@ -580,10 +580,6 @@
 [submodule "pos-tip"]
 	path = lib/pos-tip
 	url = git@github.com:pitkali/pos-tip.git
-[submodule "powerline"]
-	disabled = true
-	path = lib/powerline
-	url = git@github.com:milkypostman/powerline.git
 [submodule "prettier-js"]
 	path = lib/prettier-js
 	url = git@github.com:prettier/prettier-emacs.git
@@ -673,12 +669,6 @@
 [submodule "slime-company"]
 	path = lib/slime-company
 	url = git@github.com:anwyn/slime-company.git
-[submodule "smart-mode-line"]
-	disabled = true
-	path = lib/smart-mode-line
-	url = git@github.com:Malabarba/smart-mode-line.git
-	load-path = .
-	load-path = themes
 [submodule "smart-region"]
 	path = lib/smart-region
 	url = git@github.com:uk-ar/smart-region.git
