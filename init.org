@@ -109,7 +109,7 @@ We use borg for package management and disable ~package.el~.
 #+BEGIN_SRC emacs-lisp
 (setq package-enable-at-startup nil)
 ;; (package-initialize)
-;;(setq load-prefer-newer t)
+;; (setq load-prefer-newer t)
 #+END_SRC
 *** Borg
 #+begin_src emacs-lisp
