@@ -1867,8 +1867,8 @@ go up multiple parent directories."
 #+END_SRC
 * Eshell
 #+BEGIN_SRC emacs-lisp
-;;(setq eshell-list-files-after-cd t)
-;;(setq eshell-ls-initial-args "-alh")
+;; Always show file size in human readable format
+(setq eshell-ls-initial-args "-h")
 
 ;; We're in emacs, so 'cat' is nicer there than 'less'
 (setenv "PAGER" "cat")
@@ -1913,8 +1913,6 @@ go up multiple parent directories."
           eshell-term
           eshell-tramp
           eshell-unix))
-  ;;(delq 'eshell-banner eshell-modules-list)
-  ;;(push 'eshell-tramp eshell-modules-list))
 
   (require 'em-smart)
   (setq-default eshell-where-to-jump 'begin)
@@ -1926,8 +1924,7 @@ go up multiple parent directories."
   (setq-default eshell-scroll-to-bottom-on-input 'all
                 eshell-error-if-no-glob t
                 eshell-hist-ignoredups t
-                ;;eshell-save-history-on-exit nil
-                eshell-visual-commands '("ptpython" "ipython" "tail" "vi" "vim"
+                eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim"
                                          "tmux" "screen" "top" "htop" "less" "more" "ncftp")
                 eshell-prefer-lisp-functions nil)
 
@@ -1965,6 +1962,7 @@ go up multiple parent directories."
                                 (local-set-key (kbd "M-N") 'eshell-next-prompt)
                                 (local-set-key (kbd "M-R") 'eshell-list-history)
                                 (local-set-key (kbd "M-r") 'dakra-eshell-read-history)
+                                (local-set-key (kbd "C-r") 'dakra-eshell-read-history)
                                 (local-set-key (kbd "C-d") 'dakra-eshell-quit-or-delete-char)
                                 ;; Use helm as completion menu
                                 ;;(local-set-key [remap eshell-pcomplete] 'helm-esh-pcomplete)
