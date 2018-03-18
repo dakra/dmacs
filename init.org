@@ -154,13 +154,13 @@ We use borg for package management and disable ~package.el~.
 
 (use-package custom
   :config
-  ;; Put custom.el in no-littering etc folder
-  (setq custom-file (no-littering-expand-etc-file-name "custom.el"))
+  ;; We don't use custom and don't have to set custom-file even
+  ;; in the case when we "accidentally" click save in a custom buffer,
+  ;; `init.el' would get modified which gets overwrite the next time
+  ;; we run `make'.
+
   ;; Treat all themes as safe
-  (setf custom-safe-themes t)
-  ;;(when (file-exists-p custom-file)
-  ;;  (load custom-file))
-)
+  (setf custom-safe-themes t))
 #+END_SRC
 
 * Moe theme:
