@@ -433,6 +433,7 @@
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el.git
+	remote = dakra git@github.com:dakra/moe-theme.el.git
 [submodule "moody"]
 	path = lib/moody
 	url = git@github.com:tarsius/moody.git

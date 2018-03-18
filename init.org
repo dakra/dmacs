@@ -164,10 +164,28 @@ We use borg for package management and disable ~package.el~.
 #+END_SRC
 
 * Moe theme:
-#+BEGIN_SRC emacs-lisp
-(custom-set-faces
- '(default ((t (:family "Operator Mono" :foundry "H&Co" :slant normal :weight normal :height 69 :width normal)))))  ;; ex height 44
+Put this in your =~/.Xresources= and load them in your =~/.xprofile=
+with ~xrdb .Xresources~ so Emacs loads the right font
+even before loading this config and don't flicker from
+white to black background when first starting.
 
+#+begin_src conf :tangle no
+! Emacs settings so they are set even before Emacs starts
+! See: https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html#Table-of-Resources
+Emacs.font: Operator Mono-7:weight=medium:width=normal
+! Emacs.font: Operator Mono:size=7:slant=normal:weight=normal:width=normal
+Emacs.reverseVideo: on
+Emacs.menuBar: 0
+Emacs.toolBar: 0
+Emacs.verticalScrollBars: off
+#+end_src
+
+If you don't set your Xresources, you can load the font with:
+#+begin_src emacs-lisp :tangle no
+(set-frame-font "Operator Mono-7:weight=medium:width=normal" nil t)
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
 (use-package color-theme-sanityinc-tomorrow
   :disabled t
   :unless noninteractive
@@ -182,44 +200,7 @@ We use borg for package management and disable ~package.el~.
 
 (use-package moe-theme
   :unless noninteractive
-  :config
-  ;; Show highlighted buffer-id as decoration. (Default: nil)
-  (setq moe-theme-highlight-buffer-id t)
-
-  (setq moe-theme-resize-markdown-title '(1.5 1.3 1.2 1.1 1.0 1.0))
-  (setq moe-theme-resize-org-title '(1.5 1.2 1.0 1.0 1.0 1.0 1.0 1.0 1.0))
-  (setq moe-theme-resize-rst-title '(1.5 1.3 1.2 1.1 1.0 1.0))
-
-  ;; XXX: smart-mode-line theme is better?
-  ;;(powerline-moe-theme)
-  ;;(moe-dark)
-  (load-theme 'moe-dark t)
-  (custom-theme-set-faces
-   'moe-dark
-   ;; Change diff-hl background to more visible colors since we have only a very small fringe
-   '(diff-added ((t (:foreground "#ffffff" :background "#005f00" :bold t))))
-   '(diff-changed ((t (:foreground "#ffffff" :background "#fce94f" :bold t))))
-   '(diff-removed ((t (:foreground "#ffffff" :background "#a40000" :bold t))))
-   ;; Don't inherit flyspell from "error" which has red background
-   '(flyspell-duplicate ((t (:weight normal :underline (:color "forest green" :style wave)))))
-   '(flyspell-incorrect ((t (:weight normal :underline (:color "forest green" :style wave))))))
-
-  ;;(moe-theme-resize-font-size))
-
-  ;; Mode-line config for [[moody]]
-  (let ((line (face-attribute 'mode-line :underline)))
-    (set-face-attribute 'mode-line nil
-                        :overline line :box nil
-                        :foreground "#c5c8c6"
-                        :background "#373b41")
-    (set-face-attribute 'mode-line-inactive nil
-                        :overline line :underline line :box nil
-                        :foreground "#969896"
-                        :background "#282a2e")
-    (set-face-attribute 'mode-line-buffer-id nil
-                        :foreground "#b294bb"
-                        :background nil)))
-
+  :config (load-theme 'moe-dark t))
 
 (use-package moody
   :unless noninteractive
