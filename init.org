@@ -2470,6 +2470,9 @@ When called with 2 prefix arguments only open in browser and don't copy."
          )
   :hook (python-mode . python-flat-imenu-index)
   :config
+  ;; Don't spam message buffer when python-mode can't guess indent-offset
+  (setq python-indent-guess-indent-offset-verbose nil)
+
   (defun python-shell-send-whole-line-or-region ()
     "Send whole line or region to inferior Python process."
     (interactive)
