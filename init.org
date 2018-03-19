@@ -4702,7 +4702,7 @@ This function is called by `org-babel-execute-src-block'."
   :defer t
   :config
   ;; Don't reorder all my frames in when using org babel
-  (setq org-src-window-setup 'other-window)
+  (setq org-src-window-setup 'split-window-below)
 
   (setq org-src-fontify-natively t)  ; syntax highlighting for source code blocks
 
