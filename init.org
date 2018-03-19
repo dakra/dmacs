@@ -6829,6 +6829,17 @@ It only works for frames with exactly two windows."
 #+END_SRC
 
 * Misc
+** OVPN: OpenVPN management mode
+Place all your openvpn (~.ovpn~) in =~/vpn= and then select a config and
+start a vpn with ~s~ or start in a separate namespace without altering
+the main system route with ~n~ then you can spawn a command (like ~transmission~)
+in that namespace with ~x~
+
+#+begin_src emacs-lisp
+(use-package ovpn-mode
+  :defer t
+  :config (setq ovpn-mode-base-directory "~/vpn"))
+#+end_src
 ** Ledger: Accounting
 #+begin_src emacs-lisp
 ;; ledger-mode for bookkeeping

@@ -521,6 +521,9 @@
 [submodule "ov"]
 	path = lib/ov
 	url = git@github.com:ShingoFukuyama/ov.el.git
+[submodule "ovpn"]
+	path = lib/ovpn
+	url = git@github.com:collarchoke/ovpn-mode.git
 [submodule "ox-gfm"]
 	path = lib/ox-gfm
 	url = git@github.com:larstvei/ox-gfm.git
