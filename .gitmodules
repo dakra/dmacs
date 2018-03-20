@@ -134,6 +134,7 @@
 [submodule "dired-hacks"]
 	path = lib/dired-hacks
 	url = git@github.com:Fuco1/dired-hacks.git
+	no-byte-compile = dired-images.el
 [submodule "discover-my-major"]
 	path = lib/discover-my-major
 	url = git@github.com:steckerhalter/discover-my-major.git
@@ -220,6 +221,10 @@
 [submodule "esxml"]
 	path = lib/esxml
 	url = git@github.com:tali713/esxml.git
+	no-byte-compile = css-lite.el
+	no-byte-compile = esxml-form.el
+	no-byte-compile = esxml-html.el
+	no-byte-compile = esxpath.el
 [submodule "expand-region"]
 	path = lib/expand-region
 	url = git@github.com:magnars/expand-region.el.git
@@ -634,6 +639,7 @@
 [submodule "restclient"]
 	path = lib/restclient
 	url = git@github.com:pashky/restclient.el.git
+	no-byte-compile = restclient-helm.el
 [submodule "rich-minority"]
 	path = lib/rich-minority
 	url = git@github.com:Malabarba/rich-minority.git
@@ -719,6 +725,7 @@
 	path = lib/treemacs
 	url = git@github.com:Alexander-Miller/treemacs.git
 	load-path = src/elisp
+	no-byte-compile = src/elisp/treemacs-evil.el
 [submodule "typescript-mode"]
 	path = lib/typescript-mode
 	url = git@github.com:ananthakumaran/typescript.el.git
