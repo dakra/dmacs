@@ -1655,7 +1655,7 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
 
   ;; Use rg even for single files and show only max 120 characters per line
   (setq counsel-grep-base-command
-        "rg -i -M 120 --no-heading --line-number --color never %s %s")
+        "rg -S -M 120 --no-heading --line-number --color never %s %s")
   ;; Make ivy faster/more responsive
   ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
   (setq counsel-async-filter-update-time 10000)
