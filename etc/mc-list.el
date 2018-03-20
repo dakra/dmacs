@@ -15,6 +15,8 @@
         emmet-expand-line
         emmet-next-edit-point
         eval-last-sexp
+        grep-context-less-around-point
+        grep-context-more-around-point
         haml-electric-backspace
         helm-show-kill-ring
         indent-for-tab-command

@@ -297,6 +297,9 @@
 [submodule "graphviz-dot-mode"]
 	path = lib/graphviz-dot-mode
 	url = git@github.com:ppareit/graphviz-dot-mode.git
+[submodule "grep-context"]
+	path = lib/grep-context
+	url = git@github.com:mkcms/grep-context.git
 [submodule "guess-language"]
 	path = lib/guess-language
 	url = git@github.com:tmalsburg/guess-language.el.git

@@ -838,6 +838,19 @@ Move current line or region with M-up or M-down.
 (use-package wgrep-ag
   :after wgrep)
 #+END_SRC
+** Grep-context: Get more context for compilation/grep buffers by pressing +/-
+#+begin_src emacs-lisp
+(use-package grep-context
+  :bind (:map compilation-mode-map
+         ("+" . grep-context-more-around-point)
+         ("-" . grep-context-less-around-point)
+         :map grep-mode-map
+         ("+" . grep-context-more-around-point)
+         ("-" . grep-context-less-around-point)
+         :map ivy-occur-grep-mode-map
+         ("+" . grep-context-more-around-point)
+         ("-" . grep-context-less-around-point)))
+#+end_src
 ** Search/Replace
 *** Anzu: Show total matches for isearch and query replace
 #+BEGIN_SRC emacs-lisp
