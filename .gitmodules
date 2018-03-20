@@ -122,9 +122,6 @@
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = git@github.com:dgutov/diff-hl.git
-[submodule "diminish"]
-	path = lib/diminish
-	url = git@github.com:myrjola/diminish.el.git
 [submodule "dimmer"]
 	path = lib/dimmer
 	url = git@github.com:gonewest818/dimmer.el.git

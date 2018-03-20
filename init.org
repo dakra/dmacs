@@ -131,8 +131,6 @@ We use borg for package management and disable ~package.el~.
     (setq use-package-verbose nil
           use-package-expand-minimally t))
 
-;; For the :diminish keyword
-(use-package diminish :defer t)
 ;; For the :bind keyword
 (use-package bind-key :defer t)
 ;;(autoload #'use-package-autoload-keymap "use-package")
@@ -216,7 +214,7 @@ If you don't set your Xresources, you can load the font with:
   :defer 2
   :config
   (setq minions-mode-line-lighter "+")
-  (setq minions-direct '(flycheck-mode))
+  (setq minions-direct '(flycheck-mode multiple-cursors-mode))
   (minions-mode))
 #+END_SRC
 
@@ -333,7 +331,6 @@ Allow some commands as safe by default
 #+begin_src emacs-lisp
 (use-package autorevert
   :defer 1
-  :diminish global-auto-revert-mode
   ;;:hook (find-file . auto-revert-mode)
   :config
   ;; We only really need auto revert for git files
@@ -503,15 +500,13 @@ Visual feedback on some operations like yank,kill,undo
 #+BEGIN_SRC emacs-lisp
 (use-package volatile-highlights
   :defer 10
-  :config (volatile-highlights-mode t)
-  :diminish volatile-highlights-mode)
+  :config (volatile-highlights-mode t))
 #+END_SRC
 ** beacon: Highlight current line/cursor when switching frames
 #+BEGIN_SRC emacs-lisp
 (use-package beacon
   :defer 5
-  :config (beacon-mode 1)
-  :diminish beacon-mode)
+  :config (beacon-mode 1))
 #+END_SRC
 ** which-key: Display available keybindings in popup
 which-key displays the key bindings following your currently entered incomplete
@@ -523,8 +518,7 @@ different face
 #+BEGIN_SRC emacs-lisp
 (use-package which-key
   :defer 10
-  :config (which-key-mode 1)
-  :diminish which-key-mode)
+  :config (which-key-mode 1))
 #+END_SRC
 ** which-func: Show the name of the current function definition in the modeline
 #+BEGIN_SRC emacs-lisp
@@ -572,8 +566,7 @@ different face
 #+BEGIN_SRC emacs-lisp
 (use-package ws-butler
   :hook ((text-mode prog-mode) . ws-butler-mode)
-  :config (setq ws-butler-keep-whitespace-before-point nil)
-  :diminish ws-butler-mode)
+  :config (setq ws-butler-keep-whitespace-before-point nil))
 #+END_SRC
 ** Highlight long lines
 #+BEGIN_SRC emacs-lisp
@@ -582,8 +575,7 @@ different face
   :config
   (setq whitespace-style '(face tabs empty trailing lines-tail))
   ;; highlight lines with more than `fill-column' characters
-  (setq whitespace-line-column nil)
-  :diminish whitespace-mode)
+  (setq whitespace-line-column nil))
 #+END_SRC
 ** Zone: Emacs screen saver
 #+begin_src emacs-lisp
@@ -681,8 +673,7 @@ different face
                 (crux-smart-open-line-above)) "RET")))
 
   ;; use smartparens-mode everywhere
-  (smartparens-global-mode)
-  :diminish smartparens-mode)
+  (smartparens-global-mode))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -775,7 +766,6 @@ is already narrowed."
 ;; That way you can just C-w to copy the whole line for example.
 (use-package whole-line-or-region
   :defer 1
-  :diminish whole-line-or-region-local-mode
   :config (whole-line-or-region-global-mode t))
 
 (use-package operate-on-number
@@ -857,8 +847,7 @@ Move current line or region with M-up or M-down.
   :defer 5
   :bind (("M-%" . anzu-query-replace)
          ("C-M-%" . anzu-query-replace-regexp))
-  :config (global-anzu-mode)
-  :diminish anzu-mode)
+  :config (global-anzu-mode))
 #+END_SRC
 *** Re-builder
 #+BEGIN_SRC emacs-lisp
@@ -951,8 +940,7 @@ Move current line or region with M-up or M-down.
 ;; Nicer mark ring navigation (C-x C-SPC or C-x C-Left/Right)
 (use-package back-button
   :defer 2
-  :config (back-button-mode)
-  :diminish back-button-mode)
+  :config (back-button-mode))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 ;; Goto last change
@@ -1010,7 +998,6 @@ Move current line or region with M-up or M-down.
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :defer 2
-  :diminish company-mode
   :bind (:map company-active-map
          ([return] . nil)
          ("RET" . nil)
@@ -1427,7 +1414,6 @@ split via i3 and create a new Emacs frame."
 (use-package helm
   :disabled t
   :commands (helm-M-x helm-mini helm-imenu helm-resume helm-execute-persistent-action helm-select-action)
-  :diminish helm-mode
   ;;:bind (("M-x"     . helm-M-x)
   ;;       ("C-x C-m" . helm-M-x)
   ;;       ("M-y"     . helm-show-kill-ring)
@@ -1544,7 +1530,6 @@ split via i3 and create a new Emacs frame."
 ** Ivy
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
-  :diminish
   :bind (("C-x b"   . dakra-ivy-switch-buffer)
          ("C-x B"   . ivy-switch-buffer-other-window)
          ("C-c C-r" . ivy-resume)
@@ -1637,7 +1622,6 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
 ** Counsel
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
-  :diminish
   :bind (("C-s"     . counsel-grep-or-swiper)
          ("C-o"     . nil)  ; Remove old keybinding (open-line)
          ("C-o o"   . counsel-org-agenda-headlines)
@@ -2327,8 +2311,7 @@ file to edit."
 
   (magit-wip-before-change-mode)
   (magit-wip-after-apply-mode)
-  (magit-wip-after-save-mode)
-  :diminish (magit-wip-before-change-mode magit-wip-after-apply-mode magit-wip-after-save-mode))
+  (magit-wip-after-save-mode))
 
 (use-package magithub
   :disabled t
@@ -2564,8 +2547,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
     (interactive "P")
     (if arg
         (projectile-find-sql-file)
-      (anaconda-mode-find-definitions)))
-  :diminish anaconda-mode)
+      (anaconda-mode-find-definitions))))
 
 (use-package company-anaconda
   :after anaconda-mode
@@ -2648,8 +2630,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
 
 ;; Enable (restructured) syntax highlighting for python docstrings
 (use-package python-docstring
-  :hook (python-mode . python-docstring-mode)
-  :diminish python-docstring-mode)
+  :hook (python-mode . python-docstring-mode))
 
 (use-package pydoc
   :bind (:map anaconda-mode-map
@@ -2928,14 +2909,12 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 
 ;; Smart indentation for SQL files
 (use-package sql-indent
-  :hook (sql-mode . sqlind-minor-mode)
+  :hook (sql-mode . sqlind-minor-mode))
   ;;:config (setq-default sqlind-basic-offset 4)
-  :diminish sqlind-minor-mode)
 
 ;; Capitalize keywords in SQL mode
 (use-package sqlup-mode
   :hook (sql-mode sql-interactive-mode redis-mode)
-  :diminish
   :config
   ;; Don't capitalize `name` or 'type' keyword
   (add-to-list 'sqlup-blacklist "name")
@@ -3016,12 +2995,10 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 ;; place `.indium' file in static root folder.
 
 (use-package indium
-  :diminish
   :hook (js-mode . indium-interaction-mode)
   :config (setq indium-update-script-on-save t))
 
 (use-package js2-refactor
-  :diminish js2-refactor-mode
   :hook (js2-mode . js2-refactor-mode)
   :config
   (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
@@ -3329,8 +3306,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 #+BEGIN_SRC emacs-lisp
 ;; Nicer elisp regex syntax highlighting
 (use-package easy-escape
-  :hook ((emacs-lisp-mode lisp-mode) . easy-escape-minor-mode)
-  :diminish easy-escape-minor-mode)
+  :hook ((emacs-lisp-mode lisp-mode) . easy-escape-minor-mode))
 
 ;; From: https://github.com/Fuco1/.emacs.d/blob/af82072196564fa57726bdbabf97f1d35c43b7f7/site-lisp/redef.el#L20-L94
 ;; redefines the silly indent of keyword lists
@@ -3775,9 +3751,9 @@ displayed anywhere else."
          ("C-c C-s p" . symbol-overlay-jump-prev))
   :init (setq symbol-overlay-temp-in-scope t)
   :config
-  (setq symbol-overlay-map (make-sparse-keymap))  ; Remove all default bindings
   ;;(set-face-background 'symbol-overlay-temp-face "gray30")
-  :diminish symbol-overlay-mode)
+  ;; Remove all default bindings
+  (setq symbol-overlay-map (make-sparse-keymap)))
 
 
 ;; more useful frame title, that show either a file or a
@@ -3827,8 +3803,7 @@ displayed anywhere else."
           (set-marker m nil))
       ad-do-it))
 
-  (global-undo-tree-mode)
-  :diminish undo-tree-mode)
+  (global-undo-tree-mode))
 
 
 ;; Smart region guesses what you want to select by one command:
@@ -4038,8 +4013,7 @@ displayed anywhere else."
          ((org-mode mu4e-compose-mode) . flyspell-mode))
   :config
   ;; remove flyspess 'C-;' keybinding so we can use it for avy jump
-  (unbind-key "C-;" flyspell-mode-map)
-  :diminish flyspell-mode)
+  (unbind-key "C-;" flyspell-mode-map))
 
 ;; Show helm-list of correct spelling suggesions
 (use-package flyspell-correct-helm
@@ -4068,7 +4042,6 @@ displayed anywhere else."
 (use-package yasnippet
   :defer 10
   :mode (("\\.yasnippet\\'" . snippet-mode))
-  :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
          ;; Complete yasnippets with company. No need for extra bindings
          ;;("TAB"     . nil)  ; Remove Yasnippet's default tab key binding
@@ -4086,8 +4059,7 @@ displayed anywhere else."
 
 (use-package editorconfig
   :defer 1
-  :config (editorconfig-mode 1)
-  :diminish editorconfig-mode)
+  :config (editorconfig-mode 1))
 
 ;; backup
 
