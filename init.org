@@ -106,6 +106,13 @@ calls ~make~ every time you save this file.
 *** Package Settings
 We use borg for package management and disable ~package.el~.
 
+Since Emacs 27.1 we have to disable package.el in the early init file.
+#+begin_src emacs-lisp :tangle early-init.el
+(setq package-enable-at-startup nil)
+#+end_src
+
+But still leave it here so it's also disabled on machines that don't
+have the latest Emacs from master installed.
 #+BEGIN_SRC emacs-lisp
 (setq package-enable-at-startup nil)
 ;; (package-initialize)
