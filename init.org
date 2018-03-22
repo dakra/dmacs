@@ -4978,14 +4978,11 @@ as the default task."
 
   ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
   (setq org-clock-history-length 23)
+
   ;; Save the running clock and all clock history when exiting Emacs, load it on startup
-  ;;(setq org-clock-persist-file "~/.emacs.d/personal/org-clock-save.el")
   (setq org-clock-persist t)
-  ;; Manual setup clock persistence so we don't get asked to resume clock
-  ;; when we forgot to clock out last session and automatically start the agenda
-  ;; which then would block the Emacs daemon startup process
-  ;;(org-clock-persistence-insinuate)
-  (add-hook 'kill-emacs-hook 'org-clock-save)
+  (org-clock-persistence-insinuate)
+
   ;; org-clock-display (C-c C-x C-d) shows times for this month by default
   (setq org-clock-display-default-range 'thismonth)
 
