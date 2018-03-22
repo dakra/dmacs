@@ -1283,9 +1283,6 @@ split via i3 and create a new Emacs frame."
   :init
   ;; Show details by default  (diredp hides it)
   (setq diredp-hide-details-initially-flag nil)
-
-  (setq diredp-dwim-any-frame-flag t)
-
   :config
   ;; Reuse dired buffers
   ;; We use dired-open and also overwrite the dired-find-file there
