@@ -848,6 +848,7 @@ Move current line or region with M-up or M-down.
 ** Grep-context: Get more context for compilation/grep buffers by pressing +/-
 #+begin_src emacs-lisp
 (use-package grep-context
+  :after ivy
   :bind (:map compilation-mode-map
          ("+" . grep-context-more-around-point)
          ("-" . grep-context-less-around-point)
