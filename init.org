@@ -1749,6 +1749,7 @@ go up multiple parent directories."
          ("C-x t" . hydra-toggle-stuff/body)
          ("C-x 9" . hydra-unicode/body)
          ("C-x l" . hydra-emacs-launcher/body)
+         ("C-x C-l" . hydra-emacs-launcher/body)
          ("C-x L" . hydra-external-launcher/body))
   :config
   (defhydra hydra-scratchpad (:hint nil)
