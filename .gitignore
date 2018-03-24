@@ -1,8 +1,9 @@
-/.cask
-/.hive-maint
-/elpa
-/init.el
 *.elc
 *:tangle
+/.cask
+/.hive-maint
+/early-init.el
+/elpa
+/init.el
 dakra-*.gpg
 var/
