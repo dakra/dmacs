@@ -6715,6 +6715,7 @@ It only works for frames with exactly two windows."
            width 0.6
            height 0.8)
           ((equal exwm-class-name "Firefox Developer Edition")
+           workspace 2
            simulation-keys (([?\C-q] . [?\C-w])  ; close tab instead of quitting Firefox
                             ([?\C-b] . [left])
                             ([?\C-f] . [right])
