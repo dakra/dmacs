@@ -4307,7 +4307,74 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
       ("t" org-toggle-link-display "Toggle link display")
       ("r" jk/unlinkify "remove link")
       ("q" nil "cancel" :color blue)))
-  )
+
+  ;; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+  (setq org-refile-targets '((nil :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 9)))
+
+  ;; Allow refile to create parent tasks with confirmation
+  (setq org-refile-allow-creating-parent-nodes (quote confirm))
+  (setq org-refile-use-outline-path 'file)  ; Show filename for refiling
+  (setq org-outline-path-complete-in-steps nil)  ; Refile in a single go
+
+  ;; Exclude DONE state tasks from refile targets
+  (defun org-refile-verify-refile-target ()
+    "Exclude todo keywords with a done state from refile targets."
+    (not (member (nth 2 (org-heading-components)) org-done-keywords)))
+
+  (setq org-refile-target-verify-function #'org-refile-verify-refile-target)
+
+  ;; automatically change the list bullets when you change list levels
+  (setq org-list-demote-modify-bullet (quote (("+" . "-")
+                                              ("*" . "-")
+                                              ("1." . "-")
+                                              ("1)" . "-")
+                                              ("A)" . "-")
+                                              ("B)" . "-")
+                                              ("a)" . "-")
+                                              ("b)" . "-")
+                                              ("A." . "-")
+                                              ("B." . "-")
+                                              ("a." . "-")
+                                              ("b." . "-"))))
+
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("MEETING" :foreground "forest green" :weight bold)
+                ("PHONE" :foreground "forest green" :weight bold))))
+
+  ;; Auto completion for symbols in org-mode
+  ;; https://oremacs.com/2017/10/04/completion-at-point/
+  (defun org-completion-symbols ()
+    (when (looking-back "[`~=][a-zA-Z]+" nil)
+      (let (cands)
+        (save-match-data
+          (save-excursion
+            (goto-char (point-min))
+            (while (re-search-forward "[`~=]\\([a-zA-Z.\\-_]+\\)[`~=]" nil t)
+              (cl-pushnew
+               (match-string-no-properties 0) cands :test 'equal))
+            cands))
+        (when cands
+          (list (match-beginning 0) (match-end 0) cands)))))
+  (defun ora-cap-filesystem ()
+    (let (path)
+      (when (setq path (ffap-string-at-point))
+        (let ((compl
+               (all-completions path #'read-file-name-internal)))
+          (when compl
+            (let ((offset (ivy-completion-common-length (car compl))))
+              (list (- (point) offset) (point) compl)))))))
+   )
 #+END_SRC
 *** Org Packages
 **** Org-agenda
@@ -4365,6 +4432,9 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
 
   ;; Start the weekly agenda on Monday
   (setq org-agenda-start-on-weekday 1)
+
+  ;; Use sticky agenda's so they persist
+  ;;(setq org-agenda-sticky t)
 
   ;; Custom agenda command definitions
   (setq org-agenda-custom-commands
@@ -4845,18 +4915,9 @@ NAME may be nil for unnamed sessions."
 #+begin_src emacs-lisp
 ;;; Clock Setup
 (use-package org-clock
-  :defer t
+  :after org
   :init
   ;; FIXME: remove unused bh functions?
-  ;; Capturing task often is <1min and results in empty drawer.
-  ;; Remove empty LOGBOOK drawers on clock out
-  ;;(defun bh/remove-empty-drawer-on-clock-out ()
-  ;;  (interactive)
-  ;;  (save-excursion
-  ;;    (beginning-of-line 0)
-  ;;    (org-remove-empty-drawer-at (point))))
-  ;;(add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
-
   (setq bh/keep-clock-running nil)
 
   (defun bh/clock-in-last-task (arg)
@@ -5187,6 +5248,25 @@ as the default task."
   (setq org-github-default-owner "atomx")
   (setq org-github-default-name "api"))
 #+end_src
+**** Orgit: org-link support for magit buffers
+#+begin_src emacs-lisp
+(use-package orgit
+  ;; Automatically copy orgit link to last commit after commit
+  :hook (git-commit-setup . orgit-store-after-commit)
+  :config
+  (defun orgit-store-after-commit ()
+    "Store orgit-link for latest commit after commit message editor is finished."
+    (add-hook 'with-editor-post-finish-hook
+              (lambda ()
+                (sleep-for 0.5)  ;; See https://github.com/magit/orgit/issues/19
+                (let* ((repo (abbreviate-file-name default-directory))
+                       (rev (magit-git-string "rev-parse" "HEAD"))
+                       (link (format "orgit-rev:%s::%s" repo rev))
+                       (summary (substring-no-properties (magit-format-rev-summary rev)))
+                       (desc (format "%s (%s)" summary repo)))
+                  (push (list link desc) org-stored-links)))
+              t t)))
+#+end_src
 ** bh.el TODO: remove???
 #+BEGIN_SRC emacs-lisp  :tangle yes
 (defun bh/is-project-p ()
@@ -5443,39 +5523,12 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
         nil
       next-headline)))
 
-(defun bh/hide-other ()
-  (interactive)
-  (save-excursion
-    (org-back-to-heading 'invisible-ok)
-    (outline-hide-other)
-    (org-cycle)
-    (org-cycle)
-    (org-cycle)))
-
-
 ;; Show 20 minute clocking gaps. Hit "v c" in the agenda view
 (setq org-agenda-clock-consistency-checks
       '(:max-duration "4:00"
         :min-duration 0
         :max-gap 30
         :gap-ok-around ("4:00" "11:00" "19:00" "20:00" "21:00")))
-
-;; Exclude DONE state tasks from refile targets
-(defun bh/verify-refile-target ()
-  "Exclude todo keywords with a done state from refile targets"
-  (not (member (nth 2 (org-heading-components)) org-done-keywords)))
-
-(setq org-refile-target-verify-function 'bh/verify-refile-target)
-
-
-(defun bh/org-todo (arg)
-  (interactive "p")
-  (if (equal arg 4)
-      (save-restriction
-        (bh/narrow-to-org-subtree)
-        (org-show-todo-tree nil))
-    (bh/narrow-to-org-subtree)
-    (org-show-todo-tree nil)))
 
 (defun bh/widen ()
   (interactive)
@@ -5489,98 +5542,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 (add-hook 'org-agenda-mode-hook
           '(lambda () (org-defkey org-agenda-mode-map "W" (lambda () (interactive) (setq bh/hide-scheduled-and-waiting-next-tasks t) (bh/widen))))
           'append)
-
-(defun bh/narrow-to-org-subtree ()
-  (widen)
-  (org-narrow-to-subtree)
-  (save-restriction
-    (org-agenda-set-restriction-lock)))
-
-(defun bh/narrow-to-subtree ()
-  (interactive)
-  (if (equal major-mode 'org-agenda-mode)
-      (progn
-        (org-with-point-at (org-get-at-bol 'org-hd-marker)
-          (bh/narrow-to-org-subtree))
-        (when org-agenda-sticky
-          (org-agenda-redo)))
-    (bh/narrow-to-org-subtree)))
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "N" 'bh/narrow-to-subtree))
-          'append)
-
-(defun bh/narrow-up-one-org-level ()
-  (widen)
-  (save-excursion
-    (outline-up-heading 1 'invisible-ok)
-    (bh/narrow-to-org-subtree)))
-
-(defun bh/get-pom-from-agenda-restriction-or-point ()
-  (or (and (marker-position org-agenda-restrict-begin) org-agenda-restrict-begin)
-      (org-get-at-bol 'org-hd-marker)
-      (and (equal major-mode 'org-mode) (point))
-      org-clock-marker))
-
-(defun bh/narrow-up-one-level ()
-  (interactive)
-  (if (equal major-mode 'org-agenda-mode)
-      (progn
-        (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
-          (bh/narrow-up-one-org-level))
-        (org-agenda-redo))
-    (bh/narrow-up-one-org-level)))
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "U" 'bh/narrow-up-one-level))
-          'append)
-
-(defun bh/narrow-to-org-project ()
-  (widen)
-  (save-excursion
-    (bh/find-project-task)
-    (bh/narrow-to-org-subtree)))
-
-(defun bh/narrow-to-project ()
-  (interactive)
-  (if (equal major-mode 'org-agenda-mode)
-      (progn
-        (org-with-point-at (bh/get-pom-from-agenda-restriction-or-point)
-          (bh/narrow-to-org-project)
-          (save-excursion
-            (bh/find-project-task)
-            (org-agenda-set-restriction-lock)))
-        (org-agenda-redo)
-        (goto-char (point-min)))
-    (bh/narrow-to-org-project)
-    (save-restriction
-      (org-agenda-set-restriction-lock))))
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "P" 'bh/narrow-to-project))
-          'append)
-
-(add-hook 'org-agenda-mode-hook
-          '(lambda () (org-defkey org-agenda-mode-map "\C-c\C-x<" 'bh/set-agenda-restriction-lock))
-          'append)
-
-(defun bh/set-agenda-restriction-lock (arg)
-  "Set restriction lock to current task subtree or file if prefix is specified"
-  (interactive "p")
-  (let* ((pom (bh/get-pom-from-agenda-restriction-or-point))
-         (tags (org-with-point-at pom (org-get-tags-at))))
-    (let ((restriction-type (if (equal arg 4) 'file 'subtree)))
-      (save-restriction
-        (cond
-         ((and (equal major-mode 'org-agenda-mode) pom)
-          (org-with-point-at pom
-            (org-agenda-set-restriction-lock restriction-type))
-          (org-agenda-redo))
-         ((and (equal major-mode 'org-mode) (org-before-first-heading-p))
-          (org-agenda-set-restriction-lock 'file))
-         (pom
-          (org-with-point-at pom
-            (org-agenda-set-restriction-lock restriction-type))))))))
 
 (defun bh/skip-non-archivable-tasks ()
   "Skip trees that are not available for archiving."
@@ -5632,42 +5593,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (defun bh/is-scheduled-late (date-str)
   (string-match "Sched\.\\(.*\\)x:" date-str))
-
-;; auto-insert timestamp on 'M-RET' when creating a heading
-(defvar bh/insert-inactive-timestamp t)
-
-(defun bh/toggle-insert-inactive-timestamp ()
-  (interactive)
-  (setq bh/insert-inactive-timestamp (not bh/insert-inactive-timestamp))
-  (message "Heading timestamps are %s" (if bh/insert-inactive-timestamp "ON" "OFF")))
-
-(defun bh/insert-inactive-timestamp ()
-  (interactive)
-  (org-insert-time-stamp nil t t nil nil nil))
-
-(defun bh/insert-heading-inactive-timestamp ()
-  (save-excursion
-    (when bh/insert-inactive-timestamp
-      (org-return)
-      (org-cycle)
-      (bh/insert-inactive-timestamp))))
-
-;;(add-hook 'org-insert-heading-hook 'bh/insert-heading-inactive-timestamp 'append)
-
-
-;; automatically change the list bullets when you change list levels
-(setq org-list-demote-modify-bullet (quote (("+" . "-")
-                                            ("*" . "-")
-                                            ("1." . "-")
-                                            ("1)" . "-")
-                                            ("A)" . "-")
-                                            ("B)" . "-")
-                                            ("a)" . "-")
-                                            ("b)" . "-")
-                                            ("A." . "-")
-                                            ("B." . "-")
-                                            ("a." . "-")
-                                            ("b." . "-"))))
 #+END_SRC
 ** Rest dakra-org.el
 #+BEGIN_SRC emacs-lisp  :tangle yes
@@ -5686,113 +5611,10 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
           'append)
 
 ;; Global key bindings
-;;(global-set-key (kbd "<f5>") 'bh/org-todo)
-;;(global-set-key (kbd "<S-f5>") 'bh/widen)
-;;(global-set-key (kbd "<f8>") 'org-cycle-agenda-files)
-(global-set-key (kbd "<f9> <f9>") 'bh/show-org-agenda)
-(global-set-key (kbd "<f9> b") 'bbdb)
-(global-set-key (kbd "<f9> c") 'calendar)
-(global-set-key (kbd "<f9> f") 'boxquote-insert-file)
-(global-set-key (kbd "<f9> g") 'gnus)
-(global-set-key (kbd "<f9> h") 'bh/hide-other)
-(global-set-key (kbd "<f9> n") 'bh/toggle-next-task-display)
-
 (global-set-key (kbd "<f9> I") 'bh/punch-in)
 (global-set-key (kbd "<f9> O") 'bh/punch-out)
-
-(global-set-key (kbd "<f9> r") 'boxquote-region)
-
-(global-set-key (kbd "<f9> t") 'bh/insert-inactive-timestamp)
-(global-set-key (kbd "<f9> T") 'bh/toggle-insert-inactive-timestamp)
-
-(global-set-key (kbd "<f9> v") 'visible-mode)
 (global-set-key (kbd "<f9> l") 'org-toggle-link-display)
 (global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
-(global-set-key (kbd "C-<f9>") 'previous-buffer)
-
-;; install the restapi branch from org-jira (not on melpa yet)
-;;(quelpa '(org-jira :fetcher github :repo "baohaojun/org-jira" :branch "restapi") :upgrade nil)
-;;(require 'org-jira)
-;; we never want to upgrade org-jira (to the soap version on master)
-;; This snippet prevents package-menu to update it
-;;(defvar package-menu-exclude-packages '("org-jira"))
-;;(defun package-menu--remove-excluded-packages (orig)
-;;  (let ((included (-filter
-;;                   (lambda (entry)
-;;                     (let ((name (symbol-name (package-desc-name (car entry)))))
-;;                       (not (member name package-menu-exclude-packages))))
-;;                   tabulated-list-entries)))
-;;    (setq-local tabulated-list-entries included)
-;;    (funcall orig)))
-;;(advice-add 'package-menu--find-upgrades :around #'package-menu--remove-excluded-packages)
-
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-
-(setq org-todo-keyword-faces
-      (quote (("TODO" :foreground "red" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
-              ("DONE" :foreground "forest green" :weight bold)
-              ("WAITING" :foreground "orange" :weight bold)
-              ("HOLD" :foreground "magenta" :weight bold)
-              ("CANCELLED" :foreground "forest green" :weight bold)
-              ("MEETING" :foreground "forest green" :weight bold)
-              ("PHONE" :foreground "forest green" :weight bold))))
-
-;; Auto completion for symbols in org-mode
-;; https://oremacs.com/2017/10/04/completion-at-point/
-(defun org-completion-symbols ()
-  (when (looking-back "[`~=][a-zA-Z]+" nil)
-    (let (cands)
-      (save-match-data
-        (save-excursion
-          (goto-char (point-min))
-          (while (re-search-forward "[`~=]\\([a-zA-Z.\\-_]+\\)[`~=]" nil t)
-            (cl-pushnew
-             (match-string-no-properties 0) cands :test 'equal))
-          cands))
-      (when cands
-        (list (match-beginning 0) (match-end 0) cands)))))
-(defun ora-cap-filesystem ()
-  (let (path)
-    (when (setq path (ffap-string-at-point))
-      (let ((compl
-             (all-completions path #'read-file-name-internal)))
-        (when compl
-          (let ((offset (ivy-completion-common-length (car compl))))
-            (list (- (point) offset) (point) compl)))))))
-
-;; Targets include this file and any file contributing to the agenda - up to 9 levels deep
-(setq org-refile-targets '((nil :maxlevel . 9)
-                           (org-agenda-files :maxlevel . 9)))
-
-;; Allow refile to create parent tasks with confirmation
-(setq org-refile-allow-creating-parent-nodes (quote confirm))
-
-(setq org-refile-use-outline-path 'file)  ; Show filename for refiling
-(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-
-;; Use sticky agenda's so they persist
-;;(setq org-agenda-sticky t)
-
-(use-package orgit
-  ;; Automatically copy orgit link to last commit after commit
-  :hook (git-commit-setup . orgit-store-after-commit)
-  :config
-  (defun orgit-store-after-commit ()
-    "Store orgit-link for latest commit after commit message editor is finished."
-    (add-hook 'with-editor-post-finish-hook
-              (lambda ()
-                (sleep-for 0.5)  ;; See https://github.com/magit/orgit/issues/19
-                (let* ((repo (abbreviate-file-name default-directory))
-                       (rev (magit-git-string "rev-parse" "HEAD"))
-                       (link (format "orgit-rev:%s::%s" repo rev))
-                       (summary (substring-no-properties (magit-format-rev-summary rev)))
-                       (desc (format "%s (%s)" summary repo)))
-                  (push (list link desc) org-stored-links)))
-              t t)))
-
 
 ;;; automatically create github issues from org-mode
 ;; You have to set 'GH-PROJECT' property
@@ -5809,7 +5631,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   (gh-issue-new-browse (org-entry-get (point) "GH-PROJECT" t)
                        (org-get-heading)
                        (org-export-as 'gfm t)))
-
 
 ;; code-verbatim with backticks
 ;; Set in preload.el
@@ -5843,7 +5664,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 ;;(add-to-list 'org-structure-template-alist '("sp" "#+BEGIN_SRC python\n?\n#+END_SRC"))
 ;;(add-to-list 'org-structure-template-alist '("si" "#+BEGIN_SRC ipython\n?\n#+END_SRC"))
 #+END_SRC
-
 * Email
 You also need to configure and install mu in the system.
 Borg does only build mu4e as building mu every time is
