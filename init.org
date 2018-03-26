@@ -1587,6 +1587,7 @@ split via i3 and create a new Emacs frame."
     "Like ivy-switch-buffer but by defaults hides all EXWM buffers.
 With one prefix arg, show only EXWM buffers. With two, show all buffers."
     (interactive "p")
+    (back-button-push-mark-local-and-global)
     (case p
       (1 (ivy-switch-buffer-non-exwm))
       (4 (ivy-switch-buffer-exwm))
@@ -2564,6 +2565,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
   (defun python-goto-sql-file-or-definition (&optional arg)
     "Call anaconda find-definitions or with prefix ARG find sql file."
     (interactive "P")
+    (back-button-push-mark-local-and-global)
     (if arg
         (projectile-find-sql-file)
       (anaconda-mode-find-definitions))))
