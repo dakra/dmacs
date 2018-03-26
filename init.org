@@ -4118,6 +4118,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ("C-c l"   . org-store-link)
          ("C-c o c" . org-clock-goto)
          ("C-c o i" . org-clock-in-or-list)
+         ("C-c C-x C-j" . org-clock-goto)
          ("C-c C-x C-i" . org-clock-in-or-list)
          ("C-c C-x C-o" . org-clock-out)
          ("C-c o O" . org-clock-out)
@@ -4378,7 +4379,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
           (when compl
             (let ((offset (ivy-completion-common-length (car compl))))
               (list (- (point) offset) (point) compl)))))))
-   )
+  )
 #+END_SRC
 *** Org Packages
 **** Org-agenda
