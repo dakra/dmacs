@@ -73,6 +73,7 @@
         js2-refactor-hydra/body
         js2-refactor-hydra/js2r-extract-var-and-exit
         js2-refactor-hydra/js2r-rename-var-and-exit
+        mc/vertical-align-with-space
         org-edit-src-save
         smart-region
         swiper-mc

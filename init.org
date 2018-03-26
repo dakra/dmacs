@@ -3856,6 +3856,7 @@ displayed anywhere else."
          ("w" . count-words-region)
          ("m" . apply-macro-to-region-lines)
          ;; multiple cursors
+         ("v" . mc/vertical-align-with-space)
          ("a" . mc/mark-all-dwim)
          ("A" . mc/mark-all-like-this)
          ("m" . mc/mark-more-like-this-extended)
@@ -3874,6 +3875,7 @@ displayed anywhere else."
          ("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
          :map mc/keymap
+         ("C-x v" . mc/vertical-align-with-space)
          ("C-x n" . mc-hide-unmatched-lines-mode))
   :config
   (global-unset-key (kbd "M-<down-mouse-1>"))
