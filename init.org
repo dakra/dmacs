@@ -780,6 +780,12 @@ is already narrowed."
 (use-package smartrep
   :defer 5
   :config
+  (smartrep-define-key global-map "C-x"
+    '(("{" . shrink-window-horizontally)
+      ("}" . enlarge-window-horizontally)
+      ("^" . enlarge-window)
+      ("%" . shrink-window)))
+
   (smartrep-define-key global-map "C-c ."
     '(("+" . apply-operation-to-number-at-point)
       ("-" . apply-operation-to-number-at-point)
