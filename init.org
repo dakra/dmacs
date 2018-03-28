@@ -1180,10 +1180,6 @@ split via i3 and create a new Emacs frame."
           ("lab\\.ebenefuenf\\.com" . gfm-mode)
           ("jira.paesslergmbh.de" . jira-markup-mode)))
   (edit-server-start))
-
-
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox-developer-edition")
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 (use-package fabric
@@ -7083,7 +7079,20 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 (use-package browse-url
-  :bind (("C-c u" . browse-url-at-point)))
+  :bind (("C-c u" . browse-url-at-point))
+  :init
+  (defun dakra-toggle-browser ()
+    "Toggle browser function between eww and Firefox."
+    (interactive)
+    (if (eq browse-url-browser-function 'eww-browse-url)
+        (progn
+          (setq browse-url-browser-function 'browse-url-firefox)
+          (message "Setting browser to Firefox"))
+      (setq browse-url-browser-function 'eww-browse-url)
+      (message "Setting browser to eww")))
+  :config
+  (setq browse-url-firefox-program "firefox-developer-edition")
+  (setq browse-url-browser-function 'browse-url-firefox))
 
 (use-package eww
   :defer t
