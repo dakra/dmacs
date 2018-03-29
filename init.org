@@ -1222,7 +1222,8 @@ split via i3 and create a new Emacs frame."
 (use-package dired
   :bind (("C-x d" . dired)
          :map dired-mode-map
-         ("e" . dired-ediff-files))
+         ("e" . dired-ediff-files)
+         ("Y" . dired-rsync))
   :config
   ;; When point is on a file name only search file names
   (setq dired-isearch-filenames 'dwim)
@@ -1244,6 +1245,37 @@ split via i3 and create a new Emacs frame."
 
   ;; dired list size in human-readable format and list directories first
   (setq dired-listing-switches "-hal --group-directories-first")
+
+  ;; Copy files asynchronously with rsync
+  ;; https://oremacs.com/2016/02/24/dired-rsync/
+  (defun dired-rsync (dest)
+    (interactive
+     (list
+      (expand-file-name
+       (read-file-name
+        "Rsync to:"
+        (dired-dwim-target-directory)))))
+    ;; store all selected files into "files" list
+    (let ((files (dired-get-marked-files
+                  nil current-prefix-arg))
+          ;; the rsync command
+          (tmtxt/rsync-command
+           "rsync -arvz --progress "))
+      ;; add all selected file names as arguments
+      ;; to the rsync command
+      (dolist (file files)
+        (setq tmtxt/rsync-command
+              (concat tmtxt/rsync-command
+                      (shell-quote-argument file)
+                      " ")))
+      ;; append the destination
+      (setq tmtxt/rsync-command
+            (concat tmtxt/rsync-command
+                    (shell-quote-argument dest)))
+      ;; run the async shell command
+      (async-shell-command tmtxt/rsync-command "*rsync*")
+      ;; finally, switch to that window
+      (other-window 1)))
 
   ;; Easily diff 2 marked files in dired
   ;; https://oremacs.com/2017/03/18/dired-ediff/
@@ -1323,37 +1355,6 @@ split via i3 and create a new Emacs frame."
 (use-package dired-async  ; Part of async
   :after (dired async)
   :config (dired-async-mode 1))
-
-(defun ora-dired-rsync (dest)
-  (interactive
-   (list
-    (expand-file-name
-     (read-file-name
-      "Rsync to:"
-      (dired-dwim-target-directory)))))
-  ;; store all selected files into "files" list
-  (let ((files (dired-get-marked-files
-                nil current-prefix-arg))
-        ;; the rsync command
-        (tmtxt/rsync-command
-         "rsync -arvz --progress "))
-    ;; add all selected file names as arguments
-    ;; to the rsync command
-    (dolist (file files)
-      (setq tmtxt/rsync-command
-            (concat tmtxt/rsync-command
-                    (shell-quote-argument file)
-                    " ")))
-    ;; append the destination
-    (setq tmtxt/rsync-command
-          (concat tmtxt/rsync-command
-                  (shell-quote-argument dest)))
-    ;; run the async shell command
-    (async-shell-command tmtxt/rsync-command "*rsync*")
-    ;; finally, switch to that window
-    (other-window 1)))
-;; FIXME: use use-package and bind
-;;(define-key dired-mode-map "Y" 'ora-dired-rsync)
 #+END_SRC
 
 ** Dired-hacks
