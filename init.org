@@ -6542,7 +6542,6 @@ It only works for frames with exactly two windows."
            width 0.6
            height 0.8)
           ((equal exwm-class-name "Firefox Developer Edition")
-           workspace 2
            simulation-keys (([?\C-q] . [?\C-w])  ; close tab instead of quitting Firefox
                             ([?\C-b] . [left])
                             ([?\C-f] . [right])
@@ -6555,8 +6554,6 @@ It only works for frames with exactly two windows."
                             ([?\C-d] . [delete])))
           ((equal exwm-class-name "Termite")
            simulation-keys (([?\C-c ?\C-c] . [?\C-c])  ;; Send C-c with C-c C-c
-                            ([?\C-b] . [?\C-b])  ; C-b is default tmux prefix
-                            ([?\C-d] . [?\C-d])  ; Most of the time C-d does the right thing
                             ([?\C-f] . [right])
                             ([?\C-p] . [up])
                             ([?\C-n] . [down])
