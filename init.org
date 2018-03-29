@@ -5950,9 +5950,17 @@ popd
 
   (add-to-list 'mu4e-view-attachment-actions '("iImport ical" . dakra-mu4e-action-attachment-import-gcalcli) t)
 
+  (defun mu4e-action-view-in-firefox (msg)
+    "View the body of the message in a new Firefox window."
+    (let ((browse-url-browser-function 'browse-url-firefox)
+          (browse-url-new-window-flag t))
+      (browse-url (concat "file://" (mu4e~write-body-to-html msg)))))
+
   ;; View mail in browser with "a V"
   (add-to-list 'mu4e-view-actions
                '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+  (add-to-list 'mu4e-view-actions
+               '("fViewInFirefox" . mu4e-action-view-in-firefox) t)
   (add-to-list 'mu4e-view-actions
                '("xViewXWidget" . mu4e-action-view-with-xwidget) t)
   ;; enable inline images
@@ -5978,8 +5986,8 @@ popd
   (defmacro mu4e-context-match-fun (maildir)
     "Return lambda for context switching which checks if a message is in MAILDIR."
     `(lambda (msg)
-      (when msg
-        (mu4e-message-maildir-matches msg ,maildir))))
+       (when msg
+         (mu4e-message-maildir-matches msg ,maildir))))
 
   (setq mu4e-contexts
         `( ,(make-mu4e-context
