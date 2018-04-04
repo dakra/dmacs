@@ -354,10 +354,7 @@ Allow some commands as safe by default
   :defer t
   :config
   ;; Always replace encrypted text with plain text version
-  (setq epa-replace-original-text t)
-
-  ;; Use minibuffer instead of external tool to enter gpg password
-  (setq epa-pinentry-mode 'loopback))
+  (setq epa-replace-original-text t))
 #+end_src
 ** Saveplace: Remember your location in a file
 #+begin_src emacs-lisp
