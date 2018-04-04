@@ -138,6 +138,9 @@
 [submodule "discover-my-major"]
 	path = lib/discover-my-major
 	url = git@github.com:steckerhalter/discover-my-major.git
+[submodule "djangonaut"]
+	path = lib/djangonaut
+	url = git@github.com:proofit404/djangonaut.git
 [submodule "docker"]
 	path = lib/docker
 	url = git@github.com:Silex/docker.el.git

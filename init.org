@@ -2719,7 +2719,10 @@ When called with 2 prefix arguments only open in browser and don't copy."
     (python-django-manage-command "runserver")))
 
 (use-package pyramid :load-path "repos/pyramid.el"
-  :commands (pyramid-project-root pyramid-serve pyramid-tweens))
+  :defer t)
+
+(use-package djangonaut
+  :defer t)
 
 
 ;; Enable (restructured) syntax highlighting for python docstrings
