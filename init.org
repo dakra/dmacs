@@ -6685,7 +6685,9 @@ in that namespace with ~x~
 #+begin_src emacs-lisp
 (use-package ovpn-mode
   :defer t
-  :config (setq ovpn-mode-base-directory "~/vpn"))
+  :config
+  (setq ovpn-mode-ipv6-auto-toggle t)  ; Always turn off ipv6 when starting vpn
+  (setq ovpn-mode-base-directory "~/vpn"))
 #+end_src
 ** Ledger: Accounting
 #+begin_src emacs-lisp
