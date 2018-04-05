@@ -4188,6 +4188,9 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   :bind (("C-c a"   . org-agenda)
          ("<f6>"    . org-agenda)
          ("<f7>"    . org-clock-goto)
+         ("<f9> I"  . bh/punch-in)
+         ("<f9> O"  . bh/punch-out)
+         ("<f9> l"  . org-toggle-link-display)
          ("C-c l"   . org-store-link)
          ("C-c o c" . org-clock-goto)
          ("C-c o i" . org-clock-in-or-list)
@@ -4199,6 +4202,12 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ("C-c o a" . org-agenda)
          ("C-c o b" . org-switchb)
          :map org-mode-map
+         ("M-." . org-open-at-point)  ; So M-. behaves like in source code.
+         ("M-," . org-mark-ring-goto)
+         ;; Disable adding and removing org-agenda files via keybinding.
+         ;; I explicitly specify agenda file directories in the config.
+         ("C-c [" . nil)
+         ("C-c ]" . nil)
          ("C-a" . org-beginning-of-line)  ; Overwrite crux-beginning-of-line
          ("M-o" . ace-link-org)
          ("M-p" . org-previous-visible-heading)
@@ -4208,18 +4217,6 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          :map org-src-mode-map
          ("C-x n" . org-edit-src-exit))
   :init
-  ;; FIXME: If there is a org-clock to resume (forgot to clock out before shutting down)
-  ;;        then there will be a *blocking* minibuffer with the question to resume the
-  ;;        clock and the daemon does NOT start because there's no way to see/answer that question
-  ;; Display custom agenda when starting Emacs in daemon mode
-  ;;(require 'org-clock)
-  ;;(if (daemonp)
-  ;;    (add-hook 'after-init-hook '(lambda ()
-  ;;                                  (setq org-clock-persist-query-resume nil)
-  ;;                                  (org-clock-load)
-  ;;                                  (org-agenda nil " ")
-  ;;                                  ))
-  ;;  (org-clock-load))
   (add-hook 'org-mode-hook
             (lambda ()
               ;; Automatic line-wrapping in org-mode
@@ -4237,7 +4234,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
       (org-clock-in '(4) start-time)))
 
   ;; Show headings up to level 2 by default when opening an org files
-  (setq org-startup-folded 'content)
+  ;;(setq org-startup-folded 'content)
 
   ;; Enter key follows links (= C-c C-o)
   (setq org-return-follows-link t)
@@ -4452,7 +4449,35 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
           (when compl
             (let ((offset (ivy-completion-common-length (car compl))))
               (list (- (point) offset) (point) compl)))))))
+
+  ;; Custom org-sort to sort by TODO and then by priority
+  ;; See: https://emacs.stackexchange.com/a/9588/12559
+  (defun todo-to-int (todo)
+    (first (-non-nil
+            (mapcar (lambda (keywords)
+                      (let ((todo-seq
+                             (-map (lambda (x) (first (split-string  x "(")))
+                                   (rest keywords))))
+                        (cl-position-if (lambda (x) (string= x todo)) todo-seq)))
+                    org-todo-keywords))))
+
+  (defun my/org-sort-key ()
+    (let* ((todo-max (apply #'max (mapcar #'length org-todo-keywords)))
+           (todo (org-entry-get (point) "TODO"))
+           (todo-int (if todo (todo-to-int todo) todo-max))
+           (priority (org-entry-get (point) "PRIORITY"))
+           (priority-int (if priority (string-to-char priority) org-default-priority)))
+      (format "%03d %03d" todo-int priority-int)))
+
+  (defun my/org-sort-entries ()
+    (interactive)
+    (org-sort-entries nil ?f #'my/org-sort-key))
   )
+
+;;; org babel config
+(use-package org-tempo :after org)
+;;(add-to-list 'org-structure-template-alist '("sp" "#+BEGIN_SRC python\n?\n#+END_SRC"))
+;;(add-to-list 'org-structure-template-alist '("si" "#+BEGIN_SRC ipython\n?\n#+END_SRC"))
 #+END_SRC
 *** Org Packages
 **** Org-agenda
@@ -5671,76 +5696,6 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (defun bh/is-scheduled-late (date-str)
   (string-match "Sched\.\\(.*\\)x:" date-str))
-#+END_SRC
-** Rest dakra-org.el
-#+BEGIN_SRC emacs-lisp  :tangle yes
-;; org-mode keybindings
-(add-hook 'org-mode-hook
-          '(lambda ()
-             ;; Make links work like chasing definitions in source code.
-             (org-defkey org-mode-map "\M-." 'org-open-at-point)
-             (org-defkey org-mode-map "\M-," 'org-mark-ring-goto)
-
-             ;; Undefine C-c [ and C-c ] since this breaks my
-             ;; org-agenda files when directories are include It
-             ;; expands the files in the directories individually
-             (org-defkey org-mode-map "\C-c[" 'undefined)
-             (org-defkey org-mode-map "\C-c]" 'undefined))
-          'append)
-
-;; Global key bindings
-(global-set-key (kbd "<f9> I") 'bh/punch-in)
-(global-set-key (kbd "<f9> O") 'bh/punch-out)
-(global-set-key (kbd "<f9> l") 'org-toggle-link-display)
-(global-set-key (kbd "<f9> SPC") 'bh/clock-in-last-task)
-
-;;; automatically create github issues from org-mode
-;; You have to set 'GH-PROJECT' property
-(defun gh-issue-new-browse (project title body)
-  (browse-url (concat "https://github.com/"
-                      project
-                      "/issues/new?title="
-                      (url-hexify-string title)
-                      "&body="
-                      (url-hexify-string body))))
-
-(defun gh-issue-create ()
-  (interactive)
-  (gh-issue-new-browse (org-entry-get (point) "GH-PROJECT" t)
-                       (org-get-heading)
-                       (org-export-as 'gfm t)))
-
-;; code-verbatim with backticks
-;; Set in preload.el
-;; see: https://lists.gnu.org/archive/html/emacs-orgmode/2012-08/msg00715.html
-
-;; Custom org-sort to sort by TODO and then by priority
-;; See: https://emacs.stackexchange.com/a/9588/12559
-(defun todo-to-int (todo)
-  (first (-non-nil
-          (mapcar (lambda (keywords)
-                    (let ((todo-seq
-                           (-map (lambda (x) (first (split-string  x "(")))
-                                 (rest keywords))))
-                      (cl-position-if (lambda (x) (string= x todo)) todo-seq)))
-                  org-todo-keywords))))
-
-(defun my/org-sort-key ()
-  (let* ((todo-max (apply #'max (mapcar #'length org-todo-keywords)))
-         (todo (org-entry-get (point) "TODO"))
-         (todo-int (if todo (todo-to-int todo) todo-max))
-         (priority (org-entry-get (point) "PRIORITY"))
-         (priority-int (if priority (string-to-char priority) org-default-priority)))
-    (format "%03d %03d" todo-int priority-int)))
-
-(defun my/org-sort-entries ()
-  (interactive)
-  (org-sort-entries nil ?f #'my/org-sort-key))
-
-;;; org babel config
-(use-package org-tempo :after org)
-;;(add-to-list 'org-structure-template-alist '("sp" "#+BEGIN_SRC python\n?\n#+END_SRC"))
-;;(add-to-list 'org-structure-template-alist '("si" "#+BEGIN_SRC ipython\n?\n#+END_SRC"))
 #+END_SRC
 * Email
 You also need to configure and install mu in the system.
