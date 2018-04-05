@@ -1657,11 +1657,13 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
     'counsel-minibuffer-history)
   :config
   ;; Use rg as backend for counsel-git
-  (setq counsel-git-cmd "rg --files")
-
-  ;; Use rg even for single files and show only max 120 characters per line
+  (setq counsel-git-cmd "rg -S --files")
+  ;; Only show max 160 characters per line
+  (setq counsel-rg-base-command
+        "rg -S -M 160 --no-heading --line-number --color never %s .")
+  ;; Use rg even for single files
   (setq counsel-grep-base-command
-        "rg -S -M 120 --no-heading --line-number --color never %s %s")
+        "rg -S -M 160 --no-heading --line-number --color never %s %s")
   ;; Make ivy faster/more responsive
   ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
   (setq counsel-async-filter-update-time 10000)
