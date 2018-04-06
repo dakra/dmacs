@@ -782,6 +782,9 @@
 [submodule "ws-butler"]
 	path = lib/ws-butler
 	url = git@github.com:lewang/ws-butler.git
+[submodule "xbacklight"]
+	path = lib/xbacklight
+	url = git@github.com:dakra/xbacklight.git
 [submodule "xelb"]
 	path = lib/xelb
 	url = git@github.com:ch11ng/xelb.git
