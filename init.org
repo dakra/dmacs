@@ -2533,7 +2533,10 @@ When called with 2 prefix arguments only open in browser and don't copy."
 *** Docker
 #+BEGIN_SRC emacs-lisp
 (use-package docker
-  :bind-keymap ("C-c d" . docker-command-map))
+  :bind-keymap ("C-c d" . docker-command-map)
+  :config
+  (setq docker-images-default-sort-key '("Created" . t))
+  (setq docker-containers-default-sort-key '("Status" . t)))
 (use-package dockerfile-mode
   :mode "Dockerfile\\'")
 (use-package docker-compose-mode
