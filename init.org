@@ -6507,11 +6507,16 @@ It only works for frames with exactly two windows."
   (defun exwm-workspace-switch-previous (p)
     "Switch to previous workspace"
     (interactive "p")
-    (exwm-workspace-switch (- exwm-workspace-current-index p)))
+    (if (< (- exwm-workspace-current-index p) 0)
+        (exwm-workspace-switch exwm-workspace-number)
+      (exwm-workspace-switch (- exwm-workspace-current-index p))))
+
   (defun exwm-workspace-switch-next (p)
     "Switch to next workspace"
     (interactive "p")
-    (exwm-workspace-switch (+ exwm-workspace-current-index p)))
+    (if (> (+ exwm-workspace-current-index p) exwm-workspace-number)
+        (exwm-workspace-switch 0)
+      (exwm-workspace-switch (+ exwm-workspace-current-index p))))
 
   (exwm-input-set-key (kbd "s-u") #'exwm-workspace-switch-previous)
   (exwm-input-set-key (kbd "s-o") #'exwm-workspace-switch-next)
