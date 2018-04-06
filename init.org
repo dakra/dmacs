@@ -933,16 +933,30 @@ Move current line or region with M-up or M-down.
   (projectile-mode t))
 
 (use-package treemacs
-  :defer t
-  :bind (;;([f8]        . treemacs-toggle)
-         ;;("M-0"       . treemacs-select-window)
-         ;;("C-c 1"     . treemacs-delete-other-windows)
+  :bind (([f8]        . treemacs-toggle-or-select)
          :map treemacs-mode-map
          ;; If we only hide the treemacs buffer (default binding) then, when we switch
          ;; a frame to a different project and toggle treemacs again we still get the old project
          ("q" . treemacs-kill-buffer))
-  ;;:init (defvar treemacs-no-load-time-warnings t)
   :config
+  (defun treemacs-toggle-or-select ()
+    "Like treemacs-toggle but when treemacs is visible and not focused, select it."
+    (interactive)
+    (pcase (treemacs--current-visibility)
+      ('visible
+       (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
+           (progn
+             (treemacs--select-visible)
+             (if (one-window-p)
+                 (switch-to-buffer (other-buffer))
+               (bury-buffer)))
+         (treemacs-select-window)))
+      ('exists
+       (treemacs--select-not-visible))
+      ('none
+       (treemacs-projectile))
+      (_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility)))))
+
   (setq treemacs-follow-after-init          t
         treemacs-collapse-dirs              3
         treemacs-silent-refresh             nil
@@ -953,7 +967,7 @@ Move current line or region with M-up or M-down.
   (treemacs-filewatch-mode t))
 
 (use-package treemacs-projectile
-  :bind (([f8] . treemacs-projectile-toggle))
+  :after (treemacs)
   :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 #+END_SRC
 * Navigation
