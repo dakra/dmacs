@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        beginning-of-defun
         comment-dwim-2
         counsel-yank-pop
         crux-move-beginning-of-line
@@ -14,6 +15,7 @@
         electric-newline-and-maybe-indent
         emmet-expand-line
         emmet-next-edit-point
+        end-of-defun
         eval-last-sexp
         grep-context-less-around-point
         grep-context-more-around-point
@@ -33,6 +35,7 @@
         outshine-self-insert-command
         selected-off
         shrink-whitespace
+        sp-backward-barf-sexp
         sp-backward-delete-char
         sp-backward-kill-word
         sp-backward-sexp
