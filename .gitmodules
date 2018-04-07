@@ -709,6 +709,9 @@
 [submodule "symbol-overlay"]
 	path = lib/symbol-overlay
 	url = git@github.com:wolray/symbol-overlay.git
+[submodule "systemctl"]
+	path = lib/systemctl
+	url = git@github.com:dakra/systemctl.git
 [submodule "systemd"]
 	path = lib/systemd
 	url = git@github.com:holomorph/systemd-mode.git
