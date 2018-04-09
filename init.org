@@ -6645,24 +6645,23 @@ It only works for frames with exactly two windows."
 
   (defhydra hydra-systemctl (:hint none)
     "
-Environments               Services
-------------               --------
-_a_: ?a? atomx               _p_: ?p? postgres
-_w_: ?w? paessler cms        _r_: ?r? redis
-_s_: ?s? paessler shop       _m_: ?m? mysql
-_n_: ?n? neorent             _t_: ?t? rethinkdb
-                           _d_: ?d? docker
-_o_: offline (stop all)      _c_: ?c? cups
+Presets                    Services
+-------                    --------
+_1_: ?1? mysql/rdb/redis     ?p? _p_ostgres
+_2_: ?2? postgres/redis      ?r? _r_edis
+_3_: ?3? docker              ?m? _m_ysql
+                           ?t? re_t_hinkdb
+                           ?d? _d_ocker
+_o_: offline (stop all)      ?c? _c_ups
 _g_: Refresh Hydra  _q_: quit"
     ;; Environments
-    ("a" (mapc 'systemctl-start '("mysqld" "redis" "rethinkdb@default.service"))
+    ("1" (mapc 'systemctl-start '("mysqld" "redis" "rethinkdb@default.service"))
      (systemctl-hydra-status '("mysqld" "redis" "rethinkdb@default.service")))
-    ("w" (mapc 'systemctl-start '("mysqld" "redis"))
-     (systemctl-hydra-status '("mysqld" "redis")))
-    ("s" (systemctl-toggle "docker")
-     (systemctl-hydra-status "docker"))
-    ("n" (mapc 'systemctl-start '("postgresql" "redis"))
+    ("2" (mapc 'systemctl-start '("postgresql" "redis"))
      (systemctl-hydra-status '("postgresql" "redis")))
+    ("3" (systemctl-toggle "docker")
+     (systemctl-hydra-status "docker"))
+    ;; Stop all
     ("o" (mapc 'systemctl-stop'("postgresql" "mysqld" "redis" "rethinkdb@default.service"
                                 "docker" "org.cups.cupsd")))
     ;; Services
