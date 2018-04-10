@@ -135,6 +135,9 @@
 	path = lib/dired-hacks
 	url = git@github.com:Fuco1/dired-hacks.git
 	no-byte-compile = dired-images.el
+[submodule "dired-rsync"]
+	path = lib/dired-rsync
+	url = git@github.com:stsquad/dired-rsync.git
 [submodule "discover-my-major"]
 	path = lib/discover-my-major
 	url = git@github.com:steckerhalter/discover-my-major.git
