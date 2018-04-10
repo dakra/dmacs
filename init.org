@@ -957,6 +957,10 @@ Move current line or region with M-up or M-down.
        (treemacs-projectile))
       (_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility)))))
 
+  (defun treemacs-ignore-pyc (file _)
+    (s-ends-with-p ".pyc" file))
+  (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-pyc)
+
   (setq treemacs-follow-after-init          t
         treemacs-collapse-dirs              3
         treemacs-silent-refresh             nil
