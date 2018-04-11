@@ -6626,20 +6626,20 @@ It only works for frames with exactly two windows."
     "
 Presets                    Services
 -------                    --------
-_1_: ?1? mysql/rdb/redis     ?p? _p_ostgres
-_2_: ?2? postgres/redis      ?r? _r_edis
-_3_: ?3? docker              ?m? _m_ysql
+_1_: ?1? postgres/redis      ?p? _p_ostgres
+_2_: ?2? mysql/redis         ?r? _r_edis
+_3_: ?3? mysql/rdb/redis     ?m? _m_ysql
                            ?t? re_t_hinkdb
                            ?d? _d_ocker
 _o_: offline (stop all)      ?c? _c_ups
 _g_: Refresh Hydra  _q_: quit"
     ;; Environments
-    ("1" (mapc 'systemctl-start '("mysqld" "redis" "rethinkdb@default.service"))
-     (systemctl-hydra-status '("mysqld" "redis" "rethinkdb@default.service")))
-    ("2" (mapc 'systemctl-start '("postgresql" "redis"))
+    ("1" (mapc 'systemctl-start '("postgresql" "redis"))
      (systemctl-hydra-status '("postgresql" "redis")))
-    ("3" (systemctl-toggle "docker")
-     (systemctl-hydra-status "docker"))
+    ("2" (mapc 'systemctl-start '("mysqld" "redis"))
+     (systemctl-hydra-status '("mysqld" "redis")))
+    ("3" (mapc 'systemctl-start '("mysqld" "redis" "rethinkdb@default.service"))
+     (systemctl-hydra-status '("mysqld" "redis" "rethinkdb@default.service")))
     ;; Stop all
     ("o" (mapc 'systemctl-stop'("postgresql" "mysqld" "redis" "rethinkdb@default.service"
                                 "docker" "org.cups.cupsd")))
