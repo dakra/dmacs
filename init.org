@@ -353,6 +353,8 @@ Allow some commands as safe by default
 (use-package epa
   :defer t
   :config
+  ;; Let Emacs query the passphrase through the minibuffer
+  (setq epa-pinentry-mode 'loopback)
   ;; Always replace encrypted text with plain text version
   (setq epa-replace-original-text t))
 #+end_src
