@@ -2450,9 +2450,9 @@ When called with 2 prefix arguments only open in browser and don't copy."
   (setq docker-images-default-sort-key '("Created" . t))
   (setq docker-containers-default-sort-key '("Status" . t)))
 (use-package dockerfile-mode
-  :mode "Dockerfile\\'")
+  :defer t)
 (use-package docker-compose-mode
-  :mode "docker-compose.*\.yml\\'")
+  :defer t)
 (use-package docker-tramp
   :after tramp)
 #+END_SRC
