@@ -1926,7 +1926,7 @@ go up multiple parent directories."
   (setq-default eshell-scroll-to-bottom-on-input 'all
                 eshell-error-if-no-glob t
                 eshell-hist-ignoredups t
-                eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim"
+                eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim" "nmtui"
                                          "tmux" "screen" "top" "htop" "less" "more" "ncftp")
                 eshell-prefer-lisp-functions nil)
 
