@@ -2473,6 +2473,16 @@ When called with 2 prefix arguments only open in browser and don't copy."
          ("C-c C-t" . hydra-python/body)
          )
   :hook (python-mode . python-flat-imenu-index)
+  :init
+  ;; Allow setting some python variables via dir-locals.
+  ;; This can be dangerous if someone makes you open an untrusted
+  ;; file with a malicious `.dir-locals' and execute some more
+  ;; malicious python code. But I'm not too worried
+  ;; and I change these often enough that I don't want to save
+  ;; for each variable I allow.
+  ;; TODO: Make the check more strict.
+  (put 'python-shell-extra-pythonpaths 'safe-local-variable 'listp)
+  (put 'python-shell-process-environment 'safe-local-variable 'listp)
   :config
   ;; Don't spam message buffer when python-mode can't guess indent-offset
   (setq python-indent-guess-indent-offset-verbose nil)
