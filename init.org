@@ -4225,7 +4225,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
     (interactive "P")
     (if (eq major-mode 'org-mode)
         (org-clock-in select start-time)
-      (org-clock-in '(4) start-time)))
+      (counsel-org-clock-history)))
 
   ;; Show headings up to level 2 by default when opening an org files
   ;;(setq org-startup-folded 'content)
@@ -5363,6 +5363,11 @@ as the default task."
                        (desc (format "%s (%s)" summary repo)))
                   (push (list link desc) org-stored-links)))
               t t)))
+#+end_src
+**** Counsel-org-clock
+#+begin_src emacs-lisp
+(use-package counsel-org-clock
+  :defer t)
 #+end_src
 ** bh.el TODO: remove???
 #+BEGIN_SRC emacs-lisp  :tangle yes

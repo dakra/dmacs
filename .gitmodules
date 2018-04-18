@@ -97,6 +97,9 @@
 [submodule "counsel-css"]
 	path = lib/counsel-css
 	url = git@github.com:hlissner/emacs-counsel-css.git
+[submodule "counsel-org-clock"]
+	path = lib/counsel-org-clock
+	url = git@github.com:dakra/dmacs.git
 [submodule "counsel-projectile"]
 	path = lib/counsel-projectile
 	url = git@github.com:ericdanan/counsel-projectile.git
