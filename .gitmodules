@@ -197,9 +197,6 @@
 [submodule "emms"]
 	path = lib/emms
 	url = https://git.savannah.gnu.org/git/emms.git
-[submodule "emms-player-simple-mpv"]
-	path = lib/emms-player-simple-mpv
-	url = git@github.com:momomo5717/emms-player-simple-mpv.git
 [submodule "epkg"]
 	path = lib/epkg
 	url = git@github.com:emacscollective/epkg.git
