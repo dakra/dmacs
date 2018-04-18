@@ -6278,162 +6278,6 @@ there are no attachments."
 
 * Window Manager
 FIXME: Brightness
-** PulseAudio
-#+BEGIN_SRC emacs-lisp
-(use-package pulseaudio-control
-  :bind (("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
-         ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
-         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute)
-         ("C-c v" . hydra-pulseaudio-control/body)
-         :map exwm-mode-map
-         ("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
-         ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
-         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute))
-  ;;:bind-keymap ("C-c v" . pulseaudio-control-map)
-  :config
-  ;; XXX: Maybe -set-volume (1-9 keys sets 10%, 20% etc)?
-  ;;      Maybe show selected sink and volume
-  (defhydra hydra-pulseaudio-control (:hint nil)
-    "Pulseaudio Control"
-    ("+" pulseaudio-control-increase-volume "Increase Volume")
-    ("i" pulseaudio-control-increase-volume "Increase Volume")
-    ("-" pulseaudio-control-decrease-volume "Decrease Volume")
-    ("d" pulseaudio-control-decrease-volume "Decrease Volume")
-    ("m" pulseaudio-control-toggle-current-sink-mute "Toggle Mute")
-    ("s" pulseaudio-control-select-sink-by-name "Select Sink")
-    ("q" nil "quit"))
-  (setq pulseaudio-control-volume-step "5%"))
-#+END_SRC
-** Xbacklight: Adjust screen brightness
-#+begin_src emacs-lisp
-(use-package xbacklight
-  :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
-         ("<XF86MonBrightnessDown>" . xbacklight-decrease)
-         :map exwm-mode-map
-         ("<XF86MonBrightnessUp>" . xbacklight-increase)
-         ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
-#+end_src
-** Symon
-#+BEGIN_SRC emacs-lisp
-(use-package symon
-  ;; Nice idea but not to useful since it always disappears because the minibuffer is used.
-  ;; Use external program polybar instead.
-  :disabled t
-  :commands symon-mode)
-#+END_SRC
-** Dmenu
-#+BEGIN_SRC emacs-lisp
-(use-package dmenu :load-path "repos/el-dmenu"
-  :commands dmenu)
-#+END_SRC
-** Navigation
-#+BEGIN_SRC emacs-lisp
-;; Focus follows mouse for Emacs windows and frames
-(setq mouse-autoselect-window t)
-(setq focus-follows-mouse t)
-
-;; swap-window functions from
-;; https://github.com/Ambrevar/dotfiles/blob/master/.emacs.d/lisp/functions.el
-(defun swap-windows (&optional w1 w2)
-  "If 2 windows are up, swap them.
-Else if W1 is a window, swap it with current window.
-If W2 is a window too, swap both."
-  (interactive)
-  (unless (or (= 2 (count-windows))
-              (windowp w1)
-              (windowp w2))
-    (error "Ambiguous window selection"))
-  (let* ((w1 (or w1 (car (window-list))))
-         (w2 (or w2
-                 (if (eq w1 (car (window-list)))
-                     (nth 1 (window-list))
-                   (car (window-list)))))
-         (b1 (window-buffer w1))
-         (b2 (window-buffer w2))
-         (s1 (window-start w1))
-         (s2 (window-start w2)))
-    (with-temp-buffer
-      ;; Some buffers like EXWM buffers can only be in one live buffer at once.
-      ;; Switch to a dummy buffer in w2 so that we don't display any buffer twice.
-      (set-window-buffer w2 (current-buffer))
-      (set-window-buffer w1 b2)
-      (set-window-buffer w2 b1))
-    (set-window-start w1 s2)
-    (set-window-start w2 s1))
-  (select-window w1))
-(global-set-key (kbd "C-x \\") 'swap-windows)
-
-(defun swap-windows-left ()
-  "Swap current window with the window to the left."
-  (interactive)
-  (swap-windows (window-in-direction 'left)))
-(defun swap-windows-below ()
-  "Swap current window with the window below."
-  (interactive)
-  (swap-windows (window-in-direction 'below)))
-(defun swap-windows-above ()
-  "Swap current window with the window above."
-  (interactive)
-  (swap-windows (window-in-direction 'above)))
-(defun swap-windows-right ()
-  "Swap current window with the window to the right."
-  (interactive)
-  (swap-windows (window-in-direction 'right)))
-
-(defvar single-window--last-configuration nil "Last window configuration before calling `delete-other-windows'.")
-(defun toggle-single-window ()
-  "Un-maximize current window.
-If multiple windows are active, save window configuration and
-delete other windows.  If only one window is active and a window
-configuration was previously save, restore that configuration."
-  (interactive)
-  (if (= (count-windows) 1)
-      (when single-window--last-configuration
-        (set-window-configuration single-window--last-configuration))
-    (setq single-window--last-configuration (current-window-configuration))
-    (delete-other-windows)))
-
-(defun toggle-window-split ()
-  "Switch between vertical and horizontal split.
-It only works for frames with exactly two windows."
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-(global-set-key (kbd "C-x C-\\") 'toggle-window-split)
-#+END_SRC
-*** Switch window
-#+BEGIN_SRC emacs-lisp
-(use-package switch-window
-  :disabled t
-  :commands switch-window
-  :config (setq switch-window-input-style 'minibuffer))
-#+END_SRC
-*** winner-mode: undo/redo window configurations
-#+BEGIN_SRC emacs-lisp
-(use-package winner
-  :defer 3
-  :config (winner-mode 1))
-#+END_SRC
 ** Exwm
 #+BEGIN_SRC emacs-lisp
 (use-package xelb
@@ -6641,6 +6485,162 @@ and started. E.g. have this line in you .xprofile:
 (use-package gpastel
   :hook (exwm-init . gpastel-start-listening))
 #+end_src
+** PulseAudio
+#+BEGIN_SRC emacs-lisp
+(use-package pulseaudio-control
+  :bind (("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
+         ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
+         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute)
+         ("C-c v" . hydra-pulseaudio-control/body)
+         :map exwm-mode-map
+         ("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
+         ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
+         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute))
+  ;;:bind-keymap ("C-c v" . pulseaudio-control-map)
+  :config
+  ;; XXX: Maybe -set-volume (1-9 keys sets 10%, 20% etc)?
+  ;;      Maybe show selected sink and volume
+  (defhydra hydra-pulseaudio-control (:hint nil)
+    "Pulseaudio Control"
+    ("+" pulseaudio-control-increase-volume "Increase Volume")
+    ("i" pulseaudio-control-increase-volume "Increase Volume")
+    ("-" pulseaudio-control-decrease-volume "Decrease Volume")
+    ("d" pulseaudio-control-decrease-volume "Decrease Volume")
+    ("m" pulseaudio-control-toggle-current-sink-mute "Toggle Mute")
+    ("s" pulseaudio-control-select-sink-by-name "Select Sink")
+    ("q" nil "quit"))
+  (setq pulseaudio-control-volume-step "5%"))
+#+END_SRC
+** Xbacklight: Adjust screen brightness
+#+begin_src emacs-lisp
+(use-package xbacklight
+  :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
+         ("<XF86MonBrightnessDown>" . xbacklight-decrease)
+         :map exwm-mode-map
+         ("<XF86MonBrightnessUp>" . xbacklight-increase)
+         ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
+#+end_src
+** Symon
+#+BEGIN_SRC emacs-lisp
+(use-package symon
+  ;; Nice idea but not to useful since it always disappears because the minibuffer is used.
+  ;; Use external program polybar instead.
+  :disabled t
+  :commands symon-mode)
+#+END_SRC
+** Dmenu
+#+BEGIN_SRC emacs-lisp
+(use-package dmenu :load-path "repos/el-dmenu"
+  :commands dmenu)
+#+END_SRC
+** Navigation
+#+BEGIN_SRC emacs-lisp
+;; Focus follows mouse for Emacs windows and frames
+(setq mouse-autoselect-window t)
+(setq focus-follows-mouse t)
+
+;; swap-window functions from
+;; https://github.com/Ambrevar/dotfiles/blob/master/.emacs.d/lisp/functions.el
+(defun swap-windows (&optional w1 w2)
+  "If 2 windows are up, swap them.
+Else if W1 is a window, swap it with current window.
+If W2 is a window too, swap both."
+  (interactive)
+  (unless (or (= 2 (count-windows))
+              (windowp w1)
+              (windowp w2))
+    (error "Ambiguous window selection"))
+  (let* ((w1 (or w1 (car (window-list))))
+         (w2 (or w2
+                 (if (eq w1 (car (window-list)))
+                     (nth 1 (window-list))
+                   (car (window-list)))))
+         (b1 (window-buffer w1))
+         (b2 (window-buffer w2))
+         (s1 (window-start w1))
+         (s2 (window-start w2)))
+    (with-temp-buffer
+      ;; Some buffers like EXWM buffers can only be in one live buffer at once.
+      ;; Switch to a dummy buffer in w2 so that we don't display any buffer twice.
+      (set-window-buffer w2 (current-buffer))
+      (set-window-buffer w1 b2)
+      (set-window-buffer w2 b1))
+    (set-window-start w1 s2)
+    (set-window-start w2 s1))
+  (select-window w1))
+(global-set-key (kbd "C-x \\") 'swap-windows)
+
+(defun swap-windows-left ()
+  "Swap current window with the window to the left."
+  (interactive)
+  (swap-windows (window-in-direction 'left)))
+(defun swap-windows-below ()
+  "Swap current window with the window below."
+  (interactive)
+  (swap-windows (window-in-direction 'below)))
+(defun swap-windows-above ()
+  "Swap current window with the window above."
+  (interactive)
+  (swap-windows (window-in-direction 'above)))
+(defun swap-windows-right ()
+  "Swap current window with the window to the right."
+  (interactive)
+  (swap-windows (window-in-direction 'right)))
+
+(defvar single-window--last-configuration nil "Last window configuration before calling `delete-other-windows'.")
+(defun toggle-single-window ()
+  "Un-maximize current window.
+If multiple windows are active, save window configuration and
+delete other windows.  If only one window is active and a window
+configuration was previously save, restore that configuration."
+  (interactive)
+  (if (= (count-windows) 1)
+      (when single-window--last-configuration
+        (set-window-configuration single-window--last-configuration))
+    (setq single-window--last-configuration (current-window-configuration))
+    (delete-other-windows)))
+
+(defun toggle-window-split ()
+  "Switch between vertical and horizontal split.
+It only works for frames with exactly two windows."
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+(global-set-key (kbd "C-x C-\\") 'toggle-window-split)
+#+END_SRC
+*** Switch window
+#+BEGIN_SRC emacs-lisp
+(use-package switch-window
+  :disabled t
+  :commands switch-window
+  :config (setq switch-window-input-style 'minibuffer))
+#+END_SRC
+*** winner-mode: undo/redo window configurations
+#+BEGIN_SRC emacs-lisp
+(use-package winner
+  :defer 3
+  :config (winner-mode 1))
+#+END_SRC
 * Transmission: Bittorent
 #+begin_src emacs-lisp
 (use-package transmission
