@@ -464,9 +464,12 @@ Allow some commands as safe by default
   ;;(setq calendar-latitude -37.841
   ;;      calendar-longitude 144.939
   ;;      calendar-location-name "Melbourne, Australia")
-  (setq calendar-latitude 3.143
-        calendar-longitude 101.686
-        calendar-location-name "Kuala Lumpur, Malaysia")
+  ;;(setq calendar-latitude 3.143
+  ;;      calendar-longitude 101.686
+  ;;      calendar-location-name "Kuala Lumpur, Malaysia")
+  (setq calendar-latitude 48.97
+        calendar-longitude 8.45
+        calendar-location-name "Karlsruhe, Germany")
   ;; Highlight public holidays
   (setq calendar-holiday-marker t))
 #+END_SRC
