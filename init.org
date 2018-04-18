@@ -1697,6 +1697,7 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
          ("C-c o g" . counsel-org-agenda-headlines)
          ("C-c o G" . counsel-org-goto)
          ("C-x C-f" . counsel-find-file)
+         ("M-y"     . counsel-yank-pop)
          ("M-i"     . counsel-imenu)
          ("M-x"     . counsel-M-x))
   :init
