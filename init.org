@@ -6442,13 +6442,25 @@ It only works for frames with exactly two windows."
 (use-package exwm
   :if (daemonp)
   :demand t
+  :hook (exwm-init . exwm-startup-apps)
   :bind (:map exwm-mode-map
          ;; The following can only apply to EXWM buffers, else it could have unexpected effects.
          ("s-SPC" . exwm-floating-toggle-floating)
          ("s-q" . exwm-input-send-next-key)  ; Shorter than the default C-c C-q
          ("s-t" . exwm-input-toggle-keyboard)
-         ("s-F" . exwm-layout-toggle-fullscreen))
+         ("s-F" . exwm-layout-toggle-fullscreen)
+         ("M-y" . exwm-counsel-yank-pop))
   :config
+  (defun exwm-counsel-yank-pop ()
+    "Same as `counsel-yank-pop' and paste into exwm buffer."
+    (interactive)
+    (let ((inhibit-read-only t)
+          ;; Make sure we send selected yank-pop candidate to
+          ;; clipboard:
+          (yank-pop-change-selection t))
+      (call-interactively #'counsel-yank-pop))
+    (when (derived-mode-p 'exwm-mode)
+      (exwm-input--fake-key ?\C-v)))
   ;; Set the initial workspace number.
   (setq exwm-workspace-number 4)
   ;; Make class name the buffer name
@@ -6527,6 +6539,7 @@ It only works for frames with exactly two windows."
           ([?\C-e] . [end])
           ([?\M-v] . [prior])
           ([?\C-v] . [next])
+          ([?\C-y] . [?\C-v])
           ;;([?\C-k] . [S-end delete])
           ([?\C-d] . [delete])))
 
@@ -6615,11 +6628,19 @@ It only works for frames with exactly two windows."
     (start-process-shell-command "pidgin" nil "pidgin")
     (start-process-shell-command "kdeconnect-indicator" nil "kdeconnect-indicator")
     (start-process-shell-command "keepassxc" nil "keepassxc"))
-  (add-hook 'exwm-init-hook 'exwm-startup-apps)
 
   ;; Enable EXWM
   (exwm-enable))
 #+END_SRC
+** Gpastel: gpaste clipboard manager synchronization with kill-ring
+You need to have the ~gpaste~ daemon installed (arch package ~gpaste~)
+and started. E.g. have this line in you .xprofile:
+~/usr/lib/gpaste/gpaste-daemon &~
+
+#+begin_src emacs-lisp
+(use-package gpastel
+  :hook (exwm-init . gpastel-start-listening))
+#+end_src
 * Transmission: Bittorent
 #+begin_src emacs-lisp
 (use-package transmission

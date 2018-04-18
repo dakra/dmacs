@@ -300,6 +300,9 @@
 [submodule "goto-chg"]
 	path = lib/goto-chg
 	url = git@github.com:emacs-evil/goto-chg.git
+[submodule "gpastel"]
+	path = lib/gpastel
+	url = git@github.com:dakra/dmacs.git
 [submodule "graphviz-dot-mode"]
 	path = lib/graphviz-dot-mode
 	url = git@github.com:ppareit/graphviz-dot-mode.git
