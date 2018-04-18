@@ -162,6 +162,9 @@
 [submodule "easy-escape"]
 	path = lib/easy-escape
 	url = git@github.com:cpitclaudel/easy-escape.git
+[submodule "edit-indirect"]
+	path = lib/edit-indirect
+	url = git@github.com:Fanael/edit-indirect.git
 [submodule "edit-server"]
 	path = lib/edit-server
 	url = git@github.com:stsquad/emacs_chrome.git

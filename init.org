@@ -826,6 +826,25 @@ is already narrowed."
   :disabled t
   :commands (dumb-diff dumb-diff-set-region-as-buffer1 dumb-diff-set-region-as-buffer2))
 #+END_SRC
+** edit-indirect: Edit a region in a separate buffer
+#+begin_src emacs-lisp
+(use-package edit-indirect
+  :bind (("C-c '" . edit-indirect-region)
+         :map edit-indirect-mode-map
+         ("C-x n" . edit-indirect-commit))
+  :config
+  (defvar edit-indirect-guess-mode-history nil)
+  (defun edit-indirect-guess-mode-fn (_buffer _beg _end)
+    (let* ((lang (completing-read "Mode: "
+                                  '("python" "sql" "js2" "web")
+                                  nil nil nil 'edit-indirect-guess-mode-history))
+           (mode-str (concat lang "-mode"))
+           (mode (intern mode-str)))
+      (unless (functionp mode)
+        (error "Invalide mode `%s'" mode-str))
+      (funcall mode)))
+  (setq edit-indirect-guess-mode-function #'edit-indirect-guess-mode-fn))
+#+end_src
 ** with-editor: Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 #+BEGIN_SRC emacs-lisp
 (use-package with-editor
