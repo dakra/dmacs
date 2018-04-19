@@ -2574,7 +2574,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
     [_f_]   Function    [_a_] From ... import     [_P_] Run python
     [_m_]   Method      [_i_] Import              [_I_] Pippel
     [_c_]   Class       [_l_] Import line/region  [_R_] Runserver
-    [_F_]   File        [_r_] Remove imports      [_d_] Define stub
+    [_F_]   File        [_r_] Remove imports
     [_p_]   Project     [_s_] Sort imports        [_q_] Cancel
     "
     ("a" py-isort-add-from-import)
@@ -2592,7 +2592,6 @@ When called with 2 prefix arguments only open in browser and don't copy."
     ("P" run-python)
     ("I" pippel-list-packages)
     ("R" python-run-server)
-    ("d" elpygen-implement)
     ("q" nil))
 
   (require 'thingatpt)
@@ -2637,11 +2636,6 @@ When called with 2 prefix arguments only open in browser and don't copy."
 (use-package company-anaconda
   :after anaconda-mode
   :config (add-to-list 'company-backends 'company-anaconda))
-
-;; Generate Python function/method stub for a call-like symbol under point
-(use-package elpygen  ; FIXME: not in epkg?
-  :disabled t
-  :commands elpygen-implement)
 
 ;; package-list-packages like interface for python packages
 (use-package pippel :defer t)
