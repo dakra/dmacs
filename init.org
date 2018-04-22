@@ -917,16 +917,6 @@ Move current line or region with M-up or M-down.
          ("-" . grep-context-less-around-point)))
 #+end_src
 ** Search/Replace
-*** Anzu: Show total matches for isearch and query replace
-#+BEGIN_SRC emacs-lisp
-;; anzu-mode enhances isearch & query-replace by showing total matches and current match position
-(use-package anzu
-  :disabled t  ; With swiper and visual-regex there's no need anzu
-  :defer 5
-  :bind (("M-%" . anzu-query-replace)
-         ("C-M-%" . anzu-query-replace-regexp))
-  :config (global-anzu-mode))
-#+END_SRC
 *** Re-builder
 #+BEGIN_SRC emacs-lisp
 ;; You can change syntax in regex-builder with "C-c TAB"
@@ -1188,62 +1178,6 @@ Move current line or region with M-up or M-down.
 #+END_SRC
 ** Misc
 #+BEGIN_SRC emacs-lisp
-;; let emacs work nicely with i3; i3-emacs is not on melpa; manually installed
-;; used together with i3 keyboard shortcut (S-e) to `emacsclient -cn -e '(switch-to-buffer nil)`
-(use-package i3 :load-path "repos/i3"
-  :disabled t  ;:if (or (daemonp) window-system)
-  :commands i3-command
-  :bind (("C-x 2" . i3-split-vertically)
-         ("C-x 3" . i3-split-horizontally))
-  :init
-  (defun i3-split-vertically ()
-    "Like (split-window-vertically) but when in graphic mode
-split via i3 and create a new Emacs frame."
-    (interactive)
-    (if (display-graphic-p)
-        (progn (i3-command 0 "split vertical")
-               (make-frame))
-      (split-window-vertically)))
-  (defun i3-split-horizontally ()
-    "Like (split-window-horizontally) but when in graphic mode
-split via i3 and create a new Emacs frame."
-    (interactive)
-    (if (display-graphic-p)
-        (progn (i3-command 0 "split horizontal")
-               (make-frame))
-      (split-window-horizontally))))
-
-(use-package i3-integration  :load-path "repos/i3"
-  :disabled t
-  :after i3
-  :config
-  (i3-one-window-per-frame-mode-off)
-  (i3-advise-visible-frame-list-off))
-
-(use-package frames-only-mode
-  :disabled t
-  ;;:if (or (daemonp) window-system)
-  :config
-  ;; Open (e)shell in new frame instead of the current one
-  (add-to-list 'display-buffer-alist '("\\`\\*e?shell" display-buffer-pop-up-frame))
-  ;; Set config because magit-commit-show-diff defaults to nil
-  (setq frames-only-mode-configuration-variables
-        (list (list 'pop-up-frames 'graphic-only)
-              (list 'mouse-autoselect-window nil)
-              (list 'focus-follows-mouse nil)
-              (list 'frame-auto-hide-function 'delete-frame)
-              (list 'org-agenda-window-setup 'other-frame)
-              (list 'org-src-window-setup 'other-frame)
-              (list 'ido-default-buffer-method 'selected-window)
-              ;;(list 'magit-commit-show-diff t)
-              (list 'flycheck-display-errors-function #'frames-only-mode-flycheck-display-errors)))
-  ;; Add function that calls (display-buffer) if you want to exclude it from frames-only-mode
-  (add-to-list 'frames-only-mode-use-window-functions 'undo-tree-visualize)
-  (add-to-list 'frames-only-mode-use-window-functions 'po-edit-string)
-  (add-to-list 'frames-only-mode-use-window-functions 'org-clock-resolve)
-  (add-to-list 'frames-only-mode-use-window-functions 'graphviz-dot-preview)
-  (frames-only-mode))
-
 (use-package edit-server
   :if (daemonp)
   :defer 10
@@ -1261,21 +1195,6 @@ split via i3 and create a new Emacs frame."
 #+BEGIN_SRC emacs-lisp
 (use-package fabric
   :defer t)
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-;; A better Emacs Package Menu
-(use-package paradox
-  :disabled t  ; Using borg now!
-  :defer t  ;; Otherwise it will load and fail because I didn't unlock gpgagent yet
-  :commands paradox-list-packages
-  :config
-  ;; Set paradox-github-token
-  (require 'dakra-passwords "~/.emacs.d/dakra-passwords.el.gpg")
-
-  (setq paradox-automatically-star nil)
-  (setq paradox-display-download-count t)
-  (setq paradox-use-homepage-buttons nil)
-  (setq paradox-execute-asynchronously t))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 (use-package calc
@@ -1666,7 +1585,6 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   :after (ivy hydra))
 
 (use-package ivy-rich
-  ;;:disabled t                           ; too slow sometimes
   ;;:defer 5
   :after ivy
   :config
@@ -6512,14 +6430,6 @@ and started. E.g. have this line in you .xprofile:
          ("<XF86MonBrightnessUp>" . xbacklight-increase)
          ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
 #+end_src
-** Symon
-#+BEGIN_SRC emacs-lisp
-(use-package symon
-  ;; Nice idea but not to useful since it always disappears because the minibuffer is used.
-  ;; Use external program polybar instead.
-  :disabled t
-  :commands symon-mode)
-#+END_SRC
 ** Dmenu
 #+BEGIN_SRC emacs-lisp
 (use-package dmenu :load-path "repos/el-dmenu"
