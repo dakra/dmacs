@@ -2314,6 +2314,10 @@ file to edit."
   (magit-define-popup-action 'magit-branch-popup
     ?p "Create from pull-request" 'magit-branch-pull-request)
 
+  ;; Add reshelve command to commit popup to change date of commit
+  (magit-define-popup-action 'magit-commit-popup
+    ?n "Reshelve" 'magit-commit-reshelve)
+
   ;; Show submodules section to magit status
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
@@ -2355,18 +2359,6 @@ file to edit."
   ;; Display magit status in full frame
   ;;(setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   )
-
-(use-package magit-rockstar
-  :disabled t
-  :after magit
-  :functions (magit-define-popup-action)
-  :config
-  (magit-define-popup-action 'magit-revert-popup
-    ?e "Revert & edit HEAD" 'magit-uncommit-extend)
-  (magit-define-popup-action 'magit-commit-popup
-    ?n "Reshelve" 'magit-reshelve)
-  (magit-define-popup-action 'magit-rebase-popup
-    ?R "Rockstar" 'magit-rockstar))
 
 (use-package magit-wip
   :after magit

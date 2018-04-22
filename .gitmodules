@@ -428,10 +428,6 @@
 [submodule "magit-popup"]
 	path = lib/magit-popup
 	url = git@github.com:magit/magit-popup.git
-[submodule "magit-rockstar"]
-	disabled = true
-	path = lib/magit-rockstar
-	url = git@github.com:tarsius/magit-rockstar.git
 [submodule "magit-tbdiff"]
 	path = lib/magit-tbdiff
 	url = git@github.com:magit/magit-tbdiff.git
