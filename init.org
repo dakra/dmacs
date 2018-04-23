@@ -4134,6 +4134,9 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   ;; Show headings up to level 2 by default when opening an org files
   ;;(setq org-startup-folded 'content)
 
+  ;; Add more levels to headlines that get displayed with imenu
+  (setq org-imenu-depth 5)
+
   ;; Enter key follows links (= C-c C-o)
   (setq org-return-follows-link t)
 
