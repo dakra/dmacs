@@ -2613,7 +2613,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
     (interactive)
     (python-django-manage-command "runserver")))
 
-(use-package pyramid :load-path "repos/pyramid.el"
+(use-package pyramid
   :defer t)
 
 (use-package djangonaut

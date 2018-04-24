@@ -613,6 +613,9 @@
 [submodule "pydoc"]
 	path = lib/pydoc
 	url = git@github.com:statmobile/pydoc.git
+[submodule "pyramid"]
+	path = lib/pyramid
+	url = git@github.com:dakra/pyramid.el.git
 [submodule "python-docstring"]
 	path = lib/python-docstring
 	url = git@github.com:glyph/python-docstring-mode.git
