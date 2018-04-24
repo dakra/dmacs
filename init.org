@@ -4977,7 +4977,7 @@ as the default task."
         ;; We're in the agenda
         ;;
         (let* ((marker (org-get-at-bol 'org-hd-marker))
-               (tags (org-with-point-at marker (org-get-tags-at))))
+               (tags (org-with-point-at marker (org-get-tags))))
           (if (and (eq arg 4) tags)
               (org-agenda-clock-in '(16))
             (bh/clock-in-organization-task-as-default)))
@@ -5367,7 +5367,7 @@ Callers of this function already widen the buffer view."
             (save-excursion
               (forward-line 1)
               (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
-                (unless (member "WAITING" (org-get-tags-at))
+                (unless (member "WAITING" (org-get-tags))
                   (setq has-next t))))
             (if has-next
                 nil
@@ -5386,7 +5386,7 @@ Callers of this function already widen the buffer view."
             (save-excursion
               (forward-line 1)
               (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
-                (unless (member "WAITING" (org-get-tags-at))
+                (unless (member "WAITING" (org-get-tags))
                   (setq has-next t))))
             (if has-next
                 next-headline
@@ -5443,7 +5443,7 @@ Skip project and sub-project tasks, habits, and project related tasks."
        ((org-is-habit-p)
         next-headline)
        ((and bh/hide-scheduled-and-waiting-next-tasks
-             (member "WAITING" (org-get-tags-at)))
+             (member "WAITING" (org-get-tags)))
         next-headline)
        ((bh/is-project-p)
         next-headline)
