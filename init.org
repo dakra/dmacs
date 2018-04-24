@@ -6260,13 +6260,13 @@ FIXME: Brightness
     "Switch to previous workspace"
     (interactive "p")
     (if (< (- exwm-workspace-current-index p) 0)
-        (exwm-workspace-switch exwm-workspace-number)
+        (exwm-workspace-switch (1- (length exwm-workspace--list)))
       (exwm-workspace-switch (- exwm-workspace-current-index p))))
 
   (defun exwm-workspace-switch-next (p)
     "Switch to next workspace"
     (interactive "p")
-    (if (> (+ exwm-workspace-current-index p) exwm-workspace-number)
+    (if (> (+ exwm-workspace-current-index p) (1- (length exwm-workspace--list)))
         (exwm-workspace-switch 0)
       (exwm-workspace-switch (+ exwm-workspace-current-index p))))
 
