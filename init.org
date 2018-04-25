@@ -3973,7 +3973,7 @@ displayed anywhere else."
       (setq ispell-extra-args old-ispell-extra-args)
       (ispell-kill-ispell t)
       ))
-  ;; flyspell-correct-helm uses this function
+  ;; flyspell-correct uses this function
   (defadvice flyspell-correct-word-generic (around my-ispell-word activate)
     (let ((old-ispell-extra-args ispell-extra-args))
       (ispell-kill-ispell t)
@@ -4009,10 +4009,8 @@ displayed anywhere else."
   ;; remove flyspess 'C-;' keybinding so we can use it for avy jump
   (unbind-key "C-;" flyspell-mode-map))
 
-;; Show helm-list of correct spelling suggesions
-(use-package flyspell-correct-helm
-  :disabled t
-  :after (flyspell helm)
+;; Show ivy-list of correct spelling suggesions
+(use-package flyspell-correct-ivy
   :bind (:map flyspell-mode-map
          ("C-." . flyspell-correct-previous-word-generic)))
 

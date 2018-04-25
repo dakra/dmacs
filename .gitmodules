@@ -279,6 +279,12 @@
 [submodule "flycheck-rust"]
 	path = lib/flycheck-rust
 	url = git@github.com:flycheck/flycheck-rust.git
+[submodule "flyspell-correct"]
+	path = lib/flyspell-correct
+	url = git@github.com:d12frosted/flyspell-correct.git
+	no-byte-compile = flyspell-correct-helm.el
+	no-byte-compile = flyspell-correct-ido.el
+	no-byte-compile = flyspell-correct-popup.el
 [submodule "ghub"]
 	path = lib/ghub
 	url = git@github.com:magit/ghub.git
