@@ -2228,10 +2228,6 @@ file to edit."
     ?b "Checkout or create" 'magit-branch-or-checkout
     'magit-branch t)
 
-  ;; Create and checkout new branch from a github pull request
-  (magit-define-popup-action 'magit-branch-popup
-    ?p "Create from pull-request" 'magit-branch-pull-request)
-
   ;; Add reshelve command to commit popup to change date of commit
   (magit-define-popup-action 'magit-commit-popup
     ?n "Reshelve" 'magit-commit-reshelve)
