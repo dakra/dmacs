@@ -6564,7 +6564,7 @@ It only works for frames with exactly two windows."
 #+BEGIN_SRC emacs-lisp
 (use-package emms
   :bind (:map dired-mode-map
-         ("P" . emms-play-dired))
+         ("M-RET" . emms-play-dired))
   :config
   (require 'emms-player-mpv)
   (setq emms-player-list '(emms-player-mpv))
