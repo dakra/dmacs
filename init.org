@@ -1352,7 +1352,10 @@ Move current line or region with M-up or M-down.
 ;; Browse compressed archives in dired (requires `avfs' to be installed)
 ;; Run `mountavfs' to start `avfsd' which is needed for it to work.
 (use-package dired-avfs
-  :after dired)
+  :after dired
+  :config
+  ;; Don't warn about opening archives less than 512MB (default 100)
+  (setq dired-avfs-file-size-threshold 512))
 
 (use-package dired-open
   :after dired
