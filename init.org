@@ -4099,6 +4099,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          :map org-mode-map
          ("M-." . org-open-at-point)  ; So M-. behaves like in source code.
          ("M-," . org-mark-ring-goto)
+         ("C-c C-x C-i" . org-clock-in-or-list)
          ;; Disable adding and removing org-agenda files via keybinding.
          ;; I explicitly specify agenda file directories in the config.
          ("C-c [" . nil)
