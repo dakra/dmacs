@@ -4003,7 +4003,7 @@ displayed anywhere else."
 
 (use-package flyspell
   :hook ((prog-mode . flyspell-prog-mode)
-         ((org-mode mu4e-compose-mode) . flyspell-mode))
+         ((org-mode mu4e-compose-mode markdown-mode rst-mode) . flyspell-mode))
   :config
   ;; remove flyspess 'C-;' keybinding so we can use it for avy jump
   (unbind-key "C-;" flyspell-mode-map))
