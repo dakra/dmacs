@@ -2919,9 +2919,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 #+begin_src emacs-lisp
 (use-package solidity-mode
   :mode "\\.sol\\'"
-  :init  ; Fix upstream: This should be a config block and path should work w/o setting
-  (setq solidity-solc-path "/usr/bin/solc")
-  (setq solidity-solium-path "/usr/bin/solium")
+  :init
   (setq solidity-flycheck-solc-checker-active t)
   (setq solidity-flycheck-solium-checker-active t))
 #+end_src
