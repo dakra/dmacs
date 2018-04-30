@@ -4008,6 +4008,7 @@ displayed anywhere else."
 
 ;; Show ivy-list of correct spelling suggesions
 (use-package flyspell-correct-ivy
+  :after flyspell
   :bind (:map flyspell-mode-map
          ("C-." . flyspell-correct-previous-word-generic)))
 
