@@ -1711,6 +1711,13 @@ go up multiple parent directories."
     (interactive (list (thing-at-point 'symbol)
                        current-prefix-arg))
     (let ((current-prefix-arg)
+          (ignored (mapconcat (lambda (i)
+                                (concat "--glob "
+                                        (shell-quote-argument (concat "!" i))
+                                        " "))
+                              (append (projectile-ignored-files-rel)
+                                      (projectile-ignored-directories-rel))
+                              ""))
           (dir (cond
                 ((equal use-current-dir nil) ; no prefix: use project root
                  (condition-case _err
@@ -1724,7 +1731,7 @@ go up multiple parent directories."
                  (parent-directory default-directory 2))
                 (t  ; Numeric prefix: Go specified prefix up
                  (parent-directory default-directory use-current-dir)))))
-      (counsel-rg initial-input dir)))
+      (counsel-rg initial-input dir ignored (projectile-prepend-project-name "rg"))))
 
   (defun dakra/counsel-search-project-empty (&optional use-current-dir)
     "Like dakra/counsel-search-project but with no initial input."
