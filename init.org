@@ -2819,12 +2819,13 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 (use-package sql
   :mode (("\\.sql\\'" . sql-mode)
          ("\\.msql\\'" . sql-mode))  ; Mako template sql
+  :hook (sql-interactive-mode . toggle-truncate-lines)
   :bind (:map sql-interactive-mode-map
          ("M-p" . comint-previous-prompt)
          ("M-n" . comint-next-prompt)
          ([return] . dakra/add-semicolon-and-comint-send-input)
+         ("DEL" . sql-delete-backward-char)
          ("C-d" . dakra/sql-quit-or-delete-char))
-  :commands (dakra/sql-postgres-neorent-local dakra/sql-postgres-neorent-remote dakra/sql-atomx-local-api dakra/sql-atomx-remote-api)
   :init
   ;; Persist sqli history accross multiple sessions
   (setq-default sql-input-ring-file-name
@@ -2846,20 +2847,29 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
         (forward-char)
         (insert ";"))
       (comint-send-input)))
-  ;;(define-key sql-interactive-mode-map [return] #'dakra/add-semicolon-and-comint-send-input)
 
   (defun dakra/sql-quit-or-delete-char (arg)
     (interactive "p")
     (if (and (eolp) (looking-back sql-prompt-regexp nil))
         (progn
           (comint-quit-subjob)
+          (sleep-for 0.4)  ; Wait 400ms for the process to quit
+          (kill-buffer (current-buffer))
           (ignore-errors
-            (progn
-              ;; Remove frame if eshell is only window (otherwise just close window)
-              (if (one-window-p)
-                  (delete-frame)
-                (delete-window)))))
+            (when (= arg 4)  ; With prefix argument, also remove sql buffer frame/window
+              (progn
+                ;; Remove frame if sql buffer is only window (otherwise just close window)
+                (if (one-window-p)
+                    (delete-frame)
+                  (delete-window))))))
       (delete-char arg)))
+
+  (defun sql-delete-backward-char (n)
+    "Only call (delete-backward-char N) when not at beginning of prompt."
+    (interactive "p")
+    (if (looking-back sql-prompt-regexp nil)
+        (message "Beginning of prompt")
+      (delete-char (- n))))
 
   ;; Fix prompt detection for mariadb
   (sql-set-product-feature 'mysql :prompt-regexp "^\\(MariaDB\\|MySQL\\|mysql\\) ?\\[?[_a-zA-Z0-9]*\\]?> ")
@@ -2944,9 +2954,7 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
   (setq sql-mysql-login-params
         '((user :default "daniel")
           (database :default "api")
-          (server :default "localhost")))
-
-  (add-hook 'sql-interactive-mode-hook #'toggle-truncate-lines))
+          (server :default "localhost"))))
 
 ;; Smart indentation for SQL files
 (use-package sql-indent
