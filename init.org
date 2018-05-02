@@ -1550,6 +1550,7 @@ Move current line or region with M-up or M-down.
   :bind (("C-x b"   . dakra-ivy-switch-buffer)
          ("C-x B"   . ivy-switch-buffer-other-window)
          ("C-c C-r" . ivy-resume)
+         ("C-c e"   . ivy-switch-buffer-eshell)
          ("M-H"     . ivy-resume)
          :map ivy-minibuffer-map
          ("C-j" . ivy-partial-or-done)
@@ -1557,6 +1558,19 @@ Move current line or region with M-up or M-down.
          ("C-r" . ivy-previous-line-or-history)
          ("M-r" . ivy-reverse-i-search))
   :config
+  (defun ivy-ignore-non-eshell-buffers (str)
+    (let ((buf (get-buffer str)))
+      (if buf
+          (with-current-buffer buf
+            (not (eq major-mode 'eshell-mode)))
+        t)))
+
+  (defun ivy-switch-buffer-eshell ()
+    "Like ivy-switch-buffer but only shows eshell buffers."
+    (interactive)
+    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-non-eshell-buffers))))
+      (ivy-switch-buffer)))
+
   (defun ivy-ignore-exwm-buffers (str)
     (let ((buf (get-buffer str)))
       (when buf
