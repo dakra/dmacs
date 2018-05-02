@@ -4179,7 +4179,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   (defun org-clock-in-or-list (&optional select start-time)
     "Like org-clock-in but show list of recent clocks when not in org buffer."
     (interactive "P")
-    (if (eq major-mode 'org-mode)
+    (if (and (eq major-mode 'org-mode) (not (equal select '(4))))
         (org-clock-in select start-time)
       (counsel-org-clock-history)))
 
