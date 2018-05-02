@@ -5648,6 +5648,32 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 (defun bh/is-scheduled-late (date-str)
   (string-match "Sched\.\\(.*\\)x:" date-str))
 #+END_SRC
+* Irc
+#+begin_src emacs-lisp
+(use-package erc
+  :config
+  (setq erc-hide-list '("PART" "QUIT" "JOIN"))
+  (setq erc-autojoin-channels-alist '(("freenode.net"
+                                       "#emacs"
+                                       "#pyramid")))
+  (setq erc-server "irc.freenode.net")
+  (setq erc-nick "dakra")
+  (setq erc-user-full-name user-full-name)
+  (setq erc-prompt-for-password nil)
+
+  (erc-track-minor-mode 1)
+  (erc-track-mode 1))
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+(use-package erc-services
+  :after erc
+  :config
+  (setq erc-prompt-for-nickserv-password nil)
+  (setq erc-nickserv-passwords
+        `((freenode(("dakra" . ,(auth-source-pick-first-password :host erc-server :login erc-nick)))))))
+#+END_SRC
+
 * Email
 You also need to configure and install mu in the system.
 Borg does only build mu4e as building mu every time is
