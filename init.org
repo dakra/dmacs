@@ -334,6 +334,36 @@ Allow some commands as safe by default
 (global-hl-line-mode +1)
 #+END_SRC
 * Configure Emacs builtin packages
+** Simple: Change some default keybinding (kill-this-buffer, up/downcase-dwim)
+#+begin_src emacs-lisp
+(use-package simple
+  :bind (("C-x k" . dakra-kill-this-buffer)
+         ("M-u" . dakra-upcase-dwim)
+         ("M-l" . dakra-downcase-dwim)
+         ("M-c" . dakra-capitalize-dwim))
+  :config
+  (defun dakra-kill-this-buffer ()
+    "Like (kill-this-buffer) but independent of the menu bar."
+    (interactive)
+    (kill-buffer (current-buffer)))
+
+  (defmacro dakra-define-up/downcase-dwim (case)
+    (let ((func (intern (concat "dakra-" case "-dwim")))
+          (doc (format "Like `%s-dwim' but %s from beginning when no region is active." case case))
+          (case-region (intern (concat case "-region")))
+          (case-word (intern (concat case "-word"))))
+      `(defun ,func (arg)
+         ,doc
+         (interactive "*p")
+         (save-excursion
+           (if (use-region-p)
+               (,case-region (region-beginning) (region-end))
+             (beginning-of-thing 'symbol)
+             (,case-word arg))))))
+  (dakra-define-up/downcase-dwim "upcase")
+  (dakra-define-up/downcase-dwim "downcase")
+  (dakra-define-up/downcase-dwim "capitalize"))
+#+end_src
 ** Auto-revert: Revert buffer when file changes on disk
 #+begin_src emacs-lisp
 (use-package autorevert
@@ -3854,16 +3884,6 @@ displayed anywhere else."
     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
 
-
-;; key bindings - misc
-
-(use-package dakra :load-path "repos/dakra.el"
-  :bind (("C-x k" . dakra-kill-this-buffer) ; Don't prompt which buffer to kill. Always use current-buffer
-         ("M-u" . dakra-upcase-dwim)
-         ("M-l" . dakra-downcase-dwim)
-         ("M-c" . dakra-capitalize-dwim)
-         ("C-x o" . dakra-next-window-or-frame)
-         ("C-x O" . dakra-previous-window-or-frame)))
 
 (use-package god-mode
   :disabled t
