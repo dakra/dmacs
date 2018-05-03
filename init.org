@@ -1898,8 +1898,6 @@ go up multiple parent directories."
   (add-to-list 'tramp-default-proxies-alist '(nil "atomx" "/ssh:%h:")))
 #+END_SRC
 * Eshell
-Some ideas from https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org
-
 #+BEGIN_SRC emacs-lisp
 ;; Always show file size in human readable format
 (setq eshell-ls-initial-args "-h")
@@ -1907,20 +1905,97 @@ Some ideas from https://github.com/howardabrams/dot-files/blob/master/emacs-eshe
 ;; We're in emacs, so 'cat' is nicer there than 'less'
 (setenv "PAGER" "cat")
 
+;; Fixme eshell-mode-map maps to global keybindings? Check "C-d"
+;; Isssue: https://github.com/jwiegley/use-package/issues/332
 (use-package eshell
   :bind (("C-x m" . eshell)
-         ("C-x M" . dakra-eshell-split))
+         ("C-x M" . dakra-eshell-split)
+         ;;:map eshell-mode-map
+         ;;("M-P" . eshell-previous-prompt)
+         ;;("C-d" . dakra-eshell-quit-or-delete-char)
+         ;;("M-N" . eshell-next-prompt)
+         ;;("M-R" . eshell-list-history)
+         ;;("M-r" . dakra-eshell-read-history)
+         )
   :init (setq eshell-aliases-file (no-littering-expand-etc-file-name "eshell-aliases"))
   :config
   (defun dakra-eshell-split (&optional arg)
     "Like eshell but use pop-to-buffer to display."
     (interactive "P")
+    (interactive)
     (let ((cur-buf (buffer-name))
           (eshell-buf (eshell arg)))
       (pop-to-buffer-same-window cur-buf)
       (pop-to-buffer eshell-buf)))
 
+  ;; Don't print the welcome banner and
+  ;; use native 'sudo', system sudo asks for password every time.
+  (require 'em-tramp)
+  (setq eshell-modules-list
+        '(eshell-alias
+          eshell-basic
+          eshell-cmpl
+          eshell-dirs
+          eshell-glob
+          eshell-hist
+          eshell-ls
+          eshell-pred
+          eshell-prompt
+          eshell-script
+          eshell-term
+          eshell-tramp
+          eshell-unix))
+
+  (require 'em-smart)
+  (setq-default eshell-where-to-jump 'begin)
+  (setq-default eshell-review-quick-commands nil)
+  (setq-default eshell-smart-space-goes-to-end t)
+
+  (require 'em-hist)
+  ;; Some ideas from https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org
+  (setq-default eshell-scroll-to-bottom-on-input 'all
+                eshell-error-if-no-glob t
+                eshell-hist-ignoredups t
+                eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim" "nmtui"
+                                         "tmux" "screen" "top" "htop" "less" "more" "ncftp")
+                eshell-prefer-lisp-functions nil)
+
+  ;; Increase eshell history size from default of only 128
+  (setq eshell-history-size 8192)
+
+  (defun dakra-eshell-read-history ()
+    (interactive)
+    (insert
+     (completing-read "Eshell history: "
+                      (delete-dups
+                       (ring-elements eshell-history-ring)))))
+
+  ;; Used to C-d exiting from a shell? Want it to keep working, but still allow deleting a character?
+  ;; We can have it both
+  (require 'em-prompt)
+  (defun dakra-eshell-quit-or-delete-char (arg)
+    (interactive "p")
+    (if (and (eolp) (looking-back eshell-prompt-regexp nil))
+        (progn
+          (eshell-life-is-too-much) ; Why not? (eshell/exit)
+          (ignore-errors
+            (when (= arg 4)  ; With prefix argument, also remove eshell frame/window
+              (progn
+                ;; Remove frame if eshell is only window (otherwise just close window)
+                (if (one-window-p)
+                    (delete-frame)
+                  (delete-window))))))
+      (delete-char arg)))
+
+  ;; Fixme eshell-mode-map maps to global keybindings? Check "C-d"
+  ;; Isssue: https://github.com/jwiegley/use-package/issues/332
   (add-hook 'eshell-mode-hook (lambda ()
+                                (local-set-key (kbd "M-P") 'eshell-previous-prompt)
+                                (local-set-key (kbd "M-N") 'eshell-next-prompt)
+                                (local-set-key (kbd "M-R") 'eshell-list-history)
+                                (local-set-key (kbd "M-r") 'dakra-eshell-read-history)
+                                (local-set-key (kbd "C-r") 'dakra-eshell-read-history)
+                                (local-set-key (kbd "C-d") 'dakra-eshell-quit-or-delete-char)
                                 ;; Use helm as completion menu
                                 ;;(local-set-key [remap eshell-pcomplete] 'helm-esh-pcomplete)
                                 ;; or ivy
@@ -1938,7 +2013,6 @@ Some ideas from https://github.com/howardabrams/dot-files/blob/master/emacs-eshe
                                 ;; (setq-local company-backends '(company-capf))
                                 ;; (setq-local company-frontends '(company-preview-frontend))
                                 ))
-
   ;; Functions starting with `eshell/' can be called directly from eshell
   ;; with only the last part. E.g. (eshell/foo) will call `$ foo'
   (defun eshell/d (&rest args)
@@ -2016,86 +2090,6 @@ file to edit."
            (full-cmd (concat "cd " dir-name "; " cmd)))
       (shell-command full-cmd)))
   )
-
-(use-package em-tramp
-  :after eshell
-  :config
-  ;; Don't print the welcome banner and
-  ;; use native 'sudo', system sudo asks for password every time.
-  (setq eshell-modules-list
-        '(eshell-alias
-          eshell-basic
-          eshell-cmpl
-          eshell-dirs
-          eshell-glob
-          eshell-hist
-          eshell-ls
-          eshell-pred
-          eshell-prompt
-          eshell-script
-          eshell-term
-          eshell-tramp
-          eshell-unix)))
-
-(use-package em-smart
-  :after eshell
-  :config
-  (setq-default eshell-where-to-jump 'begin)
-  (setq-default eshell-review-quick-commands nil)
-  (setq-default eshell-smart-space-goes-to-end t))
-
-(use-package em-hist
-  :after eshell
-  :bind (:map eshell-mode-map
-         ("M-R" . eshell-list-history)
-         ("C-r" . dakra-eshell-read-history))
-  :config
-  (setq-default eshell-scroll-to-bottom-on-input 'all
-                eshell-error-if-no-glob t
-                eshell-hist-ignoredups t
-                eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim" "nmtui"
-                                         "tmux" "screen" "top" "htop" "less" "more" "ncftp")
-                eshell-prefer-lisp-functions nil)
-  ;; Increase eshell history size from default of only 128
-  (setq eshell-history-size 8192)
-
-  (defun dakra-eshell-read-history ()
-    (interactive)
-    (insert
-     (completing-read "Eshell history: "
-                      (delete-dups
-                       (ring-elements eshell-history-ring))))))
-
-(use-package em-prompt
-  :after eshell
-  :bind (:map eshell-mode-map
-         ("M-P" . eshell-previous-prompt)
-         ("M-N" . eshell-next-prompt)
-         ("C-d" . dakra-eshell-quit-or-delete-char)
-         ("DEL" . eshell-delete-backward-char))
-  :config
-  ;; Used to C-d exiting from a shell? Want it to keep working, but still allow deleting a character?
-  ;; We can have it both
-  (defun dakra-eshell-quit-or-delete-char (arg)
-    (interactive "p")
-    (if (and (eolp) (looking-back eshell-prompt-regexp nil))
-        (progn
-          (eshell-life-is-too-much) ; Why not? (eshell/exit)
-          (ignore-errors
-            (when (= arg 4)  ; With prefix argument, also remove eshell frame/window
-              (progn
-                ;; Remove frame if eshell is only window (otherwise just close window)
-                (if (one-window-p)
-                    (delete-frame)
-                  (delete-window))))))
-      (delete-char arg)))
-
-  (defun eshell-delete-backward-char (n)
-    "Only call (delete-backward-char N) when not at beginning of prompt."
-    (interactive "p")
-    (if (looking-back eshell-prompt-regexp nil)
-        (message "Beginning of prompt")
-      (delete-char (- n)))))
 
 (use-package eshell-bookmark
   :after eshell)
