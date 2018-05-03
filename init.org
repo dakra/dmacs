@@ -1194,10 +1194,15 @@ Move current line or region with M-up or M-down.
   :magic ("%PDF" . pdf-view-mode)
   :mode (("\\.pdf\\'" . pdf-view-mode))
   :bind (:map pdf-view-mode-map
-         ("C-s" . isearch-forward))
+         ("C-s" . isearch-forward)
+         ("M-p" . print-pdf))
   :config
   ;; Use `gtklp' to print as it has better cups support
-  (setq pdf-misc-print-programm (executable-find "gtklp"))
+  (defun print-pdf (&optional pdf)
+    "Print PDF using external program `gtklp'."
+    (interactive "P")
+    (start-process-shell-command "gtklp" nil (format "gtklp %s" (buffer-file-name))))
+
   ;; more fine-grained zooming; +/- 10% instead of default 25%
   (setq pdf-view-resize-factor 1.1)
   ;; Always use midnight-mode and almost same color as default font.
