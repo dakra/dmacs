@@ -2393,27 +2393,29 @@ When called with 2 prefix arguments only open in browser and don't copy."
   (setq fill-column 110))
 (add-hook 'prog-mode-hook 'dakra-prog-mode-init)
 #+END_SRC
-** Debugging
+** C/C++
 #+BEGIN_SRC emacs-lisp
-(use-package realgud
-  :defer t)
-#+END_SRC
-** Markup Languages
-#+BEGIN_SRC emacs-lisp
-(use-package jira-markup-mode
-  :mode ("\\.confluence\\'" "/itsalltext/.*jira.*\\.txt$"))
+(use-package cmake-font-lock
+  :hook (cmake-mode . cmake-font-lock-activate))
 
-(use-package markdown-mode
-  :mode (("/itsalltext/.*\\(gitlab\\|github\\).*\\.txt$" . gfm-mode)
-         ("\\.markdown\\'" . gfm-mode)
-         ("\\.md\\'" . gfm-mode))
+(use-package cmake-mode
+  :mode ("CMakeLists.txt" "\\.cmake\\'"))
+
+(use-package irony
+  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
+         (irony-mode . irony-cdb-autosetup-compile-options))
   :config
-  (add-hook 'markdown-mode-hook #'outline-minor-mode)
-  ;; Enable fontification for code blocks
-  (setq markdown-fontify-code-blocks-natively t)
-  (add-to-list 'markdown-code-lang-modes '("ini" . conf-mode))
-  ;; use pandoc with source code syntax highlighting to preview markdown (C-c C-c p)
-  (setq markdown-command "pandoc -s --highlight-style pygments -f markdown_github -t html5"))
+  (defun irony-mode-on-maybe ()
+    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
+    (when (member major-mode irony-supported-major-modes)
+      (irony-mode 1))))
+
+(use-package company-irony
+  :after irony
+  :config (add-to-list 'company-backends 'company-irony))
+
+(use-package irony-eldoc
+  :hook (irony-mode))
 #+END_SRC
 ** Configs (yaml/toml/ini/.conf/etc)
 #+BEGIN_SRC emacs-lisp
@@ -2473,6 +2475,469 @@ When called with 2 prefix arguments only open in browser and don't copy."
   :defer t)
 (use-package docker-tramp
   :after tramp)
+#+END_SRC
+** Debugging
+#+BEGIN_SRC emacs-lisp
+(use-package realgud
+  :defer t)
+#+END_SRC
+** Elixir
+#+BEGIN_SRC emacs-lisp
+(use-package elixir-mode
+  :mode ("\\.ex\\'" "\\.exs\\'" "\\.elixir\\'")
+  :config
+  (require 'smartparens)
+  (sp-with-modes '(elixir-mode)
+    (sp-local-pair "fn" "end"
+                   :when '(("SPC" "RET"))
+                   :actions '(insert navigate))
+    (sp-local-pair "do" "end"
+                   :when '(("SPC" "RET"))
+                   :post-handlers '(sp-ruby-def-post-handler)
+                   :actions '(insert navigate)))
+  (use-package alchemist))
+#+END_SRC
+** Fish
+#+BEGIN_SRC emacs-lisp
+(use-package fish-mode
+  :mode "\\.fish\\'")
+#+END_SRC
+** Go
+#+BEGIN_SRC emacs-lisp
+;; Go
+;; For better support install:
+;; arch package `go-tools' for goimports, guru and godoc
+;; `gocode' (arch gocode-git package) for autocomplete
+;; `godef' (arch godef-git package) for godoc-at-point
+;; `golint' (arch go-lint-git)
+;; XXX: `errcheck' (go get -u github.com/kisielk/errcheck) to check for missing error checks
+(use-package go-mode
+  :mode "\\.go\\'"
+  :bind (:map go-mode-map
+         ("M-?" . godoc-at-point)
+         ("M-." . godef-jump)
+         ("M-*" . pop-tag-mark)  ;; Jump back after godef-jump
+         ("C-c m r" . go-run))
+  :config
+  ;; Prefer goimports to gofmt if installed
+  (let ((goimports (executable-find "goimports")))
+    (when goimports
+      (setq gofmt-command goimports)))
+
+  ;; For autocompeltion in the `godoc' command we need 'godoc' and not 'go doc'
+  ;;(setq godoc-command "go doc")
+  (setq godoc-use-completing-read t)
+
+  ;; Syntax highlighting for code in godoc
+  ;; https://github.com/dominikh/go-mode.el/pull/88#issuecomment-98448284
+  (defun godoc-highlight ()
+    (let ((st (make-syntax-table go-mode-syntax-table)))
+      (modify-syntax-entry ?\' "w" st)
+      (set-syntax-table st))
+    (set (make-local-variable 'font-lock-defaults) '(go--build-font-lock-keywords)))
+  (add-hook 'godoc-mode-hook 'godoc-highlight)
+
+  (add-hook 'go-mode-hook
+            '(lambda ()
+               (setq tab-width 4)
+               ;; gofmt on save
+               (add-hook 'before-save-hook 'gofmt-before-save nil t)
+               ;; stop whitespace being highlighted
+               (whitespace-toggle-options '(tabs)))))
+
+(use-package helm-go-package
+  :disabled t
+  :after (helm go-mode)
+  :config
+  ;; Re-order helm actions (so ENTER is 'Display GoDoc')
+  (setq helm-go-package-actions (helm-make-actions
+                                 "Display GoDoc" 'helm-go-package--godoc-browse-url
+                                 "Show documentation" 'godoc
+                                 "Visit package's directory" 'helm-go-package--visit-package-directory
+                                 "Add a new import"  (lambda (candidate) (go-import-add nil candidate))
+                                 "Add a new import as"  (lambda (candidate) (go-import-add t candidate))))
+  (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
+
+(use-package company-go
+  :after (company go-mode)
+  :config (add-to-list 'company-backends 'company-go))
+
+(use-package gotest
+  :after go-mode
+  :bind (:map go-mode-map
+         ("C-x t" . go-test-current-test)))
+
+(use-package go-eldoc
+  :hook (go-mode . go-eldoc-setup))
+
+(use-package go-projectile
+  :after (projectile go-mode))
+#+END_SRC
+** Javascript
+#+BEGIN_SRC emacs-lisp
+(use-package prettier-js
+  :defer t
+  ;;:init (add-hook 'js2-mode-hook (lambda () (add-hook 'before-save-hook 'prettier-before-save)))
+  :init
+  (put 'prettier-js-args 'safe-local-variable 'listp)
+  :config
+  (setq prettier-js-args '(
+                           "--trailing-comma" "all"
+                           ;;"--tab-width" "4"
+                           "--single-quote" "true"
+                           "--bracket-spacing" "false"
+                           ))
+  ;; prettier "--print-width" argument is read from 'fill-column' variable
+  (setq prettier-js-width-mode 'fill))
+
+(use-package json-mode
+  :mode "\\.json\\'")
+
+(use-package js2-mode
+  :interpreter "node"
+  :mode ("\\.js\\'" "\\.pac\\'" "\\.node\\'")
+  :init
+  (add-hook 'js2-mode-hook (lambda ()
+                             ;; electric-layout-mode doesn't play nice with smartparens
+                             ;;(setq-local electric-layout-rules '((?\; . after)))
+                             (setq mode-name "JS2")))
+  :config
+  ;; Don't warn about trailing commas
+  (setq js2-strict-trailing-comma-warning nil)
+
+  (setq js2-basic-offset 2)  ; set javascript indent to 2 spaces
+  )
+
+(use-package js2-imenu-extras
+  :hook (js2-mode . js2-imenu-extras-mode))
+
+;; Connect to chrome
+;; chromium --remote-debugging-port=9222 https://localhost:3000
+;; then in emacs
+;; M-x indium-connect-to-chrome
+
+;; or node
+;; node --inspect myfile.js
+;; node with breakpoint at first line
+;; node --inspect --debug-brk myfile.js
+;; then open the url that node prints:
+;; chrome-devtools://inspector.html?...&ws=127.0.0.1:PORT/PATH
+;; then in emacs:
+;; M-x indium-connect-to-nodejs RET 127.0.0.1 RET PORT RET PATH, PORT, PATH
+
+;; place `.indium' file in static root folder.
+
+(use-package indium
+  :hook (js-mode . indium-interaction-mode)
+  :config (setq indium-update-script-on-save t))
+
+(use-package js2-refactor
+  :hook (js2-mode . js2-refactor-mode)
+  :config
+  (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+  (define-key js2-refactor-mode-map (kbd "C-c r")
+    (defhydra js2-refactor-hydra (:color blue :hint nil)
+      "
+^Functions^                    ^Variables^               ^Buffer^                      ^sexp^               ^Debugging^
+------------------------------------------------------------------------------------------------------------------------------
+[_lp_] Localize Parameter      [_ev_] Extract variable   [_wi_] Wrap buffer in IIFE    [_k_]  js2 kill      [_lt_] log this
+[_ef_] Extract function        [_iv_] Inline variable    [_ig_] Inject global in IIFE  [_ss_] split string  [_dt_] debug this
+[_ip_] Introduce parameter     [_rv_] Rename variable    [_ee_] Expand node at point   [_sl_] forward slurp
+[_em_] Extract method          [_vt_] Var to this        [_cc_] Contract node at point [_ba_] forward barf
+[_ao_] Arguments to object     [_sv_] Split var decl.    [_uw_] unwrap
+[_tf_] Toggle fun exp and decl [_ag_] Add var to globals
+[_ta_] Toggle fun expr and =>  [_ti_] Ternary to if
+[_q_]  quit"
+      ("ee" js2r-expand-node-at-point)
+      ("cc" js2r-contract-node-at-point)
+      ("ef" js2r-extract-function)
+      ("em" js2r-extract-method)
+      ("tf" js2r-toggle-function-expression-and-declaration)
+      ("ta" js2r-toggle-arrow-function-and-expression)
+      ("ip" js2r-introduce-parameter)
+      ("lp" js2r-localize-parameter)
+      ("wi" js2r-wrap-buffer-in-iife)
+      ("ig" js2r-inject-global-in-iife)
+      ("ag" js2r-add-to-globals-annotation)
+      ("ev" js2r-extract-var)
+      ("iv" js2r-inline-var)
+      ("rv" js2r-rename-var)
+      ("vt" js2r-var-to-this)
+      ("ao" js2r-arguments-to-object)
+      ("ti" js2r-ternary-to-if)
+      ("sv" js2r-split-var-declaration)
+      ("ss" js2r-split-string)
+      ("uw" js2r-unwrap)
+      ("lt" js2r-log-this)
+      ("dt" js2r-debug-this)
+      ("sl" js2r-forward-slurp)
+      ("ba" js2r-forward-barf)
+      ("k" js2r-kill)
+      ("q" nil)
+      )))
+
+;; use tern for js autocompletion
+(use-package tern
+  :disabled t  ; We use tide (typescript) also for javascript files
+  :commands tern-mode
+  :init (add-hook 'js-mode-hook 'tern-mode)
+  :config
+  (use-package company-tern
+    :config
+    (setq company-tern-property-marker "")  ; don't show circles for properties
+    (add-to-list 'company-backends 'company-tern)))
+
+(use-package skewer-mode
+  :disabled t  ; Use indium
+  :commands skewer-mode
+  :init
+  (setq httpd-port 8079)  ; set port for simple-httpd used by skewer
+  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'css-mode-hook 'skewer-css-mode)
+  (add-hook 'html-mode-hook 'skewer-html-mode))
+
+;; Adds the node_modules/.bin directory to the buffer exec_path.
+;; E.g. support project local eslint installations.
+;; XXX: Maybe add autoload for web and js2 mode?
+;; (eval-after-load 'js2-mode
+;;   '(add-hook 'js2-mode-hook #'add-node-modules-path))
+(use-package add-node-modules-path :defer t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package ng2-mode :defer t)
+#+END_SRC
+** Lisps
+#+BEGIN_SRC emacs-lisp
+;; Nicer elisp regex syntax highlighting
+(use-package easy-escape
+  :hook ((emacs-lisp-mode lisp-mode) . easy-escape-minor-mode))
+
+;; From: https://github.com/Fuco1/.emacs.d/blob/af82072196564fa57726bdbabf97f1d35c43b7f7/site-lisp/redef.el#L20-L94
+;; redefines the silly indent of keyword lists
+;; before
+;;   (:foo bar
+;;         :baz qux)
+;; after
+;;   (:foo bar
+;;    :baz qux)
+(eval-after-load "lisp-mode"
+  '(defun lisp-indent-function (indent-point state)
+     "This function is the normal value of the variable `lisp-indent-function'.
+The function `calculate-lisp-indent' calls this to determine
+if the arguments of a Lisp function call should be indented specially.
+INDENT-POINT is the position at which the line being indented begins.
+Point is located at the point to indent under (for default indentation);
+STATE is the `parse-partial-sexp' state for that position.
+If the current line is in a call to a Lisp function that has a non-nil
+property `lisp-indent-function' (or the deprecated `lisp-indent-hook'),
+it specifies how to indent.  The property value can be:
+- `defun', meaning indent `defun'-style
+  \(this is also the case if there is no property and the function
+  has a name that begins with \"def\", and three or more arguments);
+- an integer N, meaning indent the first N arguments specially
+  (like ordinary function arguments), and then indent any further
+  arguments like a body;
+- a function to call that returns the indentation (or nil).
+  `lisp-indent-function' calls this function with the same two arguments
+  that it itself received.
+This function returns either the indentation to use, or nil if the
+Lisp function does not specify a special indentation."
+     (let ((normal-indent (current-column))
+           (orig-point (point)))
+       (goto-char (1+ (elt state 1)))
+       (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
+       (cond
+        ;; car of form doesn't seem to be a symbol, or is a keyword
+        ((and (elt state 2)
+              (or (not (looking-at "\\sw\\|\\s_"))
+                  (looking-at ":")))
+         (if (not (> (save-excursion (forward-line 1) (point))
+                     calculate-lisp-indent-last-sexp))
+             (progn (goto-char calculate-lisp-indent-last-sexp)
+                    (beginning-of-line)
+                    (parse-partial-sexp (point)
+                                        calculate-lisp-indent-last-sexp 0 t)))
+         ;; Indent under the list or under the first sexp on the same
+         ;; line as calculate-lisp-indent-last-sexp.  Note that first
+         ;; thing on that line has to be complete sexp since we are
+         ;; inside the innermost containing sexp.
+         (backward-prefix-chars)
+         (current-column))
+        ((and (save-excursion
+                (goto-char indent-point)
+                (skip-syntax-forward " ")
+                (not (looking-at ":")))
+              (save-excursion
+                (goto-char orig-point)
+                (looking-at ":")))
+         (save-excursion
+           (goto-char (+ 2 (elt state 1)))
+           (current-column)))
+        (t
+         (let ((function (buffer-substring (point)
+                                           (progn (forward-sexp 1) (point))))
+               method)
+           (setq method (or (function-get (intern-soft function)
+                                          'lisp-indent-function)
+                            (get (intern-soft function) 'lisp-indent-hook)))
+           (cond ((or (eq method 'defun)
+                      (and (null method)
+                           (> (length function) 3)
+                           (string-match "\\`def" function)))
+                  (lisp-indent-defform state indent-point))
+                 ((integerp method)
+                  (lisp-indent-specform method state
+                                        indent-point normal-indent))
+                 (method
+                  (funcall method indent-point state)))))))))
+#+END_SRC
+*** Elisp
+#+BEGIN_SRC emacs-lisp
+(use-package subr-x
+  :defer t
+  :config
+  (put 'if-let   'byte-obsolete-info nil)
+  (put 'when-let 'byte-obsolete-info nil))
+
+(use-package elisp-mode
+  :bind (:map emacs-lisp-mode-map
+         ("C-c C-c" . eval-defun)
+         ("C-c C-b" . eval-buffer))
+  :config
+  (add-hook 'emacs-lisp-mode-hook (lambda ()
+                                    ;;(eldoc-mode +1)
+                                    (setq mode-name "EL"))))
+#+END_SRC
+**** Helper libraries (dash, s, marshal)
+#+begin_src emacs-lisp
+(use-package dash  :defer t
+  :config (dash-enable-font-lock))
+
+(use-package s  :defer t)
+#+end_src
+***** Request
+#+begin_src emacs-lisp
+(use-package request
+  :defer t)
+#+end_src
+**** Auto-compile
+#+begin_src emacs-lisp
+(use-package auto-compile
+  :disabled t  ; I rather trigger a new compile by hand
+  :defer 10
+  :config
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode)
+  (setq auto-compile-display-buffer               nil)
+  (setq auto-compile-mode-line-counter            t)
+  (setq auto-compile-source-recreate-deletes-dest t)
+  (setq auto-compile-toggle-deletes-nonlib-dest   t)
+  (setq auto-compile-update-autoloads             t)
+  (add-hook 'auto-compile-inhibit-compile-hook
+            'auto-compile-inhibit-compile-detached-git-head))
+#+end_src
+**** Litable: Live preview for elisp
+#+BEGIN_SRC emacs-lisp
+(use-package litable
+  :defer t)
+#+END_SRC
+**** Package helpers
+#+BEGIN_SRC emacs-lisp
+(use-package package-lint
+  :defer t)
+(use-package flycheck-package
+  :after flycheck
+  :config (flycheck-package-setup))
+#+END_SRC
+**** El2markdown: Convert package commentary to markdown
+#+begin_src emacs-lisp
+(use-package el2markdown
+  :defer t)
+#+end_src
+*** Common Lisp
+From the slime manual for faster slime startup:
+
+For SBCL, we recommend that you create a custom core file with socket support
+and POSIX bindings included because those modules take the most time to load. To
+create such a core, execute the following steps:
+#+begin_src sh  :tangle no
+$ cd ~/.emacs.d/var/
+$ sbcl
+ (mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))
+ (save-lisp-and-die "sbcl.core-for-slime")
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+(use-package slime
+  :hook (lisp-mode slime-lisp-mode-hook)
+  :bind (:map slime-mode-indirect-map
+         ("M-?" . slime-describe-symbol))
+  :config
+  (setq slime-contribs '(slime-fancy))
+  (setq inferior-lisp-program "sbcl")
+  (setq slime-lisp-implementations
+        `((sbcl ("sbcl" "--core" ,(no-littering-expand-var-file-name "sbcl.core-for-slime"))))))
+(use-package slime-company
+  :after (slime company)
+  :config (slime-setup '(slime-fancy slime-company)))
+#+END_SRC
+*** Clojure
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+*** Hy
+#+BEGIN_SRC emacs-lisp
+;;; Lisp in python vm
+(use-package hy-mode
+  :mode "\\.hy\\'")
+#+END_SRC
+** Lua
+#+BEGIN_SRC emacs-lisp
+(use-package lua-mode
+  :mode "\\.lua\\'"
+  :interpreter ("lua" . lua-mode))
+
+(use-package company-lua
+  :hook (lua-mode . my-lua-mode-company-init)
+  :config
+  (defun my-lua-mode-company-init ()
+    (setq-local company-backends '((company-lua
+                                    company-etags
+                                    company-dabbrev-code
+                                    company-yasnippet)))))
+#+END_SRC
+** Markup Languages
+#+BEGIN_SRC emacs-lisp
+(use-package jira-markup-mode
+  :mode ("\\.confluence\\'" "/itsalltext/.*jira.*\\.txt$"))
+
+(use-package markdown-mode
+  :mode (("/itsalltext/.*\\(gitlab\\|github\\).*\\.txt$" . gfm-mode)
+         ("\\.markdown\\'" . gfm-mode)
+         ("\\.md\\'" . gfm-mode))
+  :config
+  (add-hook 'markdown-mode-hook #'outline-minor-mode)
+  ;; Enable fontification for code blocks
+  (setq markdown-fontify-code-blocks-natively t)
+  (add-to-list 'markdown-code-lang-modes '("ini" . conf-mode))
+  ;; use pandoc with source code syntax highlighting to preview markdown (C-c C-c p)
+  (setq markdown-command "pandoc -s --highlight-style pygments -f markdown_github -t html5"))
+#+END_SRC
+** Octave
+#+BEGIN_SRC emacs-lisp
+(use-package octave
+  :mode ("\\.m\\'" . octave-mode)
+  :interpreter ("octave" . octave-mode)
+  :bind (:map octave-mode-map
+         ("C-x C-e" . octave-send-region-or-line))
+  :config
+  (setq octave-block-offset 4)
+  (defun octave-send-region-or-line ()
+    (interactive)
+    (if (region-active-p)
+        (octave-send-region (region-beginning) (region-end))
+      (octave-send-line))))
 #+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp
@@ -2644,8 +3109,23 @@ When called with 2 prefix arguments only open in browser and don't copy."
     (add-hook 'compilation-filter-hook 'python-test-track-pdb-prompt t t)
     (add-hook 'compilation-filter-hook 'python-test-ansi-color-filter nil t))
 
+  (defun dakra-python-comint-eof-back-to-compilation (arg)
+    "Delete ARG characters forward or send an EOF to subprocess and return to compilation mode.
+Sends an EOF only if point is at the end of the buffer and there is no input."
+    (interactive "p")
+    (let ((proc (get-buffer-process (current-buffer))))
+      (if (and (eobp) proc (= (point) (marker-position (process-mark proc))))
+          (progn
+            (comint-send-eof)
+            (python-test-back-to-compilation))
+        (delete-char arg))))
   (define-key python-django-mode-map (kbd "p") #'compilation-previous-error)
   (define-key python-django-mode-map (kbd "n") #'compilation-next-error)
+  ;; FIXME: put this in python-test-track-pdb-prompt function and restore keybinding after
+  ;;    also use `local-set-key` for buffer local keybinding
+  ;;    and check RET if last command was only "c" or "continue"
+  ;;    maybe fix with comint-input-filter-functions ?
+  (define-key inferior-python-mode-map (kbd "C-d") #'dakra-python-comint-eof-back-to-compilation)
 
   (defun python-django-manage-command (command)
     "Run Django manage.py COMMAND."
@@ -2820,6 +3300,48 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 ;;(define-key importmagic-mode-map (kbd "C-c C-i") 'importmagic-fix-symbol-at-point)
 ;;(add-to-list 'helm-boring-buffer-regexp-list "\\*epc con")
 #+END_SRC
+** Redis
+#+begin_src emacs-lisp
+;; Commint for redis
+(use-package redis
+  :defer t)
+#+end_src
+** Ruby
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+** Rust
+#+BEGIN_SRC emacs-lisp
+;; You may need installing the following packages on your system:
+;; * rustc (Rust Compiler)
+;; * cargo (Rust Package Manager)
+;; * racer (Rust Completion Tool)
+;; * rustfmt (Rust Tool for formatting code)
+(use-package rust-mode
+  :mode "\\.rs\\'"
+  :config
+  (use-package flycheck-rust
+    :after flycheck
+    :commands flycheck-rust-setup
+    :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  (use-package cargo
+    :commands cargo-minor-mode
+    :init (add-hook 'rust-mode-hook #'cargo-minor-mode))
+  (use-package racer
+    :commands racer-mode
+    :hook (rust-mode . racer-mode)
+    :config (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)))
+#+END_SRC
+** Solidity (Ethereum)
+Solidity with flycheck integration requires `solc` and `soldium`.
+So for Arch you need to install `solidity-git` and `sodium` from AUR.
+#+begin_src emacs-lisp
+(use-package solidity-mode
+  :mode "\\.sol\\'"
+  :init
+  (setq solidity-flycheck-solc-checker-active t)
+  (setq solidity-flycheck-solium-checker-active t))
+#+end_src
 ** SQL
 #+BEGIN_SRC emacs-lisp
 (use-package sql
@@ -2977,156 +3499,6 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
   (add-to-list 'sqlup-blacklist "type"))
 #+END_SRC
 
-** Solidity (Ethereum)
-Solidity with flycheck integration requires `solc` and `soldium`.
-So for Arch you need to install `solidity-git` and `sodium` from AUR.
-#+begin_src emacs-lisp
-(use-package solidity-mode
-  :mode "\\.sol\\'"
-  :init
-  (setq solidity-flycheck-solc-checker-active t)
-  (setq solidity-flycheck-solium-checker-active t))
-#+end_src
-** Redis
-#+begin_src emacs-lisp
-;; Commint for redis
-(use-package redis
-  :defer t)
-#+end_src
-** Javascript
-#+BEGIN_SRC emacs-lisp
-(use-package prettier-js
-  :defer t
-  ;;:init (add-hook 'js2-mode-hook (lambda () (add-hook 'before-save-hook 'prettier-before-save)))
-  :init
-  (put 'prettier-js-args 'safe-local-variable 'listp)
-  :config
-  (setq prettier-js-args '(
-                           "--trailing-comma" "all"
-                           ;;"--tab-width" "4"
-                           "--single-quote" "true"
-                           "--bracket-spacing" "false"
-                           ))
-  ;; prettier "--print-width" argument is read from 'fill-column' variable
-  (setq prettier-js-width-mode 'fill))
-
-(use-package json-mode
-  :mode "\\.json\\'")
-
-(use-package js2-mode
-  :interpreter "node"
-  :mode ("\\.js\\'" "\\.pac\\'" "\\.node\\'")
-  :init
-  (add-hook 'js2-mode-hook (lambda ()
-                             ;; electric-layout-mode doesn't play nice with smartparens
-                             ;;(setq-local electric-layout-rules '((?\; . after)))
-                             (setq mode-name "JS2")))
-  :config
-  ;; Don't warn about trailing commas
-  (setq js2-strict-trailing-comma-warning nil)
-
-  (setq js2-basic-offset 2)  ; set javascript indent to 2 spaces
-  )
-
-(use-package js2-imenu-extras
-  :hook (js2-mode . js2-imenu-extras-mode))
-
-;; Connect to chrome
-;; chromium --remote-debugging-port=9222 https://localhost:3000
-;; then in emacs
-;; M-x indium-connect-to-chrome
-
-;; or node
-;; node --inspect myfile.js
-;; node with breakpoint at first line
-;; node --inspect --debug-brk myfile.js
-;; then open the url that node prints:
-;; chrome-devtools://inspector.html?...&ws=127.0.0.1:PORT/PATH
-;; then in emacs:
-;; M-x indium-connect-to-nodejs RET 127.0.0.1 RET PORT RET PATH, PORT, PATH
-
-;; place `.indium' file in static root folder.
-
-(use-package indium
-  :hook (js-mode . indium-interaction-mode)
-  :config (setq indium-update-script-on-save t))
-
-(use-package js2-refactor
-  :hook (js2-mode . js2-refactor-mode)
-  :config
-  (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-  (define-key js2-refactor-mode-map (kbd "C-c r")
-    (defhydra js2-refactor-hydra (:color blue :hint nil)
-      "
-^Functions^                    ^Variables^               ^Buffer^                      ^sexp^               ^Debugging^
-------------------------------------------------------------------------------------------------------------------------------
-[_lp_] Localize Parameter      [_ev_] Extract variable   [_wi_] Wrap buffer in IIFE    [_k_]  js2 kill      [_lt_] log this
-[_ef_] Extract function        [_iv_] Inline variable    [_ig_] Inject global in IIFE  [_ss_] split string  [_dt_] debug this
-[_ip_] Introduce parameter     [_rv_] Rename variable    [_ee_] Expand node at point   [_sl_] forward slurp
-[_em_] Extract method          [_vt_] Var to this        [_cc_] Contract node at point [_ba_] forward barf
-[_ao_] Arguments to object     [_sv_] Split var decl.    [_uw_] unwrap
-[_tf_] Toggle fun exp and decl [_ag_] Add var to globals
-[_ta_] Toggle fun expr and =>  [_ti_] Ternary to if
-[_q_]  quit"
-      ("ee" js2r-expand-node-at-point)
-      ("cc" js2r-contract-node-at-point)
-      ("ef" js2r-extract-function)
-      ("em" js2r-extract-method)
-      ("tf" js2r-toggle-function-expression-and-declaration)
-      ("ta" js2r-toggle-arrow-function-and-expression)
-      ("ip" js2r-introduce-parameter)
-      ("lp" js2r-localize-parameter)
-      ("wi" js2r-wrap-buffer-in-iife)
-      ("ig" js2r-inject-global-in-iife)
-      ("ag" js2r-add-to-globals-annotation)
-      ("ev" js2r-extract-var)
-      ("iv" js2r-inline-var)
-      ("rv" js2r-rename-var)
-      ("vt" js2r-var-to-this)
-      ("ao" js2r-arguments-to-object)
-      ("ti" js2r-ternary-to-if)
-      ("sv" js2r-split-var-declaration)
-      ("ss" js2r-split-string)
-      ("uw" js2r-unwrap)
-      ("lt" js2r-log-this)
-      ("dt" js2r-debug-this)
-      ("sl" js2r-forward-slurp)
-      ("ba" js2r-forward-barf)
-      ("k" js2r-kill)
-      ("q" nil)
-      )))
-
-;; use tern for js autocompletion
-(use-package tern
-  :disabled t  ; We use tide (typescript) also for javascript files
-  :commands tern-mode
-  :init (add-hook 'js-mode-hook 'tern-mode)
-  :config
-  (use-package company-tern
-    :config
-    (setq company-tern-property-marker "")  ; don't show circles for properties
-    (add-to-list 'company-backends 'company-tern)))
-
-(use-package skewer-mode
-  :disabled t  ; Use indium
-  :commands skewer-mode
-  :init
-  (setq httpd-port 8079)  ; set port for simple-httpd used by skewer
-  (add-hook 'js2-mode-hook 'skewer-mode)
-  (add-hook 'css-mode-hook 'skewer-css-mode)
-  (add-hook 'html-mode-hook 'skewer-html-mode))
-
-;; Adds the node_modules/.bin directory to the buffer exec_path.
-;; E.g. support project local eslint installations.
-;; XXX: Maybe add autoload for web and js2 mode?
-;; (eval-after-load 'js2-mode
-;;   '(add-hook 'js2-mode-hook #'add-node-modules-path))
-(use-package add-node-modules-path :defer t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package ng2-mode :defer t)
-#+END_SRC
 ** Typescript
 #+BEGIN_SRC emacs-lisp
 ;; TypeScript
@@ -3319,363 +3691,6 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
                   )
               (unless tide-mode (tide-mode))
             (if tide-mode (tide-mode -1)))))))
-#+END_SRC
-** Octave
-#+BEGIN_SRC emacs-lisp
-(use-package octave
-  :mode ("\\.m\\'" . octave-mode)
-  :interpreter ("octave" . octave-mode)
-  :bind (:map octave-mode-map
-         ("C-x C-e" . octave-send-region-or-line))
-  :config
-  (setq octave-block-offset 4)
-  (defun octave-send-region-or-line ()
-    (interactive)
-    (if (region-active-p)
-        (octave-send-region (region-beginning) (region-end))
-      (octave-send-line))))
-#+END_SRC
-** Lua
-#+BEGIN_SRC emacs-lisp
-(use-package lua-mode
-  :mode "\\.lua\\'"
-  :interpreter ("lua" . lua-mode))
-
-(use-package company-lua
-  :hook (lua-mode . my-lua-mode-company-init)
-  :config
-  (defun my-lua-mode-company-init ()
-    (setq-local company-backends '((company-lua
-                                    company-etags
-                                    company-dabbrev-code
-                                    company-yasnippet)))))
-#+END_SRC
-** Fish
-#+BEGIN_SRC emacs-lisp
-(use-package fish-mode
-  :mode "\\.fish\\'")
-#+END_SRC
-** Lisps
-#+BEGIN_SRC emacs-lisp
-;; Nicer elisp regex syntax highlighting
-(use-package easy-escape
-  :hook ((emacs-lisp-mode lisp-mode) . easy-escape-minor-mode))
-
-;; From: https://github.com/Fuco1/.emacs.d/blob/af82072196564fa57726bdbabf97f1d35c43b7f7/site-lisp/redef.el#L20-L94
-;; redefines the silly indent of keyword lists
-;; before
-;;   (:foo bar
-;;         :baz qux)
-;; after
-;;   (:foo bar
-;;    :baz qux)
-(eval-after-load "lisp-mode"
-  '(defun lisp-indent-function (indent-point state)
-     "This function is the normal value of the variable `lisp-indent-function'.
-The function `calculate-lisp-indent' calls this to determine
-if the arguments of a Lisp function call should be indented specially.
-INDENT-POINT is the position at which the line being indented begins.
-Point is located at the point to indent under (for default indentation);
-STATE is the `parse-partial-sexp' state for that position.
-If the current line is in a call to a Lisp function that has a non-nil
-property `lisp-indent-function' (or the deprecated `lisp-indent-hook'),
-it specifies how to indent.  The property value can be:
-- `defun', meaning indent `defun'-style
-  \(this is also the case if there is no property and the function
-  has a name that begins with \"def\", and three or more arguments);
-- an integer N, meaning indent the first N arguments specially
-  (like ordinary function arguments), and then indent any further
-  arguments like a body;
-- a function to call that returns the indentation (or nil).
-  `lisp-indent-function' calls this function with the same two arguments
-  that it itself received.
-This function returns either the indentation to use, or nil if the
-Lisp function does not specify a special indentation."
-     (let ((normal-indent (current-column))
-           (orig-point (point)))
-       (goto-char (1+ (elt state 1)))
-       (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
-       (cond
-        ;; car of form doesn't seem to be a symbol, or is a keyword
-        ((and (elt state 2)
-              (or (not (looking-at "\\sw\\|\\s_"))
-                  (looking-at ":")))
-         (if (not (> (save-excursion (forward-line 1) (point))
-                     calculate-lisp-indent-last-sexp))
-             (progn (goto-char calculate-lisp-indent-last-sexp)
-                    (beginning-of-line)
-                    (parse-partial-sexp (point)
-                                        calculate-lisp-indent-last-sexp 0 t)))
-         ;; Indent under the list or under the first sexp on the same
-         ;; line as calculate-lisp-indent-last-sexp.  Note that first
-         ;; thing on that line has to be complete sexp since we are
-         ;; inside the innermost containing sexp.
-         (backward-prefix-chars)
-         (current-column))
-        ((and (save-excursion
-                (goto-char indent-point)
-                (skip-syntax-forward " ")
-                (not (looking-at ":")))
-              (save-excursion
-                (goto-char orig-point)
-                (looking-at ":")))
-         (save-excursion
-           (goto-char (+ 2 (elt state 1)))
-           (current-column)))
-        (t
-         (let ((function (buffer-substring (point)
-                                           (progn (forward-sexp 1) (point))))
-               method)
-           (setq method (or (function-get (intern-soft function)
-                                          'lisp-indent-function)
-                            (get (intern-soft function) 'lisp-indent-hook)))
-           (cond ((or (eq method 'defun)
-                      (and (null method)
-                           (> (length function) 3)
-                           (string-match "\\`def" function)))
-                  (lisp-indent-defform state indent-point))
-                 ((integerp method)
-                  (lisp-indent-specform method state
-                                        indent-point normal-indent))
-                 (method
-                  (funcall method indent-point state)))))))))
-#+END_SRC
-*** Elisp
-#+BEGIN_SRC emacs-lisp
-(use-package subr-x
-  :defer t
-  :config
-  (put 'if-let   'byte-obsolete-info nil)
-  (put 'when-let 'byte-obsolete-info nil))
-
-(use-package elisp-mode
-  :bind (:map emacs-lisp-mode-map
-         ("C-c C-c" . eval-defun)
-         ("C-c C-b" . eval-buffer))
-  :config
-  (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                    ;;(eldoc-mode +1)
-                                    (setq mode-name "EL"))))
-#+END_SRC
-**** Helper libraries (dash, s, marshal)
-#+begin_src emacs-lisp
-(use-package dash  :defer t
-  :config (dash-enable-font-lock))
-
-(use-package s  :defer t)
-#+end_src
-***** Request
-#+begin_src emacs-lisp
-(use-package request
-  :defer t)
-#+end_src
-**** Auto-compile
-#+begin_src emacs-lisp
-(use-package auto-compile
-  :disabled t  ; I rather trigger a new compile by hand
-  :defer 10
-  :config
-  (auto-compile-on-load-mode)
-  (auto-compile-on-save-mode)
-  (setq auto-compile-display-buffer               nil)
-  (setq auto-compile-mode-line-counter            t)
-  (setq auto-compile-source-recreate-deletes-dest t)
-  (setq auto-compile-toggle-deletes-nonlib-dest   t)
-  (setq auto-compile-update-autoloads             t)
-  (add-hook 'auto-compile-inhibit-compile-hook
-            'auto-compile-inhibit-compile-detached-git-head))
-#+end_src
-**** Litable: Live preview for elisp
-#+BEGIN_SRC emacs-lisp
-(use-package litable
-  :defer t)
-#+END_SRC
-**** Package helpers
-#+BEGIN_SRC emacs-lisp
-(use-package package-lint
-  :defer t)
-(use-package flycheck-package
-  :after flycheck
-  :config (flycheck-package-setup))
-#+END_SRC
-**** El2markdown: Convert package commentary to markdown
-#+begin_src emacs-lisp
-(use-package el2markdown
-  :defer t)
-#+end_src
-*** Common Lisp
-From the slime manual for faster slime startup:
-
-For SBCL, we recommend that you create a custom core file with socket support
-and POSIX bindings included because those modules take the most time to load. To
-create such a core, execute the following steps:
-#+begin_src sh  :tangle no
-$ cd ~/.emacs.d/var/
-$ sbcl
- (mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))
- (save-lisp-and-die "sbcl.core-for-slime")
-#+end_src
-
-#+BEGIN_SRC emacs-lisp
-(use-package slime
-  :hook (lisp-mode slime-lisp-mode-hook)
-  :bind (:map slime-mode-indirect-map
-         ("M-?" . slime-describe-symbol))
-  :config
-  (setq slime-contribs '(slime-fancy))
-  (setq inferior-lisp-program "sbcl")
-  (setq slime-lisp-implementations
-        `((sbcl ("sbcl" "--core" ,(no-littering-expand-var-file-name "sbcl.core-for-slime"))))))
-(use-package slime-company
-  :after (slime company)
-  :config (slime-setup '(slime-fancy slime-company)))
-#+END_SRC
-*** Clojure
-#+BEGIN_SRC emacs-lisp
-
-#+END_SRC
-*** Hy
-#+BEGIN_SRC emacs-lisp
-;;; Lisp in python vm
-(use-package hy-mode
-  :mode "\\.hy\\'")
-#+END_SRC
-** Go
-#+BEGIN_SRC emacs-lisp
-;; Go
-;; For better support install:
-;; arch package `go-tools' for goimports, guru and godoc
-;; `gocode' (arch gocode-git package) for autocomplete
-;; `godef' (arch godef-git package) for godoc-at-point
-;; `golint' (arch go-lint-git)
-;; XXX: `errcheck' (go get -u github.com/kisielk/errcheck) to check for missing error checks
-(use-package go-mode
-  :mode "\\.go\\'"
-  :bind (:map go-mode-map
-         ("M-?" . godoc-at-point)
-         ("M-." . godef-jump)
-         ("M-*" . pop-tag-mark)  ;; Jump back after godef-jump
-         ("C-c m r" . go-run))
-  :config
-  ;; Prefer goimports to gofmt if installed
-  (let ((goimports (executable-find "goimports")))
-    (when goimports
-      (setq gofmt-command goimports)))
-
-  ;; For autocompeltion in the `godoc' command we need 'godoc' and not 'go doc'
-  ;;(setq godoc-command "go doc")
-  (setq godoc-use-completing-read t)
-
-  ;; Syntax highlighting for code in godoc
-  ;; https://github.com/dominikh/go-mode.el/pull/88#issuecomment-98448284
-  (defun godoc-highlight ()
-    (let ((st (make-syntax-table go-mode-syntax-table)))
-      (modify-syntax-entry ?\' "w" st)
-      (set-syntax-table st))
-    (set (make-local-variable 'font-lock-defaults) '(go--build-font-lock-keywords)))
-  (add-hook 'godoc-mode-hook 'godoc-highlight)
-
-  (add-hook 'go-mode-hook
-            '(lambda ()
-               (setq tab-width 4)
-               ;; gofmt on save
-               (add-hook 'before-save-hook 'gofmt-before-save nil t)
-               ;; stop whitespace being highlighted
-               (whitespace-toggle-options '(tabs)))))
-
-(use-package helm-go-package
-  :disabled t
-  :after (helm go-mode)
-  :config
-  ;; Re-order helm actions (so ENTER is 'Display GoDoc')
-  (setq helm-go-package-actions (helm-make-actions
-                                 "Display GoDoc" 'helm-go-package--godoc-browse-url
-                                 "Show documentation" 'godoc
-                                 "Visit package's directory" 'helm-go-package--visit-package-directory
-                                 "Add a new import"  (lambda (candidate) (go-import-add nil candidate))
-                                 "Add a new import as"  (lambda (candidate) (go-import-add t candidate))))
-  (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
-
-(use-package company-go
-  :after (company go-mode)
-  :config (add-to-list 'company-backends 'company-go))
-
-(use-package gotest
-  :after go-mode
-  :bind (:map go-mode-map
-         ("C-x t" . go-test-current-test)))
-
-(use-package go-eldoc
-  :hook (go-mode . go-eldoc-setup))
-
-(use-package go-projectile
-  :after (projectile go-mode))
-#+END_SRC
-** Rust
-#+BEGIN_SRC emacs-lisp
-;; You may need installing the following packages on your system:
-;; * rustc (Rust Compiler)
-;; * cargo (Rust Package Manager)
-;; * racer (Rust Completion Tool)
-;; * rustfmt (Rust Tool for formatting code)
-(use-package rust-mode
-  :mode "\\.rs\\'"
-  :config
-  (use-package flycheck-rust
-    :after flycheck
-    :commands flycheck-rust-setup
-    :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-  (use-package cargo
-    :commands cargo-minor-mode
-    :init (add-hook 'rust-mode-hook #'cargo-minor-mode))
-  (use-package racer
-    :commands racer-mode
-    :hook (rust-mode . racer-mode)
-    :config (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)))
-#+END_SRC
-** C/C++
-#+BEGIN_SRC emacs-lisp
-(use-package cmake-font-lock
-  :hook (cmake-mode . cmake-font-lock-activate))
-
-(use-package cmake-mode
-  :mode ("CMakeLists.txt" "\\.cmake\\'"))
-
-(use-package irony
-  :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
-         (irony-mode . irony-cdb-autosetup-compile-options))
-  :config
-  (defun irony-mode-on-maybe ()
-    ;; avoid enabling irony-mode in modes that inherits c-mode, e.g: solidity-mode
-    (when (member major-mode irony-supported-major-modes)
-      (irony-mode 1))))
-
-(use-package company-irony
-  :after irony
-  :config (add-to-list 'company-backends 'company-irony))
-
-(use-package irony-eldoc
-  :hook (irony-mode))
-#+END_SRC
-** Ruby
-#+BEGIN_SRC emacs-lisp
-
-#+END_SRC
-** Elixir
-#+BEGIN_SRC emacs-lisp
-(use-package elixir-mode
-  :mode ("\\.ex\\'" "\\.exs\\'" "\\.elixir\\'")
-  :config
-  (require 'smartparens)
-  (sp-with-modes '(elixir-mode)
-    (sp-local-pair "fn" "end"
-                   :when '(("SPC" "RET"))
-                   :actions '(insert navigate))
-    (sp-local-pair "do" "end"
-                   :when '(("SPC" "RET"))
-                   :post-handlers '(sp-ruby-def-post-handler)
-                   :actions '(insert navigate)))
-  (use-package alchemist))
 #+END_SRC
 * personal.el
 #+BEGIN_SRC emacs-lisp
