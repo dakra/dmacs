@@ -1351,7 +1351,7 @@ Move current line or region with M-up or M-down.
 
 (use-package async)
 (use-package dired-async  ; Part of async
-  :after (dired async)
+  :after dired
   :config (dired-async-mode 1))
 #+END_SRC
 
