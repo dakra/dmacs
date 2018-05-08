@@ -1957,7 +1957,7 @@ go up multiple parent directories."
                 eshell-error-if-no-glob t
                 eshell-hist-ignoredups t
                 eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim" "nmtui"
-                                         "tmux" "screen" "top" "htop" "less" "more" "ncftp")
+                                         "ngrok" "tmux" "screen" "top" "htop" "less" "more" "ncftp")
                 eshell-prefer-lisp-functions nil)
 
   ;; Increase eshell history size from default of only 128
