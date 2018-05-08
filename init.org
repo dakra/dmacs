@@ -6320,32 +6320,41 @@ FIXME: Brightness
   (add-hook 'exwm-floating-setup-hook 'exwm-layout-hide-mode-line)
   (add-hook 'exwm-floating-exit-hook 'exwm-layout-show-mode-line)
 
-  ;; General exwm commands
-  (exwm-input-set-key (kbd "s-R") #'exwm-reset)
-  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+  ;; XXX: Make macro
+  (defun exwm-bind-keys (&rest bindings)
+    "Like exwm-input-set-key but syntax similar to bind-keys.
+Define keybindings that work in exwm and non-exwm buffers.
+Only works *before* exwm in initialized."
+    (pcase-dolist (`(,key . ,fun) bindings)
+      (add-to-list 'exwm-input-global-keys `(,(kbd key) . ,fun))))
 
-  ;; Moving/editing windows
-  (exwm-input-set-key (kbd "s-j") #'windmove-left)
-  (exwm-input-set-key (kbd "s-k") #'windmove-down)
-  (exwm-input-set-key (kbd "s-i") #'windmove-up)
-  (exwm-input-set-key (kbd "s-l") #'windmove-right)
-  (exwm-input-set-key (kbd "<s-left>") #'windmove-left)
-  (exwm-input-set-key (kbd "<s-down>") #'windmove-down)
-  (exwm-input-set-key (kbd "<s-up>") #'windmove-up)
-  (exwm-input-set-key (kbd "<s-right>") #'windmove-right)
-
-  (exwm-input-set-key (kbd "s-\\") #'toggle-window-split)
-  (exwm-input-set-key (kbd "s-J") 'swap-windows-left)
-  (exwm-input-set-key (kbd "s-K") 'swap-windows-below)
-  (exwm-input-set-key (kbd "s-I") 'swap-windows-above)
-  (exwm-input-set-key (kbd "s-L") 'swap-windows-right)
-
-  ;; FIXME: switch to winner-mode (C-X 1 and the C-c <left>)
-  (exwm-input-set-key (kbd "s-f") #'toggle-single-window)
-
-  (exwm-input-set-key (kbd "s-D") #'kill-this-buffer)
-  (exwm-input-set-key (kbd "s-b") #'ivy-switch-buffer)
-  ;;(exwm-input-set-key (kbd "s-f") #'counsel-find-file)
+  (exwm-bind-keys
+   ;; General exwm commands
+   '("s-R" . exwm-reset)
+   '("s-w" . exwm-workspace-switch)
+   ;; Moving/editing windows
+   '("s-j"       . windmove-left)
+   '("s-k"       . windmove-down)
+   '("s-i"       . windmove-up)
+   '("s-l"       . windmove-right)
+   '("<s-left>"  . windmove-left)
+   '("<s-down>"  . windmove-down)
+   '("<s-up>"    . windmove-up)
+   '("<s-right>" . windmove-right)
+   '("s-\\"       . toggle-window-split)
+   '("s-J"       . swap-windows-left)
+   '("s-K"       . swap-windows-below)
+   '("s-I"       . swap-windows-above)
+   '("s-L"       . swap-windows-right)
+   ;; XXX: switch to winner-mode (C-X 1 and the C-c <left>)
+   '("s-f"       . toggle-single-window)
+   ;; Workspaces
+   '("s-u" . exwm-workspace-switch-previous)
+   '("s-o" . exwm-workspace-switch-next)
+   ;; Launch apps
+   '("s-b" . ivy-switch-buffer)
+   '("s-d" . counsel-linux-app)
+   '("s-D" . exwm-launch-shell-command))
 
   ;; Switching workspaces
   (defun exwm-workspace-switch-previous (p)
@@ -6362,21 +6371,16 @@ FIXME: Brightness
         (exwm-workspace-switch 0)
       (exwm-workspace-switch (+ exwm-workspace-current-index p))))
 
-  (exwm-input-set-key (kbd "s-u") #'exwm-workspace-switch-previous)
-  (exwm-input-set-key (kbd "s-o") #'exwm-workspace-switch-next)
-
   ;; 's-N': Switch to certain workspace
   (dotimes (i 8)
     (exwm-input-set-key (kbd (format "s-%d" (+ 1 i)))
                         `(lambda ()
                            (interactive)
                            (exwm-workspace-switch-create ,i))))
-  (exwm-input-set-key (kbd "s-d") #'counsel-linux-app)
   ;; 's-D': Launch application
-  (exwm-input-set-key (kbd "s-D")
-                      (lambda (command)
-                        (interactive (list (read-shell-command "$ ")))
-                        (start-process-shell-command command nil command)))
+  (defun exwm-launch-shell-command (command)
+    (interactive (list (read-shell-command "$ ")))
+    (start-process-shell-command command nil command))
 
   ;; Line-editing shortcuts
   (setq exwm-input-simulation-keys
