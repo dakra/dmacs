@@ -291,6 +291,9 @@
 [submodule "ghub+"]
 	path = lib/ghub+
 	url = git@github.com:vermiculus/ghub-plus.git
+[submodule "gif-screencast"]
+	path = lib/gif-screencast
+	url = git@github.com:Ambrevar/emacs-gif-screencast.git
 [submodule "git-modes"]
 	path = lib/git-modes
 	url = git@github.com:magit/git-modes.git

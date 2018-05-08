@@ -6670,6 +6670,19 @@ It only works for frames with exactly two windows."
 #+END_SRC
 
 * Misc
+** Gif-Screencasts: One-frame-per-action GIF recording
+You need to install ~scrot~, ImageMagick (~convert~) and optional ~Gifsicle~.
+
+XXX: Use emacs ~keycast~ package to display keys in modeline.
+
+#+begin_src emacs-lisp
+(use-package gif-screencast
+  :bind (:map gif-screencast-mode-map
+         ("<f11>" . gif-screencast-toggle-pause)
+         ("<f12>" . gif-screencast-stop)
+         ("<escape>" . gif-screencast-stop))
+  :config (setq gif-screencast-output-directory (expand-file-name "videos/emacs/" "~")))
+#+end_src
 ** Systemctl
 #+begin_src emacs-lisp
 (use-package systemctl
