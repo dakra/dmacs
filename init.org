@@ -373,7 +373,7 @@ Allow some commands as safe by default
   ;; We only really need auto revert for git files
   ;; and we use magits `magit-auto-revert-mode' for that
   ;;; revert buffers automatically when underlying files are changed externally
-  (global-auto-revert-mode t)
+  (global-auto-revert-mode nil)
 
   ;; Turn off auto revert messages
   (setq auto-revert-verbose nil))
