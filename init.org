@@ -4165,6 +4165,10 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ("C-c o a" . org-agenda)
          ("C-c o b" . org-switchb)
          :map org-mode-map
+         ([(shift return)] . crux-smart-open-line)
+         ([(control shift return)] . crux-smart-open-line-above)
+         ("<M-return>" . org-insert-todo-heading-respect-content)
+         ("<M-S-return>" . org-meta-return)
          ("M-." . org-open-at-point)  ; So M-. behaves like in source code.
          ("M-," . org-mark-ring-goto)
          ("C-c C-x C-i" . org-clock-in-or-list)
