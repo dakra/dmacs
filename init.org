@@ -1009,6 +1009,9 @@ Move current line or region with M-up or M-down.
 (use-package treemacs
   :bind (([f8]        . treemacs-toggle-or-select)
          :map treemacs-mode-map
+         ("C-t a" . treemacs-add-project)
+         ("C-t d" . treemacs-remove-project)
+         ("C-t r" . treemacs-rename-project)
          ;; If we only hide the treemacs buffer (default binding) then, when we switch
          ;; a frame to a different project and toggle treemacs again we still get the old project
          ("q" . treemacs-kill-buffer))
@@ -1019,14 +1022,10 @@ Move current line or region with M-up or M-down.
     (pcase (treemacs--current-visibility)
       ('visible
        (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
-           (progn
-             (treemacs--select-visible)
-             (if (one-window-p)
-                 (switch-to-buffer (other-buffer))
-               (bury-buffer)))
-         (treemacs-select-window)))
+           (bury-buffer)
+         (treemacs--select-visible-window)))
       ('exists
-       (treemacs--select-not-visible))
+       (treemacs--select-not-visible-window))
       ('none
        (treemacs-projectile))
       (_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility)))))
@@ -1046,6 +1045,10 @@ Move current line or region with M-up or M-down.
 
 (use-package treemacs-projectile
   :after (treemacs)
+  :bind (:map treemacs-mode-map
+         ("C-p p" . nil)
+         ("C-p" . nil)  ; I often still type C-p for UP
+         ("C-t p" . treemacs-projectile))
   :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 #+END_SRC
 * Navigation
