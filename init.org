@@ -7154,7 +7154,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 ** Info-beamer
 #+begin_src emacs-lisp
 (use-package info-beamer
-  :defer t)
+  :hook (lua-mode . info-beamer-mode))
 #+end_src
 ** Nov: Read EPUBs
 #+begin_src emacs-lisp
