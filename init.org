@@ -2576,6 +2576,14 @@ When called with 2 prefix arguments only open in browser and don't copy."
 (use-package go-projectile
   :after (projectile go-mode))
 #+END_SRC
+** Haskell
+#+begin_src emacs-lisp
+(use-package haskell-mode
+  :hook (haskell-mode . turn-on-haskell-indentation))
+
+(use-package intero
+  :hook (haskell-mode . intero-mode))
+#+end_src
 ** Javascript
 #+BEGIN_SRC emacs-lisp
 (use-package prettier-js

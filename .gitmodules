@@ -330,6 +330,9 @@
 [submodule "haml-mode"]
 	path = lib/haml-mode
 	url = git@github.com:nex3/haml-mode.git
+[submodule "haskell-mode"]
+	path = lib/haskell-mode
+	url = git@github.com:haskell/haskell-mode.git
 [submodule "helpful"]
 	path = lib/helpful
 	url = git@github.com:Wilfred/helpful.git
@@ -363,6 +366,10 @@
 [submodule "info-beamer"]
 	path = lib/info-beamer
 	url = git@github.com:dakra/info-beamer.el.git
+[submodule "intero"]
+	path = lib/intero
+	url = git@github.com:commercialhaskell/intero.git
+	load-path = elisp
 [submodule "irony"]
 	path = lib/irony
 	url = git@github.com:Sarcasm/irony-mode.git
