@@ -7114,6 +7114,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("http://feeds.doughellmann.com/PyMOTW" dev python)
     ("https://blogs.msdn.microsoft.com/pythonengineering/feed/" dev python)
 
+    ("https://scripter.co/posts/index.xml" dev emacs)
     ("http://www.holgerschurig.de/topics/emacs/index.xml" dev emacs)
     ("http://planet.emacsen.org/atom.xml" dev emacs)
     ("http://feeds.feedburner.com/XahsEmacsBlog" dev emacs)
