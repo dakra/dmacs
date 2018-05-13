@@ -6324,7 +6324,9 @@ FIXME: Brightness
           (yank-pop-change-selection t))
       (call-interactively #'counsel-yank-pop))
     (when (derived-mode-p 'exwm-mode)
+      (exwm-input--set-focus (exwm--buffer->id (window-buffer (selected-window))))
       (exwm-input--fake-key ?\C-v)))
+
   ;; Set the initial workspace number.
   (setq exwm-workspace-number 4)
   ;; Make class name the buffer name
