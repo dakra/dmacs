@@ -1990,6 +1990,13 @@ go up multiple parent directories."
                   (delete-window))))))
       (delete-char arg)))
 
+  (defun eshell-delete-backward-char (n)
+    "Only call (delete-backward-char N) when not at beginning of prompt."
+    (interactive "p")
+    (if (looking-back eshell-prompt-regexp nil)
+        (message "Beginning of prompt")
+      (delete-char (- n))))
+
   ;; Fixme eshell-mode-map maps to global keybindings? Check "C-d"
   ;; Isssue: https://github.com/jwiegley/use-package/issues/332
   (add-hook 'eshell-mode-hook (lambda ()
@@ -1999,6 +2006,7 @@ go up multiple parent directories."
                                 (local-set-key (kbd "M-r") 'dakra-eshell-read-history)
                                 (local-set-key (kbd "C-r") 'dakra-eshell-read-history)
                                 (local-set-key (kbd "C-d") 'dakra-eshell-quit-or-delete-char)
+                                (local-set-key (kbd "DEL") 'eshell-delete-backward-char)
                                 ;; Use helm as completion menu
                                 ;;(local-set-key [remap eshell-pcomplete] 'helm-esh-pcomplete)
                                 ;; or ivy
