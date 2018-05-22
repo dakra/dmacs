@@ -2958,6 +2958,11 @@ $ sbcl
         (octave-send-region (region-beginning) (region-end))
       (octave-send-line))))
 #+END_SRC
+** PHP
+#+begin_src emacs-lisp
+(use-package php-mode
+  :defer t)
+#+end_src
 ** Python
 #+BEGIN_SRC emacs-lisp
 (use-package cython-mode

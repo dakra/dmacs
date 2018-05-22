@@ -586,6 +586,9 @@
 [submodule "pfuture"]
 	path = lib/pfuture
 	url = git@github.com:Alexander-Miller/pfuture.git
+[submodule "php-mode"]
+	path = lib/php-mode
+	url = git@github.com:ejmr/php-mode.git
 [submodule "pip-requirements"]
 	path = lib/pip-requirements
 	url = git@github.com:Wilfred/pip-requirements.el.git
