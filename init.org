@@ -1204,7 +1204,7 @@ Move current line or region with M-up or M-down.
   (defun print-pdf (&optional pdf)
     "Print PDF using external program `gtklp'."
     (interactive "P")
-    (start-process-shell-command "gtklp" nil (format "gtklp %s" (buffer-file-name))))
+    (start-process-shell-command "gtklp" nil (format "gtklp %s" (shell-quote-argument (buffer-file-name)))))
 
   ;; more fine-grained zooming; +/- 10% instead of default 25%
   (setq pdf-view-resize-factor 1.1)
