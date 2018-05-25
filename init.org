@@ -1250,7 +1250,8 @@ Move current line or region with M-up or M-down.
 (use-package dired
   :bind (("C-x d" . dired)
          :map dired-mode-map
-         ("e" . dired-ediff-files))
+         ("e" . dired-ediff-files)
+         ("C-c C-e" . dired-toggle-read-only))
   :config
   ;; When point is on a file name only search file names
   (setq dired-isearch-filenames 'dwim)
@@ -1295,16 +1296,6 @@ Move current line or region with M-up or M-down.
                         (set-window-configuration wnd))))
         (error "no more than 2 files should be marked")))))
 
-(use-package wdired
-  :after dired
-  :bind (:map dired-mode-map
-         ("C-c C-e" . dired-toggle-read-only)))
-
-(use-package dired-rsync
-  :after dired
-  :bind (:map dired-mode-map
-         ("Y" . dired-rsync)))
-
 (use-package dired-x
   :bind ("C-x C-j" . dired-jump)
   :config
@@ -1313,6 +1304,12 @@ Move current line or region with M-up or M-down.
                              (regexp-opt my-dired-media-files-extensions)
                              "\\'")
                      "mpv")))
+
+;; Needs to be after dired-x as it binds "Y" too
+(use-package dired-rsync
+  :after dired-x
+  :bind (:map dired-mode-map
+         ("Y" . dired-rsync)))
 
 (use-package dired+
   :after dired
