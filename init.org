@@ -576,6 +576,13 @@ different face
 (use-package highlight-indent-guides
   :hook (python-mode . highlight-indent-guides-mode)
   :config
+  ;; Don't highlight first level (that would be a line at column 1)
+  (defun my-highlighter (level responsive display)
+    (if (> 1 level) ; replace `1' with the number of guides you want to hide
+        nil
+      (highlight-indent-guides--highlighter-default level responsive display)))
+
+  (setq highlight-indent-guides-highlighter-function 'my-highlighter)
   (setq highlight-indent-guides-method 'character)
   (setq highlight-indent-guides-character ?\|)
   (setq highlight-indent-guides-auto-odd-face-perc 15)
