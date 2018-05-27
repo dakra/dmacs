@@ -6290,7 +6290,6 @@ there are no attachments."
 #+END_SRC
 
 * Window Manager
-FIXME: Brightness
 ** Exwm
 #+BEGIN_SRC emacs-lisp
 (use-package xelb
