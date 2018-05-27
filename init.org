@@ -508,11 +508,7 @@ Allow some commands as safe by default
 #+begin_src emacs-lisp
 (use-package eldoc
   :hook (prog-mode . eldoc-mode))
-(use-package eldoc-overlay
-  :disabled t  ; FIXME: remove this and quick-peek
-  :hook (prog-mode . eldoc-overlay-mode))
 #+end_src
-
 ** Dimmer: Visually highlight the selected buffer
 #+begin_src emacs-lisp
 (use-package dimmer

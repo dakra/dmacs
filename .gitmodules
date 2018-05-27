@@ -178,9 +178,6 @@
 [submodule "el2markdown"]
 	path = lib/el2markdown
 	url = git@github.com:Lindydancer/el2markdown.git
-[submodule "eldoc-overlay-mode"]
-	path = lib/eldoc-overlay-mode
-	url = git@github.com:stardiviner/eldoc-overlay-mode.git
 [submodule "elfeed"]
 	path = lib/elfeed
 	url = git@github.com:skeeto/elfeed.git
@@ -644,9 +641,6 @@
 [submodule "pythonic"]
 	path = lib/pythonic
 	url = git@github.com:proofit404/pythonic.git
-[submodule "quick-peek"]
-	path = lib/quick-peek
-	url = git@github.com:cpitclaudel/quick-peek.git
 [submodule "racer"]
 	path = lib/racer
 	url = git@github.com:racer-rust/emacs-racer.git
