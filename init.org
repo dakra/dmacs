@@ -2432,7 +2432,8 @@ When called with 2 prefix arguments only open in browser and don't copy."
 #+BEGIN_SRC emacs-lisp
 ;; Associate more files with conf-mode
 (use-package conf-mode
-  :mode ("mbsyncrc\\'" "msmtprc\\'" "pylintrc\\'" "\\.ini\\.\\(tmpl\\|sample\\)\\'" "\\.service\\'"))
+  :mode ("mbsyncrc\\'" "msmtprc\\'" "pylintrc\\'" "\\.cnf\\'"
+         "\\.ini\\.\\(tmpl\\|sample\\)\\'" "\\.service\\'"))
 
 (use-package pkgbuild-mode
   :mode "PKGBUILD\\'")
