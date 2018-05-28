@@ -203,6 +203,9 @@
 [submodule "epl"]
 	path = lib/epl
 	url = git@github.com:cask/epl.git
+[submodule "erc-hl-nicks"]
+	path = lib/erc-hl-nicks
+	url = git@github.com:leathekd/erc-hl-nicks.git
 [submodule "esh-autosuggest"]
 	path = lib/esh-autosuggest
 	url = git@github.com:dieggsy/esh-autosuggest.git

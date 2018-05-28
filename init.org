@@ -5689,8 +5689,14 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   (setq erc-user-full-name user-full-name)
   (setq erc-prompt-for-password nil)
 
+  (add-to-list 'erc-modules 'notifications)
+  (add-to-list 'erc-modules 'spelling)
+  (erc-update-modules)
   (erc-track-minor-mode 1)
   (erc-track-mode 1))
+
+(use-package erc-hl-nicks
+  :after erc)
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
