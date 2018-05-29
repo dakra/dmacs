@@ -383,10 +383,13 @@ Allow some commands as safe by default
 (use-package epa
   :defer t
   :config
-  ;; Let Emacs query the passphrase through the minibuffer
-  (setq epa-pinentry-mode 'loopback)
   ;; Always replace encrypted text with plain text version
   (setq epa-replace-original-text t))
+(use-package epg
+  :defer t
+  :config
+  ;; Let Emacs query the passphrase through the minibuffer
+  (setq epg-pinentry-mode 'loopback))
 #+end_src
 ** Saveplace: Remember your location in a file
 #+begin_src emacs-lisp
