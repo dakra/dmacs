@@ -6425,17 +6425,22 @@ Only works *before* exwm in initialized."
   (require 'exwm-randr)
   ;; Dynamic xrandr config ideas from https://github.com/ch11ng/exwm/issues/202
 
-  ;; Update exwm-randr-workspace-output-plist with two outputs named
-  ;; 'default' and 'other'.  If the 'other' output is same as 'default'
-  ;; then all workspaces will be redirected to the 'default' output.
+  ;; Update exwm-randr-workspace-output-plist with 2 or 3 outputs named
+  ;; 'primary' and 'other-1'/'other-2'.
+  ;; With 3 outputs connected the first workspace will be primary,
+  ;; second workspace goes to 'other-2' and all others to 'other-1'.
+  ;; With 2 outputs, first workspace is 'primary' display and rest 'other-1'.
+  ;; And with only one connected output, primary has all workspaces.
   (defun dakra-exwm-randr-screen-change ()
     (let* ((connected-cmd "xrandr -q|awk '/ connected/ {print $1}'")
            (connected (process-lines "bash" "-lc" connected-cmd))
            (primary (car connected))  ; Primary display is always first in list
-           (other (cadr connected)))
+           (other-1 (cadr connected))
+           (other-2 (caddr connected)))
       (setq exwm-randr-workspace-output-plist
             (append (list 0 primary)
-                    (mapcan (lambda (i) (list i (or other primary)))
+                    (list 1 (or other-2 primary))
+                    (mapcan (lambda (i) (list i (or other-1 other-2 primary)))
                             (number-sequence 1 exwm-workspace-number))))
       (exwm-randr--refresh)
       (message "Display: %s refreshed." (string-join connected ", "))))
