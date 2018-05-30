@@ -99,7 +99,7 @@
 	url = git@github.com:hlissner/emacs-counsel-css.git
 [submodule "counsel-org-clock"]
 	path = lib/counsel-org-clock
-	url = git@github.com:dakra/dmacs.git
+	url = git@github.com:akirak/counsel-org-clock.git
 [submodule "counsel-projectile"]
 	path = lib/counsel-projectile
 	url = git@github.com:ericdanan/counsel-projectile.git
@@ -314,7 +314,7 @@
 	url = git@github.com:emacs-evil/goto-chg.git
 [submodule "gpastel"]
 	path = lib/gpastel
-	url = git@github.com:dakra/dmacs.git
+	url = https://gitlab.petton.fr/DamienCassou/gpastel.git
 [submodule "graphviz-dot-mode"]
 	path = lib/graphviz-dot-mode
 	url = git@github.com:ppareit/graphviz-dot-mode.git
