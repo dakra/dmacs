@@ -6691,13 +6691,15 @@ It only works for frames with exactly two windows."
 #+BEGIN_SRC emacs-lisp
 (use-package emms
   :bind (:map dired-mode-map
-         ("M-RET" . emms-play-dired))
+         ("M-RET" . emms-play-dired)))
+
+(use-package emms-player-mpv
+  :after emms
   :config
-  (require 'emms-player-mpv)
   (setq emms-player-list '(emms-player-mpv))
+  (setq emms-player-mpv-ipc-method 'file)
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
 #+END_SRC
-
 * Misc
 ** Gif-Screencasts: One-frame-per-action GIF recording
 You need to install ~scrot~, ImageMagick (~convert~) and optional ~Gifsicle~.
