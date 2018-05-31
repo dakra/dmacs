@@ -4137,12 +4137,9 @@ displayed anywhere else."
          ;; Complete yasnippets with company. No need for extra bindings
          ;;("TAB"     . nil)  ; Remove Yasnippet's default tab key binding
          ;;([tab]     . nil)
-         ("<backtab>" . yas-expand)  ; Set Yasnippet's key binding to shift+tab
-         ("\C-c TAB" . yas-expand)  ; Alternatively use Control-c + tab
-         )
+         ;; Set Yasnippet's key binding to C-tab
+         ("\C-c TAB" . yas-expand))
   :config
-  ;;(setq-default yas-snippet-dirs '("~/.emacs.d/personal/snippets"))
-  ;;(add-to-list 'yas-snippet-dirs "~/.emacs.d/personal/snippets")
   (yas-global-mode 1))
 
 (use-package shrink-whitespace
