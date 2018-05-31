@@ -1832,6 +1832,7 @@ go up multiple parent directories."
     ("m" mu4e "mu4e - Mail")
     ("p" proced "proced")
     ("T" display-time-world "time - Display world time")
+    ("v" ovpn "VPN")
     ("w" woman "woman - Man page viewer")
     ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
     ("z" zone "Zone - Screensaver"))
