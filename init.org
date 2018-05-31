@@ -1319,6 +1319,8 @@ Move current line or region with M-up or M-down.
 
 (use-package dired+
   :after dired
+  :bind (:map dired-mode-map
+         ("M-u" . diredp-up-directory-reuse-dir-buffer))
   :init
   ;; Show details by default  (diredp hides it)
   (setq diredp-hide-details-initially-flag nil)
