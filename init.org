@@ -3744,13 +3744,6 @@ displayed anywhere else."
           (kill-buffer buffer))))))
 ;;(add-to-list 'delete-frame-functions #'maybe-delete-frame-buffer)
 
-(defun dakra-delete-frame-maybe-kill-buffer (p)
-  "Call (delete-frame) or (kill-buffer) and (delete-frame) when called with prefix argument."
-  (interactive "P")
-  (when p
-    (maybe-delete-frame-buffer (selected-frame)))
-  (delete-frame))
-
 (use-package outline
   :hook (((message-mode emacs-lisp) . outline-minor-mode)
          (python-mode . python-outline-minor-mode))
