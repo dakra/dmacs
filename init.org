@@ -3535,6 +3535,38 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 #+END_SRC
 
 ** Typescript
+Format options can be specified in the ~tide-format-options~ variable
+or via tsfmt.json (present in the root folder along with tsconfig.json):
+#+begin_src json :tangle no
+{
+  "indentSize": 4,
+  "tabSize": 4,
+  "insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": false,
+  "placeOpenBraceOnNewLineForFunctions": false,
+  "placeOpenBraceOnNewLineForControlBlocks": false
+}
+#+END_SRC
+See
+https://github.com/Microsoft/TypeScript/blob/cc58e2d7eb144f0b2ff89e6a6685fb4deaa24fde/src/server/protocol.d.ts#L421-473
+for the full list available options
+
+To edit javascript with typescript
+create `jsconfig.json` in the root folder of your project.
+`jsconfig.json` is `tsconfig.json` with `allowJs` attribute set to
+true.
+#+begin_src json :tangle no
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "checkJs": true,
+    "jsx": "react",
+    "lib": [ "dom", "es2017" ]
+  }
+}
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 ;; TypeScript
 (use-package typescript-mode
@@ -3542,31 +3574,18 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 
 (use-package tide
   :commands (setup-tide-mode tide-mode company-tide)
-  ;; https://github.com/ananthakumaran/tide#javascript
-  ;; https://www.reddit.com/r/emacs/comments/68zacv/using_tidemode_to_typecheck_javascript/
-  :hook ((typescript-mode js2-mode) . setup-tide-mode)
+  :hook ((typescript-mode js2-mode) . tide-setup)
   :config
   (setq typescript-indent-level 2)
-  (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
-    ;;(eldoc-mode +1)
-    (tide-hl-identifier-mode +1)
-    ;;(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))  ; add tide yasnippets as company backend
-    ;;(company-mode +1)
-    )
-  ;; configure javascript-tide checker to run after your default javascript checker
-  ;; FIXME: javascript-tide is not a valid Flycheck syntax checker
-  ;;(flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
 
-  ;; formats the buffer before saving
+  ;; Configure javascript-tide checker to run after your default javascript checker
+  (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+
+  ;; Format the buffer before saving
   ;; FIXME: auto indent doesn't respect editorconfig
   ;;(add-hook 'before-save-hook 'tide-format-before-save)
-  ;; format options
-  (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
-  ;; see https://github.com/Microsoft/TypeScript/blob/cc58e2d7eb144f0b2ff89e6a6685fb4deaa24fde/src/server/protocol.d.ts#L421-473 for the full list available options
-  )
+  (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t
+                              :placeOpenBraceOnNewLineForFunctions nil)))
 #+END_SRC
 ** Web
 #+BEGIN_SRC emacs-lisp
