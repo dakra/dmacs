@@ -6356,14 +6356,14 @@ Only works *before* exwm in initialized."
    '("s-R" . exwm-reset)
    '("s-w" . exwm-workspace-switch)
    ;; Moving/editing windows
-   '("s-j"       . windmove-left)
+   '("s-j"       . exwm-windmove-left)
    '("s-k"       . windmove-down)
    '("s-i"       . windmove-up)
-   '("s-l"       . windmove-right)
-   '("<s-left>"  . windmove-left)
+   '("s-l"       . exwm-windmove-right)
+   '("<s-left>"  . exwm-windmove-left)
    '("<s-down>"  . windmove-down)
    '("<s-up>"    . windmove-up)
-   '("<s-right>" . windmove-right)
+   '("<s-right>" . exwm-windmove-right)
    '("s-\\"       . toggle-window-split)
    '("s-J"       . swap-windows-left)
    '("s-K"       . swap-windows-below)
@@ -6393,6 +6393,31 @@ Only works *before* exwm in initialized."
     (if (> (+ exwm-workspace-current-index p) (1- (length exwm-workspace--list)))
         (exwm-workspace-switch 0)
       (exwm-workspace-switch (+ exwm-workspace-current-index p))))
+
+  (require 'windmove)
+  (defun exwm-windmove-left (&optional arg)
+    "Like windmove-left but go to previous workspace if there is
+no window on the left."
+    (interactive "P")
+    (if (windmove-find-other-window 'left arg)
+        (windmove-do-window-select 'left arg)
+      ;; No window to the left
+      ;; Switch to previous workspace and select rightmost window
+      (exwm-workspace-switch-previous 1)
+      (while (windmove-find-other-window 'right arg)
+        (windmove-do-window-select 'right arg))))
+
+  (defun exwm-windmove-right (&optional arg)
+    "Like windmove-right but go to previous workspace if there is
+no window on the right."
+    (interactive "P")
+    (if (windmove-find-other-window 'right arg)
+        (windmove-do-window-select 'right arg)
+      ;; No window to the left
+      ;; Switch to previous workspace and select rightmost window
+      (exwm-workspace-switch-next 1)
+      (while (windmove-find-other-window 'left arg)
+        (windmove-do-window-select 'left arg))))
 
   ;; 's-N': Switch to certain workspace
   (dotimes (i 8)
