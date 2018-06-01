@@ -2598,7 +2598,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
 ** Haskell
 #+begin_src emacs-lisp
 (use-package haskell-mode
-  :hook (haskell-mode . turn-on-haskell-indentation))
+  :hook (haskell-mode . haskell-indentation-mode))
 
 (use-package intero
   :hook (haskell-mode . intero-mode))
@@ -6940,7 +6940,7 @@ if __name__ == '__main__':
   (defun elfeed-mark-all-as-read ()
     "Mark all as read."
     (interactive)
-    (mark-whole-buffer)
+    (call-interactively 'mark-whole-buffer)
     (elfeed-search-untag-all-unread))
 
   (defun elfeed-reset-filter ()
