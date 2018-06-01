@@ -2292,6 +2292,9 @@ file to edit."
 
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
+  ;; Show gravatars
+  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+
   (setq magit-repository-directories
         '(("~/atomx" . 5)
           ("~/e5" . 5)
