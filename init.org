@@ -1820,8 +1820,9 @@ go up multiple parent directories."
     ("oi" org-toggle-inline-images "org inline-images")
     ("w" whitespace-mode "whitespace-mode"))
 
+  ;; Start different emacs packages (like elfeed or mu4e)
   (defhydra hydra-emacs-launcher (:color blue :hint nil)
-    "Start different emacs packages (like elfeed or mu4e)."
+    "Launch emacs package"
     ("b" brain-fm-play "brain.fm - Stream music")
     ("c" quick-calc "calc - Quick calc")
     ("C" calendar "calendar")
@@ -1837,9 +1838,10 @@ go up multiple parent directories."
     ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
     ("z" zone "Zone - Screensaver"))
 
+  ;; Start different external programs (like Termite or Firefox).
   (defhydra hydra-external-launcher (:color blue :hint nil)
-    "Start different external programs (like Termite or Firefox)."
-    ("P" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
+    "Start external program"
+    ("p" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
     ("f" (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition") "Firefox Developer Edition")
     ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
     ("l" (start-process-shell-command "i3lock-fancy" nil "i3lock-fancy") "Lock screen")
