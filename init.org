@@ -2268,7 +2268,6 @@ file to edit."
          ("s-m f" . magit-log-buffer-file)
          ("s-m b" . magit-blame))
   :defines (magit-ediff-dwim-show-on-hunks)
-  :commands (magit-status magit-list-repositories magit-log magit-log-buffer-file magit-list-submodules)
   :init
   (defcustom magit-push-protected-branch nil
     "When set, ask for confirmation before pushing to this branch (e.g. master)."
@@ -2301,6 +2300,10 @@ file to edit."
         '(("~/atomx" . 5)
           ("~/e5" . 5)
           ("~/projects" . 5)))
+
+  ;; Add action to easily create a release tag to tag popup
+  (magit-define-popup-action 'magit-tag-popup
+    ?r "Release" 'magit-tag-release)
 
   ;; "b b" is only for checkout and doesn't automatically create a new branch
   ;; remap to `magit-branch-or-checkout' that checks out an existing branch
