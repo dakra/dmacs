@@ -2323,6 +2323,11 @@ file to edit."
                           'magit-insert-stashes
                           'append)
 
+  ;; Show ignored files section to magit status
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-ignored-files
+                          'magit-insert-untracked-files
+                          nil)
   ;; Disable safety nets
   (setq magit-commit-squash-confirm nil)
   (setq magit-save-repository-buffers 'dontask)
