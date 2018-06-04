@@ -3039,8 +3039,8 @@ $ sbcl
     "Start pyramid pserve or django runserver."
     (interactive)
     (if (pyramid-project-root)
-        (pyramid-serve t)
-      (python-django-manage-runserver)))
+        (pyramid-serve)
+      (djangonaut-run-management-command "runserver")))
 
   (defhydra hydra-python (python-mode-map "C-c C-p" :color blue :hint nil)
     "
@@ -3123,81 +3123,20 @@ $ sbcl
 
 (use-package sphinx-mode :defer t)
 
-
-(defgroup python-django nil
-  "Python Django integration"
-  :prefix "python-django-"
-  :group 'compilation)
-
-(defcustom python-django-settings nil
-  "Django settings file to use for running management command."
-  :type 'string
-  :safe #'stringp
-  :group 'python-django)
-
-
 (use-package python-test
   ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
   :after python
   :config
   ;; Set default test backend to pytest
-  (setq python-test-backend 'pytest)
-
-  ;; Django stuff
-  (defun python-django-get-manage.py ()
-    (format "%smanage.py"
-            (expand-file-name (locate-dominating-file buffer-file-name "manage.py"))))
-
-  (define-compilation-mode python-django-mode "python-django"
-    "Django management compilation mode"
-    ;;(add-hook 'compilation-filter-hook 'comint-truncate-buffer)
-    (add-hook 'compilation-filter-hook 'python-test-track-pdb-prompt t t)
-    (add-hook 'compilation-filter-hook 'python-test-ansi-color-filter nil t))
-
-  (defun dakra-python-comint-eof-back-to-compilation (arg)
-    "Delete ARG characters forward or send an EOF to subprocess and return to compilation mode.
-Sends an EOF only if point is at the end of the buffer and there is no input."
-    (interactive "p")
-    (let ((proc (get-buffer-process (current-buffer))))
-      (if (and (eobp) proc (= (point) (marker-position (process-mark proc))))
-          (progn
-            (comint-send-eof)
-            (python-test-back-to-compilation))
-        (delete-char arg))))
-  (define-key python-django-mode-map (kbd "p") #'compilation-previous-error)
-  (define-key python-django-mode-map (kbd "n") #'compilation-next-error)
-  ;; FIXME: put this in python-test-track-pdb-prompt function and restore keybinding after
-  ;;    also use `local-set-key` for buffer local keybinding
-  ;;    and check RET if last command was only "c" or "continue"
-  ;;    maybe fix with comint-input-filter-functions ?
-  (define-key inferior-python-mode-map (kbd "C-d") #'dakra-python-comint-eof-back-to-compilation)
-
-  (defun python-django-manage-command (command)
-    "Run Django manage.py COMMAND."
-    (interactive
-     (list (completing-read "python manage.py "
-                            '("check" "clearsessions" "collectstatic"
-                              "makemessages" "makemigrations" "migrate" "showmigrations"))))
-    (python-test-with-environment
-      (compilation-start (format "python %s %s %s"
-                                 (python-django-get-manage.py)
-                                 command
-                                 (if python-django-settings
-                                     (format "--settings=%s" python-django-settings)
-                                   ""))
-                         #'python-django-mode
-                         (lambda (_mode) (format "*django manage.py %s*" command)))))
-
-  (defun python-django-manage-runserver ()
-    "Run Django command `python manage.py runserver'"
-    (interactive)
-    (python-django-manage-command "runserver")))
+  (setq python-test-backend 'pytest))
 
 (use-package pyramid
-  :defer t)
+  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
+  :after python)
 
 (use-package djangonaut
-  :defer t)
+  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
+  :after python)
 
 
 ;; Enable (restructured) syntax highlighting for python docstrings
