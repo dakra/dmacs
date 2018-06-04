@@ -6360,7 +6360,7 @@ Only works *before* exwm in initialized."
     "Like windmove-left but go to previous workspace if there is
 no window on the left."
     (interactive "P")
-    (if (windmove-find-other-window 'left arg)
+    (if (or (<= exwm-connected-displays 1) (windmove-find-other-window 'left arg))
         (windmove-do-window-select 'left arg)
       ;; No window to the left
       ;; Switch to previous workspace and select rightmost window
@@ -6372,7 +6372,7 @@ no window on the left."
     "Like windmove-right but go to previous workspace if there is
 no window on the right."
     (interactive "P")
-    (if (windmove-find-other-window 'right arg)
+    (if (or (<= exwm-connected-displays 1) (windmove-find-other-window 'right arg))
         (windmove-do-window-select 'right arg)
       ;; No window to the left
       ;; Switch to previous workspace and select rightmost window
@@ -6415,6 +6415,9 @@ no window on the right."
   (require 'exwm-randr)
   ;; Dynamic xrandr config ideas from https://github.com/ch11ng/exwm/issues/202
 
+  (defvar exwm-connected-displays 1
+    "Number of connected displays.")
+
   ;; Update exwm-randr-workspace-output-plist with 2 or 3 outputs named
   ;; 'primary' and 'other-1'/'other-2'.
   ;; With 3 outputs connected the first workspace will be primary,
@@ -6427,6 +6430,7 @@ no window on the right."
            (primary (car connected))  ; Primary display is always first in list
            (other-1 (cadr connected))
            (other-2 (caddr connected)))
+      (setq exwm-connected-displays (length connected))
       (setq exwm-randr-workspace-output-plist
             (append (list 0 primary)
                     (list 1 (or other-2 primary))
