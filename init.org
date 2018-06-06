@@ -651,6 +651,25 @@ different face
   (setq zmx-unicode-mode t))
 #+end_src
 * Editor
+Lossage
+#+begin_src emacs-lisp
+(defun update-lossage-buffer ()
+  "Update the \"Lossage\" buffer.
+For this to work, visit the lossage buffer, and call
+M-x rename-buffer Lossage RET"
+  (save-excursion
+    (let ((b (get-buffer "Lossage")))
+      (when (buffer-live-p b)
+        (with-current-buffer b
+          (revert-buffer nil 'noconfirm))))))
+
+(defun view-lossage-live ()
+  "Update lossage"
+  (interactive)
+  (add-hook 'post-command-hook #'update-lossage-buffer nil 'local))
+#+END_SRC
+
+
 #+BEGIN_SRC emacs-lisp
 (use-package hippie-exp
   :bind (("M-/" . hippie-expand))
