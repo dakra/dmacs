@@ -1275,6 +1275,7 @@ Move current line or region with M-up or M-down.
 (use-package dired
   :bind (("C-x d" . dired)
          :map dired-mode-map
+         ("M-RET" . emms-play-dired)
          ("e" . dired-ediff-files)
          ("C-c C-e" . dired-toggle-read-only))
   :config
@@ -6702,8 +6703,7 @@ It only works for frames with exactly two windows."
 ** Emms
 #+BEGIN_SRC emacs-lisp
 (use-package emms
-  :bind (:map dired-mode-map
-         ("M-RET" . emms-play-dired)))
+  :defer t)
 
 (use-package emms-player-mpv
   :after emms
