@@ -1347,28 +1347,7 @@ Move current line or region with M-up or M-down.
   :config
   ;; Reuse dired buffers
   ;; We use dired-open and also overwrite the dired-find-file there
-  (diredp-toggle-find-file-reuse-dir 1)
-
-  ;; Remove stupid font-locking
-  (setf (nth 3 diredp-font-lock-keywords-1)
-        ;; Properly handle the extensions
-        '("[^ .\\/]\\(\\.[^. /]+\\)$" 1 diredp-file-suffix))
-  (setf (nth 4 diredp-font-lock-keywords-1)
-        ;; Properly handle the extensions
-        '("\\([^ ]+\\) -> .+$" 1 diredp-symlink))
-  (setf (nth 6 diredp-font-lock-keywords-1)
-        (list (concat
-               "^  \\(.*\\("
-               (concat
-                (mapconcat
-                 'regexp-quote
-                 (or (and (boundp 'dired-omit-extensions)
-                          dired-omit-extensions)
-                     completion-ignored-extensions)
-                 "[*]?\\|")
-                "[*]?")        ; Allow for executable flag (*).
-               "\\)\\)$") ; Do not treat compressed files as garbage... why the hell!
-              1 diredp-ignored-file-name t)))
+  (diredp-toggle-find-file-reuse-dir 1))
 
 ;; Display the recursive size of directories in Dired
 (use-package dired-du
