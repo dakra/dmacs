@@ -419,8 +419,19 @@ Allow some commands as safe by default
 #+end_src
 ** Compile
 #+BEGIN_SRC emacs-lisp
-(use-package compile :defer t
+(use-package compile
+  :bind (:map compilation-mode-map
+         ("C-c -" . compilation-add-separator)
+         ("-" . compilation-add-separator)
+         :map comint-mode-map
+         ("C-c -" . compilation-add-separator))
   :config
+  (defun compilation-add-separator ()
+    "Insert separator in read-only buffer."
+    (interactive)
+    (let ((inhibit-read-only t))
+      (insert "\n------------------------\n\n")))
+
   ;; Always save before compiling
   (setq compilation-ask-about-save nil)
   ;; Just kill old compile processes before starting the new one
