@@ -3148,7 +3148,8 @@ $ sbcl
 
 ;; Automatically sort and format python imports
 (use-package py-isort
-  :defer t
+  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
+  :after python
   :config
   ;;(add-hook 'before-save-hook 'py-isort-before-save)
   (setq py-isort-options '("--line-width=100"
