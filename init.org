@@ -4208,6 +4208,9 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   ;; Show headings up to level 2 by default when opening an org files
   ;;(setq org-startup-folded 'content)
 
+  ;; Show inline images by default
+  (setq org-startup-with-inline-images t)
+
   ;; Add more levels to headlines that get displayed with imenu
   (setq org-imenu-depth 5)
 
