@@ -708,16 +708,34 @@ M-x rename-buffer Lossage RET"
 
 (use-package smartparens
   :defer 1
-  :hook ((emacs-lisp-mode lisp-mode hy-mode) . smartparens-strict-mode)
+  ;;:hook ((emacs-lisp-mode lisp-mode hy-mode) . smartparens-strict-mode)
+  :hook (prog-mode . smartparens-strict-mode)
+  :bind (:map smartparens-mode-map
+         ;; This is the paredit mode map minus a few key bindings
+         ;; that I use in other modes (e.g. M-?)
+         ("C-M-f" . sp-forward-sexp) ;; navigation
+         ("C-M-b" . sp-backward-sexp)
+         ("C-M-u" . sp-backward-up-sexp)
+         ("C-M-d" . sp-down-sexp)
+         ("C-M-p" . sp-backward-down-sexp)
+         ("C-M-n" . sp-up-sexp)
+         ("M-s" . sp-splice-sexp) ;; depth-changing commands
+         ("M-r" . sp-splice-sexp-killing-around)
+         ("M-(" . sp-wrap-round)
+         ("C-)" . sp-forward-slurp-sexp) ;; barf/slurp
+         ("C-<right>" . sp-forward-slurp-sexp)
+         ("C-}" . sp-forward-barf-sexp)
+         ("C-<left>" . sp-forward-barf-sexp)
+         ("C-(" . sp-backward-slurp-sexp)
+         ("C-M-<left>" . sp-backward-slurp-sexp)
+         ("C-{" . sp-backward-barf-sexp)
+         ("C-M-<right>" . sp-backward-barf-sexp)
+         ("M-S" . sp-split-sexp) ;; misc
+         ("M-j" . sp-join-sexp))
   :config
   (require 'smartparens-config)
   (setq sp-base-key-bindings 'paredit)
   (setq sp-autoskip-closing-pair 'always)
-  (setq sp-hybrid-kill-entire-symbol nil)
-  (sp-use-paredit-bindings)
-  ;; Remove sp keybinding for org-metaup/down to work
-  (unbind-key "<M-up>" smartparens-mode-map)
-  (unbind-key "<M-down>" smartparens-mode-map)
 
   ;; Always highlight matching parens
   (show-smartparens-global-mode +1)
