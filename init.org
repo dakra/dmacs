@@ -6527,11 +6527,21 @@ no window on the right."
       (start-process-shell-command "reboot" nil "reboot")))
 
   ;; Start some apps
-  (defun exwm-startup-apps ()
-    "Start some applications after exwm init"
+  (defun exwm-startup-external-apps ()
+    "Start some applications after exwm init."
+    ;; Start some external apps
     (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
     (start-process-shell-command "pidgin" nil "pidgin")
     (start-process-shell-command "kdeconnect-indicator" nil "kdeconnect-indicator")
+
+    ;; Some always used Emacs apps
+    (org-agenda nil " ")
+    (pop-to-buffer (eshell))
+    (pop-to-buffer (mu4e))
+    (pop-to-buffer (elfeed))
+    (pop-to-buffer (find-file "~/.emacs.d/init.org"))
+    (sql-init-passwords)
+
     (start-process-shell-command "keepassxc" nil "keepassxc"))
 
   ;; Enable EXWM
