@@ -257,7 +257,7 @@
 	url = git@github.com:alpaker/Fill-Column-Indicator.git
 [submodule "fish-completion"]
 	path = lib/fish-completion
-	url = git@github.com:Ambrevar/emacs-fish-completion.git
+	url = git@gitlab.com:Ambrevar/emacs-fish-completion.git
 [submodule "fish-mode"]
 	path = lib/fish-mode
 	url = git@github.com:wwwjfy/emacs-fish.git
@@ -293,7 +293,7 @@
 	url = git@github.com:vermiculus/ghub-plus.git
 [submodule "gif-screencast"]
 	path = lib/gif-screencast
-	url = git@github.com:Ambrevar/emacs-gif-screencast.git
+	url = git@gitlab.com:Ambrevar/emacs-gif-screencast.git
 [submodule "git-modes"]
 	path = lib/git-modes
 	url = git@github.com:magit/git-modes.git
