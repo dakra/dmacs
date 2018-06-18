@@ -3312,6 +3312,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   :mode (("\\.sql\\'" . sql-mode)
          ("\\.msql\\'" . sql-mode))  ; Mako template sql
   :hook (sql-interactive-mode . toggle-truncate-lines)
+  :commands sql-init-passwords
   :bind (:map sql-interactive-mode-map
          ("M-p" . comint-previous-prompt)
          ("M-n" . comint-next-prompt)
@@ -3363,85 +3364,66 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
         (message "Beginning of prompt")
       (delete-char (- n))))
 
-  ;; Fix prompt detection for mariadb
-  (sql-set-product-feature 'mysql :prompt-regexp "^\\(MariaDB\\|MySQL\\|mysql\\) ?\\[?[_a-zA-Z0-9]*\\]?> ")
-
-  (setq sql-product 'mysql)
+  (setq sql-product 'postgres)
   (setq sql-connection-alist
-        '((atomx-local-api (sql-product 'mysql)
-                           (sql-server "localhost")
+        '((atomx-local     (sql-product 'mariadb)
+                           (sql-user "api")
+                           (sql-database "atomx_api"))
+          (atomx-remote    (sql-product 'mysql)
+                           (sql-port 3307)
                            (sql-user "root")
-                           (sql-database "api"))
-          (atomx-remote-api (sql-product 'mysql)
-                            (sql-server "127.0.0.1")
-                            (sql-port 3307)
-                            (sql-user "root")
-                            (sql-database "api")
-                            (sql-mysql-options '("-A")))
-          (hogaso-remote (sql-product 'mysql)
-                         (sql-server "127.0.0.1")
-                         (sql-port 3307)
-                         (sql-user "root")
-                         (sql-database "naehmaschinen")
-                         (sql-mysql-options '("-A")))
+                           (sql-database "api")
+                           (sql-mysql-options '("-A")))
+          (hogaso-remote   (sql-product 'mysql)
+                           (sql-port 3307)
+                           (sql-user "root")
+                           (sql-database "hogaso")
+                           (sql-mysql-options '("-A")))
           (paessler-docker (sql-product 'mysql)
-                           (sql-server "127.0.0.1")
                            (sql-port 3308)
                            (sql-user "root")
                            (sql-database "paessler_com2"))
-          (neorent-local (sql-product 'postgres)
-                         (sql-server "127.0.0.1")
-                         (sql-port 5432)
-                         (sql-user "neoadmin")
-                         (sql-database "neorent"))
-          (neorent-remote (sql-product 'postgres)
-                          (sql-server "decisive-plate-71.db.databaselabs.io")
-                          (sql-port 5432)
-                          (sql-user "neouser")
-                          (sql-database "neorent"))))
+          (paessler-local      (sql-product 'mariadb)
+                               (sql-user "website")
+                               (sql-database "paessler_com2"))
+          (shop-local      (sql-product 'mariadb)
+                           (sql-user "bis")
+                           (sql-database "bis"))
+          (blif-local      (sql-product 'postgres)
+                           (sql-user "blif2")
+                           (sql-database "blif2"))
+          (blif-remote     (sql-product 'postgres)
+                           (sql-port 5433)
+                           (sql-user "blif2")
+                           (sql-database "blif2"))
+          (neorent-local   (sql-product 'postgres)
+                           (sql-user "neoadmin")
+                           (sql-database "neorent"))
+          (neorent-remote  (sql-product 'postgres)
+                           (sql-server "decisive-plate-71.db.databaselabs.io")
+                           (sql-user "neouser")
+                           (sql-database "neorent"))))
+
+  ;; FIXME: make advice around sqlconnect or load after exwm?
+  (defun sql-init-passwords ()
+    "Fill sql-connection-alist with passwords from =~/.authinfo.gpg=."
+    (interactive)
+    (auth-source-forget-all-cached)  ;; FIXME
+    (dolist (conn sql-connection-alist)
+      (let* ((conn-name    (car conn))
+             (conn-details (cdr conn))
+             (host         (or (cadr (assoc 'sql-server conn-details)) "127.0.0.1"))
+             (user         (symbol-name conn-name))
+             (password     (auth-source-pick-first-password :host host :user user)))
+        (unless password
+          (message "No password set for sql connection %s in authinfo." conn-name))
+        ;; Add password to each antry from .authinfo.gpg
+        (nconc conn-details `((sql-password ,password)))
+        ;; When there is no sql-server set, set it to "127.0.0.1"
+        (unless (assoc 'sql-server conn-details)
+          (nconc conn-details '((sql-server "127.0.0.1")))))))
 
   (setq sql-mysql-login-params (append sql-mysql-login-params '(port)))
-
-  (defun dakra/sql-postgres-neorent-local ()
-    (interactive)
-    (dakra/sql-connect 'postgres 'neorent-local))
-
-  (defun dakra/sql-postgres-neorent-remote ()
-    (interactive)
-    (dakra/sql-connect 'postgres 'neorent-remote))
-
-  (defun dakra/sql-atomx-local-api ()
-    (interactive)
-    (dakra/sql-connect 'mysql 'atomx-local-api))
-
-  (defun dakra/sql-atomx-remote-api ()
-    (interactive)
-    (dakra/sql-connect 'mysql 'atomx-remote-api))
-
-  (defun dakra/sql-hogaso-remote ()
-    (interactive)
-    (dakra/sql-connect 'mysql 'hogaso-remote))
-
-  (defun dakra/sql-paessler-docker ()
-    (interactive)
-    (dakra/sql-connect 'mysql 'paessler-docker))
-
-  (defun dakra/sql-connect (product connection)
-    ;; load the password
-    (require 'dakra-passwords "~/.emacs.d/dakra-passwords.el.gpg")
-
-    ;; update the password to the sql-connection-alist
-    (let ((connection-info (assoc connection sql-connection-alist))
-          (sql-password (car (last (assoc connection dakra-sql-passwords)))))
-      (delete sql-password connection-info)
-      (nconc connection-info `((sql-password ,sql-password)))
-      (setq sql-connection-alist (assq-delete-all connection sql-connection-alist))
-      (add-to-list 'sql-connection-alist connection-info))
-
-    ;; connect to database
-    (setq sql-product product)
-    (sql-connect connection)
-    (rename-buffer (format "*SQL-%s*" connection)))
 
   (setq sql-mysql-login-params
         '((user :default "daniel")
