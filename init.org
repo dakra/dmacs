@@ -4694,6 +4694,9 @@ session as the current block. ARG has same meaning as in
   (defun org-babel-execute:inline-js (body _params)
     (format "<script type=\"text/javascript\">\n%s\n</script>" body))
 
+  ;; Path when plantuml is installed from AUR (package `plantuml')
+  (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
+
   ;; add all languages to org mode
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -4727,7 +4730,7 @@ session as the current block. ARG has same meaning as in
      (org . t)
      (perl)
      (picolisp)
-     (plantuml)
+     (plantuml . t)
      (python . t)
      (ipython . t)
      (restclient . t)
