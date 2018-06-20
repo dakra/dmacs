@@ -3124,7 +3124,8 @@ $ sbcl
 
 (use-package anaconda-mode
   :bind (:map anaconda-mode-map
-         ("M-." . python-goto-sql-file-or-definition))
+         ("M-." . python-goto-sql-file-or-definition)
+         ("M-," . anaconda-mode-find-assignments))
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode))
   :config
@@ -3134,7 +3135,8 @@ $ sbcl
     (back-button-push-mark-local-and-global)
     (if arg
         (projectile-find-sql-file)
-      (anaconda-mode-find-definitions))))
+      (anaconda-mode-find-definitions)
+      (recenter))))
 
 (use-package company-anaconda
   :after anaconda-mode
