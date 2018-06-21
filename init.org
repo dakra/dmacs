@@ -1934,6 +1934,8 @@ go up multiple parent directories."
                '((regexp-quote (system-name)) nil nil))
   (add-to-list 'tramp-default-proxies-alist
                '("localhost" nil nil))
+  (add-to-list 'tramp-default-proxies-alist
+               '("blif\\.vpn" nil nil))
   ;; add tramp proxy for atomx user
   (add-to-list 'tramp-default-proxies-alist '(nil "atomx" "/ssh:%h:")))
 #+END_SRC
