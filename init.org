@@ -7218,6 +7218,31 @@ Run ~M-x esup~ to see where the time is spend during emacs startup.
   :defer t
   :config (setq esup-user-init-file "~/.emacs.d/emacs.el"))
 #+END_SRC
+** Unsortet stuff in no packages
+Probably create a `dakra` package (again) to lazy load all those commands.
+#+begin_src emacs-lisp
+(defun borg-sync-drone-urls ()
+  "Offer to update outdated upstream urls of all drones."
+  (interactive)
+  (let (moved)
+    (dolist (drone (borg-clones))
+      (let ((a (borg-get drone "url"))
+            (b (ignore-errors (oref (epkg drone) url))))
+        (when (and b (not (magit--github-url-equal a b)))  ;; when (and b (not (magit--forge-url-equal a b)))
+          (push (list drone a b) moved))))
+    (when (and moved
+               (yes-or-no-p
+                (concat (mapconcat (pcase-lambda (`(,drone ,a ,b))
+                                     (format "%s: %s => %s" drone a b))
+                                   moved "\n")
+                        "\n\nThese upstream repositories appear to have moved."
+                        "\s\sUpdate local configuration accordingly? ")))
+      (let ((default-directory borg-user-emacs-directory))
+        (pcase-dolist (`(,drone ,_ ,b) moved)
+          (process-file "git" nil nil nil "config" "-f" ".gitmodules"
+                        (format "submodule.%s.url" drone) b))
+        (process-file "git" nil nil nil "submodule" "sync")))))
+#+end_src
 * Post Initialization
 #+begin_src emacs-lisp
 (message "Loading %s...done (%.3fs)" user-init-file
