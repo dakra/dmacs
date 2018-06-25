@@ -29,19 +29,19 @@ each time you make a change or ~make build-init~ if you only made
 changes to this file.
 * Emacs Initialization
 We want to use lexical scoping
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;;; init.el --- user-init-file                    -*- lexical-binding: t -*-
-#+end_src
+#+END_SRC
 
 Show a few messages with timestamps to get a better overview of how fast
 Emacs is loading certain packages.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (defvar before-user-init-time (current-time)
     "Value of `current-time' when Emacs begins loading `user-init-file'.")
   (message "Loading Emacs...done (%.3fs)"
            (float-time (time-subtract before-user-init-time
                                       before-init-time)))
-#+end_src
+#+END_SRC
 
 We're going to increase the gc-cons-threshold to a very high number to decrease
 the load and compile time.  We'll lower this value significantly after
@@ -53,15 +53,15 @@ will result in long GC pauses during normal usage.
 #+END_SRC
 
 Temporarily disable file name handlers as it's not needed on initialization
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defvar file-name-handler-alist-old file-name-handler-alist)
 (setq file-name-handler-alist nil)
-#+end_src
+#+END_SRC
 
 Increase max number of log messages
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq message-log-max 16384)
-#+end_src
+#+END_SRC
 
 Disable certain byte compiler warnings to cut down on the noise. This is a
 personal choice and can be removed if you would like to see any and all byte
@@ -73,27 +73,27 @@ compiler warnings.
 
 ** Set some early UI settings
 Disable Tool- and Menubar
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-#+end_src
+#+END_SRC
 
 Set fringe to a small value so we don't have big borders in exwm
 but can still see our diff-hl colors in the fringe
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (fringe-mode '(3 . 1))
-#+end_src
+#+END_SRC
 
 Disable startup screen and startup echo area message and select the
 scratch buffer by default
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-buffer-menu t)
 (setq inhibit-startup-screen t)
 (setq inhibit-startup-echo-area-message "daniel")
 (setq initial-buffer-choice t)
 (setq initial-scratch-message nil)
-#+end_src
+#+END_SRC
 
 ** Package Management
 *** Org config tangle
@@ -107,9 +107,9 @@ calls ~make~ every time you save this file.
 We use borg for package management and disable ~package.el~.
 
 Since Emacs 27.1 we have to disable package.el in the early init file.
-#+begin_src emacs-lisp :tangle early-init.el
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
 (setq package-enable-at-startup nil)
-#+end_src
+#+END_SRC
 
 But still leave it here so it's also disabled on machines that don't
 have the latest Emacs from master installed.
@@ -119,13 +119,13 @@ have the latest Emacs from master installed.
 ;; (setq load-prefer-newer t)
 #+END_SRC
 *** Borg
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq user-init-file (or load-file-name buffer-file-name))
 (setq user-emacs-directory (file-name-directory user-init-file))
 (add-to-list 'load-path (expand-file-name "lib/borg" user-emacs-directory))
 (require 'borg)
 (borg-initialize)
-#+end_src
+#+END_SRC
 *** Use-Package
 #+BEGIN_SRC emacs-lisp
 ;;(defvar use-package-enable-imenu-support t)
@@ -143,9 +143,9 @@ have the latest Emacs from master installed.
 ;;(autoload #'use-package-autoload-keymap "use-package")
 #+END_SRC
 *** Epkg
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package epkg :defer t)
-#+end_src
+#+END_SRC
 * Don't litter configs
 #+BEGIN_SRC emacs-lisp
 (use-package no-littering
@@ -174,7 +174,7 @@ with ~xrdb .Xresources~ so Emacs loads the right font
 even before loading this config and don't flicker from
 white to black background when first starting.
 
-#+begin_src conf :tangle no
+#+BEGIN_SRC conf :tangle no
 ! Emacs settings so they are set even before Emacs starts
 ! See: https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html#Table-of-Resources
 Emacs.font: Operator Mono-7:weight=medium:width=normal
@@ -183,12 +183,12 @@ Emacs.reverseVideo: on
 Emacs.menuBar: 0
 Emacs.toolBar: 0
 Emacs.verticalScrollBars: off
-#+end_src
+#+END_SRC
 
 If you don't set your Xresources, you can load the font with:
-#+begin_src emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle no
 (set-frame-font "Operator Mono-7:weight=medium:width=normal" nil t)
-#+end_src
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package color-theme-sanityinc-tomorrow
@@ -335,7 +335,7 @@ Allow some commands as safe by default
 #+END_SRC
 * Configure Emacs builtin packages
 ** Simple: Change some default keybinding (kill-this-buffer, up/downcase-dwim)
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package simple
   :bind (("C-x k" . dakra-kill-this-buffer)
          ("M-u" . dakra-upcase-dwim)
@@ -363,9 +363,9 @@ Allow some commands as safe by default
   (dakra-define-up/downcase-dwim "upcase")
   (dakra-define-up/downcase-dwim "downcase")
   (dakra-define-up/downcase-dwim "capitalize"))
-#+end_src
+#+END_SRC
 ** Auto-revert: Revert buffer when file changes on disk
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package autorevert
   :defer 1
   ;;:hook (find-file . auto-revert-mode)
@@ -377,9 +377,9 @@ Allow some commands as safe by default
 
   ;; Turn off auto revert messages
   (setq auto-revert-verbose nil))
-#+end_src
+#+END_SRC
 ** Epa
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package epa
   :defer t
   :config
@@ -390,24 +390,24 @@ Allow some commands as safe by default
   :config
   ;; Let Emacs query the passphrase through the minibuffer
   (setq epg-pinentry-mode 'loopback))
-#+end_src
+#+END_SRC
 ** Saveplace: Remember your location in a file
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package saveplace
   :unless noninteractive
   :config (save-place-mode))
-#+end_src
+#+END_SRC
 ** Savehist: Keep track of minibuffer history
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package savehist
   :unless noninteractive
   :defer 1
   :config
   (setq savehist-additional-variables '(compile-command regexp-search-ring))
   (savehist-mode 1))
-#+end_src
+#+END_SRC
 ** Ansi-color
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ansi-color
   :hook (compilation-filter . colorize-compilation-buffer)
   :config
@@ -416,7 +416,7 @@ Allow some commands as safe by default
   (defun colorize-compilation-buffer ()
     (let ((inhibit-read-only t))
       (ansi-color-apply-on-region (point-min) (point-max)))))
-#+end_src
+#+END_SRC
 ** Compile
 #+BEGIN_SRC emacs-lisp
 (use-package compile
@@ -448,36 +448,36 @@ Allow some commands as safe by default
   (setq comint-buffer-maximum-size 8192))
 #+END_SRC
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (message "Loading early birds...done (%.3fs)"
          (float-time (time-subtract (current-time) before-user-init-time)))
-#+end_src
+#+END_SRC
 ** Subword: CamelCase aware editing operations
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package subword
   :hook ((python-mode yaml-mode go-mode) . subword-mode))
-#+end_src
+#+END_SRC
 ** Shr: Simple html renderer
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package shr
   :defer t
   :config
   (setq shr-width 80)
   (setq shr-external-browser 'eww-browse-url)
   (setq shr-color-visible-luminance-min 80))
-#+end_src
+#+END_SRC
 ** Help
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package help
   :disabled t  ; I actually prefer larger help windows
   :config (temp-buffer-resize-mode))
-#+end_src
+#+END_SRC
 ** Makefile
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package make-mode
   ;; Files like `Makefile.docker' are also gnu make
   :mode (("Makefile" . makefile-gmake-mode)))
-#+end_src
+#+END_SRC
 ** Time
 #+BEGIN_SRC emacs-lisp
 (use-package time
@@ -519,12 +519,12 @@ Allow some commands as safe by default
 #+END_SRC
 * UI
 ** Eldoc: Display help
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package eldoc
   :hook (prog-mode . eldoc-mode))
-#+end_src
+#+END_SRC
 ** Dimmer: Visually highlight the selected buffer
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package dimmer
   :unless noninteractive
   :defer 10
@@ -532,18 +532,18 @@ Allow some commands as safe by default
   (setq dimmer-fraction 0.25)
   ;;(setq dimmer-use-colorspace ':rgb)
   (dimmer-mode))
-#+end_src
+#+END_SRC
 ** Hl-todo: Highlight and navigate TODO keywords
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package hl-todo
   :defer 2
   :config (global-hl-todo-mode))
-#+end_src
+#+END_SRC
 ** Fill-column-indicator
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package fill-column-indicator
   :hook ((emacs-lisp git-commit-setup) . fci-mode))
-#+end_src
+#+END_SRC
 ** Volatile highlights
 Visual feedback on some operations like yank,kill,undo
 #+BEGIN_SRC emacs-lisp
@@ -634,7 +634,7 @@ different face
   (setq whitespace-line-column nil))
 #+END_SRC
 ** Zone: Emacs screen saver
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package zone
   :defer t
   :config
@@ -660,10 +660,10 @@ different face
   :config
   (setq zone-programs (vconcat zone-programs [zone-matrix]))
   (setq zmx-unicode-mode t))
-#+end_src
+#+END_SRC
 * Editor
 Lossage
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun update-lossage-buffer ()
   "Update the \"Lossage\" buffer.
 For this to work, visit the lossage buffer, and call
@@ -914,7 +914,7 @@ is already narrowed."
   :commands (dumb-diff dumb-diff-set-region-as-buffer1 dumb-diff-set-region-as-buffer2))
 #+END_SRC
 ** edit-indirect: Edit a region in a separate buffer
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package edit-indirect
   :bind (("C-c '" . edit-indirect-dwim)
          :map edit-indirect-mode-map
@@ -961,7 +961,7 @@ mark the string and call `edit-indirect-region' with it."
         (error "Invalide mode `%s'" mode-str))
       (funcall mode)))
   (setq edit-indirect-guess-mode-function #'edit-indirect-guess-mode-fn))
-#+end_src
+#+END_SRC
 ** with-editor: Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 #+BEGIN_SRC emacs-lisp
 (use-package with-editor
@@ -987,7 +987,7 @@ Move current line or region with M-up or M-down.
   :after wgrep)
 #+END_SRC
 ** Grep-context: Get more context for compilation/grep buffers by pressing +/-
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package grep-context
   :after ivy
   :bind (:map compilation-mode-map
@@ -999,7 +999,7 @@ Move current line or region with M-up or M-down.
          :map ivy-occur-grep-mode-map
          ("+" . grep-context-more-around-point)
          ("-" . grep-context-less-around-point)))
-#+end_src
+#+END_SRC
 ** Search/Replace
 *** Re-builder
 #+BEGIN_SRC emacs-lisp
@@ -1392,7 +1392,7 @@ Move current line or region with M-up or M-down.
 #+END_SRC
 
 ** Dired-hacks
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package dired-rainbow
   :after dired
   :config
@@ -1465,7 +1465,7 @@ Move current line or region with M-up or M-down.
   :bind (:map dired-mode-map
          ("i" . dired-subtree-insert)
          ("I" . dired-subtree-remove)))
-#+end_src
+#+END_SRC
 * Helm
 #+BEGIN_SRC emacs-lisp
   ;;; Helm config
@@ -2159,7 +2159,7 @@ file to edit."
   :after eshell)
 #+END_SRC
 ** Prompt
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; Show git info in prompt
 (use-package eshell-git-prompt
   :disabled t  ; Use eshell-prompt-extras
@@ -2175,19 +2175,19 @@ file to edit."
   (autoload 'epe-theme-dakrone "eshell-prompt-extras")
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'epe-theme-dakrone))
-#+end_src
+#+END_SRC
 ** Z: cd to frequent directory
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package eshell-z
   :after eshell)
-#+end_src
+#+END_SRC
 ** Eshel-up: Quickly go to a specific parent directory in eshell
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package eshell-up
   :after eshell)
-#+end_src
+#+END_SRC
 ** Eshell-fringe-status: Show last status in fringe
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package eshell-fringe-status
   :hook (eshell-mode . eshell-fringe-status-mode)
   :config
@@ -2213,7 +2213,7 @@ file to edit."
      ] 18 4 'center)
   (setq eshell-fringe-status-success-bitmap 'efs-line-bitmap)
   (setq eshell-fringe-status-failure-bitmap 'efs-line-bitmap))
-#+end_src
+#+END_SRC
 
 ** Autocomplete
 #+BEGIN_SRC emacs-lisp
@@ -2650,13 +2650,13 @@ When called with 2 prefix arguments only open in browser and don't copy."
   :after (projectile go-mode))
 #+END_SRC
 ** Haskell
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package haskell-mode
   :hook (haskell-mode . haskell-indentation-mode))
 
 (use-package intero
   :hook (haskell-mode . intero-mode))
-#+end_src
+#+END_SRC
 ** Javascript
 #+BEGIN_SRC emacs-lisp
 (use-package prettier-js
@@ -2894,19 +2894,19 @@ Lisp function does not specify a special indentation."
                                     (setq mode-name "EL"))))
 #+END_SRC
 **** Helper libraries (dash, s, marshal)
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package dash  :defer t
   :config (dash-enable-font-lock))
 
 (use-package s  :defer t)
-#+end_src
+#+END_SRC
 ***** Request
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package request
   :defer t)
-#+end_src
+#+END_SRC
 **** Auto-compile
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package auto-compile
   :disabled t  ; I rather trigger a new compile by hand
   :defer 10
@@ -2920,7 +2920,7 @@ Lisp function does not specify a special indentation."
   (setq auto-compile-update-autoloads             t)
   (add-hook 'auto-compile-inhibit-compile-hook
             'auto-compile-inhibit-compile-detached-git-head))
-#+end_src
+#+END_SRC
 **** Litable: Live preview for elisp
 #+BEGIN_SRC emacs-lisp
 (use-package litable
@@ -2935,22 +2935,22 @@ Lisp function does not specify a special indentation."
   :config (flycheck-package-setup))
 #+END_SRC
 **** El2markdown: Convert package commentary to markdown
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package el2markdown
   :defer t)
-#+end_src
+#+END_SRC
 *** Common Lisp
 From the slime manual for faster slime startup:
 
 For SBCL, we recommend that you create a custom core file with socket support
 and POSIX bindings included because those modules take the most time to load. To
 create such a core, execute the following steps:
-#+begin_src sh  :tangle no
+#+BEGIN_SRC sh  :tangle no
 $ cd ~/.emacs.d/var/
 $ sbcl
  (mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))
  (save-lisp-and-die "sbcl.core-for-slime")
-#+end_src
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package slime
@@ -3024,10 +3024,10 @@ $ sbcl
       (octave-send-line))))
 #+END_SRC
 ** PHP
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package php-mode
   :defer t)
-#+end_src
+#+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp
 (use-package cython-mode
@@ -3283,11 +3283,11 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 ;;(add-to-list 'helm-boring-buffer-regexp-list "\\*epc con")
 #+END_SRC
 ** Redis
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; Commint for redis
 (use-package redis
   :defer t)
-#+end_src
+#+END_SRC
 ** Ruby
 #+BEGIN_SRC emacs-lisp
 
@@ -3317,13 +3317,13 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 ** Solidity (Ethereum)
 Solidity with flycheck integration requires `solc` and `soldium`.
 So for Arch you need to install `solidity-git` and `sodium` from AUR.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package solidity-mode
   :mode "\\.sol\\'"
   :init
   (setq solidity-flycheck-solc-checker-active t)
   (setq solidity-flycheck-solium-checker-active t))
-#+end_src
+#+END_SRC
 ** SQL
 #+BEGIN_SRC emacs-lisp
 (use-package sql
@@ -3472,7 +3472,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 ** Typescript
 Format options can be specified in the ~tide-format-options~ variable
 or via tsfmt.json (present in the root folder along with tsconfig.json):
-#+begin_src json :tangle no
+#+BEGIN_SRC json :tangle no
 {
   "indentSize": 4,
   "tabSize": 4,
@@ -3489,7 +3489,7 @@ To edit javascript with typescript
 create `jsconfig.json` in the root folder of your project.
 `jsconfig.json` is `tsconfig.json` with `allowJs` attribute set to
 true.
-#+begin_src json :tangle no
+#+BEGIN_SRC json :tangle no
 {
   "compilerOptions": {
     "target": "es2017",
@@ -4429,7 +4429,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
 #+END_SRC
 *** Org Packages
 **** Org-agenda
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-agenda
   :defer t
   :config
@@ -4643,9 +4643,9 @@ Late deadlines first, then scheduled, then non-late deadlines"
        (t (setq result nil)))
       result))
   )
-#+end_src
+#+END_SRC
 **** Org-babel
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ob
   :defer t
   :init
@@ -4813,9 +4813,9 @@ This function is called by `org-babel-execute-src-block'."
                    (->> result (assoc 'image/svg+xml) cdr (ob-ipython--write-string-to-file file)))
                   (file (error "%s is currently an unsupported file extension." (f-ext file)))
                   (t (->> result (assoc 'text/plain) cdr)))))))))
-#+end_src
+#+END_SRC
 **** Org-src
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-src
   :defer t
   :config
@@ -4868,7 +4868,7 @@ NAME may be nil for unnamed sessions."
     "Major mode for editing web-mode django templates."
     (web-mode)
     (web-mode-set-engine "django")))
-#+end_src
+#+END_SRC
 **** Org-indent: Indent text according to outline structure.
 #+BEGIN_SRC emacs-lisp
 (use-package org-indent
@@ -4880,7 +4880,7 @@ NAME may be nil for unnamed sessions."
   :hook (org-mode . org-bullets-mode))
 #+END_SRC
 **** Org-capture
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-protocol :after org)
 ;; org-capture chrome plugin: https://chrome.google.com/webstore/detail/org-capture/kkkjlfejijcjgjllecmnejhogpbcigdc?hl=en
 
@@ -4942,9 +4942,9 @@ NAME may be nil for unnamed sessions."
 (use-package org-protocol-capture-html
   :disabled t  ; Usefule but never used since bookmarklet not configured yet
   :after org-capture)
-#+end_src
+#+END_SRC
 **** Org-clock:
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;;; Clock Setup
 (use-package org-clock
   :after org
@@ -5114,7 +5114,7 @@ as the default task."
   (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
   ;; Include current clocking task in clock reports
   (setq org-clock-report-include-clocking-task t))
-#+end_src
+#+END_SRC
 **** Org-crypt: Encrypt parts in org file tagged with ~CRYPT~
 #+BEGIN_SRC emacs-lisp
 (use-package org-crypt
@@ -5191,7 +5191,7 @@ as the default task."
   :config (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 #+END_SRC
 **** Org-table
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-table
   :after org
   :config
@@ -5240,9 +5240,9 @@ as the default task."
    :map org-mode-map
    :filter (org-at-table-p)
    ("S-SPC" . hydra-org-table-mark-field/body)))
-#+end_src
+#+END_SRC
 **** Org-pomodoro
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro
   :defer t
   :init
@@ -5261,7 +5261,7 @@ as the default task."
   (setq org-pomodoro-keep-killed-pomodoro-time t)
   ;; Never clock-out automatically
   (setq org-pomodoro-clock-always t))
-#+end_src
+#+END_SRC
 **** Org-jira: Sync issues with Jira
 #+BEGIN_SRC emacs-lisp
 (use-package org-jira
@@ -5273,15 +5273,15 @@ as the default task."
   (setq org-jira-worklog-sync-p nil))
 #+END_SRC
 **** Org-github: Sync issues with GitHub
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package org-github
   :defer t
   :config
   (setq org-github-default-owner "atomx")
   (setq org-github-default-name "api"))
-#+end_src
+#+END_SRC
 **** Orgit: org-link support for magit buffers
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package orgit
   ;; Automatically copy orgit link to last commit after commit
   :hook (git-commit-setup . orgit-store-after-commit)
@@ -5298,12 +5298,12 @@ as the default task."
                        (desc (format "%s (%s)" summary repo)))
                   (push (list link desc) org-stored-links)))
               t t)))
-#+end_src
+#+END_SRC
 **** Counsel-org-clock
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package counsel-org-clock
   :defer t)
-#+end_src
+#+END_SRC
 ** bh.el TODO: remove???
 #+BEGIN_SRC emacs-lisp  :tangle yes
 (defun bh/is-project-p ()
@@ -5632,7 +5632,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
   (string-match "Sched\.\\(.*\\)x:" date-str))
 #+END_SRC
 * Irc
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package erc
   :config
   (setq erc-hide-list '("PART" "QUIT" "JOIN"))
@@ -5652,7 +5652,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 
 (use-package erc-hl-nicks
   :after erc)
-#+end_src
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package erc-services
@@ -5667,7 +5667,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 You also need to configure and install mu in the system.
 Borg does only build mu4e as building mu every time is
 unnecessary.
-#+begin_src sh :tangle no :var mudir=(expand-file-name "mu4e" borg-drone-directory)
+#+BEGIN_SRC sh :tangle no :var mudir=(expand-file-name "mu4e" borg-drone-directory)
 # Install mu for mu4e
 pushd .
 echo cd $mudir
@@ -5676,7 +5676,7 @@ test -e ./configure || autoreconf -i
 make
 sudo make install
 popd
-#+end_src
+#+END_SRC
 #+BEGIN_SRC emacs-lisp
 ;; mu package (includes mu4e) must be installed in the system
 (use-package mu4e
@@ -6507,10 +6507,10 @@ You need to have the ~gpaste~ daemon installed (arch package ~gpaste~)
 and started. E.g. have this line in you .xprofile:
 ~/usr/lib/gpaste/gpaste-daemon &~
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package gpastel
   :hook (exwm-init . gpastel-start-listening))
-#+end_src
+#+END_SRC
 ** PulseAudio
 #+BEGIN_SRC emacs-lisp
 (use-package pulseaudio-control
@@ -6538,14 +6538,14 @@ and started. E.g. have this line in you .xprofile:
   (setq pulseaudio-control-volume-step "5%"))
 #+END_SRC
 ** Xbacklight: Adjust screen brightness
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package xbacklight
   :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
          ("<XF86MonBrightnessDown>" . xbacklight-decrease)
          :map exwm-mode-map
          ("<XF86MonBrightnessUp>" . xbacklight-increase)
          ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
-#+end_src
+#+END_SRC
 ** Dmenu
 #+BEGIN_SRC emacs-lisp
 (use-package dmenu :load-path "repos/el-dmenu"
@@ -6660,7 +6660,7 @@ It only works for frames with exactly two windows."
   :config (winner-mode 1))
 #+END_SRC
 * Transmission: Bittorent
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package transmission
   :defer t
   :config
@@ -6669,16 +6669,16 @@ It only works for frames with exactly two windows."
                                      transmission-files-mode
                                      transmission-info-mode
                                      transmission-peers-mode)))
-#+end_src
+#+END_SRC
 * Multimedia
 ** Brain-fm: Stream music from brain.fm
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package brain-fm
   :defer t
   :config
   ;; Station 35 is "Focus"
   (setq brain-fm-station-id 35))
-#+end_src
+#+END_SRC
 ** Emms
 #+BEGIN_SRC emacs-lisp
 (use-package emms
@@ -6697,16 +6697,16 @@ You need to install ~scrot~, ImageMagick (~convert~) and optional ~Gifsicle~.
 
 XXX: Use emacs ~keycast~ package to display keys in modeline.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package gif-screencast
   :bind (:map gif-screencast-mode-map
          ("<f11>" . gif-screencast-toggle-pause)
          ("<f12>" . gif-screencast-stop)
          ("<escape>" . gif-screencast-stop))
   :config (setq gif-screencast-output-directory (expand-file-name "videos/emacs/" "~")))
-#+end_src
+#+END_SRC
 ** Systemctl
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package systemctl
   :commands hydra-systemctl/body
   :config
@@ -6750,22 +6750,22 @@ _g_: Refresh Hydra  _q_: quit"
 
     ("g" (message "Hydra refreshed"))
     ("q" (message "Abort") :exit t)))
-#+end_src
+#+END_SRC
 ** OVPN: OpenVPN management mode
 Place all your openvpn (~.ovpn~) in =~/vpn= and then select a config and
 start a vpn with ~s~ or start in a separate namespace without altering
 the main system route with ~n~ then you can spawn a command (like ~transmission~)
 in that namespace with ~x~
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package ovpn-mode
   :defer t
   :config
   (setq ovpn-mode-ipv6-auto-toggle t)  ; Always turn off ipv6 when starting vpn
   (setq ovpn-mode-base-directory "~/vpn"))
-#+end_src
+#+END_SRC
 ** Ledger: Accounting
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; ledger-mode for bookkeeping
 (defun ledger-mode-outline-hook ()
   (outline-minor-mode)
@@ -6833,9 +6833,9 @@ in that namespace with ~x~
 
 (use-package flycheck-ledger
   :after (flycheck ledger-mode))
-#+end_src
+#+END_SRC
 ** Elfeed: Atomx/RSS news reader
-#+begin_src python :tangle ~/bin/read_url.py :shebang #!/usr/bin/python3
+#+BEGIN_SRC python :tangle ~/bin/read_url.py :shebang #!/usr/bin/python3
 """Script to get the readable text from a website.
 Like in Firefox article view.
 Needs `requests` and `readability-lxml` installed.
@@ -6864,9 +6864,9 @@ if __name__ == '__main__':
         print(doc.summary())
     else:
         print('Error fetching {}: {}'.format(url, response.reason))
-#+end_src
+#+END_SRC
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package youtube-dl
   :defer t
   :config
@@ -7165,17 +7165,17 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("cgpgrey" youtube education)
     ("ufc" youtube mma)
     ("MMAFightingonSBN" youtube mma)))
-#+end_src
+#+END_SRC
 ** Info-beamer
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package info-beamer
   :hook (lua-mode . info-beamer-mode))
-#+end_src
+#+END_SRC
 ** Nov: Read EPUBs
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
-#+end_src
+#+END_SRC
 ** Pocket reader
 #+BEGIN_SRC emacs-lisp
 ;; Read and manage your pocket (getpocket.com) list
@@ -7224,10 +7224,10 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
   (setq wolfram-alpha-app-id "KTKV36-2LRW2LELV8"))
 #+END_SRC
 ** Tea timer
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package tea-timer
   :defer t)
-#+end_src
+#+END_SRC
 ** Debug emacs init startup time
 Run ~M-x esup~ to see where the time is spend during emacs startup.
 #+BEGIN_SRC emacs-lisp
@@ -7237,7 +7237,7 @@ Run ~M-x esup~ to see where the time is spend during emacs startup.
 #+END_SRC
 ** Unsortet stuff in no packages
 Probably create a `dakra` package (again) to lazy load all those commands.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (defun borg-sync-drone-urls ()
   "Offer to update outdated upstream urls of all drones."
   (interactive)
@@ -7259,9 +7259,9 @@ Probably create a `dakra` package (again) to lazy load all those commands.
           (process-file "git" nil nil nil "config" "-f" ".gitmodules"
                         (format "submodule.%s.url" drone) b))
         (process-file "git" nil nil nil "submodule" "sync")))))
-#+end_src
+#+END_SRC
 * Post Initialization
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (message "Loading %s...done (%.3fs)" user-init-file
          (float-time (time-subtract (current-time)
                                     before-user-init-time)))
@@ -7276,4 +7276,4 @@ Probably create a `dakra` package (again) to lazy load all those commands.
             ;; Let's lower our GC thresholds back down to a sane level.
             (setq gc-cons-threshold (* 20 1024 1024)))
           t)
-#+end_src
+#+END_SRC
