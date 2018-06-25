@@ -4426,11 +4426,6 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
     (interactive)
     (org-sort-entries nil ?f #'my/org-sort-key))
   )
-
-;;; org babel config
-(use-package org-tempo :after org)
-;;(add-to-list 'org-structure-template-alist '("sp" "#+BEGIN_SRC python\n?\n#+END_SRC"))
-;;(add-to-list 'org-structure-template-alist '("si" "#+BEGIN_SRC ipython\n?\n#+END_SRC"))
 #+END_SRC
 *** Org Packages
 **** Org-agenda

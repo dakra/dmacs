@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: dot block
+# key: <dot
+# --
+#+BEGIN_SRC dot ${1::file ${2:$$(let ((temporary-file-directory "./")) (make-temp-file "graph-" nil ".png"))} }
+$0
+#+END_SRC

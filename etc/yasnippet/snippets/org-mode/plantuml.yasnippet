@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: plantuml block
+# key: <plantuml
+# --
+#+BEGIN_SRC plantuml ${1::file ${2:$$(let ((temporary-file-directory "./")) (make-temp-file "uml-" nil ".png"))} }
+$0
+#+END_SRC
