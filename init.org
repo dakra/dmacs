@@ -6448,22 +6448,68 @@ no window on the right."
       (start-process-shell-command "reboot" nil "reboot")))
 
   ;; Start some apps
-  (defun exwm-startup-external-apps ()
+  (defun exwm-startup-apps ()
     "Start some applications after exwm init."
-    ;; Start some external apps
-    (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
     (start-process-shell-command "pidgin" nil "pidgin")
-    (start-process-shell-command "kdeconnect-indicator" nil "kdeconnect-indicator")
-
-    ;; Some always used Emacs apps
+    ;; Start some always used Emacs apps
     (org-agenda nil " ")
     (pop-to-buffer (eshell))
     (pop-to-buffer (mu4e))
     (pop-to-buffer (elfeed))
     (pop-to-buffer (find-file "~/.emacs.d/init.org"))
-    (sql-init-passwords)
+    ;; Start some external apps
+    (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
 
-    (start-process-shell-command "keepassxc" nil "keepassxc"))
+    (start-process-shell-command "kdeconnect-indicator" nil "kdeconnect-indicator")
+    (start-process-shell-command "keepassxc" nil "keepassxc")
+    (sql-init-passwords)
+  )
+
+  (defun exwm-input--set-focus (id)
+    "Set input focus to window ID in a proper way."
+    (when (exwm--id->buffer id)
+      (with-current-buffer (exwm--id->buffer id)
+        (cond
+         ((and (not exwm--hints-input)
+               (memq xcb:Atom:WM_TAKE_FOCUS exwm--protocols))
+          (when (= (frame-parameter nil 'exwm-id)
+                   (slot-value (xcb:+request-unchecked+reply exwm--connection
+                                   (make-instance 'xcb:GetInputFocus))
+                               'focus))
+            (exwm--log "Focus on #x%x with WM_TAKE_FOCUS" id)
+            (exwm-input--update-timestamp
+             (lambda (timestamp id)
+               (let ((event (make-instance 'xcb:icccm:WM_TAKE_FOCUS
+                                           :window id
+                                           :time timestamp)))
+                 (setq event (xcb:marshal event exwm--connection))
+                 (xcb:+request exwm--connection
+                     (make-instance 'xcb:icccm:SendEvent
+                                    :destination id
+                                    :event event))
+                 (exwm-input--set-active-window id)
+                 (xcb:flush exwm--connection)))
+             id)))
+         (t
+          (exwm--log "Focus on #x%x with SetInputFocus" id)
+          (exwm-input--update-timestamp
+           (lambda (timestamp id)
+             (let ((event (make-instance 'xcb:icccm:WM_TAKE_FOCUS
+                                         :window id
+                                         :time timestamp)))
+               (setq event (xcb:marshal event exwm--connection))
+               (xcb:+request exwm--connection
+                   (make-instance 'xcb:icccm:SendEvent
+                                  :destination id
+                                  :event event)))
+             (xcb:+request exwm--connection
+                 (make-instance 'xcb:SetInputFocus
+                                :revert-to xcb:InputFocus:Parent
+                                :focus id
+                                :time timestamp))
+             (exwm-input--set-active-window id)
+             (xcb:flush exwm--connection))
+           id))))))
 
   ;; Enable EXWM
   (exwm-enable))
