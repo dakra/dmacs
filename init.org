@@ -6881,8 +6881,9 @@ if __name__ == '__main__':
 #+BEGIN_SRC emacs-lisp
 (use-package youtube-dl
   :defer t
-  :config
+  :init
   (setq youtube-dl-directory "~/videos/youtube")
+  :config
   (setq youtube-dl-arguments
         '("--no-mtime" "--restrict-filenames" "--format" "best" "--mark-watched")))
 
