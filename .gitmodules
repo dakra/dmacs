@@ -46,6 +46,9 @@
 [submodule "beacon"]
 	path = lib/beacon
 	url = git@github.com:Malabarba/beacon.git
+[submodule "bicycle"]
+	path = lib/bicycle
+	url = git@github.com:tarsius/bicycle.git
 [submodule "borg"]
 	path = lib/borg
 	url = git@github.com:emacscollective/borg.git
@@ -544,9 +547,6 @@
 [submodule "osc"]
 	path = lib/osc
 	url = git@github.com:emacsmirror/osc.git
-[submodule "outline-magic"]
-	path = lib/outline-magic
-	url = git@github.com:tj64/outline-magic.git
 [submodule "ov"]
 	path = lib/ov
 	url = git@github.com:ShingoFukuyama/ov.el.git

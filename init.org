@@ -913,6 +913,22 @@ is already narrowed."
   :disabled t
   :commands (dumb-diff dumb-diff-set-region-as-buffer1 dumb-diff-set-region-as-buffer2))
 #+END_SRC
+** Cycle outline and code visibility
+#+BEGIN_SRC emacs-lisp
+;; Minor mode to selectively hide/show code and comment blocks
+(use-package hideshow
+  :hook (prog-mode  . hs-minor-mode))
+
+(use-package outline
+  :hook ((prog-mode message-mode markdown-mode) . outline-minor-mode))
+
+(use-package bicycle
+  :after outline
+  :bind (:map outline-minor-mode-map
+         ([C-tab] . bicycle-cycle)
+         ([backtab] . bicycle-cycle-global)))
+#+END_SRC
+
 ** edit-indirect: Edit a region in a separate buffer
 #+BEGIN_SRC emacs-lisp
 (use-package edit-indirect
@@ -3001,7 +3017,6 @@ $ sbcl
          ("\\.markdown\\'" . gfm-mode)
          ("\\.md\\'" . gfm-mode))
   :config
-  (add-hook 'markdown-mode-hook #'outline-minor-mode)
   ;; Enable fontification for code blocks
   (setq markdown-fontify-code-blocks-natively t)
   (add-to-list 'markdown-code-lang-modes '("ini" . conf-mode))
@@ -3697,55 +3712,6 @@ displayed anywhere else."
         (when (eq 1 (length (get-buffer-window-list buffer nil t)))
           (kill-buffer buffer))))))
 ;;(add-to-list 'delete-frame-functions #'maybe-delete-frame-buffer)
-
-(use-package outline
-  :hook (((message-mode emacs-lisp) . outline-minor-mode)
-         (python-mode . python-outline-minor-mode))
-  :config
-  ;; https://stackoverflow.com/questions/4079648/combine-python-mode-with-org-mode-for-emacs/29057808#29057808
-  (defun python-outline-minor-mode ()
-    (outline-minor-mode)
-    (setq-local outline-level 'python-outline-level)
-    (setq-local outline-regexp
-                (rx (or
-                     ;; Commented outline heading
-                     (group
-                      (* space)  ; 0 or more spaces
-                      (one-or-more (syntax comment-start))
-                      (one-or-more space)
-                      ;; Heading level
-                      (group (repeat 1 8 "\*"))  ; Outline stars
-                      (one-or-more space))
-
-                     ;; Python keyword heading
-                     (group
-                      ;; Heading level
-                      (group (* space)) ; 0 or more spaces
-                      bow
-                      ;; Keywords
-                      (or "class" "def" "else" "elif" "except" "for" "if" "try" "while")
-                      eow)))))
-
-  (defun python-outline-level ()
-    (or
-     ;; Commented outline heading
-     (and (string-match (rx
-                         (* space)
-                         (one-or-more (syntax comment-start))
-                         (one-or-more space)
-                         (group (one-or-more "\*"))
-                         (one-or-more space))
-                        (match-string 0))
-          (- (match-end 0) (match-beginning 0)))
-
-     ;; Python keyword heading, set by number of indentions
-     ;; Add 8 (the highest standard outline level) to every Python keyword heading
-     (+ 8 (- (match-end 0) (match-beginning 0))))))
-
-;; use outline-cycle (from outline-magic) in outline-minor-mode
-(use-package outline-magic
-  :after outline
-  :bind (:map outline-minor-mode-map ("<C-tab>" . outline-cycle)))
 
 (use-package restclient
   :mode ("\\.rest\\'" . restclient-mode)
