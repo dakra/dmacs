@@ -1037,6 +1037,20 @@ Move current line or region with M-up or M-down.
 (use-package visual-regexp-steroids
   :after visual-regexp)
 #+END_SRC
+** Prescient
+Simple but effective sorting and filtering for Emacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package prescient
+  :defer t
+  :config (prescient-persist-mode))
+(use-package ivy-prescient
+  :after ivy
+  :config (ivy-prescient-mode))
+(use-package company-prescient
+  :after company
+  :config (company-prescient-mode))
+#+END_SRC
 * Project Management
 #+BEGIN_SRC emacs-lisp
 (use-package projectile

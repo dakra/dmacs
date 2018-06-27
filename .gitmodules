@@ -616,6 +616,9 @@
 [submodule "pos-tip"]
 	path = lib/pos-tip
 	url = git@github.com:pitkali/pos-tip.git
+[submodule "prescient"]
+	path = lib/prescient
+	url = git@github.com:raxod502/prescient.el.git
 [submodule "prettier-js"]
 	path = lib/prettier-js
 	url = git@github.com:prettier/prettier-emacs.git
