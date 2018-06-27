@@ -679,8 +679,6 @@ M-x rename-buffer Lossage RET"
   (interactive)
   (add-hook 'post-command-hook #'update-lossage-buffer nil 'local))
 #+END_SRC
-
-
 #+BEGIN_SRC emacs-lisp
 (use-package hippie-exp
   :bind (("M-/" . hippie-expand))
@@ -768,13 +766,11 @@ M-x rename-buffer Lossage RET"
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 #+END_SRC
-
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
   :hook ((emacs-lisp-mode lisp-mode hy-mode) . rainbow-delimiters-mode))
 #+END_SRC
-
 #+BEGIN_SRC emacs-lisp
 (use-package fancy-narrow
   :bind (("C-x n" . fancy-narrow-or-widen-dwim)
@@ -1050,6 +1046,230 @@ Simple but effective sorting and filtering for Emacs
 (use-package company-prescient
   :after company
   :config (company-prescient-mode))
+#+END_SRC
+* Ivy
+** Flx: Fuzzy search
+#+BEGIN_SRC emacs-lisp
+(use-package flx :defer t)
+#+END_SRC
+** Smex: Improved M-x
+#+BEGIN_SRC emacs-lisp
+(use-package smex
+  :disabled t
+  :defer t)
+#+END_SRC
+** Ivy
+#+BEGIN_SRC emacs-lisp
+(use-package ivy
+  :bind (("C-x b"   . dakra-ivy-switch-buffer)
+         ("C-x B"   . ivy-switch-buffer-other-window)
+         ("C-c C-r" . ivy-resume)
+         ("C-c e"   . ivy-switch-buffer-eshell)
+         ("M-H"     . ivy-resume)
+         :map ivy-minibuffer-map
+         ("C-j" . ivy-partial-or-done)
+         ("<S-return>" . ivy-call)
+         ("C-r" . ivy-previous-line-or-history)
+         ("M-r" . ivy-reverse-i-search))
+  :config
+  (defun ivy-ignore-non-eshell-buffers (str)
+    (let ((buf (get-buffer str)))
+      (if buf
+          (with-current-buffer buf
+            (not (eq major-mode 'eshell-mode)))
+        t)))
+
+  (defun ivy-switch-buffer-eshell ()
+    "Like ivy-switch-buffer but only shows eshell buffers."
+    (interactive)
+    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-non-eshell-buffers))))
+      (ivy-switch-buffer)))
+
+  (defun ivy-ignore-exwm-buffers (str)
+    (let ((buf (get-buffer str)))
+      (when buf
+        (with-current-buffer buf
+          (eq major-mode 'exwm-mode)))))
+
+  (defun ivy-ignore-non-exwm-buffers (str)
+    (let ((buf (get-buffer str)))
+      (if buf
+          (with-current-buffer buf
+            (not (eq major-mode 'exwm-mode)))
+        t)))
+
+  (defun ivy-switch-buffer-exwm ()
+    "Like ivy-switch-buffer but only shows EXWM buffers."
+    (interactive)
+    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-non-exwm-buffers))))
+      (ivy-switch-buffer)))
+
+  (defun ivy-switch-buffer-non-exwm ()
+    "Like ivy-switch-buffer but hides all EXWM buffers."
+    (interactive)
+    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-exwm-buffers))))
+      (ivy-switch-buffer)))
+
+  (defun dakra-ivy-switch-buffer (p)
+    "Like ivy-switch-buffer but by defaults hides all EXWM buffers.
+With one prefix arg, show only EXWM buffers. With two, show all buffers."
+    (interactive "p")
+    (back-button-push-mark-local-and-global)
+    (case p
+      (1 (ivy-switch-buffer-non-exwm))
+      (4 (ivy-switch-buffer-exwm))
+      (16 (ivy-switch-buffer))))
+
+  ;; Extend searching to bookmarks and recentf
+  (setq ivy-use-virtual-buffers t)
+  ;; Show full path for virtual buffers
+  (setq ivy-virtual-abbreviate 'full)
+
+  ;; Display count displayed and total
+  (setq ivy-count-format "%d/%d ")
+  (setq ivy-height 18)
+  ;; Press C-p when you're on the first candidate to select your input
+  (setq ivy-use-selectable-prompt t)
+
+  ;; FIXME: ignore space for fuzzy matching
+  ;;(require 's)
+  ;;(defun dakra-ivy--regex-fuzzy (str)
+  ;;  "Like ivy--regex-fuzzy but remove all spaces first."
+  ;;  (ivy--regex-fuzzy (s-replace " " "" str)))
+  ;;(add-to-list 'ivy-highlight-functions-alist
+  ;;             '(dakra-ivy--regex-fuzzy . ivy--highlight-fuzzy))
+
+  ;;(setq ivy-re-builders-alist
+  ;;      '((counsel-M-x . ivy--regex-fuzzy) ; Only counsel-M-x use flx fuzzy search
+  ;;        (t . ivy--regex-plus)))
+  (setq ivy-initial-inputs-alist '((Man-completion-table . "^")
+                                   (woman . "^")))
+
+  ;; Don't quit ivy when pressing backspace on already empty input
+  (setq ivy-on-del-error-function nil)
+
+  (ivy-mode 1))
+
+(use-package ivy-hydra
+  :after (ivy hydra))
+
+(use-package ivy-rich
+  ;;:defer 5
+  :after ivy
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer
+                               'ivy-rich-switch-buffer-transformer)
+  ;; Show only basic info for tramp buffers to make it faster
+  (setq ivy-rich-parse-remote-buffer nil)
+  (setq ivy-rich-switch-buffer-align-virtual-buffer t
+        ivy-rich-path-style 'abbrev))
+#+END_SRC
+** Swiper: Search with ivy
+#+BEGIN_SRC emacs-lisp
+(use-package swiper
+  :bind (;;("C-s" . swiper)  ; Use counsel-grep-or-swiper
+         :map swiper-map
+         ("M-h" . swiper-avy)
+         ("M-c" . swiper-mc)))
+#+END_SRC
+** Counsel
+#+BEGIN_SRC emacs-lisp
+(use-package counsel
+  :bind (("C-s"     . counsel-grep-or-swiper)
+         ("C-o"     . nil)  ; Remove old keybinding (open-line)
+         ("C-o o"   . counsel-org-agenda-headlines)
+         ("C-o g"   . counsel-org-agenda-headlines)
+         ("C-o G"   . counsel-org-goto)
+         ("C-c o o" . counsel-org-agenda-headlines)
+         ("C-c o g" . counsel-org-agenda-headlines)
+         ("C-c o G" . counsel-org-goto)
+         ("C-x C-f" . counsel-find-file)
+         ("M-y"     . counsel-yank-pop)
+         ("M-i"     . counsel-imenu)
+         ("M-x"     . counsel-M-x))
+  :init
+  (define-key minibuffer-local-map (kbd "M-r")
+    'counsel-minibuffer-history)
+  :config
+  ;; Use rg as backend for counsel-git
+  (setq counsel-git-cmd "rg -S --files")
+  ;; Only show max 160 characters per line
+  (setq counsel-rg-base-command
+        "rg -S -M 160 --no-heading --line-number --color never %s .")
+  ;; Use rg even for single files
+  (setq counsel-grep-base-command
+        "rg -S -M 160 --no-heading --line-number --color never %s %s")
+  ;; Make ivy faster/more responsive
+  ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
+  (setq counsel-async-filter-update-time 10000)
+  (setq ivy-dynamic-exhibit-delay-ms 20)
+
+  (counsel-mode 1))
+
+(use-package counsel-projectile
+  :bind-keymap (("s-p"   . counsel-projectile-command-map)
+                ("C-c p" . counsel-projectile-command-map))
+  :bind (:map counsel-projectile-command-map
+         (("s s" . dakra/counsel-search-project-empty)
+          ("s S" . dakra/counsel-search-project)))
+  :config
+  ;; Always use ripgrep instead of ag
+  (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg)
+
+  (defun parent-directory (dir &optional l)
+    "Go up L many directories from DIR. Go 1 parent up when L is nil."
+    (let ((l (or l 1)))
+      (if (or (equal "/" dir) (<= l 0))
+          dir
+        (parent-directory (file-name-directory (directory-file-name dir)) (1- l)))))
+
+  ;; https://github.com/purcell/emacs.d/blob/4e487d4ef2ab39875d96fd413fca3b075faf9612/lisp/init-ivy.el#L49
+  (defun dakra/counsel-search-project (initial-input &optional use-current-dir)
+    "Search using `counsel-rg' from the project root for INITIAL-INPUT.
+If there is no project root, or if the prefix argument USE-CURRENT-DIR is set,
+then search from the current directory instead.
+With multiple prefix arguments, or a numeric prefix argument
+go up multiple parent directories."
+    (interactive (list (thing-at-point 'symbol)
+                       current-prefix-arg))
+    (let ((current-prefix-arg)
+          (ignored (mapconcat (lambda (i)
+                                (concat "--glob "
+                                        (shell-quote-argument (concat "!" i))
+                                        " "))
+                              (append (projectile-ignored-files-rel)
+                                      (projectile-ignored-directories-rel))
+                              ""))
+          (dir (cond
+                ((equal use-current-dir nil) ; no prefix: use project root
+                 (condition-case _err
+                     (projectile-project-root)
+                   (error default-directory)))
+                ((equal use-current-dir '(4)) ; C-u: use current dir
+                 (parent-directory default-directory 0))
+                ((equal use-current-dir '(16)) ; C-u C-u: use parent dir
+                 (parent-directory default-directory 1))
+                ((equal use-current-dir '(64)) ; C-u C-u C-u: go 2 up
+                 (parent-directory default-directory 2))
+                (t  ; Numeric prefix: Go specified prefix up
+                 (parent-directory default-directory use-current-dir)))))
+      (counsel-rg initial-input dir ignored (projectile-prepend-project-name "rg"))))
+
+  (defun dakra/counsel-search-project-empty (&optional use-current-dir)
+    "Like dakra/counsel-search-project but with no initial input."
+    (interactive "P")
+    (dakra/counsel-search-project "" use-current-dir))
+
+  (defun counsel-projectile-find-file-occur ()
+    (cd (projectile-project-root))
+    (counsel-cmd-to-dired
+     (format
+      "find . | grep -i -E '%s' | xargs -d '\n' ls"
+      (counsel-unquote-regex-parens ivy--old-re))))
+  (ivy-set-occur 'counsel-projectile-find-file 'counsel-projectile-find-file-occur)
+  (ivy-set-occur 'counsel-projectile 'counsel-projectile-find-file-occur)
+
+  (counsel-projectile-mode))
 #+END_SRC
 * Project Management
 #+BEGIN_SRC emacs-lisp
@@ -1605,220 +1825,6 @@ Simple but effective sorting and filtering for Emacs
   :after helm
   :bind ("\C-s" . swiper-helm)
   )
-#+END_SRC
-* Ivy
-** Flx: Fuzzy search
-#+BEGIN_SRC emacs-lisp
-(use-package flx :defer t)
-#+END_SRC
-** Smex: Improved M-x
-#+BEGIN_SRC emacs-lisp
-(use-package smex :defer t)
-#+END_SRC
-** Ivy
-#+BEGIN_SRC emacs-lisp
-(use-package ivy
-  :bind (("C-x b"   . dakra-ivy-switch-buffer)
-         ("C-x B"   . ivy-switch-buffer-other-window)
-         ("C-c C-r" . ivy-resume)
-         ("C-c e"   . ivy-switch-buffer-eshell)
-         ("M-H"     . ivy-resume)
-         :map ivy-minibuffer-map
-         ("C-j" . ivy-partial-or-done)
-         ("<S-return>" . ivy-call)
-         ("C-r" . ivy-previous-line-or-history)
-         ("M-r" . ivy-reverse-i-search))
-  :config
-  (defun ivy-ignore-non-eshell-buffers (str)
-    (let ((buf (get-buffer str)))
-      (if buf
-          (with-current-buffer buf
-            (not (eq major-mode 'eshell-mode)))
-        t)))
-
-  (defun ivy-switch-buffer-eshell ()
-    "Like ivy-switch-buffer but only shows eshell buffers."
-    (interactive)
-    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-non-eshell-buffers))))
-      (ivy-switch-buffer)))
-
-  (defun ivy-ignore-exwm-buffers (str)
-    (let ((buf (get-buffer str)))
-      (when buf
-        (with-current-buffer buf
-          (eq major-mode 'exwm-mode)))))
-
-  (defun ivy-ignore-non-exwm-buffers (str)
-    (let ((buf (get-buffer str)))
-      (if buf
-          (with-current-buffer buf
-            (not (eq major-mode 'exwm-mode)))
-        t)))
-
-  (defun ivy-switch-buffer-exwm ()
-    "Like ivy-switch-buffer but only shows EXWM buffers."
-    (interactive)
-    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-non-exwm-buffers))))
-      (ivy-switch-buffer)))
-
-  (defun ivy-switch-buffer-non-exwm ()
-    "Like ivy-switch-buffer but hides all EXWM buffers."
-    (interactive)
-    (let ((ivy-ignore-buffers (append ivy-ignore-buffers '(ivy-ignore-exwm-buffers))))
-      (ivy-switch-buffer)))
-
-  (defun dakra-ivy-switch-buffer (p)
-    "Like ivy-switch-buffer but by defaults hides all EXWM buffers.
-With one prefix arg, show only EXWM buffers. With two, show all buffers."
-    (interactive "p")
-    (back-button-push-mark-local-and-global)
-    (case p
-      (1 (ivy-switch-buffer-non-exwm))
-      (4 (ivy-switch-buffer-exwm))
-      (16 (ivy-switch-buffer))))
-
-  ;; Extend searching to bookmarks and recentf
-  (setq ivy-use-virtual-buffers t)
-  ;; Show full path for virtual buffers
-  (setq ivy-virtual-abbreviate 'full)
-
-  ;; Display count displayed and total
-  (setq ivy-count-format "%d/%d ")
-  (setq ivy-height 18)
-  ;; Press C-p when you're on the first candidate to select your input
-  (setq ivy-use-selectable-prompt t)
-
-  ;;(setq ivy-re-builders-alist
-  ;;      '((counsel-M-x . ivy--regex-fuzzy) ; Only counsel-M-x use flx fuzzy search
-  ;;        (t . ivy--regex-plus)))
-  (setq ivy-initial-inputs-alist '((Man-completion-table . "^")
-                                   (woman . "^")))
-
-  ;; Don't quit ivy when pressing backspace on already empty input
-  (setq ivy-on-del-error-function nil)
-
-  (ivy-mode 1))
-
-(use-package ivy-hydra
-  :after (ivy hydra))
-
-(use-package ivy-rich
-  ;;:defer 5
-  :after ivy
-  :config
-  (ivy-set-display-transformer 'ivy-switch-buffer
-                               'ivy-rich-switch-buffer-transformer)
-  ;; Show only basic info for tramp buffers to make it faster
-  (setq ivy-rich-parse-remote-buffer nil)
-  (setq ivy-rich-switch-buffer-align-virtual-buffer t
-        ivy-rich-path-style 'abbrev))
-#+END_SRC
-** Swiper: Search with ivy
-#+BEGIN_SRC emacs-lisp
-(use-package swiper
-  :bind (;;("C-s" . swiper)  ; Use counsel-grep-or-swiper
-         :map swiper-map
-         ("M-h" . swiper-avy)
-         ("M-c" . swiper-mc)))
-#+END_SRC
-** Counsel
-#+BEGIN_SRC emacs-lisp
-(use-package counsel
-  :bind (("C-s"     . counsel-grep-or-swiper)
-         ("C-o"     . nil)  ; Remove old keybinding (open-line)
-         ("C-o o"   . counsel-org-agenda-headlines)
-         ("C-o g"   . counsel-org-agenda-headlines)
-         ("C-o G"   . counsel-org-goto)
-         ("C-c o o" . counsel-org-agenda-headlines)
-         ("C-c o g" . counsel-org-agenda-headlines)
-         ("C-c o G" . counsel-org-goto)
-         ("C-x C-f" . counsel-find-file)
-         ("M-y"     . counsel-yank-pop)
-         ("M-i"     . counsel-imenu)
-         ("M-x"     . counsel-M-x))
-  :init
-  (define-key minibuffer-local-map (kbd "M-r")
-    'counsel-minibuffer-history)
-  :config
-  ;; Use rg as backend for counsel-git
-  (setq counsel-git-cmd "rg -S --files")
-  ;; Only show max 160 characters per line
-  (setq counsel-rg-base-command
-        "rg -S -M 160 --no-heading --line-number --color never %s .")
-  ;; Use rg even for single files
-  (setq counsel-grep-base-command
-        "rg -S -M 160 --no-heading --line-number --color never %s %s")
-  ;; Make ivy faster/more responsive
-  ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
-  (setq counsel-async-filter-update-time 10000)
-  (setq ivy-dynamic-exhibit-delay-ms 20)
-
-  (counsel-mode 1))
-
-(use-package counsel-projectile
-  :bind-keymap (("s-p"   . counsel-projectile-command-map)
-                ("C-c p" . counsel-projectile-command-map))
-  :bind (:map counsel-projectile-command-map
-         (("s s" . dakra/counsel-search-project-empty)
-          ("s S" . dakra/counsel-search-project)))
-  :config
-  ;; Always use ripgrep instead of ag
-  (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg)
-
-  (defun parent-directory (dir &optional l)
-    "Go up L many directories from DIR. Go 1 parent up when L is nil."
-    (let ((l (or l 1)))
-      (if (or (equal "/" dir) (<= l 0))
-          dir
-        (parent-directory (file-name-directory (directory-file-name dir)) (1- l)))))
-
-  ;; https://github.com/purcell/emacs.d/blob/4e487d4ef2ab39875d96fd413fca3b075faf9612/lisp/init-ivy.el#L49
-  (defun dakra/counsel-search-project (initial-input &optional use-current-dir)
-    "Search using `counsel-rg' from the project root for INITIAL-INPUT.
-If there is no project root, or if the prefix argument USE-CURRENT-DIR is set,
-then search from the current directory instead.
-With multiple prefix arguments, or a numeric prefix argument
-go up multiple parent directories."
-    (interactive (list (thing-at-point 'symbol)
-                       current-prefix-arg))
-    (let ((current-prefix-arg)
-          (ignored (mapconcat (lambda (i)
-                                (concat "--glob "
-                                        (shell-quote-argument (concat "!" i))
-                                        " "))
-                              (append (projectile-ignored-files-rel)
-                                      (projectile-ignored-directories-rel))
-                              ""))
-          (dir (cond
-                ((equal use-current-dir nil) ; no prefix: use project root
-                 (condition-case _err
-                     (projectile-project-root)
-                   (error default-directory)))
-                ((equal use-current-dir '(4)) ; C-u: use current dir
-                 (parent-directory default-directory 0))
-                ((equal use-current-dir '(16)) ; C-u C-u: use parent dir
-                 (parent-directory default-directory 1))
-                ((equal use-current-dir '(64)) ; C-u C-u C-u: go 2 up
-                 (parent-directory default-directory 2))
-                (t  ; Numeric prefix: Go specified prefix up
-                 (parent-directory default-directory use-current-dir)))))
-      (counsel-rg initial-input dir ignored (projectile-prepend-project-name "rg"))))
-
-  (defun dakra/counsel-search-project-empty (&optional use-current-dir)
-    "Like dakra/counsel-search-project but with no initial input."
-    (interactive "P")
-    (dakra/counsel-search-project "" use-current-dir))
-
-  (defun counsel-projectile-find-file-occur ()
-    (cd (projectile-project-root))
-    (counsel-cmd-to-dired
-     (format
-      "find . | grep -i -E '%s' | xargs -d '\n' ls"
-      (counsel-unquote-regex-parens ivy--old-re))))
-  (ivy-set-occur 'counsel-projectile-find-file 'counsel-projectile-find-file-occur)
-  (ivy-set-occur 'counsel-projectile 'counsel-projectile-find-file-occur)
-
-  (counsel-projectile-mode))
 #+END_SRC
 * Hydras
 #+BEGIN_SRC emacs-lisp
