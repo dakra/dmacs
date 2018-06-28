@@ -6497,9 +6497,7 @@ no window on the right."
     (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
 
     (start-process-shell-command "kdeconnect-indicator" nil "kdeconnect-indicator")
-    (start-process-shell-command "keepassxc" nil "keepassxc")
-    (sql-init-passwords)
-  )
+    (start-process-shell-command "keepassxc" nil "keepassxc"))
 
   (defun exwm-input--set-focus (id)
     "Set input focus to window ID in a proper way."
