@@ -1047,6 +1047,90 @@ Simple but effective sorting and filtering for Emacs
   :after company
   :config (company-prescient-mode))
 #+END_SRC
+* Project Management
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :defer t
+  :bind-keymap (("s-p"   . projectile-command-map)
+                ("C-c p" . projectile-command-map))
+  :init
+  ;; Allow all file-local values for project root
+  (put 'projectile-project-root 'safe-local-variable 'stringp)
+  :config
+  (add-to-list 'projectile-other-file-alist '("py" "sql" "py"))
+  (add-to-list 'projectile-other-file-alist '("sql" "py"))
+  ;; Shorten the mode line
+  (setq projectile-mode-line
+        '(:eval (if (--any? (and it (file-remote-p it))
+                            (list
+                             (buffer-file-name)
+                             list-buffers-directory
+                             default-directory
+                             dired-directory))
+                    "P[-]"
+                  (format " P[%s]" (projectile-project-name)))))
+
+  ;; https://sideshowcoder.com/2017/10/24/projectile-and-tramp/
+  (defadvice projectile-on (around exlude-tramp activate)
+    "This should disable projectile when visiting a remote file"
+    (unless  (--any? (and it (file-remote-p it))
+                     (list
+                      (buffer-file-name)
+                      list-buffers-directory
+                      default-directory
+                      dired-directory))
+      ad-do-it))
+  ;; cache projectile project files
+  ;; projectile-find-files will be much faster for large projects.
+  ;; C-u C-c p f to clear cache before search.
+  (setq projectile-enable-caching nil)
+  (projectile-mode t))
+
+(use-package treemacs
+  :bind (([f8]        . treemacs-toggle-or-select)
+         :map treemacs-mode-map
+         ("C-t a" . treemacs-add-project)
+         ("C-t d" . treemacs-remove-project)
+         ("C-t r" . treemacs-rename-project)
+         ;; If we only hide the treemacs buffer (default binding) then, when we switch
+         ;; a frame to a different project and toggle treemacs again we still get the old project
+         ("q" . treemacs-kill-buffer))
+  :config
+  (defun treemacs-toggle-or-select ()
+    "Like treemacs-toggle but when treemacs is visible and not focused, select it."
+    (interactive)
+    (pcase (treemacs--current-visibility)
+      ('visible
+       (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
+           (bury-buffer)
+         (treemacs--select-visible-window)))
+      ('exists
+       (treemacs--select-not-visible-window))
+      ('none
+       (treemacs-projectile))
+      (_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility)))))
+
+  (defun treemacs-ignore-pyc (file _)
+    (s-ends-with-p ".pyc" file))
+  (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-pyc)
+
+  (setq treemacs-follow-after-init          t
+        treemacs-collapse-dirs              3
+        treemacs-silent-refresh             nil
+        treemacs-never-persist              t
+        treemacs-is-never-other-window      t)
+  (treemacs-git-mode 'simple)
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t))
+
+(use-package treemacs-projectile
+  :after (treemacs)
+  :bind (:map treemacs-mode-map
+         ("C-p p" . nil)
+         ("C-p" . nil)  ; I often still type C-p for UP
+         ("C-t p" . treemacs-projectile))
+  :config (setq treemacs-header-function #'treemacs-projectile-create-header))
+#+END_SRC
 * Ivy
 ** Flx: Fuzzy search
 #+BEGIN_SRC emacs-lisp
@@ -1270,90 +1354,6 @@ go up multiple parent directories."
   (ivy-set-occur 'counsel-projectile 'counsel-projectile-find-file-occur)
 
   (counsel-projectile-mode))
-#+END_SRC
-* Project Management
-#+BEGIN_SRC emacs-lisp
-(use-package projectile
-  :defer t
-  :bind-keymap (("s-p"   . projectile-command-map)
-                ("C-c p" . projectile-command-map))
-  :init
-  ;; Allow all file-local values for project root
-  (put 'projectile-project-root 'safe-local-variable 'stringp)
-  :config
-  (add-to-list 'projectile-other-file-alist '("py" "sql" "py"))
-  (add-to-list 'projectile-other-file-alist '("sql" "py"))
-  ;; Shorten the mode line
-  (setq projectile-mode-line
-        '(:eval (if (--any? (and it (file-remote-p it))
-                            (list
-                             (buffer-file-name)
-                             list-buffers-directory
-                             default-directory
-                             dired-directory))
-                    "P[-]"
-                  (format " P[%s]" (projectile-project-name)))))
-
-  ;; https://sideshowcoder.com/2017/10/24/projectile-and-tramp/
-  (defadvice projectile-on (around exlude-tramp activate)
-    "This should disable projectile when visiting a remote file"
-    (unless  (--any? (and it (file-remote-p it))
-                     (list
-                      (buffer-file-name)
-                      list-buffers-directory
-                      default-directory
-                      dired-directory))
-      ad-do-it))
-  ;; cache projectile project files
-  ;; projectile-find-files will be much faster for large projects.
-  ;; C-u C-c p f to clear cache before search.
-  (setq projectile-enable-caching nil)
-  (projectile-mode t))
-
-(use-package treemacs
-  :bind (([f8]        . treemacs-toggle-or-select)
-         :map treemacs-mode-map
-         ("C-t a" . treemacs-add-project)
-         ("C-t d" . treemacs-remove-project)
-         ("C-t r" . treemacs-rename-project)
-         ;; If we only hide the treemacs buffer (default binding) then, when we switch
-         ;; a frame to a different project and toggle treemacs again we still get the old project
-         ("q" . treemacs-kill-buffer))
-  :config
-  (defun treemacs-toggle-or-select ()
-    "Like treemacs-toggle but when treemacs is visible and not focused, select it."
-    (interactive)
-    (pcase (treemacs--current-visibility)
-      ('visible
-       (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
-           (bury-buffer)
-         (treemacs--select-visible-window)))
-      ('exists
-       (treemacs--select-not-visible-window))
-      ('none
-       (treemacs-projectile))
-      (_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility)))))
-
-  (defun treemacs-ignore-pyc (file _)
-    (s-ends-with-p ".pyc" file))
-  (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-pyc)
-
-  (setq treemacs-follow-after-init          t
-        treemacs-collapse-dirs              3
-        treemacs-silent-refresh             nil
-        treemacs-never-persist              t
-        treemacs-is-never-other-window      t)
-  (treemacs-git-mode 'simple)
-  (treemacs-follow-mode t)
-  (treemacs-filewatch-mode t))
-
-(use-package treemacs-projectile
-  :after (treemacs)
-  :bind (:map treemacs-mode-map
-         ("C-p p" . nil)
-         ("C-p" . nil)  ; I often still type C-p for UP
-         ("C-t p" . treemacs-projectile))
-  :config (setq treemacs-header-function #'treemacs-projectile-create-header))
 #+END_SRC
 * Navigation
 #+BEGIN_SRC emacs-lisp
