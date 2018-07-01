@@ -1119,9 +1119,9 @@ Simple but effective sorting and filtering for Emacs
         treemacs-silent-refresh             nil
         treemacs-never-persist              t
         treemacs-is-never-other-window      t)
-  (treemacs-git-mode 'simple)
-  (treemacs-follow-mode t)
-  (treemacs-filewatch-mode t))
+  ;;(treemacs-filewatch-mode t)
+  ;;(treemacs-follow-mode t)
+  (treemacs-git-mode 'simple))
 
 (use-package treemacs-projectile
   :after (treemacs)
