@@ -6734,7 +6734,6 @@ It only works for frames with exactly two windows."
   :after emms
   :config
   (setq emms-player-list '(emms-player-mpv))
-  (setq emms-player-mpv-ipc-method 'file)
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
 #+END_SRC
 * Misc
