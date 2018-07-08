@@ -1250,8 +1250,7 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   ;;:defer 5
   :after ivy
   :config
-  (ivy-set-display-transformer 'ivy-switch-buffer
-                               'ivy-rich-switch-buffer-transformer)
+  (ivy-rich-set-display-transformer)
   ;; Show only basic info for tramp buffers to make it faster
   (setq ivy-rich-parse-remote-buffer nil)
   (setq ivy-rich-switch-buffer-align-virtual-buffer t
