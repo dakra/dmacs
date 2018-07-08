@@ -2353,8 +2353,9 @@ file to edit."
          ("C-x M-g" . magit-dispatch-popup)
          ("s-m p" . magit-list-repositories)
          ("s-m m" . magit-status)
+         ("s-m f" . magit-file-popup)
          ("s-m l" . magit-log-popup)
-         ("s-m f" . magit-log-buffer-file)
+         ("s-m L" . magit-log-buffer-file)
          ("s-m b" . magit-blame))
   :defines (magit-ediff-dwim-show-on-hunks)
   :init
