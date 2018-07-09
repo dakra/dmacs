@@ -1056,6 +1056,12 @@ Simple but effective sorting and filtering for Emacs
   :after company
   :config (company-prescient-mode))
 #+END_SRC
+** deadgrep: Interface for ripgrep
+#+BEGIN_SRC emacs-lisp
+(use-package deadgrep
+  :bind ("<f5>" . deadgrep))
+#+END_SRC
+
 * Project Management
 #+BEGIN_SRC emacs-lisp
 (use-package projectile

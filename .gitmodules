@@ -122,6 +122,9 @@
 [submodule "datetime"]
 	path = lib/datetime
 	url = git@github.com:doublep/datetime.git
+[submodule "deadgrep"]
+	path = lib/deadgrep
+	url = git@github.com:Wilfred/deadgrep.git
 [submodule "deferred"]
 	path = lib/deferred
 	url = git@github.com:kiwanami/emacs-deferred.git
@@ -727,6 +730,9 @@
 [submodule "sphinx-mode"]
 	path = lib/sphinx-mode
 	url = git@github.com:Fuco1/sphinx-mode.git
+[submodule "spinner"]
+	path = lib/spinner
+	url = git@github.com:Malabarba/spinner.el.git
 [submodule "sql-indent"]
 	path = lib/sql-indent
 	url = git@github.com:alex-hhh/emacs-sql-indent.git
