@@ -341,7 +341,11 @@ Allow some commands as safe by default
          ("M-u" . dakra-upcase-dwim)
          ("M-l" . dakra-downcase-dwim)
          ("M-c" . dakra-capitalize-dwim))
+  :hook (text . turn-on-auto-fill)  ; Use auto-fill in all text modes
   :config
+  ;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
+  (setq-default fill-column 80)
+
   (defun dakra-kill-this-buffer ()
     "Like (kill-this-buffer) but independent of the menu bar."
     (interactive)
@@ -671,7 +675,7 @@ different face
   (setq zmx-unicode-mode t))
 #+END_SRC
 * Editor
-Lossage
+** Lossage: Live update lossage buffer
 #+BEGIN_SRC emacs-lisp
 (defun update-lossage-buffer ()
   "Update the \"Lossage\" buffer.
@@ -688,6 +692,7 @@ M-x rename-buffer Lossage RET"
   (interactive)
   (add-hook 'post-command-hook #'update-lossage-buffer nil 'local))
 #+END_SRC
+** hippie-exp: Expand by fuzzy matching text in open buffers
 #+BEGIN_SRC emacs-lisp
 (use-package hippie-exp
   :bind (("M-/" . hippie-expand))
@@ -702,6 +707,75 @@ M-x rename-buffer Lossage RET"
                                            try-expand-line
                                            try-complete-lisp-symbol-partially
                                            try-complete-lisp-symbol)))
+#+END_SRC
+** rainbow-delimiters: Different color for each paranthesis level
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-delimiters
+  :commands rainbow-delimiters-mode
+  :hook ((emacs-lisp-mode lisp-mode hy-mode) . rainbow-delimiters-mode))
+#+END_SRC
+** fancy-narrow: Fancier narrow
+#+BEGIN_SRC emacs-lisp
+(use-package fancy-narrow
+  :bind (("C-x n" . fancy-narrow-or-widen-dwim)
+         ("C-x N" . narrow-or-widen-dwim))
+  :config
+    ;;; toggle narrow or widen (region or defun) with C-x n
+  (defun fancy-narrow-or-widen-dwim (p)
+    "Widen if buffer is narrowed, narrow-dwim otherwise.
+Dwim means: region, org-src-block, org-subtree, or
+defun, whichever applies first.  Narrowing to
+org-src-block actually calls `org-edit-src-code'.
+
+With prefix P, don't widen, just narrow even if buffer
+is already narrowed."
+    (interactive "P")
+    (declare (interactive-only))
+    (cond ((and (fancy-narrow-active-p) (not p)) (fancy-widen))
+          ((region-active-p)
+           (fancy-narrow-to-region (region-beginning)
+                                   (region-end)))
+          ((derived-mode-p 'org-mode)
+           ;; `org-edit-src-code' is not a real narrowing
+           ;; command. Remove this first conditional if
+           ;; you don't want it.
+           (cond ((ignore-errors (org-edit-src-code) t))
+                 ((ignore-errors (org-fancy-narrow-to-block) t))
+                 (t (org-narrow-to-subtree))))
+          ((derived-mode-p 'latex-mode)
+           (LaTeX-narrow-to-environment))
+          (t (fancy-narrow-to-defun))))
+
+  ;; Make swiper work with fancy-narow
+  (fancy-narrow--advise-function 'swiper)
+
+  (defun narrow-or-widen-dwim (p)
+    "Widen if buffer is narrowed, narrow-dwim otherwise.
+Dwim means: region, org-src-block, org-subtree, or
+defun, whichever applies first.  Narrowing to
+org-src-block actually calls `org-edit-src-code'.
+
+With prefix P, don't widen, just narrow even if buffer
+is already narrowed."
+    (interactive "P")
+    (declare (interactive-only))
+    (cond ((and (buffer-narrowed-p) (not p)) (widen))
+          ((region-active-p)
+           (narrow-to-region (region-beginning)
+                             (region-end)))
+          ((derived-mode-p 'org-mode)
+           ;; `org-edit-src-code' is not a real narrowing
+           ;; command. Remove this first conditional if
+           ;; you don't want it.
+           (cond ((ignore-errors (org-edit-src-code) t))
+                 ((ignore-errors (org-narrow-to-block) t))
+                 (t (org-narrow-to-subtree))))
+          ((derived-mode-p 'latex-mode)
+           (LaTeX-narrow-to-environment))
+          (t (narrow-to-defun)))))
+#+END_SRC
+** crux: Various small useful utility functions
+#+BEGIN_SRC emacs-lisp
 (use-package crux
   :bind (("C-c u" . crux-view-url)
          ("C-c f c" . write-file)
@@ -712,7 +786,10 @@ M-x rename-buffer Lossage RET"
          ("C-a"   . crux-move-beginning-of-line)
          ([(shift return)] . crux-smart-open-line)
          ([(control shift return)] . crux-smart-open-line-above)))
+#+END_SRC
 
+** smartparens
+#+BEGIN_SRC emacs-lisp
 (use-package smartparens
   :defer 1
   ;;:hook ((emacs-lisp-mode lisp-mode hy-mode) . smartparens-strict-mode)
@@ -775,77 +852,7 @@ M-x rename-buffer Lossage RET"
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 #+END_SRC
-#+BEGIN_SRC emacs-lisp
-(use-package rainbow-delimiters
-  :commands rainbow-delimiters-mode
-  :hook ((emacs-lisp-mode lisp-mode hy-mode) . rainbow-delimiters-mode))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-(use-package fancy-narrow
-  :bind (("C-x n" . fancy-narrow-or-widen-dwim)
-         ("C-x N" . narrow-or-widen-dwim))
-  :config
-    ;;; toggle narrow or widen (region or defun) with C-x n
-  (defun fancy-narrow-or-widen-dwim (p)
-    "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or
-defun, whichever applies first.  Narrowing to
-org-src-block actually calls `org-edit-src-code'.
-
-With prefix P, don't widen, just narrow even if buffer
-is already narrowed."
-    (interactive "P")
-    (declare (interactive-only))
-    (cond ((and (fancy-narrow-active-p) (not p)) (fancy-widen))
-          ((region-active-p)
-           (fancy-narrow-to-region (region-beginning)
-                                   (region-end)))
-          ((derived-mode-p 'org-mode)
-           ;; `org-edit-src-code' is not a real narrowing
-           ;; command. Remove this first conditional if
-           ;; you don't want it.
-           (cond ((ignore-errors (org-edit-src-code) t))
-                 ((ignore-errors (org-fancy-narrow-to-block) t))
-                 (t (org-narrow-to-subtree))))
-          ((derived-mode-p 'latex-mode)
-           (LaTeX-narrow-to-environment))
-          (t (fancy-narrow-to-defun))))
-
-  ;; Make swiper work with fancy-narow
-  (fancy-narrow--advise-function 'swiper)
-
-  (defun narrow-or-widen-dwim (p)
-    "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or
-defun, whichever applies first.  Narrowing to
-org-src-block actually calls `org-edit-src-code'.
-
-With prefix P, don't widen, just narrow even if buffer
-is already narrowed."
-    (interactive "P")
-    (declare (interactive-only))
-    (cond ((and (buffer-narrowed-p) (not p)) (widen))
-          ((region-active-p)
-           (narrow-to-region (region-beginning)
-                             (region-end)))
-          ((derived-mode-p 'org-mode)
-           ;; `org-edit-src-code' is not a real narrowing
-           ;; command. Remove this first conditional if
-           ;; you don't want it.
-           (cond ((ignore-errors (org-edit-src-code) t))
-                 ((ignore-errors (org-narrow-to-block) t))
-                 (t (org-narrow-to-subtree))))
-          ((derived-mode-p 'latex-mode)
-           (LaTeX-narrow-to-environment))
-          (t (narrow-to-defun)))))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
-;; set with 'custom' since it's buffer-local variable
-(setq-default fill-column 80)
-;; Use auto-fill in all modes
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-#+END_SRC
+** Misc
 #+BEGIN_SRC emacs-lisp
 ;; comment-dwim-2 is a replacement for the Emacs' built-in command
 ;; comment-dwim which includes more comment features, including:
@@ -858,14 +865,15 @@ is already narrowed."
 ;; switch between the different behaviors
 (use-package comment-dwim-2
   :bind ("M-;" . comment-dwim-2))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
+
 ;; Do action that normally works on a region to the whole line if no region active.
 ;; That way you can just C-w to copy the whole line for example.
 (use-package whole-line-or-region
   :defer 1
   :config (whole-line-or-region-global-mode t))
-
+#+END_SRC
+** smartrep: Repeat previous command without prefix key
+#+BEGIN_SRC emacs-lisp
 (use-package operate-on-number
   :defer t)
 (use-package smartrep
@@ -890,8 +898,8 @@ is already narrowed."
       ("%" . apply-operation-to-number-at-point)
       ("'" . operate-on-number-at-point))))
 #+END_SRC
+** copy-as-format: Copy text as GitHub/Slack/JIRA/HipChat/... formatted code
 #+BEGIN_SRC emacs-lisp
-;; Emacs function to copy buffer locations as GitHub/Slack/JIRA/HipChat/... formatted code
 (use-package copy-as-format
   :bind (("C-c w g" . copy-as-format-github)
          ("C-c w h" . copy-as-format-hipchat-pidgin)
@@ -908,15 +916,13 @@ is already narrowed."
     (interactive)
     (setq copy-as-format-default "hipchat-pidgin")
     (copy-as-format)))
-
+#+END_SRC
+** zop-to-char: Remove multiple characters at once
+#+BEGIN_SRC emacs-lisp
 ;; Replace zap-to-char functionaity with the more powerful zop-to-char
 (use-package zop-to-char
   :bind (("M-z" . zop-up-to-char)
          ("M-Z" . zop-to-char)))
-
-(use-package dumb-diff
-  :disabled t
-  :commands (dumb-diff dumb-diff-set-region-as-buffer1 dumb-diff-set-region-as-buffer2))
 #+END_SRC
 ** Cycle outline and code visibility
 #+BEGIN_SRC emacs-lisp
