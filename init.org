@@ -6455,7 +6455,7 @@ no window on the right."
       (setq exwm-connected-displays (length connected))
       (setq exwm-randr-workspace-output-plist
             (append (list 0 primary)
-                    (list 1 (or other-2 primary))
+                    (list 1 (or other-2 other-1 primary))
                     (mapcan (lambda (i) (list i (or other-1 other-2 primary)))
                             (number-sequence 1 exwm-workspace-number))))
       (exwm-randr--refresh)
