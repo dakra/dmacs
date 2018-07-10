@@ -259,6 +259,9 @@ Let's set some variables with basic user information.
 ;; activate character folding in searches i.e. searching for 'a' matches 'ä' as well
 (setq search-default-mode 'char-fold-to-regexp)
 
+;; Only split vertically on very tall screens
+(setq split-height-threshold 110)
+
 ;; Paste with middle mouse button doesn't move the curser
 (setq mouse-yank-at-point t)
 
