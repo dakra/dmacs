@@ -322,12 +322,6 @@ Allow some commands as safe by default
 ;; Some things don't work well with fish, just always use posix compatible shell (dash)
 (setq shell-file-name "/bin/sh")
 
-
-(use-package alert :defer t
-  :config
-  ;; send alerts by default to D-Bus
-  (setq alert-default-style 'notifications))
-
 (use-package image :defer t
   :config
   ;; always loop GIF images
@@ -534,6 +528,13 @@ Allow some commands as safe by default
   (setq calendar-holiday-marker t))
 #+END_SRC
 * UI
+** Alert: Growl-style notification system
+#+BEGIN_SRC emacs-lisp
+(use-package alert :defer t
+  :config
+  ;; send alerts by default to D-Bus
+  (setq alert-default-style 'notifications))
+#+END_SRC
 ** Eldoc: Display help
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
