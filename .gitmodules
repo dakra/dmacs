@@ -688,6 +688,9 @@
 [submodule "sass-mode"]
 	path = lib/sass-mode
 	url = git@github.com:nex3/sass-mode.git
+[submodule "sauron"]
+	path = lib/sauron
+	url = git@github.com:djcb/sauron.git
 [submodule "scss-mode"]
 	path = lib/scss-mode
 	url = git@github.com:antonj/scss-mode.git

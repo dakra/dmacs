@@ -535,6 +535,24 @@ Allow some commands as safe by default
   ;; send alerts by default to D-Bus
   (setq alert-default-style 'notifications))
 #+END_SRC
+** Sauron: Event log (listen to d-bus and other messages and show them)
+#+BEGIN_SRC emacs-lisp
+(use-package sauron
+  :if (daemonp)
+  :defer 5
+  :bind (("<f12>" . sauron-toggle-hide-show)
+         ("C-c <f12>" . sauron-clear))
+  :config
+  ;; Feed sauron events into alert
+  (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)
+
+  (setq sauron-max-line-length 110)
+  (setq sauron-separate-frame nil)
+  ;;(setq sauron-sticky-frame t)
+
+  (setq sauron-watch-nicks '("dakra"))
+  (sauron-start-hidden))
+#+END_SRC
 ** Eldoc: Display help
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
