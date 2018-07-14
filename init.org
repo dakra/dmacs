@@ -1418,6 +1418,18 @@ go up multiple parent directories."
 (use-package ace-window
   :bind ("s-a" . ace-window))
 #+END_SRC
+** ibuffer
+#+BEGIN_SRC emacs-lisp
+(use-package ibuffer-projectile
+  :hook (ibuffer . ibuffer-projectile-init)
+  :commands ibuffer-projectile-init
+  :config
+  (defun ibuffer-projectile-init()
+    (ibuffer-projectile-set-filter-groups)
+    (unless (eq ibuffer-sorting-mode 'alphabetic)
+      (ibuffer-do-sort-by-alphabetic))))
+#+END_SRC
+
 ** Imenu
 #+BEGIN_SRC emacs-lisp
 (use-package imenu

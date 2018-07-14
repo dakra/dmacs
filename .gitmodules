@@ -360,6 +360,9 @@
 [submodule "hyperspec"]
 	path = lib/hyperspec
 	url = git@github.com:emacsorphanage/hyperspec.git
+[submodule "ibuffer-projectile"]
+	path = lib/ibuffer-projectile
+	url = git@github.com:purcell/ibuffer-projectile.git
 [submodule "iedit"]
 	path = lib/iedit
 	url = git@github.com:victorhge/iedit.git
