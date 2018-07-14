@@ -4351,7 +4351,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   (setq org-pretty-entities t)
   ;; But Don't print "bar" as subscript in "foo_bar"
   (setq org-pretty-entities-include-sub-superscripts nil)
-  ;; And also don't export ^ or _ as super/subscripts
+  ;; And also don't display ^ or _ as super/subscripts
   (setq org-use-sub-superscripts nil)
   ;; undone TODO entries will block switching the parent to DONE
   (setq org-enforce-todo-dependencies t)
@@ -5218,7 +5218,12 @@ as the default task."
            (point-min)
            (point-max)
            "xclip -selection clipboard -t 'text/html' -i"))
-        (kill-buffer buf)))))
+        (kill-buffer buf))))
+
+  ;; Don't add html footer to export
+  (setq org-html-postamble nil)
+  ;; Don't export ^ or _ as super/subscripts
+  (setq org-export-with-sub-superscripts nil))
 
 ;; Export blog posts to hugo
 (use-package ox-hugo
