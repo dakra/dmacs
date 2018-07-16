@@ -1421,6 +1421,9 @@ go up multiple parent directories."
 #+END_SRC
 ** ibuffer
 #+BEGIN_SRC emacs-lisp
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer))
+
 (use-package ibuffer-projectile
   :hook (ibuffer . ibuffer-projectile-init)
   :commands ibuffer-projectile-init
