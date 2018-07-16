@@ -538,6 +538,7 @@ Allow some commands as safe by default
 ** Sauron: Event log (listen to d-bus and other messages and show them)
 #+BEGIN_SRC emacs-lisp
 (use-package sauron
+  :disabled t
   :if (daemonp)
   :defer 5
   :bind (("<f12>" . sauron-toggle-hide-show)
