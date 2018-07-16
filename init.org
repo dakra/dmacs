@@ -1003,7 +1003,7 @@ mark the string and call `edit-indirect-region' with it."
   (defvar edit-indirect-guess-mode-history nil)
   (defun edit-indirect-guess-mode-fn (_buffer _beg _end)
     (let* ((lang (completing-read "Mode: "
-                                  '("python" "sql" "js2" "web" "emacs-lisp")
+                                  '("typescript" "python" "sql" "js2" "web" "scss" "emacs-lisp")
                                   nil nil nil 'edit-indirect-guess-mode-history))
            (mode-str (concat lang "-mode"))
            (mode (intern mode-str)))
