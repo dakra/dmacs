@@ -82,6 +82,9 @@
 [submodule "company-anaconda"]
 	path = lib/company-anaconda
 	url = git@github.com:proofit404/company-anaconda.git
+[submodule "company-box"]
+	path = lib/company-box
+	url = git@github.com:sebastiencs/company-box.git
 [submodule "company-go"]
 	path = lib/company-go
 	url = git@github.com:emacsmirror/company-go.git

@@ -1475,14 +1475,14 @@ go up multiple parent directories."
 #+BEGIN_SRC emacs-lisp
 (use-package company
   :defer 2
-  :bind (:map company-active-map
-         ([return] . nil)
-         ("RET" . nil)
-         ("TAB" . company-select-next)
-         ([tab] . company-select-next)
-         ("S-TAB" . company-select-previous)
-         ([backtab] . company-select-previous)
-         ("C-j" . company-complete-selection))
+  ;; :bind (:map company-active-map
+  ;;        ([return] . nil)
+  ;;        ("RET" . nil)
+  ;;        ("TAB" . company-select-next)
+  ;;        ([tab] . company-select-next)
+  ;;        ("S-TAB" . company-select-previous)
+  ;;        ([backtab] . company-select-previous)
+  ;;        ("C-j" . company-complete-selection))
   :config
   ;; company-tng (tab and go) allows you to use TAB to both select a
   ;; completion candidate from the list and to insert it into the
@@ -1493,12 +1493,12 @@ go up multiple parent directories."
   ;; inserts it in the buffer. Pressing TAB again selects the second
   ;; item and replaces the inserted item with the second one. This can
   ;; continue as long as the user wishes to cycle through the menu.
-  (require 'company-tng)
-  (setq company-frontends '(company-tng-frontend
-                            company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend))
+  ;;(require 'company-tng)
+  ;; (setq company-frontends '(company-tng-frontend
+  ;;                           company-pseudo-tooltip-frontend
+  ;;                           company-echo-metadata-frontend))
 
-  (setq company-idle-delay 0.2)
+  (setq company-idle-delay 0.1)
   (setq company-tooltip-limit 10)
   (setq company-minimum-prefix-length 1)
   ;; Aligns annotation to the right hand side
@@ -1528,6 +1528,9 @@ go up multiple parent directories."
       (append (if (consp backend) backend (list backend))
               '(:with company-yasnippet))))
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 #+END_SRC
 ** View Large Files
 #+BEGIN_SRC emacs-lisp
