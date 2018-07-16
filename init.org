@@ -3519,7 +3519,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
                              (sql-user "root")
                              (sql-database "api")
                              (sql-mysql-options '("-A")))
-            (hogaso-remote   (sql-product 'mysql)
+            (hogaso-remote   (sql-product 'mariadb)
                              (sql-port 3307)
                              (sql-user "root")
                              (sql-database "hogaso")
