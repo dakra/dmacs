@@ -1478,7 +1478,7 @@ go up multiple parent directories."
 ** Company
 #+BEGIN_SRC emacs-lisp
 (use-package company
-  :defer 2
+  :defer 1
   ;; :bind (:map company-active-map
   ;;        ([return] . nil)
   ;;        ("RET" . nil)
@@ -1497,10 +1497,10 @@ go up multiple parent directories."
   ;; inserts it in the buffer. Pressing TAB again selects the second
   ;; item and replaces the inserted item with the second one. This can
   ;; continue as long as the user wishes to cycle through the menu.
-  ;;(require 'company-tng)
-  ;; (setq company-frontends '(company-tng-frontend
-  ;;                           company-pseudo-tooltip-frontend
-  ;;                           company-echo-metadata-frontend))
+  (require 'company-tng)
+  (setq company-frontends '(company-tng-frontend
+                            company-pseudo-tooltip-frontend
+                            company-echo-metadata-frontend))
 
   (setq company-idle-delay 0.1)
   (setq company-tooltip-limit 10)
@@ -1534,6 +1534,7 @@ go up multiple parent directories."
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
 
 (use-package company-box
+  :disabled t
   :hook (company-mode . company-box-mode))
 #+END_SRC
 ** View Large Files

@@ -83,6 +83,7 @@
 	path = lib/company-anaconda
 	url = git@github.com:proofit404/company-anaconda.git
 [submodule "company-box"]
+	disabled = true
 	path = lib/company-box
 	url = git@github.com:sebastiencs/company-box.git
 [submodule "company-go"]
