@@ -5233,6 +5233,23 @@ as the default task."
            "xclip -selection clipboard -t 'text/html' -i"))
         (kill-buffer buf))))
 
+  ;; FIXME: This is only a hack as I do NOT want the tags INSIDE the h3 title tag
+  (defun my-hack-org-html-format-headline-function
+      (todo _todo-type priority text tags info)
+    "Default format function for a headline.
+See `org-html-format-headline-function' for details."
+    (let ((todo (org-html--todo todo info))
+	  (priority (org-html--priority priority info))
+	  (tags (org-html--tags tags info)))
+      (concat todo (and todo " ")
+	      priority (and priority " ")
+	      text
+	      (and tags "&#xa0;&#xa0;&#xa0;</h3><p>") tags (and tags "</p><h3>"))))
+  (setq org-html-format-headline-function #'my-hack-org-html-format-headline-function)
+
+  ;; Use html5 as org export and use new tags (I don't care about browsers <=IE8)
+  (setq org-html-doctype "html5")
+  (setq org-html-html5-fancy t)
   ;; Don't add html footer to export
   (setq org-html-postamble nil)
   ;; Don't export ^ or _ as super/subscripts
