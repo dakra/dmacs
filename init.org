@@ -1092,6 +1092,7 @@ Simple but effective sorting and filtering for Emacs
 #+END_SRC
 
 * Project Management
+** Projectile
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
   :defer t
@@ -1129,7 +1130,9 @@ Simple but effective sorting and filtering for Emacs
   ;; C-u C-c p f to clear cache before search.
   (setq projectile-enable-caching nil)
   (projectile-mode t))
-
+#+END_SRC
+** Treemacs: A tree layout file explorer
+#+BEGIN_SRC emacs-lisp
 (use-package treemacs
   :bind (([f8]        . treemacs-toggle-or-select)
          :map treemacs-mode-map
@@ -1141,18 +1144,20 @@ Simple but effective sorting and filtering for Emacs
          ("q" . treemacs-kill-buffer))
   :config
   (defun treemacs-toggle-or-select ()
-    "Like treemacs-toggle but when treemacs is visible and not focused, select it."
+    "Initialize or toggle treemacs.
+- If the treemacs window is visible and selected, hide it.
+- If the treemacs window is visible select it.
+- If a treemacs buffer exists, but is not visible show it.
+- If no treemacs buffer exists for the current frame create and show it.
+- If the workspace is empty additionally ask for the root path of the first
+  project to add."
     (interactive)
-    (pcase (treemacs--current-visibility)
-      ('visible
-       (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
-           (bury-buffer)
-         (treemacs--select-visible-window)))
-      ('exists
-       (treemacs--select-not-visible-window))
-      ('none
-       (treemacs-projectile))
-      (_ (error "[Treemacs] Invalid visibility value: %s" (treemacs--current-visibility)))))
+    (-pcase (treemacs--current-visibility)
+      ['visible (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
+                    (delete-window (treemacs--is-visible?))
+                  (treemacs--select-visible-window))]
+      ['exists  (treemacs-select-window)]
+      ['none    (treemacs--init (treemacs--read-first-project-path))]))
 
   (defun treemacs-ignore-pyc (file _)
     (s-ends-with-p ".pyc" file))
@@ -1163,8 +1168,8 @@ Simple but effective sorting and filtering for Emacs
         treemacs-silent-refresh             nil
         treemacs-never-persist              t
         treemacs-is-never-other-window      t)
-  ;;(treemacs-filewatch-mode t)
-  ;;(treemacs-follow-mode t)
+  (treemacs-filewatch-mode t)
+  (treemacs-follow-mode -1)
   (treemacs-git-mode 'simple))
 
 (use-package treemacs-projectile
