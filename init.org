@@ -1091,6 +1091,68 @@ Simple but effective sorting and filtering for Emacs
   :bind ("<f5>" . deadgrep))
 #+END_SRC
 
+** Company: Auto completion
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :defer 1
+  :bind (:map company-active-map
+         ([return] . nil)
+         ("RET" . nil)
+         ("TAB" . company-select-next)
+         ([tab] . company-select-next)
+         ("S-TAB" . company-select-previous)
+         ([backtab] . company-select-previous)
+         ("C-j" . company-complete-selection))
+  :config
+  ;; company-tng (tab and go) allows you to use TAB to both select a
+  ;; completion candidate from the list and to insert it into the
+  ;; buffer.
+  ;;
+  ;; It cycles the candidates like `yank-pop' or `dabbrev-expand' or
+  ;; Vim: Pressing TAB selects the first item in the completion menu and
+  ;; inserts it in the buffer. Pressing TAB again selects the second
+  ;; item and replaces the inserted item with the second one. This can
+  ;; continue as long as the user wishes to cycle through the menu.
+  (require 'company-tng)
+  (setq company-frontends '(company-tng-frontend
+                            company-pseudo-tooltip-frontend
+                            company-echo-metadata-frontend))
+
+  (setq company-idle-delay 0.1)
+  (setq company-tooltip-limit 10)
+  (setq company-minimum-prefix-length 1)
+  ;; Aligns annotation to the right hand side
+  (setq company-tooltip-align-annotations t)
+  ;;(setq company-dabbrev-downcase nil)
+  ;; invert the navigation direction if the the completion popup-isearch-match
+  ;; is displayed on top (happens near the bottom of windows)
+  ;;(setq company-tooltip-flip-when-above t)
+  ;; start autocompletion only after typing
+  (setq company-begin-commands '(self-insert-command))
+  (global-company-mode 1)
+
+  (use-package company-emoji
+    :disabled t
+    :config (add-to-list 'company-backends 'company-emoji))
+
+  (use-package company-quickhelp
+    :disabled t
+    :config (company-quickhelp-mode 1))
+
+  ;; Add yasnippet support for all company backends
+  (defvar company-mode/enable-yas t
+    "Enable yasnippet for all backends.")
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+
+(use-package company-box
+  :disabled t
+  :hook (company-mode . company-box-mode))
+#+END_SRC
 * Project Management
 ** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -1474,73 +1536,6 @@ go up multiple parent directories."
         recentf-auto-cleanup 'never)
 
   (recentf-mode))
-#+END_SRC
-** Atomx
-#+BEGIN_SRC emacs-lisp
-(use-package atomx
-  :defer t)
-#+END_SRC
-** Company
-#+BEGIN_SRC emacs-lisp
-(use-package company
-  :defer 1
-  ;; :bind (:map company-active-map
-  ;;        ([return] . nil)
-  ;;        ("RET" . nil)
-  ;;        ("TAB" . company-select-next)
-  ;;        ([tab] . company-select-next)
-  ;;        ("S-TAB" . company-select-previous)
-  ;;        ([backtab] . company-select-previous)
-  ;;        ("C-j" . company-complete-selection))
-  :config
-  ;; company-tng (tab and go) allows you to use TAB to both select a
-  ;; completion candidate from the list and to insert it into the
-  ;; buffer.
-  ;;
-  ;; It cycles the candidates like `yank-pop' or `dabbrev-expand' or
-  ;; Vim: Pressing TAB selects the first item in the completion menu and
-  ;; inserts it in the buffer. Pressing TAB again selects the second
-  ;; item and replaces the inserted item with the second one. This can
-  ;; continue as long as the user wishes to cycle through the menu.
-  (require 'company-tng)
-  (setq company-frontends '(company-tng-frontend
-                            company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend))
-
-  (setq company-idle-delay 0.1)
-  (setq company-tooltip-limit 10)
-  (setq company-minimum-prefix-length 1)
-  ;; Aligns annotation to the right hand side
-  (setq company-tooltip-align-annotations t)
-  ;;(setq company-dabbrev-downcase nil)
-  ;; invert the navigation direction if the the completion popup-isearch-match
-  ;; is displayed on top (happens near the bottom of windows)
-  ;;(setq company-tooltip-flip-when-above t)
-  ;; start autocompletion only after typing
-  (setq company-begin-commands '(self-insert-command))
-  (global-company-mode 1)
-
-  (use-package company-emoji
-    :disabled t
-    :config (add-to-list 'company-backends 'company-emoji))
-
-  (use-package company-quickhelp
-    :disabled t
-    :config (company-quickhelp-mode 1))
-
-  ;; Add yasnippet support for all company backends
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
-
-(use-package company-box
-  :disabled t
-  :hook (company-mode . company-box-mode))
 #+END_SRC
 ** View Large Files
 #+BEGIN_SRC emacs-lisp
@@ -6799,6 +6794,11 @@ It only works for frames with exactly two windows."
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
 #+END_SRC
 * Misc
+** Atomx
+#+BEGIN_SRC emacs-lisp
+(use-package atomx
+  :defer t)
+#+END_SRC
 ** Gif-Screencasts: One-frame-per-action GIF recording
 You need to install ~scrot~, ImageMagick (~convert~) and optional ~Gifsicle~.
 
