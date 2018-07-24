@@ -2439,6 +2439,10 @@ file to edit."
   ;; Show gravatars
   (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
+  ;; Always show recent/unpushed/unpulled commits
+  (setq magit-section-initial-visibility-alist '((unpushed . show)
+                                                 (unpulled . show)))
+
   (setq magit-repository-directories
         '(("~/atomx" . 5)
           ("~/e5" . 5)
