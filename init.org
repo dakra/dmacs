@@ -2826,7 +2826,9 @@ When called with 2 prefix arguments only open in browser and don't copy."
 
 (use-package indium
   :hook (js-mode . indium-interaction-mode)
-  :config (setq indium-update-script-on-save t))
+  :config
+  (setq indium-update-script-on-save t)
+  (setq indium-chrome-executable "google-chrome-stable"))
 
 (use-package js2-refactor
   :hook (js2-mode . js2-refactor-mode)
