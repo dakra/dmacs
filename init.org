@@ -815,8 +815,11 @@ is already narrowed."
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens
   :defer 1
-  ;;:hook ((emacs-lisp-mode lisp-mode hy-mode) . smartparens-strict-mode)
-  :hook (prog-mode . smartparens-strict-mode)
+  :hook ((
+          emacs-lisp-mode lisp-mode hy-mode go-mode
+          python-mode typescript-mode javascript-mode
+          ) . smartparens-strict-mode)
+  ;; :hook (prog-mode . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
          ;; This is the paredit mode map minus a few key bindings
          ;; that I use in other modes (e.g. M-?)
