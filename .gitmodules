@@ -539,6 +539,9 @@
 [submodule "org-jira"]
 	path = lib/org-jira
 	url = git@github.com:ahungry/org-jira.git
+[submodule "org-make-toc"]
+	path = lib/org-make-toc
+	url = git@github.com:alphapapa/org-make-toc.git
 [submodule "org-mime"]
 	path = lib/org-mime
 	url = git@github.com:org-mime/org-mime.git
