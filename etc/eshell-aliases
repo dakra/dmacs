@@ -1,8 +1,11 @@
+alias .. cd ..
+alias ... cd ../..
 alias e find-file-other-window $1
 alias ee find-file $1
 alias emacs find-file $1
 alias gd magit-diff-unstaged
 alias gds magit-diff-staged
+alias git git --no-pager $*
 alias l ls -l $*
 alias la ls -al $*
 alias ll ls -al $*
