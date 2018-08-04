@@ -3300,8 +3300,12 @@ $ sbcl
 (use-package lua-mode
   :mode "\\.lua\\'"
   :interpreter ("lua" . lua-mode)
+  :hook (lua-mode . lua-outline-mode)
   :bind (:map lua-mode-map
-         ("M-." . dumb-jump-go)))
+         ("M-." . dumb-jump-go))
+  :config
+  (defun lua-outline-mode ()
+    (setq-local outline-regexp "function")))
 
 (use-package company-lua
   :hook (lua-mode . my-lua-mode-company-init)
