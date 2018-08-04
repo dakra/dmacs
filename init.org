@@ -3299,7 +3299,9 @@ $ sbcl
 #+BEGIN_SRC emacs-lisp
 (use-package lua-mode
   :mode "\\.lua\\'"
-  :interpreter ("lua" . lua-mode))
+  :interpreter ("lua" . lua-mode)
+  :bind (:map lua-mode-map
+         ("M-." . dumb-jump-go)))
 
 (use-package company-lua
   :hook (lua-mode . my-lua-mode-company-init)
