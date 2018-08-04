@@ -2182,7 +2182,7 @@ go up multiple parent directories."
     "Same as C-x 8 enter UNICODE-NAME."
     (insert-char (gethash unicode-name (ucs-names))))
 
-  (defhydra hydra-unicode (:hint nil)
+  (defhydra hydra-unicode (:color blue :hint nil)
     "
      Unicode  _c_ €   _a_ ä   _A_ Ä
               _d_ °   _o_ ö   _O_ Ö
