@@ -5031,7 +5031,7 @@ session as the current block. ARG has same meaning as in
      (haskell)
      (io)
      (java)
-     (js)
+     (js . t)
      (latex)
      (ledger . t)
      (lilypond)
@@ -5059,7 +5059,10 @@ session as the current block. ARG has same meaning as in
      (shen)
      (snippet)
      (sql . t)
-     (sqlite))))
+     (sqlite)))
+
+  ;; Load personal library of babel
+  (org-babel-lob-ingest (no-littering-expand-etc-file-name "library-of-babel.org")))
 
 (use-package ob-restclient
   :after ob)

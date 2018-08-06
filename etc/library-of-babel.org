@@ -1,0 +1,24 @@
+#+TITLE: The Library of Babel for Dmacs
+#+AUTHOR: Daniel Kraus <daniel@kraus.my>
+
+* restclient-json-filter
+Filter ob-restclient output header/footer and comments so they
+can be parsed as json.
+If ~attr~ is given, only return this json attribute.
+
+E.g:
+You make a restclient call with NAME ~foo~,
+then when you work with the result you can do
+~BEGIN_SRC python :var myattr=restclient-json-filter(data=foo, attr="myattr")~
+to have ~foo.myattr~ as python variable ~myattr~.
+
+#+NAME: restclient-json-filter
+#+BEGIN_SRC python :results value pp :var data="" :var attr=""
+import json
+lines = data.replace('\t', '').replace(' ', '').split('\n')
+res = ''.join(l for l in lines[1:-1] if not (l.startswith('//') or l.startswith('#')))
+if attr:
+   r = json.loads(res)
+   res = r.get(attr)
+return res
+#+END_SRC
