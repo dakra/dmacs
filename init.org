@@ -1418,12 +1418,12 @@ Simple but effective sorting and filtering for Emacs
 - If the workspace is empty additionally ask for the root path of the first
   project to add."
     (interactive)
-    (-pcase (treemacs--current-visibility)
-      ['visible (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
-                    (delete-window (treemacs--is-visible?))
-                  (treemacs--select-visible-window))]
-      ['exists  (treemacs-select-window)]
-      ['none    (treemacs--init (treemacs--read-first-project-path))]))
+    (pcase (treemacs-current-visibility)
+      ('visible (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
+                    (delete-window (treemacs-get-local-window))
+                  (treemacs--select-visible-window)))
+      ('exists  (treemacs-select-window))
+      ('none    (treemacs--init (treemacs--read-first-project-path)))))
 
   (defun treemacs-ignore-pyc (file _)
     (s-ends-with-p ".pyc" file))
