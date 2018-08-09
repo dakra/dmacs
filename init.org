@@ -2174,7 +2174,8 @@ go up multiple parent directories."
     ("p" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
     ("f" (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition") "Firefox Developer Edition")
     ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
-    ("l" (start-process-shell-command "i3lock-fancy" nil "i3lock-fancy") "Lock screen")
+    ("l" (start-process-shell-command "i3lock-fancy-dualmonitor" nil "i3lock-fancy-dualmonitor") "Lock screen")
+    ("n" (start-process-shell-command "networkmanager_dmenu" nil "networkmanager_dmenu") "Networkmanager")
     ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
     ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" ))
 
