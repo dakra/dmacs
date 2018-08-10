@@ -2118,6 +2118,8 @@ go up multiple parent directories."
          ("C-x C-l" . hydra-emacs-launcher/body)
          ("C-x L" . hydra-external-launcher/body))
   :config
+  (hydra-add-font-lock)
+
   (defhydra hydra-scratchpad (:hint nil)
     "
      _p_ython    _e_lisp        _s_ql
