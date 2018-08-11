@@ -3494,7 +3494,11 @@ $ sbcl
          ("requirements.*\\.txt\\'" . pip-requirements-mode)
          ("requirements\\.in" . pip-requirements-mode)))
 
-(use-package sphinx-mode :defer t)
+;; This adds a few sphinx features and fontification for rst buffers.
+;; You can do `sphinx-compile` (`C-c C-x C-c`) to compile the sphinx docs or
+;; `sphinx-compile-and-view` (`C-c C-x C-v`) to compile and view.
+(use-package sphinx-mode
+  :hook (rst-mode . sphinx-mode))
 
 (use-package python-test
   ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
