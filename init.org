@@ -6657,6 +6657,11 @@ Only works *before* exwm in initialized."
    '("s-d"       . counsel-linux-app)
    '("s-D"       . exwm-launch-shell-command))
 
+  ;; We start workspaces at 1 instead of 0
+  (defun exwm-workspace-number-to-string (number)
+    (number-to-string (1+ number)))
+  (setq exwm-workspace-index-map #'exwm-workspace-number-to-string)
+
   ;; Switching workspaces
   (defun exwm-workspace-switch-previous (p)
     "Switch to previous workspace"
@@ -6788,7 +6793,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
             (append (list 0 primary)
                     (list 1 (or other-2 other-1 primary))
                     (mapcan (lambda (i) (list i (or other-1 other-2 primary)))
-                            (number-sequence 1 exwm-workspace-number))))
+                            (number-sequence 2 exwm-workspace-number))))
       (exwm-randr--refresh)
       (message "Display: %s refreshed." (string-join connected ", "))))
 
