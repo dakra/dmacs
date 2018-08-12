@@ -6635,12 +6635,12 @@ Only works *before* exwm in initialized."
    '("s-w"       . exwm-workspace-switch)
    ;; Moving/editing windows
    '("s-j"       . exwm-windmove-left)
-   '("s-k"       . windmove-down)
-   '("s-i"       . windmove-up)
+   '("s-k"       . exwm-windmove-down)
+   '("s-i"       . exwm-windmove-up)
    '("s-l"       . exwm-windmove-right)
    '("<s-left>"  . exwm-windmove-left)
-   '("<s-down>"  . windmove-down)
-   '("<s-up>"    . windmove-up)
+   '("<s-down>"  . exwm-windmove-down)
+   '("<s-up>"    . exwm-windmove-up)
    '("<s-right>" . exwm-windmove-right)
    '("s-\\"       . toggle-window-split)
    '("s-J"       . swap-windows-left)
@@ -6696,6 +6696,42 @@ no window on the right."
       (exwm-workspace-switch-next 1)
       (while (windmove-find-other-window 'left arg)
         (windmove-do-window-select 'left arg))))
+
+  (setq exwm-windmove-workspace-1-below-p t)
+  ;; FIXME: Automatically get displayed workspace on top monitor
+  (setq exwm-windmove-last-workspace-top 1)
+
+  (defun exwm-windmove-down (&optional arg)
+    "Like windmove-down but go to workspace 1 if there is no window
+or active minibuffer below and `exwm-windmove-workspace-1-below-p' is non-NIL."
+    (interactive "P")
+    (let ((active-minibuffer-below-p
+           (and (minibuffer-window-active-p (minibuffer-window))
+                (eq (minibuffer-window) (windmove-find-other-window 'down arg)))))
+      (if (or (<= exwm-connected-displays 1)
+              active-minibuffer-below-p
+              (= exwm-workspace-current-index 0))
+          (windmove-do-window-select 'down arg)
+        ;; No window below
+        (when exwm-windmove-workspace-1-below-p
+          ;; Switch to workspace 0 and select top window
+          (setq exwm-windmove-last-workspace-top exwm-workspace-current-index)
+          (exwm-workspace-switch 0)
+          (while (windmove-find-other-window 'up arg)
+            (windmove-do-window-select 'up arg))))))
+
+  (defun exwm-windmove-up (&optional arg)
+    "Like windmove-up but go to workspace 1 if there is
+no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
+    (interactive "P")
+    (if (or (<= exwm-connected-displays 1) (windmove-find-other-window 'up arg))
+        (windmove-do-window-select 'up arg)
+      ;; No window below
+      (when exwm-windmove-workspace-1-below-p
+        ;; Switch to workspace 1 and select bottom window
+        (exwm-workspace-switch exwm-windmove-last-workspace-top)
+        (while (windmove-find-other-window 'down arg)
+          (windmove-do-window-select 'down arg)))))
 
   ;; 's-N': Switch to certain workspace
   (dotimes (i 4)
