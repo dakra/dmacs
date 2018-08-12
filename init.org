@@ -2233,16 +2233,13 @@ go up multiple parent directories."
 
   ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
   ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
-  (add-to-list 'tramp-default-proxies-alist
-               '(nil "\\`root\\'" "/ssh:%h:"))
-  (add-to-list 'tramp-default-proxies-alist
-               '((regexp-quote (system-name)) nil nil))
-  (add-to-list 'tramp-default-proxies-alist
-               '("localhost" nil nil))
-  (add-to-list 'tramp-default-proxies-alist
-               '("blif\\.vpn" nil nil))
-  ;; add tramp proxy for atomx user
-  (add-to-list 'tramp-default-proxies-alist '(nil "atomx" "/ssh:%h:")))
+  (dolist (tramp-proxies '((nil "\\`root\\'" "/ssh:%h:")
+                           ((regexp-quote (system-name)) nil nil)
+                           ("localhost" nil nil)
+                           ("blif\\.vpn" nil nil)
+                           ;; Add tramp proxy for atomx user
+                           (nil "atomx" "/ssh:%h:")))
+    (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
 #+END_SRC
 * Eshell
 #+BEGIN_SRC emacs-lisp
@@ -6115,10 +6112,12 @@ popd
   (setq-default mu4e-index-update-in-background t)
 
   ;; Add some mailing lists
-  (add-to-list 'mu4e~mailing-lists '("intern.lists.entropia.de" . "Entropia"))
-  (add-to-list 'mu4e~mailing-lists '("intern.lists.ccc.de" . "CCC"))
-  (add-to-list 'mu4e~mailing-lists '("pylons-discuss.googlegroups.com" . "Pyramid"))
-  (add-to-list 'mu4e~mailing-lists '("pylons-devel.googlegroups.com" . "Pyramid"))
+  (dolist (mailing-list '(("intern.lists.entropia.de" . "Entropia")
+                          ("intern.lists.ccc.de" . "CCC")
+                          ("pylons-discuss.googlegroups.com" . "PyrUsr")
+                          ("pylons-devel.googlegroups.com" . "PyrDev")
+                          ("sqlalchemy.googlegroups.com" . "SQLA")))
+    (add-to-list 'mu4e~mailing-lists mailing-list))
 
   (setq mu4e-bookmarks `((,(concat "maildir:/private/Inbox OR "
                                    "maildir:/paessler/Inbox OR "
