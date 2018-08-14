@@ -2224,12 +2224,12 @@ go up multiple parent directories."
                 vc-ignore-dir-regexp
                 tramp-file-name-regexp))
 
-  ;; Turn off auto-save for tramp files
-  (add-to-list 'backup-directory-alist
-               (cons tramp-file-name-regexp nil))
-
   ;; Use ControlPath from .ssh/config
   (setq tramp-ssh-controlmaster-options "")
+
+  ;; Backup tramp files like local files and don't litter the remote
+  ;; file system with my emacs backup files
+  (setq tramp-backup-directory-alist backup-directory-alist)
 
   ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
   ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
