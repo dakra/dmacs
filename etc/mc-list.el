@@ -20,7 +20,6 @@
         grep-context-less-around-point
         grep-context-more-around-point
         haml-electric-backspace
-        helm-show-kill-ring
         indent-for-tab-command
         ledger-magic-tab
         markdown-exdent-or-delete
@@ -53,7 +52,6 @@
         wgrep-mark-deletion
         whole-line-or-region-kill-region
         whole-line-or-region-yank
-        xah-paste-or-paste-previous
         yas-expand
         ))
 
@@ -64,21 +62,7 @@
         god-local-mode
         handle-select-window
         handle-switch-frame
-        helm-M-x
-        helm-find-files
-        helm-mini
-        hydra-multiple-cursors/mc/edit-lines-and-exit
-        hydra-multiple-cursors/mc/mark-all-like-this-and-exit
-        hydra-multiple-cursors/mc/mark-next-like-this
-        hydra-multiple-cursors/mc/mark-previous-like-this
-        hydra-multiple-cursors/mc/skip-to-next-like-this
-        hydra-multiple-cursors/mc/skip-to-previous-like-this
-        hydra-multiple-cursors/mc/unmark-next-like-this
-        hydra-multiple-cursors/mc/unmark-previous-like-this
         iedit-switch-to-mc-mode
-        js2-refactor-hydra/body
-        js2-refactor-hydra/js2r-extract-var-and-exit
-        js2-refactor-hydra/js2r-rename-var-and-exit
         mc/vertical-align-with-space
         org-edit-src-save
         smart-region
