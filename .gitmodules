@@ -61,6 +61,12 @@
 [submodule "cargo"]
 	path = lib/cargo
 	url = git@github.com:kwrooijen/cargo.el.git
+[submodule "cider"]
+	path = lib/cider
+	url = git@github.com:clojure-emacs/cider.git
+[submodule "clojure-mode"]
+	path = lib/clojure-mode
+	url = git@github.com:clojure-emacs/clojure-mode.git
 [submodule "closql"]
 	path = lib/closql
 	url = git@github.com:emacscollective/closql.git
@@ -660,6 +666,9 @@
 [submodule "pythonic"]
 	path = lib/pythonic
 	url = git@github.com:proofit404/pythonic.git
+[submodule "queue"]
+	path = lib/queue
+	url = git@github.com:emacsmirror/queue.git
 [submodule "racer"]
 	path = lib/racer
 	url = git@github.com:racer-rust/emacs-racer.git
@@ -708,6 +717,9 @@
 [submodule "selected"]
 	path = lib/selected
 	url = git@github.com:Kungsgeten/selected.el.git
+[submodule "sesman"]
+	path = lib/sesman
+	url = git@github.com:vspinu/sesman.git
 [submodule "shrink-whitespace"]
 	path = lib/shrink-whitespace
 	url = git@github.com:jcpetkovich/shrink-whitespace.el.git

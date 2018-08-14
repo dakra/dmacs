@@ -666,7 +666,7 @@ Allow some commands as safe by default
 ** Subword: CamelCase aware editing operations
 #+BEGIN_SRC emacs-lisp
 (use-package subword
-  :hook ((python-mode yaml-mode go-mode) . subword-mode))
+  :hook ((python-mode yaml-mode go-mode clojure-mode cider-repl-mode) . subword-mode))
 #+END_SRC
 ** Shr: Simple html renderer
 #+BEGIN_SRC emacs-lisp
@@ -936,7 +936,7 @@ M-x rename-buffer Lossage RET"
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
-  :hook ((emacs-lisp-mode lisp-mode hy-mode) . rainbow-delimiters-mode))
+  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode cider-repl-mode) . rainbow-delimiters-mode))
 #+END_SRC
 ** fancy-narrow: Fancier narrow
 #+BEGIN_SRC emacs-lisp
@@ -3287,7 +3287,13 @@ $ sbcl
 #+END_SRC
 *** Clojure
 #+BEGIN_SRC emacs-lisp
-
+(use-package clojure-mode
+  :defer t)
+#+END_SRC
+**** CIDER
+#+BEGIN_SRC emacs-lisp
+(use-package cider
+  :hook ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion))
 #+END_SRC
 *** Hy
 #+BEGIN_SRC emacs-lisp
@@ -4137,7 +4143,7 @@ displayed anywhere else."
 ;;(crux-reopen-as-root-mode)
 
 (use-package aggressive-indent
-  :hook ((emacs-lisp-mode lisp-mode hy-mode css js2-mode) . aggressive-indent-mode))
+  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js2-mode) . aggressive-indent-mode))
 
 (use-package undo-tree
   :demand t
