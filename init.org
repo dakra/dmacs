@@ -4498,6 +4498,9 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   ;; Show headings up to level 2 by default when opening an org files
   ;;(setq org-startup-folded 'content)
 
+  ;; Insead of "..." show "…" when there's hidden folded content
+  (setq org-ellipsis ?…)
+
   ;; Show inline images by default
   (setq org-startup-with-inline-images t)
 
