@@ -50,6 +50,7 @@
         sp-up-sexp
         sql-magic-go
         web-mode-comment-or-uncomment
+        wgrep-mark-deletion
         whole-line-or-region-kill-region
         whole-line-or-region-yank
         xah-paste-or-paste-previous
