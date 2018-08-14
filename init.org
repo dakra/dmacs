@@ -3639,7 +3639,11 @@ $ autopep8 --in-place --aggressive --aggressive <filename>"
 #+END_SRC
 ** Ruby
 #+BEGIN_SRC emacs-lisp
+(use-package ruby-mode
+  :defer t)
 
+(use-package inf-ruby
+  :hook (ruby-mode-hook . inf-ruby-minor-mode))
 #+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp
