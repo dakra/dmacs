@@ -1397,7 +1397,7 @@ Simple but effective sorting and filtering for Emacs
   ;; projectile-find-files will be much faster for large projects.
   ;; C-u C-c p f to clear cache before search.
   (setq projectile-enable-caching nil)
-  (projectile-mode t))
+  (counsel-projectile-mode))
 #+END_SRC
 ** Treemacs: A tree layout file explorer
 #+BEGIN_SRC emacs-lisp
@@ -1607,9 +1607,7 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   (counsel-mode 1))
 
 (use-package counsel-projectile
-  :bind-keymap (("s-p"   . counsel-projectile-command-map)
-                ("C-c p" . counsel-projectile-command-map))
-  :bind (:map counsel-projectile-command-map
+  :bind (:map projectile-command-map
          (("s s" . dakra/counsel-search-project-empty)
           ("s S" . dakra/counsel-search-project)))
   :config
