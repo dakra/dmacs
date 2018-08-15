@@ -4498,6 +4498,10 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
                     '(org-completion-symbols
                       ora-cap-filesystem))))
   :config
+  ;; Insead of "..." show "…" when there's hidden folded content
+  ;; Some characters to choose from: …, ⤵, ▼, ↴, ⬎, ⤷, and ⋱
+  (setq org-ellipsis "⤵")
+
   (defun org-clock-in-or-list (&optional select start-time)
     "Like org-clock-in but show list of recent clocks when not in org buffer."
     (interactive "P")
@@ -4506,10 +4510,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
       (counsel-org-clock-history)))
 
   ;; Show headings up to level 2 by default when opening an org files
-  ;;(setq org-startup-folded 'content)
-
-  ;; Insead of "..." show "…" when there's hidden folded content
-  (setq org-ellipsis ?…)
+  (setq org-startup-folded 'content)
 
   ;; Show inline images by default
   (setq org-startup-with-inline-images t)
