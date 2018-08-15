@@ -454,10 +454,10 @@ Let's set some variables with basic user information.
 ;; Default to utf-8 unix encoding
 (prefer-coding-system 'utf-8-unix)
 
-;; delete the selection with a keypress
+;; Delete the selection with a keypress
 (delete-selection-mode t)
 
-;; activate character folding in searches i.e. searching for 'a' matches 'ä' as well
+;; Activate character folding in searches i.e. searching for 'a' matches 'ä' as well
 (setq search-default-mode 'char-fold-to-regexp)
 
 ;; Only split vertically on very tall screens
@@ -473,12 +473,14 @@ Let's set some variables with basic user information.
 
 (setq ffap-machine-p-known 'reject)  ; don't "ping Germany" when typing test.de<TAB>
 
-;; accept 'UTF-8' (uppercase) as a valid encoding in the coding header
+;; Accept 'UTF-8' (uppercase) as a valid encoding in the coding header
 (define-coding-system-alias 'UTF-8 'utf-8)
 
 ;; Put authinfo.gpg first so new secrets will be stored there by default and not in plain text
 (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
 
+;; Silence ad-handle-definition about advised functions getting redefined
+(setq ad-redefinition-action 'accept)
 #+END_SRC
 
 Allow some commands as safe by default
