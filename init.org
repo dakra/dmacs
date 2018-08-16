@@ -3874,14 +3874,14 @@ true.
 #+BEGIN_SRC emacs-lisp
 ;; TypeScript
 (use-package typescript-mode
-  :mode "\\.ts\\'")
+  :init
+  (put 'typescript-indent-level 'safe-local-variable 'integerp)
+  :config
+  (setq typescript-indent-level 2))
 
 (use-package tide
-  :commands (setup-tide-mode tide-mode company-tide)
   :hook ((typescript-mode js2-mode) . tide-setup)
   :config
-  (setq typescript-indent-level 2)
-
   ;; Configure javascript-tide checker to run after your default javascript checker
   (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
 
