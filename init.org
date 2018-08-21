@@ -2859,6 +2859,9 @@ When called with 2 prefix arguments only open in browser and don't copy."
 #+BEGIN_SRC emacs-lisp
 (use-package docker
   :bind-keymap ("C-c d" . docker-command-map)
+  :init
+  ;; Mark all docker-compose-arguments as safe for dir local usage
+  (put 'docker-compose-arguments 'safe-local-variable 'listp)
   :config
   (setq docker-images-default-sort-key '("Created" . t))
   (setq docker-containers-default-sort-key '("Status" . t)))
