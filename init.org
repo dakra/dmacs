@@ -6786,7 +6786,8 @@ or active minibuffer below and `exwm-windmove-workspace-1-below-p' is non-NIL."
                 (eq (minibuffer-window) (windmove-find-other-window 'down arg)))))
       (if (or (<= exwm-connected-displays 1)
               active-minibuffer-below-p
-              (= exwm-workspace-current-index 0))
+              (= exwm-workspace-current-index 0)
+              (not (eq (minibuffer-window) (windmove-find-other-window 'down arg))))
           (windmove-do-window-select 'down arg)
         ;; No window below
         (when exwm-windmove-workspace-1-below-p
