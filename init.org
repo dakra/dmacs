@@ -7004,11 +7004,6 @@ Control network manager from Emacs
                           (async-shell-command
                            (format "nmcli device wifi connect %s" (shell-quote-argument network))))))))
 #+END_SRC
-** Dmenu
-#+BEGIN_SRC emacs-lisp
-(use-package dmenu :load-path "repos/el-dmenu"
-  :commands dmenu)
-#+END_SRC
 ** Navigation
 #+BEGIN_SRC emacs-lisp
 ;; Focus follows mouse for Emacs windows and frames
