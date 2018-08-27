@@ -691,6 +691,17 @@ Allow some commands as safe by default
   ;; Files like `Makefile.docker' are also gnu make
   :mode (("Makefile" . makefile-gmake-mode)))
 #+END_SRC
+** Goto-addr: Buttonize URLs and e-mail addresses in the current buffer
+#+BEGIN_SRC emacs-lisp
+(use-package goto-addr
+  :hook ((compilation-mode . goto-address-mode)
+         (prog-mode . goto-address-prog-mode)
+         (eshell-mode . goto-address-mode)
+         (shell-mode . goto-address-mode))
+  :bind (:map goto-address-highlight-keymap
+         ("<RET>" . goto-address-at-point)
+         ("M-<RET>" . newline)))
+#+END_SRC
 ** Time
 #+BEGIN_SRC emacs-lisp
 (use-package time
