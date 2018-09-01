@@ -525,11 +525,6 @@ Allow some commands as safe by default
 ;; Some things don't work well with fish, just always use posix compatible shell (dash)
 (setq shell-file-name "/bin/sh")
 
-(use-package image :defer t
-  :config
-  ;; always loop GIF images
-  (setq image-animate-loop t))
-
 ;; highlight the current line
 (global-hl-line-mode +1)
 #+END_SRC
@@ -7153,6 +7148,42 @@ It only works for frames with exactly two windows."
   :config
   (setq emms-player-list '(emms-player-mpv))
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
+#+END_SRC
+** Image (magick)
+This needs imagemagick support compiled in Emacs to work.
+#+BEGIN_SRC emacs-lisp
+(use-package image :defer t
+  :config
+  ;; always loop GIF images
+  (setq image-animate-loop t))
+#+END_SRC
+
+This package allows interactive image manipulation from within Emacs.  It uses
+the mogrify utility from ImageMagick to do the actual transformations.
+#+BEGIN_SRC emacs-lisp
+(use-package eimp
+  :hook (image-mode . eimp-mode))
+#+END_SRC
+
+
+Blimp is a complete wrapper around all imagemagick commands with descriptions,
+autocompletion (for some commands) and hints displayed.
+
+_Usage_
+First enter a image-buffer and type =C-c C-i= to bring up the
+=blimp-interface=. After choosing a imagemagick command and its parameters, do =C-c
+C-e= to apply the chosen command(s) on the current image or =C-c C-r= to clear all
+queued commands. You can also do =C-c C-I= to apply the command right after
+selecting it and =C-c C-p= to toggle the current command prefix between "+" and "-".
+
+If you want to resize the current image to fit the buffer you have several
+alternatives: =M-x eimp-fit-image-height-to-window= or =M-x
+eimp-fit-image-to-whole-window= or =M-x eimp-fit-image-to-window= or =M-x
+eimp-fit-image-width-to-window=
+
+#+BEGIN_SRC emacs-lisp
+(use-package blimp
+  :hook (image-mode . blimp-mode))
 #+END_SRC
 * Misc
 ** Atomx

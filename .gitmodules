@@ -49,6 +49,9 @@
 [submodule "bicycle"]
 	path = lib/bicycle
 	url = git@github.com:tarsius/bicycle.git
+[submodule "blimp"]
+	path = lib/blimp
+	url = git@github.com:walseb/blimp.git
 [submodule "borg"]
 	path = lib/borg
 	url = git@github.com:emacscollective/borg.git
@@ -191,6 +194,9 @@
 [submodule "editorconfig"]
 	path = lib/editorconfig
 	url = git@github.com:editorconfig/editorconfig-emacs.git
+[submodule "eimp"]
+	path = lib/eimp
+	url = git@github.com:nicferrier/eimp.git
 [submodule "el2markdown"]
 	path = lib/el2markdown
 	url = git@github.com:Lindydancer/el2markdown.git
