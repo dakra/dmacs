@@ -162,7 +162,7 @@
 	url = git@github.com:stsquad/dired-rsync.git
 [submodule "discover-my-major"]
 	path = lib/discover-my-major
-	url = git@github.com:steckerhalter/discover-my-major.git
+	url = https://framagit.org/steckerhalter/discover-my-major.git
 [submodule "djangonaut"]
 	path = lib/djangonaut
 	url = git@github.com:proofit404/djangonaut.git
@@ -205,10 +205,10 @@
 	url = git@github.com:skeeto/elfeed.git
 [submodule "elisp-refs"]
 	path = lib/elisp-refs
-	url = git@github.com:Wilfred/refs.el.git
+	url = git@github.com:Wilfred/elisp-refs.git
 [submodule "elixir-mode"]
 	path = lib/elixir-mode
-	url = git@github.com:elixir-lang/emacs-elixir.git
+	url = git@github.com:elixir-editors/emacs-elixir.git
 [submodule "emacsql"]
 	path = lib/emacsql
 	url = git@github.com:skeeto/emacsql.git
@@ -239,7 +239,7 @@
 	url = git@github.com:ryuslash/eshell-fringe-status.git
 [submodule "eshell-prompt-extras"]
 	path = lib/eshell-prompt-extras
-	url = git@github.com:hiddenlotus/eshell-prompt-extras.git
+	url = git@github.com:kaihaosw/eshell-prompt-extras.git
 [submodule "eshell-up"]
 	path = lib/eshell-up
 	url = git@github.com:peterwvj/eshell-up.git
@@ -348,7 +348,7 @@
 	url = git@github.com:tmalsburg/guess-language.el.git
 [submodule "hacker-typer"]
 	path = lib/hacker-typer
-	url = git@github.com:therockmandolinist/emacs-hacker-typer.git
+	url = git@github.com:dieggsy/emacs-hacker-typer.git
 [submodule "haml-mode"]
 	path = lib/haml-mode
 	url = git@github.com:nex3/haml-mode.git
@@ -607,7 +607,7 @@
 	url = git@github.com:leoliu/pcmpl-git-el.git
 [submodule "pcmpl-pip"]
 	path = lib/pcmpl-pip
-	url = git@github.com:hiddenlotus/pcmpl-pip.git
+	url = git@github.com:kaihaosw/pcmpl-pip.git
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = git@github.com:politza/pdf-tools.git
@@ -616,7 +616,7 @@
 	url = git@github.com:Alexander-Miller/pfuture.git
 [submodule "php-mode"]
 	path = lib/php-mode
-	url = git@github.com:ejmr/php-mode.git
+	url = git@github.com:emacs-php/php-mode.git
 [submodule "pip-requirements"]
 	path = lib/pip-requirements
 	url = git@github.com:Wilfred/pip-requirements.el.git
@@ -692,7 +692,7 @@
 	url = git@github.com:emacsmirror/rainbow-mode.git
 [submodule "realgud"]
 	path = lib/realgud
-	url = git@github.com:rocky/emacs-dbgr.git
+	url = git@github.com:realgud/realgud.git
 	build-step = git checkout realgud-recursive-autoloads.el
 [submodule "redis"]
 	path = lib/redis
