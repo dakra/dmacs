@@ -6080,10 +6080,10 @@ popd
          ("D" . my-move-to-trash)
          ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
          :map mu4e-view-mode-map
-         ("N" . mu4e-scroll-up)
-         ("P" . mu4e-scroll-down)
-         ("n" . mu4e-view-headers-next)
-         ("p" . mu4e-view-headers-prev)
+         ("n" . mu4e-scroll-up)
+         ("p" . mu4e-scroll-down)
+         ("N" . mu4e-view-headers-next)
+         ("P" . mu4e-view-headers-prev)
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash))
   :init
