@@ -1471,9 +1471,10 @@ Simple but effective sorting and filtering for Emacs
       ('exists  (treemacs-select-window))
       ('none    (treemacs--init (treemacs--read-first-project-path)))))
 
-  (defun treemacs-ignore-pyc (file _)
-    (s-ends-with-p ".pyc" file))
-  (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-pyc)
+  (defun treemacs-ignore-python-files (file _)
+    (or (s-ends-with-p ".pyc" file)
+        (string= file "__pycache__")))
+  (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-python-files)
 
   (setq treemacs-follow-after-init          t
         treemacs-collapse-dirs              3
