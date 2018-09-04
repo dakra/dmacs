@@ -367,6 +367,9 @@
 [submodule "ht"]
 	path = lib/ht
 	url = git@github.com:Wilfred/ht.el.git
+[submodule "htmlize"]
+	path = lib/htmlize
+	url = git@github.com:hniksic/emacs-htmlize.git
 [submodule "hy-mode"]
 	path = lib/hy-mode
 	url = git@github.com:hylang/hy-mode.git
