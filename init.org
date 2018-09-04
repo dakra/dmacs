@@ -5280,6 +5280,8 @@ This function is called by `org-babel-execute-src-block'."
 #+BEGIN_SRC emacs-lisp
 (use-package org-src
   :defer t
+  :init
+  (put 'org-src-preserve-indentation 'safe-local-variable 'booleanp)
   :config
   ;; Don't reorder all my frames in when using org babel
   (setq org-src-window-setup 'current-window)
