@@ -434,6 +434,42 @@ Let's set some variables with basic user information.
       user-mail-address "daniel@kraus.my")
 #+END_SRC
 
+* Some config helper functions
+These functions make it easy to define which environment variables should be
+marked as safe.
+E.g. to allow *all* all strings for ~DJANGO_SETTINGS_MODULE~ and ~FOOBAR~ in
+your ~python-shell-process-environment~ add:
+#+BEGIN_SRC emacs-lisp :tangle no
+  (put 'python-shell-process-environment
+       'safe-local-variable (create-safe-env-p "DJANGO_SETTINGS_MODULE" "ENV_INI_PATH"))
+#+END_SRC
+
+In your ~.dir-locals.el~ you can then have something like
+#+BEGIN_SRC emacs-lisp :tangle no
+((nil . ((python-shell-process-environment . ("DJANGO_SETTINGS_MODULE=shop_paessler_com.settings.base"
+                                              "FOOBAR=SAFE_FOO_BAR")))))
+#+END_SRC
+and you will not get prompted for unsafe dir-locals.
+
+#+BEGIN_SRC emacs-lisp
+  (defun get-envvar-name (envvar)
+    "Return environment variable name for ENVVAR.
+Code from `read-envvar-name'."
+    (let ((str (substring envvar 0
+                          (string-match "=" envvar))))
+      (if (multibyte-string-p str)
+          (decode-coding-string
+           str locale-coding-system t)
+        str)))
+
+  (defun create-safe-env-p (&rest keys)
+    "Return predicate function that's non-NIL when it's argument KEY is in KEYS."
+    (lambda (envlist)
+      (-all-p (lambda (key)
+                (-any-p (lambda (k)
+                          (string= (get-envvar-name key) k)) keys)) envlist)))
+#+END_SRC
+
 * Change Emacs default config
 #+BEGIN_SRC emacs-lisp
 ;; Don't quit Emacs on C-x C-c
@@ -633,6 +669,8 @@ Allow some commands as safe by default
          ("-" . compilation-add-separator)
          :map comint-mode-map
          ("C-c -" . compilation-add-separator))
+  :init
+  (put 'compilation-environment 'safe-local-variable (create-safe-env-p "SENTRY_DSN"))
   :config
   (defun compilation-add-separator ()
     "Insert separator in read-only buffer."
@@ -3394,7 +3432,8 @@ $ sbcl
   ;; for each variable I allow.
   ;; TODO: Make the check more strict.
   (put 'python-shell-extra-pythonpaths 'safe-local-variable 'listp)
-  (put 'python-shell-process-environment 'safe-local-variable 'listp)
+  (put 'python-shell-process-environment
+       'safe-local-variable (create-safe-env-p "DJANGO_SETTINGS_MODULE" "ENV_INI_PATH"))
   :config
   ;; Don't spam message buffer when python-mode can't guess indent-offset
   (setq python-indent-guess-indent-offset-verbose nil)
