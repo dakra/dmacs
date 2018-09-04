@@ -1404,6 +1404,73 @@ Simple but effective sorting and filtering for Emacs
   :disabled t
   :hook (company-mode . company-box-mode))
 #+END_SRC
+** Helpful: A better help buffer
+Helpful is a replacement for ~*help*~ buffers that provides much more contextual information.
+#+BEGIN_SRC emacs-lisp
+(use-package helpful
+  :bind (("C-h f" . helpful-function)
+         ("C-h v" . helpful-variable)
+         ("C-h s" . helpful-symbol)
+         ("C-h k" . helpful-key)
+         ("C-c h f" . helpful-function)
+         ("C-c h v" . helpful-variable)
+         ("C-c h c" . helpful-command)
+         ("C-c h m" . helpful-macro)
+         ("<C-tab>" . backward-button)
+         :map helpful-mode-map
+         ("M-?" . helpful-at-point)
+         ("RET" . helpful-jump-to-org)
+         :map emacs-lisp-mode-map
+         ("M-?" . helpful-at-point)
+         :map lisp-interaction-mode-map  ; Scratch buffer
+         ("M-?" . helpful-at-point))
+  :config
+  (defun helpful-visit-reference ()
+    "Go to the reference at point."
+    (interactive)
+    (let* ((sym helpful--sym)
+           (path (get-text-property (point) 'helpful-path))
+           (pos (get-text-property (point) 'helpful-pos))
+           (pos-is-start (get-text-property (point) 'helpful-pos-is-start)))
+      (when (and path pos)
+        ;; If we're looking at a source excerpt, calculate the offset of
+        ;; point, so we don't just go the start of the excerpt.
+        (when pos-is-start
+          (save-excursion
+            (let ((offset 0))
+              (while (and
+                      (get-text-property (point) 'helpful-pos)
+                      (not (eobp)))
+                (backward-char 1)
+                (setq offset (1+ offset)))
+              ;; On the last iteration we moved outside the source
+              ;; excerpt, so we overcounted by one character.
+              (setq offset (1- offset))
+
+              ;; Set POS so we go to exactly the place in the source
+              ;; code where point was in the helpful excerpt.
+              (setq pos (+ pos offset)))))
+
+        (find-file path)
+        (when (or (< pos (point-min))
+                  (> pos (point-max)))
+          (widen))
+        (goto-char pos)
+        (recenter 0)
+        (save-excursion
+          (let ((defun-end (scan-sexps (point) 1)))
+            (while (re-search-forward
+                    (rx-to-string `(seq symbol-start ,(symbol-name sym) symbol-end))
+                    defun-end t)
+              (helpful--flash-region (match-beginning 0) (match-end 0)))))
+        t)))
+
+  (defun helpful-jump-to-org ()
+    (interactive)
+    (when (helpful-visit-reference)
+      (org-babel-tangle-jump-to-org))))
+#+END_SRC
+
 * Project Management
 ** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -4118,27 +4185,6 @@ displayed anywhere else."
 (use-package company-restclient
   :after (restclient company)
   :config (add-to-list 'company-backends 'company-restclient))
-
-;; disable auto escape quote feature of smartparens
-;;(setq sp-escape-quotes-after-insert nil
-;;      sp-escape-wrapped-region nil)
-
-(use-package helpful
-  :bind (("C-h f" . helpful-function)
-         ("C-h v" . helpful-variable)
-         ("C-h s" . helpful-symbol)
-         ("C-h k" . helpful-key)
-         ("C-c h f" . helpful-function)
-         ("C-c h v" . helpful-variable)
-         ("C-c h c" . helpful-command)
-         ("C-c h m" . helpful-macro)
-         ("<C-tab>" . backward-button)
-         :map helpful-mode-map
-         ("M-?" . helpful-at-point)
-         :map emacs-lisp-mode-map
-         ("M-?" . helpful-at-point)
-         :map lisp-interaction-mode-map  ; Scratch buffer
-         ("M-?" . helpful-at-point)))
 
 (use-package symbol-overlay
   :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode)
