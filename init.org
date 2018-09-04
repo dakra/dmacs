@@ -7189,6 +7189,16 @@ It only works for frames with exactly two windows."
   (setq emms-player-list '(emms-player-mpv))
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
 #+END_SRC
+** YouTube Download
+#+BEGIN_SRC emacs-lisp
+(use-package youtube-dl
+  :defer t
+  :init
+  (setq youtube-dl-directory "~/videos/youtube")
+  :config
+  (setq youtube-dl-arguments
+        '("--no-mtime" "--restrict-filenames" "--format" "best" "--mark-watched")))
+#+END_SRC
 ** Image (magick)
 This needs imagemagick support compiled in Emacs to work.
 #+BEGIN_SRC emacs-lisp
@@ -7406,14 +7416,6 @@ if __name__ == '__main__':
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(use-package youtube-dl
-  :defer t
-  :init
-  (setq youtube-dl-directory "~/videos/youtube")
-  :config
-  (setq youtube-dl-arguments
-        '("--no-mtime" "--restrict-filenames" "--format" "best" "--mark-watched")))
-
 (use-package elfeed
   :defer t
   :bind (:map elfeed-show-mode-map
