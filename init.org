@@ -950,6 +950,14 @@ different face
   (setq zone-programs (vconcat zone-programs [zone-matrix]))
   (setq zmx-unicode-mode t))
 #+END_SRC
+** Sticky-buffer: Lock a buffer to a window
+From http://lists.gnu.org/archive/html/help-gnu-emacs/2007-05/msg00975.html
+#+BEGIN_SRC emacs-lisp
+(define-minor-mode sticky-buffer-mode
+  "Make the current window always display this buffer."
+  nil " sticky" nil
+  (set-window-dedicated-p (selected-window) sticky-buffer-mode))
+#+END_SRC
 * Editor
 ** Lossage: Live update lossage buffer
 #+BEGIN_SRC emacs-lisp
