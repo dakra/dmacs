@@ -236,7 +236,7 @@ each time you make a change or ~make build-init~ if you only made
 changes to this file.
 * Emacs Initialization
 We want to use lexical scoping
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :comments nil
 ;;; init.el --- user-init-file                    -*- lexical-binding: t -*-
 #+END_SRC
 
