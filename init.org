@@ -458,22 +458,22 @@ In your ~.dir-locals.el~ you can then have something like
 and you will not get prompted for unsafe dir-locals.
 
 #+BEGIN_SRC emacs-lisp
-  (defun get-envvar-name (envvar)
-    "Return environment variable name for ENVVAR.
+(defun get-envvar-name (envvar)
+  "Return environment variable name for ENVVAR.
 Code from `read-envvar-name'."
-    (let ((str (substring envvar 0
-                          (string-match "=" envvar))))
-      (if (multibyte-string-p str)
-          (decode-coding-string
-           str locale-coding-system t)
-        str)))
+  (let ((str (substring envvar 0
+                        (string-match "=" envvar))))
+    (if (multibyte-string-p str)
+        (decode-coding-string
+         str locale-coding-system t)
+      str)))
 
-  (defun create-safe-env-p (&rest keys)
-    "Return predicate function that's non-NIL when it's argument KEY is in KEYS."
-    (lambda (envlist)
-      (-all-p (lambda (key)
-                (-any-p (lambda (k)
-                          (string= (get-envvar-name key) k)) keys)) envlist)))
+(defun create-safe-env-p (&rest keys)
+  "Return predicate function that's non-NIL when it's argument KEY is in KEYS."
+  (lambda (envlist)
+    (-all-p (lambda (key)
+              (-any-p (lambda (k)
+                        (string= (get-envvar-name key) k)) keys)) envlist)))
 #+END_SRC
 
 * Change Emacs default config
@@ -1475,7 +1475,6 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
     (when (helpful-visit-reference)
       (org-babel-tangle-jump-to-org))))
 #+END_SRC
-
 * Project Management
 ** Projectile
 #+BEGIN_SRC emacs-lisp
@@ -5360,7 +5359,8 @@ NAME may be nil for unnamed sessions."
           ("T" "todo with link" entry (file ,(concat org-directory "refile.org"))
            "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
           ("e" "email" entry (file ,(concat org-directory "refile.org"))
-           "* TODO %? Email: %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish nil)
+           "* TODO %? Email: %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
+           :clock-in t :clock-resume t :immediate-finish nil)
           ("r" "respond" entry (file ,(concat org-directory "refile.org"))
            "* TODO Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
           ("n" "note" entry (file ,(concat org-directory "refile.org"))
