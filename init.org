@@ -428,7 +428,7 @@ If you don't set your Xresources, you can load the font with:
   :defer 2
   :config
   (setq minions-mode-line-lighter "+")
-  (setq minions-direct '(projectile-mode flycheck-mode multiple-cursors-mode))
+  (setq minions-direct '(projectile-mode flycheck-mode multiple-cursors-mode sticky-buffer-mode))
   (minions-mode))
 #+END_SRC
 
