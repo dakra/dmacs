@@ -24,6 +24,7 @@
         ledger-magic-tab
         markdown-exdent-or-delete
         markdown-outdent-or-delete
+        mouse-yank-primary
         org-beginning-of-line
         org-cycle
         org-delete-char
