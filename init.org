@@ -2269,6 +2269,7 @@ go up multiple parent directories."
     "Toggle"
     ("b" dakra-toggle-browser "browser - toggle eww/firefox" :column "Misc")
     ("d" toggle-debug-on-error "debug-on-error")
+    ("s" sticky-buffer-mode "Sticky buffer mode")
     ("c" column-number-mode "column-number-mode" :column "Text")
     ("f" auto-fill-mode "fill-mode")
     ("w" whitespace-mode "whitespace-mode")
