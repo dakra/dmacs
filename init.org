@@ -2282,6 +2282,11 @@ go up multiple parent directories."
     ("op" org-toggle-pretty-entities "org pretty-entities")
     ("oi" org-toggle-inline-images "org inline-images"))
 
+  (defun ansi-term-bash ()
+    "Start ansi-term with bash."
+    (interactive)
+    (ansi-term "/bin/bash"))
+
   ;; Start different emacs packages (like elfeed or mu4e)
   (defhydra hydra-emacs-launcher (:color blue :hint nil)
     "Launch emacs package"
@@ -2294,7 +2299,8 @@ go up multiple parent directories."
     ("C" calendar "calendar")
     ("T" display-time-world "time - Display world time")
     ("s" hydra-systemctl/body "Systemctl")
-    ("b" brain-fm-play "brain.fm - Stream music" :column "Misc")
+    ("a" ansi-term-bash "Ansi Terminal"  :column "Misc")
+    ("b" brain-fm-play "brain.fm - Stream music")
     ("E" elisp-index-search "elisp-index-search")
     ("w" woman "woman - Man page viewer")
     ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
