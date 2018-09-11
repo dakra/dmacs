@@ -3561,11 +3561,11 @@ $ sbcl
   (defhydra hydra-python (python-mode-map "C-c C-p" :color blue :hint nil)
     "
            ^Tests^           ^Import^                ^Other^
-    -------------------------------------------------------------
-    [_f_]   Function    [_a_] From ... import     [_P_] Run python
+    ----------------------------------------------------------------
+    [_f_]   Function    [_a_] From ... import     [_P_] Run Python
     [_m_]   Method      [_i_] Import              [_I_] Pippel
     [_c_]   Class       [_l_] Import line/region  [_R_] Runserver
-    [_F_]   File        [_r_] Remove imports
+    [_F_]   File        [_r_] Remove imports      [_!_] Start Python
     [_p_]   Project     [_s_] Sort imports        [_q_] Cancel
     "
     ("a" py-isort-add-from-import)
@@ -3583,6 +3583,7 @@ $ sbcl
     ("P" run-python)
     ("I" pippel-list-packages)
     ("R" python-run-server)
+    ("!" run-python)
     ("q" nil))
 
   (require 'thingatpt)
