@@ -2276,6 +2276,7 @@ go up multiple parent directories."
     ("s" sticky-buffer-mode "Sticky buffer mode")
     ("c" column-number-mode "column-number-mode" :column "Text")
     ("f" auto-fill-mode "fill-mode")
+    ("F" web-server-file-server-toggle  "Toggle file file-server")
     ("w" whitespace-mode "whitespace-mode")
     ("l" toggle-truncate-lines "truncate-lines")
     ("ol" org-toggle-link-display "org link-display" :column "Org")
@@ -7863,9 +7864,11 @@ and http://eschulte.github.io/emacs-web-server/File-Server.html#File-Server
   (defun web-server-file-server-start (&optional port)
     "Start a file server on a `PORT', serving the content of directory
 associated with the current buffer's file."
-    (interactive "nPort: ")
+    (interactive "p")
     (if web-server-file-server
         (message "File server is already running!")
+      (when (= port 1)
+        (setq port 8888))
       (lexical-let ((docroot (if (buffer-file-name)
                                  (file-name-directory (buffer-file-name))
                                (expand-file-name default-directory))))
