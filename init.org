@@ -5302,8 +5302,9 @@ This function is called by `org-babel-execute-src-block'."
   :init
   (put 'org-src-preserve-indentation 'safe-local-variable 'booleanp)
   :config
-  ;; Don't reorder all my frames in when using org babel
-  (setq org-src-window-setup 'current-window)
+  ;; Always split babel source window below.
+  ;; Alternative is `current-window' to don't mess with window layout at all
+  (setq org-src-window-setup 'split-window-below)
 
   (setq org-src-fontify-natively t)  ; syntax highlighting for source code blocks
 
