@@ -836,6 +836,9 @@
 	path = lib/web-mode
 	url = git@github.com:fxbois/web-mode.git
 	remote = dakra git@github.com:dakra/web-mode.git
+[submodule "web-server"]
+	path = lib/web-server
+	url = git@github.com:eschulte/emacs-web-server.git
 [submodule "websocket"]
 	path = lib/websocket
 	url = git@github.com:ahyatt/emacs-websocket.git

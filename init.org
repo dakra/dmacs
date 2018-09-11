@@ -7843,6 +7843,63 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 (use-package tea-timer
   :defer t)
 #+END_SRC
+** Web Server: A web server running handlers written in Emacs Lisp
+Create a simple "file server" as a fast replacement to something like ~python -m http.server~
+From https://gist.github.com/TeMPOraL/f6f5333ae93de4ce9b5bd82cdad87d32
+and http://eschulte.github.io/emacs-web-server/File-Server.html#File-Server
+#+BEGIN_SRC emacs-lisp
+(use-package web-server
+  :config
+  (defvar web-server-file-server nil "Is the file server running? Holds an instance if so.")
+  (defvar web-server-old-global-mode-string nil)  ; XXX: Make nicer solution to display in mode line
+
+  (defun web-server-file-server-toggle ()
+    "Toggle file-server start/stop."
+    (interactive)
+    (if web-server-file-server
+        (web-server-file-server-stop)
+      (web-server-file-server-start)))
+
+  (defun web-server-file-server-start (&optional port)
+    "Start a file server on a `PORT', serving the content of directory
+associated with the current buffer's file."
+    (interactive "nPort: ")
+    (if web-server-file-server
+        (message "File server is already running!")
+      (lexical-let ((docroot (if (buffer-file-name)
+                                 (file-name-directory (buffer-file-name))
+                               (expand-file-name default-directory))))
+        (setf web-server-file-server
+              (ws-start
+               (lambda (request)
+                 (with-slots (process headers) request
+                   (let ((path (substring (cdr (assoc :GET headers)) 1)))
+                     (if (ws-in-directory-p docroot path)
+                         (if (file-directory-p path)
+                             (ws-send-directory-list process
+                                                     (expand-file-name path docroot)
+                                                     "^[^\.]")
+                           (ws-send-file process (expand-file-name path docroot)))
+                       (ws-send-404 process)))))
+               port
+               nil  ; no log buffer
+               :host "0.0.0.0"))
+        (setq web-server-old-global-mode-string global-mode-string)
+        (add-to-list 'global-mode-string (format " fs:%d" port) t)
+        (message "Serving files from %s on port %d" docroot port))))
+
+  (defun web-server-file-server-stop ()
+    "Stop the file server if running."
+    (interactive)
+    (if web-server-file-server
+        (progn
+          (ws-stop web-server-file-server)
+          (setf web-server-file-server nil)
+          (setq global-mode-string web-server-old-global-mode-string)
+          (message "File server stopped."))
+      (message "No file server is running."))))
+#+END_SRC
+
 ** Debug emacs init startup time
 Run ~M-x esup~ to see where the time is spend during emacs startup.
 #+BEGIN_SRC emacs-lisp
