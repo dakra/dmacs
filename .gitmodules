@@ -338,6 +338,10 @@
 [submodule "gpastel"]
 	path = lib/gpastel
 	url = https://gitlab.petton.fr/DamienCassou/gpastel.git
+[submodule "graphql"]
+	path = lib/graphql
+	url = git@github.com:vermiculus/graphql.el.git
+	no-byte-compile = examples.el
 [submodule "graphviz-dot-mode"]
 	path = lib/graphviz-dot-mode
 	url = git@github.com:ppareit/graphviz-dot-mode.git
@@ -807,6 +811,9 @@
 	url = git@github.com:Alexander-Miller/treemacs.git
 	load-path = src/elisp
 	no-byte-compile = src/elisp/treemacs-evil.el
+[submodule "treepy"]
+	path = lib/treepy
+	url = git@github.com:volrath/treepy.el.git
 [submodule "typescript-mode"]
 	path = lib/typescript-mode
 	url = git@github.com:ananthakumaran/typescript.el.git
