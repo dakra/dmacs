@@ -2740,7 +2740,14 @@ file to edit."
 
 (use-package git-commit
   ;; Highlight issue ids in commit messages and spellcheck
-  :hook (git-commit-setup . git-commit-turn-on-flyspell))
+  :hook (git-commit-setup . git-commit-turn-on-flyspell)
+  :init
+  ;; Mark a few major modes as safe
+  (put 'git-commit-major-mode 'safe-local-variable
+       (lambda (m) (or (eq m 'gfm-mode)
+                       (eq m 'text-mode)
+                       (eq m 'git-commit-elisp-text-mode))))
+  :config (setq git-commit-major-mode 'gfm-mode))
 
 (use-package magit
   :bind (("C-x g" . magit-status)
