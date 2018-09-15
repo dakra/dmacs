@@ -341,7 +341,6 @@
 [submodule "graphql"]
 	path = lib/graphql
 	url = git@github.com:vermiculus/graphql.el.git
-	no-byte-compile = examples.el
 [submodule "graphviz-dot-mode"]
 	path = lib/graphviz-dot-mode
 	url = git@github.com:ppareit/graphviz-dot-mode.git
