@@ -7863,7 +7863,10 @@ and http://eschulte.github.io/emacs-web-server/File-Server.html#File-Server
 #+BEGIN_SRC emacs-lisp
 (use-package web-server
   :config
-  (defvar web-server-file-server nil "Is the file server running? Holds an instance if so.")
+  (defvar web-server-file-server nil
+    "Is the file server running? Holds an instance if so.")
+  (defvar web-server-file-server-default-port 8888
+    "Default port the file web server listens to when not calles with prefix argument.")
   (defvar web-server-old-global-mode-string nil)  ; XXX: Make nicer solution to display in mode line
 
   (defun web-server-file-server-toggle ()
@@ -7871,7 +7874,7 @@ and http://eschulte.github.io/emacs-web-server/File-Server.html#File-Server
     (interactive)
     (if web-server-file-server
         (web-server-file-server-stop)
-      (web-server-file-server-start)))
+      (web-server-file-server-start web-server-file-server-default-port)))
 
   (defun web-server-file-server-start (&optional port)
     "Start a file server on a `PORT', serving the content of directory
@@ -7880,7 +7883,7 @@ associated with the current buffer's file."
     (if web-server-file-server
         (message "File server is already running!")
       (when (= port 1)
-        (setq port 8888))
+        (setq port web-server-file-server-default-port))
       (lexical-let ((docroot (if (buffer-file-name)
                                  (file-name-directory (buffer-file-name))
                                (expand-file-name default-directory))))
