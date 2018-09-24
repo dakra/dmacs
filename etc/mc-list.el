@@ -60,6 +60,10 @@
       '(
         counsel-M-x
         end-of-buffer
+        exwm-windmove-down
+        exwm-windmove-left
+        exwm-windmove-right
+        exwm-windmove-up
         god-local-mode
         handle-select-window
         handle-switch-frame
