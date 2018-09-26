@@ -3913,7 +3913,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
                              (sql-database "hogaso")
                              (sql-mysql-options '("-A")))
             (postgres-root (sql-product 'postgres)
-                           (sql-user "root")
+                           (sql-user "postgres")
                            (sql-database "blif2"))
             (paessler-docker (sql-product 'mysql)
                              (sql-port 3308)
