@@ -4719,8 +4719,12 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
 
   (setq org-directory "~/org/")
 
+  ;; Log time when we re-schedule a task
+  (setq org-log-reschedule 'time)
   ;; Always take note when marking task as done
   (setq org-log-done 'note)
+  ;; and take note when re-scheduling a deadline
+  (setq org-log-redeadline 'note)
 
   ;; Show org entities as UTF-8 characters (e.g. \sum as ∑)
   (setq org-pretty-entities t)
