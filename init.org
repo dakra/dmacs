@@ -4614,7 +4614,8 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   (setq org-ellipsis "⤵")
 
   (defun org-clock-in-or-list (&optional select start-time)
-    "Like org-clock-in but show list of recent clocks when not in org buffer."
+    "Like org-clock-in but show list of recent clocks when not in org buffer.
+Show clock history when not in org buffer or when called with prefix argument."
     (interactive "P")
     (if (and (eq major-mode 'org-mode) (not (equal select '(4))))
         (org-clock-in select start-time)
