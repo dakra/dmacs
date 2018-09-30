@@ -1501,18 +1501,11 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   (add-to-list 'projectile-other-file-alist '("py" "sql" "py"))
   (add-to-list 'projectile-other-file-alist '("sql" "py"))
 
-  ;; Don't show projectile project name in mode line
-  (setq projectile-mode-line nil)
-  ;; Shorten the mode line (and don't call projectile for remote files)
-  ;; (setq projectile-mode-line
-  ;;       '(:eval (if (--any? (and it (file-remote-p it))
-  ;;                           (list
-  ;;                            (buffer-file-name)
-  ;;                            list-buffers-directory
-  ;;                            default-directory
-  ;;                            dired-directory))
-  ;;                   "P[-]"
-  ;;                 (format " P[%s]" (projectile-project-name)))))
+  ;; Shorten the mode line to only "P" and do not include the project type
+  (defun projectile-short-mode-line ()
+    "Short version of the default projectile mode line."
+    (format " P[%s]" (projectile-project-name)))
+  (setq projectile-mode-line-fn 'projectile-short-mode-line)
 
   ;; https://sideshowcoder.com/2017/10/24/projectile-and-tramp/
   (defadvice projectile-on (around exlude-tramp activate)
