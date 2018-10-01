@@ -2677,6 +2677,11 @@ file to edit."
 ;; Nicer diff (should be taken from global .config/git/config)
 (setq vc-git-diff-switches '("--indent-heuristic"))
 
+(use-package diff-mode
+  :config
+  ;; Shorten file headers like Magit's diff format.
+  (setq diff-font-lock-prettify t))
+
 (use-package ediff
   :defer t
   :config
