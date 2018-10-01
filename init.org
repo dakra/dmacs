@@ -3962,7 +3962,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 
 ;; Smart indentation for SQL files
 (use-package sql-indent
-  :hook (sql-mode . sqlind-minor-mode))
+  :hook ((sql-mode sql-interactive-mode) . sqlind-minor-mode))
   ;;:config (setq-default sqlind-basic-offset 4)
 
 ;; Capitalize keywords in SQL mode
