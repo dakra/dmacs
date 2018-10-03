@@ -738,7 +738,7 @@
 	url = git@github.com:vspinu/sesman.git
 [submodule "shrink-whitespace"]
 	path = lib/shrink-whitespace
-	url = git@github.com:jcpetkovich/shrink-whitespace.el.git
+	url = git@gitlab.com:jcpetkovich/shrink-whitespace.el.git
 [submodule "shut-up"]
 	path = lib/shut-up
 	url = git@github.com:cask/shut-up.git
