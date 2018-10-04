@@ -2956,6 +2956,17 @@ When called with 2 prefix arguments only open in browser and don't copy."
 (use-package irony-eldoc
   :hook (irony-mode))
 #+END_SRC
+** GLSL: OpenGLSL shader
+#+BEGIN_SRC emacs-lisp
+(use-package glsl-mode
+  :mode ("\\.vert\\'" "\\.frag\\'" "\\.glsl\\'" "\\.geom\\'"))
+#+END_SRC
+The company backend need the =glslang= package installed for =glslangValidator=.
+#+BEGIN_SRC emacs-lisp
+(use-package company-glsl
+  :after glsl-mode
+  :config (add-to-list 'company-backends 'company-glsl))
+#+END_SRC
 ** Configs (yaml/toml/ini/.conf/etc)
 #+BEGIN_SRC emacs-lisp
 ;; Associate more files with conf-mode

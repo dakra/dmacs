@@ -95,6 +95,9 @@
 	disabled = true
 	path = lib/company-box
 	url = git@github.com:sebastiencs/company-box.git
+[submodule "company-glsl"]
+	path = lib/company-glsl
+	url = git@github.com:GuidoSchmidt/company-glsl.git
 [submodule "company-go"]
 	path = lib/company-go
 	url = git@github.com:mdempsky/gocode.git
@@ -320,6 +323,9 @@
 [submodule "git-modes"]
 	path = lib/git-modes
 	url = git@github.com:magit/git-modes.git
+[submodule "glsl-mode"]
+	path = lib/glsl-mode
+	url = git@github.com:jimhourihan/glsl-mode.git
 [submodule "go-eldoc"]
 	path = lib/go-eldoc
 	url = git@github.com:syohex/emacs-go-eldoc.git
