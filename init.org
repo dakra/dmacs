@@ -7755,7 +7755,8 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("http://www.archlinux.org/feeds/news/" dev important)
     ("http://www.heise.de/newsticker/heise-atom.xml" dev)
     ("http://feeds.feedburner.com/codinghorror/" dev)
-    ("http://googledevelopers.blogspot.com/atom.xml" dev)
+    ("http://googledevelopers.blogspot.com/atom.xml" dev google)
+    ("https://cloudblog.withgoogle.com/rss/" dev google)
     ("https://blogs.msdn.microsoft.com/oldnewthing/feed" dev)
     ("http://blog.dubbelboer.com/atom.xml" dev friends)
 
