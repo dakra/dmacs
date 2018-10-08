@@ -881,7 +881,7 @@ different face
 #+BEGIN_SRC emacs-lisp
 ;; highlight indentations in python
 (use-package highlight-indent-guides
-  :hook ((python-mode sass-mode yaml-mode) . highlight-indent-guides-mode)
+  :hook ((python-mode sass-mode yaml-mode nim-mode) . highlight-indent-guides-mode)
   :config
   ;; Don't highlight first level (that would be a line at column 1)
   (defun my-highlighter (level responsive display)
@@ -3498,6 +3498,13 @@ $ sbcl
   (add-to-list 'markdown-code-lang-modes '("ini" . conf-mode))
   ;; use pandoc with source code syntax highlighting to preview markdown (C-c C-c p)
   (setq markdown-command "pandoc -s --highlight-style pygments -f markdown_github -t html5"))
+#+END_SRC
+** Nim
+You need to install the =nim= package, plus
+=nimble= and =nimsuggest=.
+#+BEGIN_SRC emacs-lisp
+(use-package nim
+  :hook (nim-mode . nimsuggest-mode))
 #+END_SRC
 ** Octave
 #+BEGIN_SRC emacs-lisp

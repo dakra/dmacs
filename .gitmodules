@@ -85,6 +85,9 @@
 [submodule "comment-dwim-2"]
 	path = lib/comment-dwim-2
 	url = git@github.com:remyferre/comment-dwim-2.git
+[submodule "commenter"]
+	path = lib/commenter
+	url = git@github.com:yuutayamada/commenter.git
 [submodule "company"]
 	path = lib/company
 	url = git@github.com:company-mode/company-mode.git
@@ -129,6 +132,9 @@
 [submodule "csv-mode"]
 	path = lib/csv-mode
 	url = git@github.com:emacsmirror/csv-mode.git
+[submodule "ctable"]
+	path = lib/ctable
+	url = git@github.com:kiwanami/emacs-ctable.git
 [submodule "cython-mode"]
 	path = lib/cython-mode
 	url = git@github.com:emacsmirror/cython-mode.git
@@ -223,6 +229,9 @@
 [submodule "emms"]
 	path = lib/emms
 	url = https://git.savannah.gnu.org/git/emms.git
+[submodule "epc"]
+	path = lib/epc
+	url = git@github.com:kiwanami/emacs-epc.git
 [submodule "epkg"]
 	path = lib/epkg
 	url = git@github.com:emacscollective/epkg.git
@@ -530,6 +539,9 @@
 [submodule "nginx-mode"]
 	path = lib/nginx-mode
 	url = git@github.com:ajc/nginx-mode.git
+[submodule "nim-mode"]
+	path = lib/nim-mode
+	url = git@github.com:nim-lang/nim-mode.git
 [submodule "no-littering"]
 	path = lib/no-littering
 	url = git@github.com:emacscollective/no-littering.git
