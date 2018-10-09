@@ -420,6 +420,9 @@
 	path = lib/intero
 	url = git@github.com:commercialhaskell/intero.git
 	load-path = elisp
+[submodule "ipinfo"]
+	path = lib/ipinfo
+	url = git@github.com:dakra/ipinfo.el.git
 [submodule "irony"]
 	path = lib/irony
 	url = git@github.com:Sarcasm/irony-mode.git

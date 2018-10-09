@@ -7366,6 +7366,10 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
          ("<escape>" . gif-screencast-stop))
   :config (setq gif-screencast-output-directory (expand-file-name "videos/emacs/" "~")))
 #+END_SRC
+** IPInfo: Get IP info from ipinfo.io
+#+BEGIN_SRC emacs-lisp
+(use-package ipinfo :defer t)
+#+END_SRC
 ** Systemctl
 #+BEGIN_SRC emacs-lisp
 (use-package systemctl
