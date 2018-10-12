@@ -3469,8 +3469,11 @@ $ sbcl
   :interpreter ("lua" . lua-mode)
   :hook (lua-mode . lua-outline-mode)
   :bind (:map lua-mode-map
+         ("M-?" . lua-search-documentation)
          ("M-." . dumb-jump-go))
   :config
+  ;; Use eww to browse Lua documentation
+  (setq lua-documentation-function 'eww)
   (defun lua-outline-mode ()
     (setq-local outline-regexp "function")))
 
