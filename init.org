@@ -5238,7 +5238,7 @@ session as the current block. ARG has same meaning as in
      (asymptote)
      (awk)
      (calc . t)
-     (clojure)
+     (clojure . t)
      (comint)
      (css)
      (ditaa . t)
@@ -5254,7 +5254,7 @@ session as the current block. ARG has same meaning as in
      (ledger . t)
      (lilypond)
      (lisp)
-     (lua)
+     (lua . t)
      (matlab)
      (maxima)
      (mscgen)
@@ -5277,7 +5277,7 @@ session as the current block. ARG has same meaning as in
      (shen)
      (snippet)
      (sql . t)
-     (sqlite)))
+     (sqlite . t)))
 
   ;; Load personal library of babel
   (org-babel-lob-ingest (no-littering-expand-etc-file-name "library-of-babel.org")))
