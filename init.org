@@ -5418,9 +5418,9 @@ NAME may be nil for unnamed sessions."
           ("e" "email" entry (file ,(concat org-directory "refile.org"))
            "* TODO %? Email: %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
            :clock-in t :clock-resume t :immediate-finish nil)
-          ("j" "Journal entry" entry (file+datetree ,(concat org-directory "journal.org"))
+          ("j" "Journal entry" entry (file+olp+datetree ,(concat org-directory "journal.org"))
            "* %?\n%U\n" :clock-in t :clock-resume t)
-          ("J" "Journal with link" entry (file+datetree ,(concat org-directory "journal.org"))
+          ("J" "Journal with link" entry (file+olp+datetree ,(concat org-directory "journal.org"))
            "* %?\n%U\n%a\n" :clock-in t :clock-resume t)
           ("r" "respond" entry (file ,(concat org-directory "refile.org"))
            "* TODO Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
