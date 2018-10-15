@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: begin_ block
+# key: <b
+# --
+#+begin_${1:$$(yas-auto-next
+                (yas-completing-read "Block type: "
+                '("example" "quote" "note" "warning" "tip" "caution" "important"
+                  "left" "center" "right" "sidebar" "attention" "hint" "error" "danger"
+                  "info" "notice" "question" "summary" "success")))}
+$0
+#+end_$1
