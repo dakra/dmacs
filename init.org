@@ -4431,8 +4431,9 @@ displayed anywhere else."
 (use-package proced
   :bind ("C-x p" . proced)
   :config
-  (setq-default proced-auto-update-flag t)
-  (setq-default proced-auto-update-interval 1))
+  (setq proced-format 'medium)
+  (setq proced-auto-update-flag t)
+  (setq proced-auto-update-interval 1))
 
 ;; scroll 4 lines up/down w/o moving pointer
 ;;(global-set-key "\M-n"  (lambda () (interactive) (scroll-up   1)) )
