@@ -3123,6 +3123,64 @@ The company backend need the =glslang= package installed for =glslangValidator=.
     (set (make-local-variable 'font-lock-defaults) '(go--build-font-lock-keywords)))
   (add-hook 'godoc-mode-hook 'godoc-highlight)
 
+  ;; Helper function to automatically insert commit message for updated
+  ;; vendored submodules
+  (defun go-submodule-states ()
+    (let ((default-directory (projectile-project-root)))
+      (mapcar
+       (lambda (line)
+         (pcase-let* ((`(,state ,module) (split-string line "\t")))
+           (list module state
+                 (and (member state '("A" "M"))
+                      (message module)
+                      (let ((default-directory (expand-file-name module)))
+                        (message default-directory)
+                        (if (file-directory-p default-directory)
+                            (car (process-lines
+                                  "git" "describe" "--tags" "--always"))
+                          "REMOVED"))))))
+       (process-lines
+        "git" "diff-index" "--name-status" "--cached" "HEAD" "--" "vendor/"))))
+
+  (defun go-submodule-insert-update-message ()
+    "Insert information about vendor packages that are changed in the index.
+Formatting is according to the commit message conventions."
+    (interactive)
+    (let ((alist (go-submodule-states)))
+      (when alist
+        (let ((width (apply #'max (mapcar (lambda (e) (length (car e))) alist)))
+              (align (cl-member-if (pcase-lambda (`(,_ ,_ ,version))
+                                     (and version
+                                          (string-match-p "\\`v[0-9]" version)))
+                                   alist)))
+          (when (> (length alist) 1)
+            (let ((a 0) (m 0) (d 0))
+              (pcase-dolist (`(,_ ,state ,_) alist)
+                (pcase state
+                  ("A" (cl-incf a))
+                  ("M" (cl-incf m))
+                  ("D" (cl-incf d))))
+              (insert (format "%s %-s vendor packages\n\n"
+                              (pcase (list a m d)
+                                (`(,_ 0 0) "Install")
+                                (`(0 ,_ 0) "Update")
+                                (`(0 0 ,_) "Remove")
+                                (_         "CHANGE"))
+                              (length alist)))))
+          (pcase-dolist (`(,drone ,state ,version) alist)
+            (insert
+             (format
+              (pcase state
+                ("A" (format "Install %%-%is %%s%%s\n" width))
+                ("M" (format "Update %%-%is to %%s%%s\n" width))
+                ("D" "Remove %s\n"))
+              drone
+              (if (and align version
+                       (string-match-p "\\`\\([0-9]\\|[0-9a-f]\\{7\\}\\)" version))
+                  " "
+                "")
+              version)))))))
+
   (add-hook 'go-mode-hook
             '(lambda ()
                (setq tab-width 4)
