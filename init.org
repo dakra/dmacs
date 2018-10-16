@@ -2932,6 +2932,38 @@ When called with 2 prefix arguments only open in browser and don't copy."
   (setq fill-column 110))
 (add-hook 'prog-mode-hook 'dakra-prog-mode-init)
 #+END_SRC
+*** Flycheck
+#+BEGIN_SRC emacs-lisp
+;; activate virtualenv for flycheck
+;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
+(use-package flycheck
+  :hook ((prog-mode ledger-mode) . flycheck-mode)
+  :config
+  ;; Use the load-path from running Emacs when checking elisp files
+  (setq flycheck-emacs-lisp-load-path 'inherit)
+
+  ;; Only do flycheck when I actually safe the buffer
+  (setq flycheck-check-syntax-automatically '(save mode-enable))
+
+  (declare-function python-shell-calculate-exec-path "python")
+
+  (defun flycheck-virtualenv-executable-find (executable)
+    "Find an EXECUTABLE in the current virtualenv if any."
+    (if (bound-and-true-p python-shell-virtualenv-root)
+        (let ((exec-path (python-shell-calculate-exec-path)))
+          (executable-find executable))
+      (executable-find executable)))
+
+  (defun flycheck-virtualenv-setup ()
+    "Setup Flycheck for the current virtualenv."
+    (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find))
+
+  (add-hook 'python-mode-hook #'flycheck-virtualenv-setup)
+
+  (setq flycheck-python-mypy-cache-dir "/home/daniel/.mypy-cache")
+  (setq flycheck-flake8-maximum-line-length 110))
+#+END_SRC
+
 ** C/C++
 #+BEGIN_SRC emacs-lisp
 (use-package cmake-font-lock
@@ -3530,12 +3562,15 @@ You need to install the =nim= package, plus
   :defer t)
 #+END_SRC
 ** Python
+*** Cython
 #+BEGIN_SRC emacs-lisp
 (use-package cython-mode
   :mode ("\\.pyd\\'" "\\.pyi\\'" "\\.pyx\\'"))
 (use-package flycheck-cython
   :after (cython-mode flycheck))
-
+#+END_SRC
+*** Main Python setup
+#+BEGIN_SRC emacs-lisp
 (use-package python
   :mode (("\\.py\\'" . python-mode)
          ("\\.xsh\\'" . python-mode))  ; Xonsh script files
@@ -3558,6 +3593,32 @@ You need to install the =nim= package, plus
   (put 'python-shell-process-environment
        'safe-local-variable (create-safe-env-p "DJANGO_SETTINGS_MODULE" "ENV_INI_PATH"))
   :config
+  ;; ipython5 uses prompt_toolkit which doesn't play nice with emacs
+  ;; when setting interpreter to 'ipython', you need additional '--simple-prompt' arg
+  (setq python-shell-interpreter "python")
+  ;;(setq python-shell-interpreter-args "-i")
+  ;; FIXME: run new python interpreter on projectile-switch-project?
+  ;; and only run pshell when it's a pyramid project.
+  ;;(setq python-shell-interpreter "python"
+  ;;      python-shell-interpreter-args "--simple-prompt -i /home/daniel/.virtualenvs/atomx/lib/python3.5/site-packages/pyramid/scripts/pshell.py /home/daniel/atomx/api/development.ini")
+
+  (defun python-enable-highlighting-in-comint (f &rest args)
+    "Workaround so entered python code in comint mode stays highlighted.
+See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
+    (if (eq major-mode 'inferior-python-mode)
+        (cl-letf (((symbol-function 'g)
+                   (symbol-function 'add-text-properties))
+                  ((symbol-function 'add-text-properties)
+                   (lambda (start end properties
+                                  &optional object)
+                     (unless (eq (nth 3 properties)
+                                 'comint-highlight-input)
+                       (funcall g start end
+                                properties object)))))
+          (apply f args))
+      (apply f args)))
+  ;; (advice-add 'comint-send-input :around #'python-enable-highlighting-in-comint)
+  ;; (advice-remove 'comint-send-input 'python-enable-highlighting-in-comint)
   ;; Don't spam message buffer when python-mode can't guess indent-offset
   (setq python-indent-guess-indent-offset-verbose nil)
 
@@ -3640,7 +3701,9 @@ You need to install the =nim= package, plus
   (defun python-flat-imenu-index ()
     (setq-local imenu-create-index-function
                 #'python-imenu-create-flat-index)))
-
+#+END_SRC
+*** Anaconda: Code navigation, documentation lookup and completion for Python
+#+BEGIN_SRC emacs-lisp
 (use-package anaconda-mode
   :bind (:map anaconda-mode-map
          ("M-." . python-goto-sql-file-or-definition)
@@ -3660,38 +3723,66 @@ You need to install the =nim= package, plus
 (use-package company-anaconda
   :after anaconda-mode
   :config (add-to-list 'company-backends 'company-anaconda))
-
+#+END_SRC
+*** Pippel: List, install, upgrade packages with pip
+#+BEGIN_SRC emacs-lisp
 ;; package-list-packages like interface for python packages
 (use-package pippel :defer t)
-
+#+END_SRC
+*** Pip requirements
+#+BEGIN_SRC emacs-lisp
 ;; Syntax highlighting for requirements.txt files
 (use-package pip-requirements
   :mode (("\\.pip\\'" . pip-requirements-mode)
          ("requirements.*\\.txt\\'" . pip-requirements-mode)
          ("requirements\\.in" . pip-requirements-mode)))
-
+#+END_SRC
+*** Sphinx
+#+BEGIN_SRC emacs-lisp
 ;; This adds a few sphinx features and fontification for rst buffers.
 ;; You can do `sphinx-compile` (`C-c C-x C-c`) to compile the sphinx docs or
 ;; `sphinx-compile-and-view` (`C-c C-x C-v`) to compile and view.
 (use-package sphinx-mode
   :hook (rst-mode . sphinx-mode))
-
+#+END_SRC
+*** Python-test: Run python tests with unittest, pytest, django
+#+BEGIN_SRC emacs-lisp
 (use-package python-test
   ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
   :after python
   :config
   ;; Set default test backend to pytest
   (setq python-test-backend 'pytest))
-
+#+END_SRC
+*** Pyramid
+#+BEGIN_SRC emacs-lisp
 (use-package pyramid
+  :defer t
   ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
-  :after python)
-
+  ;;:after python
+  )
+#+END_SRC
+*** Django
+#+BEGIN_SRC emacs-lisp
 (use-package djangonaut
   ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
-  :after python)
+  :after python
+  :config
+  (setq djangonaut-run-shell-plus-arguments '("--plain"))
+  (defun djangonaut-run-shell-plus-inferior-python ()
+    (message "test hook"))
+  (setq djangonaut-run-shell-plus-hook '(djangonaut-run-shell-plus-inferior-python))
 
-
+  (defun djangonaut-shell-plus ()
+    (interactive)
+    (with-current-buffer (djangonaut-run-management-command "shell_plus" "--plain")
+      (let ((python-shell--interpreter nil)
+            (python-shell--interpreter-args nil))
+        (inferior-python-mode))))
+  )
+#+END_SRC
+*** Pydoc: Nicer documentation view
+#+BEGIN_SRC emacs-lisp
 ;; Enable (restructured) syntax highlighting for python docstrings
 (use-package python-docstring
   :hook (python-mode . python-docstring-mode))
@@ -3699,7 +3790,9 @@ You need to install the =nim= package, plus
 (use-package pydoc
   :bind (:map anaconda-mode-map
          ("M-?" . pydoc-at-point)))
-
+#+END_SRC
+*** Isort
+#+BEGIN_SRC emacs-lisp
 ;; Automatically sort and format python imports
 (use-package py-isort
   ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
@@ -3711,83 +3804,29 @@ You need to install the =nim= package, plus
                            "--trailing-comma"
                            "--force-grid-wrap=2"
                            "--thirdparty=rethinkdb")))
-
-;; activate virtualenv for flycheck
-;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
-
-(use-package flycheck
-  :hook ((prog-mode ledger-mode) . flycheck-mode)
+#+END_SRC
+*** Blacken: Auto format Python buffer with black
+#+BEGIN_SRC emacs-lisp
+(use-package blacken
+  :defer t
   :config
-  ;; Use the load-path from running Emacs when checking elisp files
-  (setq flycheck-emacs-lisp-load-path 'inherit)
+  ;; Allow using Python 3.6-only syntax
+  (setq blacken-allow-py36 t)
+  ;; Skips temporary sanity checks
+  (setq blacken-fast-unsafe t)
+  ;; Use fill-column line-length
+  (setq blacken-line-length 'fill))
+#+END_SRC
 
-  ;; Only do flycheck when I actually safe the buffer
-  (setq flycheck-check-syntax-automatically '(save mode-enable))
-
-  (declare-function python-shell-calculate-exec-path "python")
-
-  (defun flycheck-virtualenv-executable-find (executable)
-    "Find an EXECUTABLE in the current virtualenv if any."
-    (if (bound-and-true-p python-shell-virtualenv-root)
-        (let ((exec-path (python-shell-calculate-exec-path)))
-          (executable-find executable))
-      (executable-find executable)))
-
-  (defun flycheck-virtualenv-setup ()
-    "Setup Flycheck for the current virtualenv."
-    (setq-local flycheck-executable-find #'flycheck-virtualenv-executable-find))
-
-  (add-hook 'python-mode-hook #'flycheck-virtualenv-setup)
-
-  (setq flycheck-python-mypy-cache-dir "/home/daniel/.mypy-cache")
-  (setq flycheck-flake8-maximum-line-length 110))
-
-;; ipython5 uses prompt_toolkit which doesn't play nice with emacs
-;; when setting interpreter to 'ipython', you need additional '--simple-prompt' arg
-(setq python-shell-interpreter "python")
-;;(setq python-shell-interpreter-args "-i")
-;; FIXME: run new python interpreter on projectile-switch-project?
-;; and only run pshell when it's a pyramid project.
-;;(setq python-shell-interpreter "python"
-;;      python-shell-interpreter-args "--simple-prompt -i /home/daniel/.virtualenvs/atomx/lib/python3.5/site-packages/pyramid/scripts/pshell.py /home/daniel/atomx/api/development.ini")
-
+*** Virtualenvwrapper: Automatically switch virtualenvs on projectile switch project
+#+BEGIN_SRC emacs-lisp
 (use-package virtualenvwrapper
   ;; Automatically switch python venv
   :hook (projectile-after-switch-project . venv-projectile-auto-workon)
   :config
   (venv-initialize-interactive-shells) ;; if you want interactive shell support
   (venv-initialize-eshell) ;; if you want eshell support
-  (setq venv-location "/home/daniel/.virtualenvs/")
-  ;;(venv-workon '"atomx")  ; default venv after a starting emacs
-  )
-
-
-(defcustom python-autopep8-path (executable-find "autopep8")
-  "autopep8 executable path."
-  :group 'python
-  :type 'string)
-
-(defun python-autopep8 ()
-  "Automatically formats Python code to conform to the PEP 8 style guide.
-$ autopep8 --in-place --aggressive --aggressive <filename>"
-  (interactive)
-  (when (eq major-mode 'python-mode)
-    (shell-command
-     (format "%s --in-place --max-line-length %s --aggressive %s" python-autopep8-path
-             whitespace-line-column
-             (shell-quote-argument (buffer-file-name))))
-    (revert-buffer t t t)))
-
-
-;; importmagic
-;; FIXME: very buggy yet 15.12.2016
-;; importmagic itself buggy: https://github.com/alecthomas/importmagic
-;; Always reorder imports; No way to put each import on a new line..
-;; maybe always call py-isort after calling importmagic?
-;;(require 'importmagic)
-;;(add-hook 'python-mode-hook 'importmagic-mode)
-;;(define-key importmagic-mode-map (kbd "C-c C-i") 'importmagic-fix-symbol-at-point)
-;;(add-to-list 'helm-boring-buffer-regexp-list "\\*epc con")
+  (setq venv-location "/home/daniel/.virtualenvs/"))
 #+END_SRC
 ** Redis
 #+BEGIN_SRC emacs-lisp

@@ -49,6 +49,9 @@
 [submodule "bicycle"]
 	path = lib/bicycle
 	url = git@github.com:tarsius/bicycle.git
+[submodule "blacken"]
+	path = lib/blacken
+	url = git@github.com:proofit404/blacken.git
 [submodule "blimp"]
 	path = lib/blimp
 	url = git@github.com:walseb/blimp.git
