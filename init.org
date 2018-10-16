@@ -1676,17 +1676,6 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   ;; Press C-p when you're on the first candidate to select your input
   (setq ivy-use-selectable-prompt t)
 
-  ;; FIXME: ignore space for fuzzy matching
-  ;;(require 's)
-  ;;(defun dakra-ivy--regex-fuzzy (str)
-  ;;  "Like ivy--regex-fuzzy but remove all spaces first."
-  ;;  (ivy--regex-fuzzy (s-replace " " "" str)))
-  ;;(add-to-list 'ivy-highlight-functions-alist
-  ;;             '(dakra-ivy--regex-fuzzy . ivy--highlight-fuzzy))
-
-  ;;(setq ivy-re-builders-alist
-  ;;      '((counsel-M-x . ivy--regex-fuzzy) ; Only counsel-M-x use flx fuzzy search
-  ;;        (t . ivy--regex-plus)))
   (setq ivy-initial-inputs-alist '((Man-completion-table . "^")
                                    (woman . "^")))
 
@@ -2621,7 +2610,7 @@ file to edit."
   :disabled t  ; Use eshell-prompt-extras
   :after eshell
   :config ;;(eshell-git-prompt-use-theme 'powerline)
-  ;; FIXME: Wait for powerline font https://github.com/powerline/fonts/issues/154
+  ;; XXX: Wait for powerline font https://github.com/powerline/fonts/issues/154
   (eshell-git-prompt-use-theme 'robbyrussell))
 
 (use-package eshell-prompt-extras
@@ -3825,8 +3814,7 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
 *** Python-test: Run python tests with unittest, pytest, django
 #+BEGIN_SRC emacs-lisp
 (use-package python-test
-  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
-  :after python
+  :defer t
   :config
   ;; Set default test backend to pytest
   (setq python-test-backend 'pytest))
@@ -3834,16 +3822,12 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
 *** Pyramid
 #+BEGIN_SRC emacs-lisp
 (use-package pyramid
-  :defer t
-  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
-  ;;:after python
-  )
+  :defer t)
 #+END_SRC
 *** Django
 #+BEGIN_SRC emacs-lisp
 (use-package djangonaut
-  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
-  :after python
+  :defer t
   :config
   (setq djangonaut-run-shell-plus-arguments '("--plain"))
   (defun djangonaut-run-shell-plus-inferior-python ()
@@ -3872,8 +3856,7 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
 #+BEGIN_SRC emacs-lisp
 ;; Automatically sort and format python imports
 (use-package py-isort
-  ;; FIXME: Use :defer but then, when not loaded yet, dir local vars appear as unsafe
-  :after python
+  :defer t
   :config
   ;;(add-hook 'before-save-hook 'py-isort-before-save)
   (setq py-isort-options '("--line-width=100"
@@ -3894,7 +3877,6 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
   ;; Use fill-column line-length
   (setq blacken-line-length 'fill))
 #+END_SRC
-
 *** Virtualenvwrapper: Automatically switch virtualenvs on projectile switch project
 #+BEGIN_SRC emacs-lisp
 (use-package virtualenvwrapper
@@ -4148,8 +4130,6 @@ true.
 #+BEGIN_SRC emacs-lisp
 ;; TypeScript
 (use-package typescript-mode
-  :init
-  (put 'typescript-indent-level 'safe-local-variable 'integerp)
   :config
   (setq typescript-indent-level 2))
 
