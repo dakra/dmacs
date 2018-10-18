@@ -751,6 +751,9 @@
 	disabled = true
 	path = lib/sauron
 	url = git@github.com:djcb/sauron.git
+[submodule "scrot"]
+	path = lib/scrot
+	url = git@github.com:dakra/scrot.el.git
 [submodule "scss-mode"]
 	path = lib/scss-mode
 	url = git@github.com:antonj/scss-mode.git

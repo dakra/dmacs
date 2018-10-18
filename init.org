@@ -7453,6 +7453,10 @@ eimp-fit-image-width-to-window=
 (use-package blimp
   :hook (image-mode . blimp-mode))
 #+END_SRC
+** Scrot: Screenshot utility using scrot
+#+BEGIN_SRC emacs-lisp
+(use-package scrot :defer t)
+#+END_SRC
 * Misc
 ** Atomx
 #+BEGIN_SRC emacs-lisp
