@@ -3107,6 +3107,7 @@ The company backend need the =glslang= package installed for =glslangValidator=.
 ;; XXX: `errcheck' (go get -u github.com/kisielk/errcheck) to check for missing error checks
 (use-package go-mode
   :mode "\\.go\\'"
+  :hook (go-mode . go-setup)
   :bind (:map go-mode-map
          ("M-?" . godoc-at-point)
          ("M-." . godef-jump)
@@ -3189,13 +3190,15 @@ Formatting is according to the commit message conventions."
                 "")
               version)))))))
 
-  (add-hook 'go-mode-hook
-            '(lambda ()
-               (setq tab-width 4)
-               ;; gofmt on save
-               (add-hook 'before-save-hook 'gofmt-before-save nil t)
-               ;; stop whitespace being highlighted
-               (whitespace-toggle-options '(tabs)))))
+  ;; Some go buffer local setup
+  (defun go-setup ()
+    (setq tab-width 4)
+    ;; Set compile command by default to 'go run ....'
+    (setq-local compile-command (concat "go run " (shell-quote-argument buffer-file-name)))
+    ;; gofmt on save
+    (add-hook 'before-save-hook 'gofmt-before-save nil t)
+    ;; stop whitespace being highlighted
+    (whitespace-toggle-options '(tabs))))
 
 (use-package helm-go-package
   :disabled t
