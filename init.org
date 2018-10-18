@@ -3749,6 +3749,33 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
     ("!" run-python)
     ("q" nil))
 
+  ;; Convert python syntax to json
+  (require 'pythonic)
+  (setq py2json-code "
+import json
+print(json.dumps(%s))
+")
+  (defun py2json (start end)
+    "Read region in Python syntax and convert to json."
+    (interactive
+     (if (or (use-region-p) (not transient-mark-mode))
+         (prog1 (list (region-beginning) (region-end))
+           (deactivate-mark))
+       (user-error "No region")))
+    (let* ((exit-code nil)
+           (code (format py2json-code (buffer-substring start end)))
+           (output (with-output-to-string
+                     (with-current-buffer standard-output
+                       (hack-dir-local-variables-non-file-buffer)
+                       (setq exit-code
+                             (pythonic-call-process
+                              :buffer standard-output
+                              :args (append (list "-c" code))))))))
+      (when (not (zerop exit-code))
+        (error (format "Python exit with status code %d" exit-code)))
+      (kill-region start end)
+      (insert output)))
+
   (require 'thingatpt)
   (require 'projectile)
   (defun projectile-find-sql-file ()
