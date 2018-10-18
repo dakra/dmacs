@@ -3659,6 +3659,9 @@ You need to install the =nim= package, plus
   ;; for each variable I allow.
   ;; TODO: Make the check for extra-pythonpaths more strict.
   (put 'python-shell-extra-pythonpaths 'safe-local-variable 'listp)
+  ;; Only mark virtualenvs safe that are my home folder
+  (put 'python-shell-virtualenv-root 'safe-local-variable
+       (lambda (p) (s-starts-with-p (expand-file-name "~/.virtualenvs/") (expand-file-name p))))
   (put 'python-shell-process-environment
        'safe-local-variable (create-safe-env-p "DJANGO_SETTINGS_MODULE" "ENV_INI_PATH"))
   :config
