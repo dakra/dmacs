@@ -7931,7 +7931,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("http://nutrientjournal.com/feed/" health)
     ("http://suppversity.blogspot.com/feeds/posts/default" health)
     ("http://mountaindogdiet.com/feed/" health)
-    ("https://examine.com/nutrition/rss/" health)
+    ;; ("https://examine.com/nutrition/rss/" health)
 
     ;; "https://en.chessbase.com/feed" is broken: elfeed says "Unknown feed type"
     ("http://feeds.feedburner.com/chessbase/mNmu" chess)
