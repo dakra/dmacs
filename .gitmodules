@@ -33,6 +33,9 @@
 [submodule "atomx"]
 	path = lib/atomx
 	url = git@github.com:atomx/atomx-api-elisp.git
+[submodule "aurel"]
+	path = lib/aurel
+	url = git@github.com:alezost/aurel.git
 [submodule "auto-compile"]
 	disabled = true
 	path = lib/auto-compile
@@ -64,6 +67,9 @@
 [submodule "browse-at-remote"]
 	path = lib/browse-at-remote
 	url = git@github.com:rmuslimov/browse-at-remote.git
+[submodule "bui"]
+	path = lib/bui
+	url = git@github.com:alezost/bui.el.git
 [submodule "cargo"]
 	path = lib/cargo
 	url = git@github.com:kwrooijen/cargo.el.git
