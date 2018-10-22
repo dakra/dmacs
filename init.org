@@ -2937,7 +2937,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
 (defun dakra-prog-mode-init ()
   ;; Only auto-fill comments in prog-mode
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
-  (setq fill-column 110))
+  (setq fill-column 100))
 (add-hook 'prog-mode-hook 'dakra-prog-mode-init)
 #+END_SRC
 *** Flycheck
