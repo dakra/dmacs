@@ -253,6 +253,16 @@ to tangle this file and initialize all packages.
 After that you can just call ~make~ to tangle and rebuild the packages
 each time you make a change or ~make build-init~ if you only made
 changes to this file.
+*** External packages
+This config tangles a list of arch-packages that are
+not mandatory but useful to have with this config in =arch-pkglist.txt=.
+
+The missing packages can be installed with:
+#+BEGIN_SRC shell
+yay -S --needed - < arch-pkglist.txt
+# or (no AUR packages)
+# pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort pkglist.txt))
+#+END_SRC
 * Emacs Initialization
 We want to use lexical scoping
 #+BEGIN_SRC emacs-lisp :comments nil
@@ -916,10 +926,13 @@ different face
   (setq highlight-indent-guides-auto-character-face-perc 20))
 #+END_SRC
 ** Emoji font
+Package ttf-symbola has to be installed
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+ttf-symbola
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
-;; emoji font
-;; package ttf-symbola has to be installed
-;; Just use "C-x 8 RET <type name>" insead
+;; Use "C-x 8 RET <type name>"
 (defun --set-emoji-font (frame)
   "Adjust the font settings of FRAME so Emacs can display emoji properly."
   (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend))
@@ -928,7 +941,6 @@ different face
 ;; Hook for when a frame is created with emacsclient
 ;; see https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Frames.html
 (add-hook 'after-make-frame-functions '--set-emoji-font)
-
 #+END_SRC
 ** Automatically remove trailing whitespace (only if I put them there)
 #+BEGIN_SRC emacs-lisp
@@ -1889,9 +1901,15 @@ go up multiple parent directories."
   :defer t)
 #+END_SRC
 ** PDF Tools
+Better pdf viewer with search, annotate, highlighting etc
+'poppler' and 'poppler-glib' must be installed.
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+poppler
+poppler-glib
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
-;; Better pdf viewer with search, annotate, highlighting etc
-;; 'poppler' and 'poppler-glib' must be installed
 (use-package pdf-tools
   ;; manually update
   ;; after each update we have to call:
@@ -2068,9 +2086,16 @@ go up multiple parent directories."
 
 (use-package dired-collapse
   :hook (dired-mode . dired-collapse-mode))
+#+END_SRC
 
-;; Browse compressed archives in dired (requires `avfs' to be installed)
-;; Run `mountavfs' to start `avfsd' which is needed for it to work.
+Browse compressed archives in dired (requires `avfs' to be installed)
+Run `mountavfs' to start `avfsd' which is needed for it to work.
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+avfs
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package dired-avfs
   :after dired
   :config
@@ -2941,6 +2966,11 @@ When called with 2 prefix arguments only open in browser and don't copy."
 (add-hook 'prog-mode-hook 'dakra-prog-mode-init)
 #+END_SRC
 *** Flycheck
+To activate shellcheck we need the =shellcheck= package.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+shellcheck
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 ;; activate virtualenv for flycheck
 ;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
@@ -3002,6 +3032,9 @@ When called with 2 prefix arguments only open in browser and don't copy."
   :mode ("\\.vert\\'" "\\.frag\\'" "\\.glsl\\'" "\\.geom\\'"))
 #+END_SRC
 The company backend need the =glslang= package installed for =glslangValidator=.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+glslang
+#+END_SRC
 #+BEGIN_SRC emacs-lisp
 (use-package company-glsl
   :after glsl-mode
@@ -3097,14 +3130,21 @@ The company backend need the =glslang= package installed for =glslangValidator=.
   :mode "\\.fish\\'")
 #+END_SRC
 ** Go
+For better support install:
+arch package `go-tools' for goimports, guru and godoc
+`gocode' (arch gocode-git package) for autocomplete
+`godef' (arch godef-git package) for godoc-at-point
+`golint' (arch go-lint-git)
+XXX: `errcheck' (go get -u github.com/kisielk/errcheck) to check for missing error checks
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+go-tools
+gocode-git
+godef-git
+go-lint-git
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
-;; Go
-;; For better support install:
-;; arch package `go-tools' for goimports, guru and godoc
-;; `gocode' (arch gocode-git package) for autocomplete
-;; `godef' (arch godef-git package) for godoc-at-point
-;; `golint' (arch go-lint-git)
-;; XXX: `errcheck' (go get -u github.com/kisielk/errcheck) to check for missing error checks
 (use-package go-mode
   :mode "\\.go\\'"
   :hook (go-mode . go-setup)
@@ -6354,8 +6394,8 @@ make
 sudo make install
 popd
 #+END_SRC
+
 #+BEGIN_SRC emacs-lisp
-;; mu package (includes mu4e) must be installed in the system
 (use-package mu4e
   ;; Open mu4e with the 'Mail' key (if your keyboard has one)
   :bind (("<XF86Mail>" . mu4e)
@@ -7229,6 +7269,10 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 You need to have the ~gpaste~ daemon installed (arch package ~gpaste~)
 and started. E.g. have this line in you .xprofile:
 ~/usr/lib/gpaste/gpaste-daemon &~
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+gpaste
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package gpastel
