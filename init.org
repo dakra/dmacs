@@ -1736,6 +1736,12 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   (define-key minibuffer-local-map (kbd "M-r")
     'counsel-minibuffer-history)
   :config
+  ;; Hide pyc and elc files by default from `counsel-find-file'
+  (setq counsel-find-file-ignore-regexp "\\.\\(pyc\\|elc\\)\\'")
+  ;; Add action to open file literally
+  ;; This makes opening of files with minified js or sql dumps possible.
+  (ivy-add-actions 'counsel-find-file
+                   `(("l" find-file-literally "Open literally")))
   ;; Use rg as backend for counsel-git
   (setq counsel-git-cmd "rg -S --files")
   ;; Only show max 160 characters per line
