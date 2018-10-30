@@ -258,7 +258,7 @@ This config tangles a list of arch-packages that are
 not mandatory but useful to have with this config in =arch-pkglist.txt=.
 
 The missing packages can be installed with:
-#+BEGIN_SRC shell
+#+BEGIN_SRC shell :tangle no
 yay -S --needed - < arch-pkglist.txt
 # or (no AUR packages)
 # pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort pkglist.txt))
