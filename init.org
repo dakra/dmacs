@@ -2409,6 +2409,7 @@ avfs
                            ((regexp-quote (system-name)) nil nil)
                            ("localhost" nil nil)
                            ("blif\\.vpn" nil nil)
+                           ("skor-pi" nil nil)
                            ;; Add tramp proxy for atomx user
                            (nil "atomx" "/ssh:%h:")))
     (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
@@ -7265,7 +7266,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     ;; Start some external apps
     (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
 
-    (start-process-shell-command "syncthing-gtk" nil "syncthing-gtk --minimized")
+    ;; (start-process-shell-command "syncthing-gtk" nil "syncthing-gtk --minimized")
     (start-process-shell-command "kdeconnect-indicator" nil "kdeconnect-indicator")
     (start-process-shell-command "keepassxc" nil "keepassxc"))
 
