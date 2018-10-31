@@ -751,6 +751,30 @@ Allow some commands as safe by default
   (setq shr-external-browser 'eww-browse-url)
   (setq shr-color-visible-luminance-min 80))
 #+END_SRC
+** Info: View info pages
+#+BEGIN_SRC emacs-lisp
+(use-package info
+  :bind (:map Info-mode-map
+         ("c" . info-copy-current-node-name-web))
+  :config
+  ;; From: https://www.reddit.com/r/emacs/comments/9sp7hh/show_me_your_functions/e8s1mgg/
+  (defun info-copy-current-node-name-web (arg)
+    "Copy the lispy form of the current node.
+With a prefix argument, copy the link to the online manual instead."
+    (interactive "P")
+    (let* ((manual (file-name-sans-extension
+                    (file-name-nondirectory Info-current-file)))
+           (node Info-current-node)
+           (link (if (not arg)
+                     (format "(info \"(%s) %s\")" manual node)
+                   ;; NOTE this will only work with emacs-related nodes...
+                   (format "https://www.gnu.org/software/emacs/manual/html_node/%s/%s.html"
+                           manual (if (string= node "Top")
+                                      "index"
+                                    (replace-regexp-in-string " " "-" node))))))
+      (kill-new link)
+      (message link))))
+#+END_SRC
 ** Help
 #+BEGIN_SRC emacs-lisp
 (use-package help
