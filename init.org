@@ -3822,10 +3822,6 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
 
   ;; Convert python syntax to json
   (require 'pythonic)
-  (setq py2json-code "
-import json
-print(json.dumps(%s))
-")
   (defun py2json (start end)
     "Read region in Python syntax and convert to json."
     (interactive
@@ -3834,10 +3830,10 @@ print(json.dumps(%s))
            (deactivate-mark))
        (user-error "No region")))
     (let* ((exit-code nil)
-           (code (format py2json-code (buffer-substring start end)))
+           (code "import json; print(json.dumps(%s))")
+           (code (format code (buffer-substring start end)))
            (output (with-output-to-string
                      (with-current-buffer standard-output
-                       (hack-dir-local-variables-non-file-buffer)
                        (setq exit-code
                              (pythonic-call-process
                               :buffer standard-output
@@ -3954,6 +3950,7 @@ print(json.dumps(%s))
   :hook (python-mode . python-docstring-mode))
 
 (use-package pydoc
+  :after anaconda-mode
   :bind (:map anaconda-mode-map
          ("M-?" . pydoc-at-point)))
 #+END_SRC
