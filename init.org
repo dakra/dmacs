@@ -775,12 +775,6 @@ With a prefix argument, copy the link to the online manual instead."
       (kill-new link)
       (message link))))
 #+END_SRC
-** Help
-#+BEGIN_SRC emacs-lisp
-(use-package help
-  :disabled t  ; I actually prefer larger help windows
-  :config (temp-buffer-resize-mode))
-#+END_SRC
 ** Makefile
 #+BEGIN_SRC emacs-lisp
 (use-package make-mode
