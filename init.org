@@ -3949,17 +3949,25 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
          ("M-?" . pydoc-at-point)))
 #+END_SRC
 *** Isort
+I have a =.isort.cfg= in my home folder that contains a config to
+match the =black= style:
+#+BEGIN_SRC conf :tangle ~/.config/_isort.cfg
+# Auto-generated from emacs config
+# isort config to match `black` style
+[settings]
+line_length=99
+known_third_party=rethinkdb,pydruid,redis,publicsuffix,rapidjson,restalchemy
+multi_line_output=3
+include_trailing_comma=True
+force_grid_wrap=0
+combine_as_imports=True
+indent=4
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 ;; Automatically sort and format python imports
 (use-package py-isort
-  :defer t
-  :config
-  ;;(add-hook 'before-save-hook 'py-isort-before-save)
-  (setq py-isort-options '("--line-width=100"
-                           "--multi-line=3"
-                           "--trailing-comma"
-                           "--force-grid-wrap=2"
-                           "--thirdparty=rethinkdb")))
+  :defer t)
 #+END_SRC
 *** Blacken: Auto format Python buffer with black
 #+BEGIN_SRC emacs-lisp
