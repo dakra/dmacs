@@ -4718,8 +4718,17 @@ displayed anywhere else."
   :bind (:map flyspell-mode-map
          ("C-." . flyspell-correct-previous-word-generic)))
 
-;; Automatically guess languages and switch ispell
+;; Need to install `languagetool'
+(use-package langtool
+  :defer t
+  :config
+  ;; Langtool classpath in arch is not set per environment variable
+  ;; Set classpath like in the `/usr/bin/languagetool' script
+  (setq langtool-java-classpath
+        (concat "/usr/share/languagetool:"
+                (s-join ":" (directory-files "/usr/share/java/languagetool/" t ".jar\\'")))))
 
+;; Automatically guess languages and switch ispell
 (use-package guess-language
   ;; Only guess language for emails
   :hook (mu4e-compose-mode . guess-language-mode)

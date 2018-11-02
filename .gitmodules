@@ -469,6 +469,9 @@
 [submodule "kv"]
 	path = lib/kv
 	url = git@github.com:nicferrier/emacs-kv.git
+[submodule "langtool"]
+	path = lib/langtool
+	url = git@github.com:mhayashi1120/Emacs-langtool.git
 [submodule "ledger-mode"]
 	path = lib/ledger-mode
 	url = git@github.com:ledger/ledger-mode.git
