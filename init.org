@@ -2818,7 +2818,7 @@ file to edit."
          ("s-m f" . magit-file-popup)
          ("s-m l" . magit-log-popup)
          ("s-m L" . magit-log-buffer-file)
-         ("s-m b" . magit-blame))
+         ("s-m b" . magit-blame-addition))
   :defines (magit-ediff-dwim-show-on-hunks)
   :init
   (defcustom magit-push-protected-branch nil
