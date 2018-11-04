@@ -1577,7 +1577,7 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
 (use-package treemacs
   :bind (([f8]        . treemacs-toggle-or-select)
          :map treemacs-mode-map
-         ("C-t a" . treemacs-add-project)
+         ("C-t a" . treemacs-add-project-to-workspace)
          ("C-t d" . treemacs-remove-project)
          ("C-t r" . treemacs-rename-project)
          ;; If we only hide the treemacs buffer (default binding) then, when we switch
