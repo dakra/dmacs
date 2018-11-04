@@ -3837,6 +3837,26 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
       (kill-region start end)
       (insert output)
       (json-reformat-region (- (point) (length output)) (point))))
+  (defun python-pprint (start end)
+    "Read region in Python syntax and pretty print it."
+    (interactive
+     (if (or (use-region-p) (not transient-mark-mode))
+         (prog1 (list (region-beginning) (region-end))
+           (deactivate-mark))
+       (user-error "No region")))
+    (let* ((exit-code nil)
+           (code "import pprint; pprint.pprint(%s)")
+           (code (format code (buffer-substring start end)))
+           (output (with-output-to-string
+                     (with-current-buffer standard-output
+                       (setq exit-code
+                             (pythonic-call-process
+                              :buffer standard-output
+                              :args (append (list "-c" code))))))))
+      (when (not (zerop exit-code))
+        (error (format "Python exit with status code %d" exit-code)))
+      (kill-region start end)
+      (insert output)))
 
   (require 'thingatpt)
   (require 'projectile)
