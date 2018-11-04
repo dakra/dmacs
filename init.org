@@ -4996,25 +4996,22 @@ Show clock history when not in org buffer or when called with prefix argument."
 
   (setq org-default-notes-file (concat org-directory "refile.org"))
 
+  ;; FIXME: Merge with org mode org-cycle-hide-drawers
+  ;;        Using only this would always show all drawers expanded by default
   ;; From: https://stackoverflow.com/questions/17478260/completely-hide-the-properties-drawer-in-org-mode
-  (defun org-cycle-hide-drawers (state)
+  (defun org-cycle-hide-drawers-all (state)
     "Re-hide all drawers after a visibility state change."
     (when (and (derived-mode-p 'org-mode)
                (not (memq state '(overview folded contents))))
       (save-excursion
         (let* ((globalp (memq state '(contents all)))
-               (beg (if globalp
-                        (point-min)
-                      (point)))
-               (end (if globalp
-                        (point-max)
+               (beg (if globalp (point-min) (point)))
+               (end (if globalp (point-max)
                       (if (eq state 'children)
-                          (save-excursion
-                            (outline-next-heading)
-                            (point))
+                          (save-excursion (outline-next-heading) (point))
                         (org-end-of-subtree t)))))
           (goto-char beg)
-          (while (re-search-forward org-drawer-regexp end t)
+          (while (re-search-forward org-drawer-regexp (max end (point)) t)
             (save-excursion
               (beginning-of-line 1)
               (when (looking-at org-drawer-regexp)
@@ -5036,7 +5033,7 @@ Show clock history when not in org buffer or when called with prefix argument."
   (defun org-hide-all-drawers ()
     "Hide all drawers"
     (interactive)
-    (org-cycle-hide-drawers 'all))
+    (org-cycle-hide-drawers-all 'all))
 
   (defun prelude-org-mode-defaults ()
     (let ((oldmap (cdr (assoc 'prelude-mode minor-mode-map-alist)))
