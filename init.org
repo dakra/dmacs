@@ -2910,6 +2910,8 @@ file to edit."
   ;; Set remote.pushDefault
   (setq magit-push-current-set-remote-if-missing 'default)
 
+  ;; When showing refs (In magit status press `y y') show only merged into master by default
+  (setq magit-show-refs-arguments '("--merged=master"))
   ;; Show color and graph in magit-log. Since color makes it a bit slow, only show the last 128 commits
   (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n128"))
   ;; Always highlight word differences in diff
