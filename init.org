@@ -1546,6 +1546,8 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   :init
   ;; Allow all file-local values for project root
   (put 'projectile-project-root 'safe-local-variable 'stringp)
+  ;; Don't show "Projectile" as liter when not in a project
+  (setq-default projectile-mode-line-prefix "")
   :config
   (add-to-list 'projectile-other-file-alist '("py" "sql" "py"))
   (add-to-list 'projectile-other-file-alist '("sql" "py"))
