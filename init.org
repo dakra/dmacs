@@ -2944,9 +2944,7 @@ file to edit."
   (magit-define-popup-action 'magit-log-popup
     ?W "Log WIP" 'magit-wip-log)
 
-  (magit-wip-before-change-mode)
-  (magit-wip-after-apply-mode)
-  (magit-wip-after-save-mode))
+  (magit-wip-mode))
 
 (use-package magithub
   :disabled t
