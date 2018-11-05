@@ -7229,13 +7229,13 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
            (other-1 (cadr connected))
            (other-2 (caddr connected)))
       (setq exwm-connected-displays (length connected))
-      (setq exwm-randr-workspace-output-plist
+      (setq exwm-randr-workspace-monitor-plist
             (append (list 0 primary)
                     (list 1 (or other-2 other-1 primary))
                     (mapcan (lambda (i) (list i (or other-1 other-2 primary)))
                             (number-sequence 2 exwm-workspace-number))))
       (exwm-randr--refresh)
-      (message "Display: %s refreshed." (string-join connected ", "))))
+      (message "Randr: %s monitors refreshed." (string-join connected ", "))))
 
   (add-hook 'exwm-randr-screen-change-hook #'dakra-exwm-randr-screen-change)
   (exwm-randr-enable)
