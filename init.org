@@ -3313,17 +3313,23 @@ Formatting is according to the commit message conventions."
   :hook (haskell-mode . intero-mode))
 #+END_SRC
 ** Javascript
+Instead of calling =prettier-js= for all projects, rather put this in
+your =.dir-locals.el= where you want the prettier after save hook activated:
+#+BEGIN_SRC emacs-lisp :tangle no
+((js2-mode . ((eval . (prettier-js-mode)))))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package prettier-js
   :defer t
-  ;;:init (add-hook 'js2-mode-hook (lambda () (add-hook 'before-save-hook 'prettier-before-save)))
+  ;;:hook (js2-mode . prettier-js-mode)
   :init
   (put 'prettier-js-args 'safe-local-variable 'listp)
   :config
   (setq prettier-js-args '(
                            "--trailing-comma" "all"
                            ;;"--tab-width" "4"
-                           "--single-quote" "true"
+                           ;;"--single-quote" "true"
                            "--bracket-spacing" "false"
                            ))
   ;; prettier "--print-width" argument is read from 'fill-column' variable
@@ -4001,6 +4007,13 @@ indent=4
   :defer t)
 #+END_SRC
 *** Blacken: Auto format Python buffer with black
+If you want =blacken= called as after-save-hook in your project
+put something like this in your =.dir-locals.el=:
+#+BEGIN_SRC emacs-lisp :tangle no
+((python-mode . ((flycheck-checker . python-mypy)
+                 (eval . (blacken-mode)))))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package blacken
   :defer t
