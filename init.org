@@ -1241,13 +1241,19 @@ is already narrowed."
 ** copy-as-format: Copy text as GitHub/Slack/JIRA/HipChat/... formatted code
 #+BEGIN_SRC emacs-lisp
 (use-package copy-as-format
-  :bind (("C-c w g" . copy-as-format-github)
-         ("C-c w h" . copy-as-format-hipchat-pidgin)
-         ("C-c w j" . copy-as-format-jira)
-         ("C-c w m" . copy-as-format-markdown)
-         ("C-c w o" . copy-as-format-org-mode)
-         ("C-c w s" . copy-as-format-slack))
+  :bind (:map mode-specific-map
+         :prefix-map copy-as-format-prefix-map
+         :prefix "w"
+         ("w" . copy-as-format)
+         ("g" . copy-as-format-github)
+         ("h" . copy-as-format-hipchat-pidgin)
+         ("j" . copy-as-format-jira)
+         ("m" . copy-as-format-markdown)
+         ("o" . copy-as-format-org-mode)
+         ("r" . copy-as-format-rst)
+         ("s" . copy-as-format-slack))
   :config
+  ;; (setq copy-as-format-default "slack")
   ;; Define own format since pidgin doesn't allow to begin a message with `/code'
   (defun copy-as-format--hipchat-pidgin (text _multiline)
     (format "/say /code %s" text))
@@ -1380,10 +1386,13 @@ Move current line or region with M-up or M-down.
 *** Visual-regex:
 #+BEGIN_SRC emacs-lisp
 (use-package visual-regexp
-  :bind (("C-c r s" . query-replace)
-         ("C-c r R" . vr/replace)
-         ("C-c r r" . vr/query-replace)
-         ("C-c r m" . vr/mc-mark)))
+  :bind (:map mode-specific-map
+         :prefix-map visual-regexp-prefix-map
+         :prefix "r"
+         ("r" . vr/query-replace)
+         ("R" . vr/replace)
+         ("m" . vr/mc-mark)
+         ("s" . query-replace)))
 
 (use-package visual-regexp-steroids
   :after visual-regexp)
