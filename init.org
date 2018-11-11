@@ -1251,7 +1251,8 @@ is already narrowed."
          ("m" . copy-as-format-markdown)
          ("o" . copy-as-format-org-mode)
          ("r" . copy-as-format-rst)
-         ("s" . copy-as-format-slack))
+         ("s" . copy-as-format-slack)
+         ("v" . org-copy-visible))
   :config
   ;; (setq copy-as-format-default "slack")
   ;; Define own format since pidgin doesn't allow to begin a message with `/code'
