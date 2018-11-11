@@ -6468,6 +6468,8 @@ popd
 (use-package mu4e
   ;; Open mu4e with the 'Mail' key (if your keyboard has one)
   :bind (("<XF86Mail>" . mu4e)
+         :map mu4e-main-mode-map
+         ("U" . mu4e-update-mail-and-index-background)
          :map mu4e-headers-mode-map
          ("TAB" . mu4e-headers-next-unread)
          ("d" . my-move-to-trash)
@@ -6495,6 +6497,11 @@ popd
         mail-envelope-from 'header
         message-sendmail-envelope-from 'header)
   :config
+  (defun mu4e-update-mail-and-index-background ()
+    "Call `mu4e-update-mail-and-index' to run in background."
+    (interactive)
+    (mu4e-update-mail-and-index t))
+
   ;; gmail delete == move mail to trash folder
   (fset 'my-move-to-trash "mt")
 
