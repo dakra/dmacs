@@ -30,6 +30,9 @@
 [submodule "async"]
 	path = lib/async
 	url = git@github.com:jwiegley/emacs-async.git
+[submodule "atomic-chrome"]
+	path = lib/atomic-chrome
+	url = git@github.com:alpha22jp/atomic-chrome.git
 [submodule "atomx"]
 	path = lib/atomx
 	url = git@github.com:atomx/atomx-api-elisp.git
@@ -206,10 +209,6 @@
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = git@github.com:Fanael/edit-indirect.git
-[submodule "edit-server"]
-	path = lib/edit-server
-	url = git@github.com:stsquad/emacs_chrome.git
-	load-path = servers
 [submodule "editorconfig"]
 	path = lib/editorconfig
 	url = git@github.com:editorconfig/editorconfig-emacs.git
