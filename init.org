@@ -1676,13 +1676,17 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
     (let ((buf (get-buffer str)))
       (when buf
         (with-current-buffer buf
-          (eq major-mode 'exwm-mode)))))
+          (or
+           (file-remote-p (or (buffer-file-name) default-directory))
+           (eq major-mode 'exwm-mode))))))
 
   (defun ivy-ignore-non-exwm-buffers (str)
     (let ((buf (get-buffer str)))
       (if buf
           (with-current-buffer buf
-            (not (eq major-mode 'exwm-mode)))
+            (or
+             (file-remote-p (or (buffer-file-name) default-directory))
+             (not (eq major-mode 'exwm-mode))))
         t)))
 
   (defun ivy-switch-buffer-exwm ()
@@ -1733,11 +1737,11 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   ;;:defer 5
   :after ivy
   :config
-  (ivy-rich-set-display-transformer)
   ;; Show only basic info for tramp buffers to make it faster
-  (setq ivy-rich-parse-remote-buffer nil)
-  (setq ivy-rich-switch-buffer-align-virtual-buffer t
-        ivy-rich-path-style 'abbrev))
+  (setq ivy-rich-parse-remote-buffer nil
+        ivy-rich-switch-buffer-align-virtual-buffer t
+        ivy-rich-path-style 'abbrev)
+  (ivy-rich-set-display-transformer))
 #+END_SRC
 ** Swiper: Search with ivy
 #+BEGIN_SRC emacs-lisp
