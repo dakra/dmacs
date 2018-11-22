@@ -7654,8 +7654,90 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
 ** Systemctl
 #+BEGIN_SRC emacs-lisp
 (use-package systemctl
-  :commands hydra-systemctl/body
+  :commands (hydra-systemctl/body services-run)
   :config
+  ;; FIXME: Loot at https://github.com/rejeep/prodigy.el
+  (setq services-list
+        '((:project-root "/home/daniel/atomx/api/"
+           :services ("mysqld" "redis")
+           :fun pyramid-serve)
+
+          (:project-root "/home/daniel/skor/buzzer/src/github.com/skor/buzzer/"
+           :services ()
+           :fun compilation-start
+           :fun-args ("make"
+                      t  ; Use compilation-shell-minor-mode under comint-mode
+                      (lambda (_mode) "*skor buzzer*")))
+
+          (:project-root "/home/daniel/skor/back-end/"
+           :services ("postgresql" "redis")
+           :fun compilation-start
+           :fun-args ("uvicorn --debug --host 0.0.0.0 skor.app:app"
+                      t  ; Use compilation-shell-minor-mode under comint-mode
+                      (lambda (_mode) "*skor back-end*")))
+
+          (:project-root "/home/daniel/skor/front-end/"
+           :services ()
+           :fun compilation-start
+           :fun-args ("yarn serve"
+                      t  ; Use compilation-shell-minor-mode under comint-mode
+                      (lambda (_mode) "*skor front-end*")))
+
+          (:project-root "/home/daniel/projects/bush-kennels.uk/"
+           :services ()
+           :fun compilation-start
+           :fun-args ("yarn serve"
+                      t  ; Use compilation-shell-minor-mode under comint-mode
+                      (lambda (_mode) "*yarn serve bush-kennels.uk*")))
+          (:project-root "/home/daniel/e5/blif/blif-frontend/"
+           :services ()
+           :fun compilation-start
+           :fun-args ("gulp dev"
+                      t  ; Use compilation-shell-minor-mode under comint-mode
+                      (lambda (_mode) "*blif frontend*")))
+
+          (:project-root "/home/daniel/e5/paessler/website/"
+           :services ("mysqld" "redis")
+           :fun djangonaut-run-management-command
+           :fun-args ("runserver" "8001"))
+
+          (:project-root "/home/daniel/e5/paessler/shop/"
+           :services ("mysqld" "redis")
+           :fun djangonaut-run-management-command
+           :fun-args ("runserver"))
+
+          ;; (:project-root "/home/daniel/e5/paessler/shop/"
+          ;;  :services ("docker")
+          ;;  :fun compilation-start
+          ;;  :fun-args ("docker-compose -p bis-trunk -f docker/docker-compose.yml -f docker/shop-admin.yml up"
+          ;;             t  ; Use compilation-shell-minor-mode under comint-mode
+          ;;             (lambda (_mode) "*docker compose paessler*")))
+
+          (:project-root "/home/daniel/e5/neorent/neorent/"
+           :services ("postgresql" "redis")
+           :fun pyramid-serve
+           :fun-args (t))))
+
+  ;; FIXME: Add process environment
+  (defun services-run (&optional project-root)
+    "Start running server for project NAME."
+    (interactive)
+    (let* ((project-root (or project-root (projectile-project-root)))
+           (project (-first
+                     (lambda (p)
+                       (equal (plist-get p :project-root) project-root))
+                     services-list))
+           (services (plist-get project :services))
+           (fun (plist-get project :fun))
+           (fun-args (plist-get project :fun-args)))
+      (unless project
+        (error "Project not found in services-list."))
+      (message "Starting services for project %s" project-root)
+      (dolist (service services)
+        (systemctl-start service))
+      (let ((default-directory project-root))
+        (apply fun fun-args))))
+
   (defun systemctl-hydra-status (unit)
     "Return a checkbox indicating the status of UNIT."
     (if (equal (type-of unit) 'string)
