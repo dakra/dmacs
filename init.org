@@ -1961,7 +1961,8 @@ poppler-glib
   (defun print-pdf (&optional pdf)
     "Print PDF using external program `gtklp'."
     (interactive "P")
-    (start-process-shell-command "gtklp" nil (format "gtklp %s" (shell-quote-argument (buffer-file-name)))))
+    (start-process-shell-command
+     "gtklp" nil (format "gtklp %s" (shell-quote-argument (or pdf (buffer-file-name))))))
 
   ;; more fine-grained zooming; +/- 10% instead of default 25%
   (setq pdf-view-resize-factor 1.1)
