@@ -2971,17 +2971,6 @@ file to edit."
     ?W "Log WIP" 'magit-wip-log)
 
   (magit-wip-mode))
-
-(use-package magithub
-  :disabled t
-  :after magit
-  :hook (prog-mode magithub-bug-reference-mode-on)
-  :config
-  ;; Don't query github api all the time. This causes magit-status to freeze
-  ;; Wait for async support https://github.com/vermiculus/magithub/issues/37
-  (setq magithub-cache t)
-  (setq magithub-api-timeout 5)
-  (magithub-feature-autoinject t))
 #+END_SRC
 ** Browse-at-remote: Open website (github/gitlab) for current buffer/line/log
 #+BEGIN_SRC emacs-lisp

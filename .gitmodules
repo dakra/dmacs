@@ -514,9 +514,6 @@
 [submodule "magit-tbdiff"]
 	path = lib/magit-tbdiff
 	url = git@github.com:magit/magit-tbdiff.git
-[submodule "magithub"]
-	path = lib/magithub
-	url = git@github.com:vermiculus/magithub.git
 [submodule "makey"]
 	path = lib/makey
 	url = git@github.com:mickeynp/makey.git
