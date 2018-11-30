@@ -221,6 +221,9 @@
 [submodule "elfeed"]
 	path = lib/elfeed
 	url = git@github.com:skeeto/elfeed.git
+[submodule "elisp-demos"]
+	path = lib/elisp-demos
+	url = git@github.com:xuchunyang/elisp-demos.git
 [submodule "elisp-refs"]
 	path = lib/elisp-refs
 	url = git@github.com:Wilfred/elisp-refs.git

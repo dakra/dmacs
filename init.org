@@ -1546,6 +1546,13 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
     (when (helpful-visit-reference)
       (org-babel-tangle-jump-to-org))))
 #+END_SRC
+** Elisp-demos: Inject elisp demos into help buffer
+#+BEGIN_SRC emacs-lisp
+(use-package elisp-demos
+  :after helpful
+  :config
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+#+END_SRC
 * Project Management
 ** Projectile
 #+BEGIN_SRC emacs-lisp
