@@ -6668,6 +6668,20 @@ popd
 
   ;;; Use 'fancy' non-ascii characters in various places in mu4e
   (setq mu4e-use-fancy-chars t)
+  ;; And change default threading characers to some "nicer" looking chars
+  (setq mu4e-headers-thread-child-prefix '("├>" . "├▶ "))
+  (setq mu4e-headers-thread-last-child-prefix '("└>" . "└▶ "))
+  (setq mu4e-headers-thread-connection-prefix '("│" . "│ "))
+  (setq mu4e-headers-thread-orphan-prefix '("┬>" . "┬▶ "))
+  (setq mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶ "))
+
+  ;; Also change to some nicer characers for marks
+  (setq mu4e-headers-new-mark    '("N" . "☉"))
+  (setq mu4e-headers-passed-mark  '("P" . "›"))
+  (setq mu4e-headers-replied-mark '("R" . "‹"))
+  (setq mu4e-headers-seen-mark   '("S" . ""))
+  (setq mu4e-headers-attach-mark '("a" . "📎"))
+  (setq mu4e-headers-unread-mark '("u" . "✉"))
 
   ;; I want my format=flowed thank you very much
   ;; mu4e sets up visual-line-mode and also fill (M-q) to do the right thing
