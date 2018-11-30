@@ -7372,7 +7372,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
 
     ;; (start-process-shell-command "syncthing-gtk" nil "syncthing-gtk --minimized")
-    (start-process-shell-command "kdeconnect-indicator" nil "kdeconnect-indicator")
+    (start-process-shell-command "indicator-kdeconnect" nil "indicator-kdeconnect")
     (start-process-shell-command "keepassxc" nil "keepassxc"))
 
   ;; Enable EXWM
