@@ -2972,6 +2972,13 @@ file to edit."
 
   (magit-wip-mode))
 #+END_SRC
+** Forge: Work with Git forges from the comfort of Magit
+#+BEGIN_SRC emacs-lisp
+(use-package forge
+  :after magit
+  :config
+  (add-to-list 'forge-alist '("gitlab.paesslergmbh.de:bis-team" "gitlab.paesslergmbh.de/api/v4" "gitlab.paesslergmbh.de" forge-gitlab-repository)))
+#+END_SRC
 ** Browse-at-remote: Open website (github/gitlab) for current buffer/line/log
 #+BEGIN_SRC emacs-lisp
 ;; open current line/region/dired/commit in github
