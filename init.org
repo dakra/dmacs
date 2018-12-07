@@ -2190,6 +2190,12 @@ avfs
          ("i" . dired-subtree-insert)
          ("I" . dired-subtree-remove)))
 #+END_SRC
+** Treemacs-icons-dired: Treemacs icons for dired
+#+BEGIN_SRC emacs-lisp
+(use-package treemacs-icons-dired
+  :after dired
+  :config (treemacs-icons-dired-mode))
+#+END_SRC
 * Helm
 #+BEGIN_SRC emacs-lisp
   ;;; Helm config

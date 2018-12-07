@@ -847,7 +847,9 @@
 	path = lib/treemacs
 	url = git@github.com:Alexander-Miller/treemacs.git
 	load-path = src/elisp
+	load-path = src/extra
 	no-byte-compile = src/elisp/treemacs-evil.el
+	no-byte-compile = src/extra/treemacs-evil.el
 [submodule "treepy"]
 	path = lib/treepy
 	url = git@github.com:volrath/treepy.el.git
