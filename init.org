@@ -2797,6 +2797,17 @@ file to edit."
   :hook (((prog-mode conf-mode vc-dir-mode ledger-mode) . turn-on-diff-hl-mode)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
+  (defhydra hydra-diff-hl (:color red)
+    "diff-hl"
+    ("=" diff-hl-diff-goto-hunk "goto hunk")
+    ("<RET>" diff-hl-diff-goto-hunk "goto hunk")
+    ("u" diff-hl-revert-hunk "revert hunk")
+    ("[" diff-hl-previous-hunk "prev hunk")
+    ("p" diff-hl-previous-hunk "prev hunk")
+    ("]" diff-hl-next-hunk "next hunk")
+    ("n" diff-hl-next-hunk "next hunk")
+    ("q" nil "cancel"))
+
   ;; XXX: maybe set draw-borders to nil and set background color like
   ;; `(diff-added ((,class (:foreground ,green-4 :background ,green-00 :bold t))))
   ;; `(diff-changed ((,class (:foreground ,yellow-4 :background ,yellow-00 :bold t))))
@@ -2806,19 +2817,6 @@ file to edit."
 (use-package diff-hl-dired  ;; in diff-hl package
   :after dired
   :hook (dired-mode . diff-hl-dired-mode))
-
-;; XXX: not sure if git gutter is really nicer than diff-hl
-;; diff-hl comes pre-packaged with prelude but doesn't
-;; have those *-hunk commands
-
-;;;; disable diff-hl that's enabled in prelude-editor.el:393
-;;(global-diff-hl-mode -1)
-;;(remove-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-;;;; use git-gutter everywhere
-;;(global-git-gutter-mode t)
-;;(global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
-;;(global-set-key (kbd "C-x v s") 'git-gutter:stage-hunk)
-;;(global-set-key (kbd "C-x v r") 'git-gutter:revert-hunk)
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
