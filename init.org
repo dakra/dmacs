@@ -2068,6 +2068,12 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
                         (set-window-configuration wnd))))
         (error "no more than 2 files should be marked")))))
 
+(use-package wdired
+  :afer dired
+  :config
+  ;; Make permission bits editable
+  (setq wdired-allow-to-change-permissions t))
+
 (use-package dired-x
   :bind ("C-x C-j" . dired-jump)
   :config
