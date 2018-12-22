@@ -7441,7 +7441,7 @@ gpaste
 
 #+BEGIN_SRC emacs-lisp
 (use-package gpastel
-  :hook (exwm-init . gpastel-start-listening))
+  :hook (exwm-init . gpastel-mode))
 #+END_SRC
 ** PulseAudio
 #+BEGIN_SRC emacs-lisp
