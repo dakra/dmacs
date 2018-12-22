@@ -2068,6 +2068,12 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
                         (set-window-configuration wnd))))
         (error "no more than 2 files should be marked")))))
 
+(use-package dired-aux
+  :after dired
+  :config
+  ;; Add unrar to `dired-compress'
+  (add-to-list 'dired-compress-file-suffixes '("\\.rar\\'" "" "unrar x %i")))
+
 (use-package wdired
   :afer dired
   :config
