@@ -2890,6 +2890,9 @@ file to edit."
   ;; Show gravatars
   (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
+  ;; Don't show fringe indicators (Not really visible with our small exwm fringe)
+  (setq magit-section-visibility-indicator nil)
+
   ;; Always show recent/unpushed/unpulled commits
   (setq magit-section-initial-visibility-alist '((unpushed . show)
                                                  (unpulled . show)))
