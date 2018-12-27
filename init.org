@@ -2796,9 +2796,6 @@ file to edit."
 ;; bug-reference-url-format has to be set in dir-locals (S-p E)
 ;; E.g. for github: (bug-reference-url-format . "https://github.com/atomx/api/issues/%s")
 (use-package bug-reference
-  :hook ((prog-mode . bug-reference-prog-mode)
-         ((log-view-mode git-commit-setup) . bug-reference-mode))
-  :init (add-hook 'prog-mode-hook 'bug-reference-prog-mode)
   :config
   ;; (setq bug-reference-bug-regexp "\\([Bb]ug\\|[Pp]ull request\\|[Ii]ssue\\|[PpMm][Rr]\\|[Ff]ix\\) #\\([0-9]+\\(?:#[0-9]+\\)?\\)")
   (setq bug-reference-bug-regexp "#\\(?2:[0-9]+\\)"))
@@ -3035,8 +3032,13 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 #+BEGIN_SRC emacs-lisp
 (use-package forge
   :after magit
+  :hook ((prog-mode log-view-mode git-commit-setup) . forge-bug-reference-setup)
   :config
-  (add-to-list 'forge-alist '("gitlab.paesslergmbh.de" "gitlab.paesslergmbh.de/api/v4" "gitlab.paesslergmbh.de" forge-gitlab-repository)))
+  (add-to-list 'forge-alist
+               '("gitlab.paesslergmbh.de"
+                 "gitlab.paesslergmbh.de/api/v4"
+                 "gitlab.paesslergmbh.de"
+                 forge-gitlab-repository)))
 #+END_SRC
 ** Browse-at-remote: Open website (github/gitlab) for current buffer/line/log
 #+BEGIN_SRC emacs-lisp
