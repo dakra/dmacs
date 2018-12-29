@@ -3751,6 +3751,8 @@ $ sbcl
          ("\\.markdown\\'" . gfm-mode)
          ("\\.md\\'" . gfm-mode))
   :config
+  ;; Display remote images
+  (setq markdown-display-remote-images t)
   ;; Enable fontification for code blocks
   (setq markdown-fontify-code-blocks-natively t)
   (add-to-list 'markdown-code-lang-modes '("ini" . conf-mode))
