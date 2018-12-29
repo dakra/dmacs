@@ -3744,7 +3744,7 @@ $ sbcl
 ** Markup Languages
 #+BEGIN_SRC emacs-lisp
 (use-package jira-markup-mode
-  :mode ("\\.confluence\\'" "/itsalltext/.*jira.*\\.txt$"))
+  :mode ("\\.confluence\\'" "\\.jira\\'"))
 
 (use-package markdown-mode
   :mode (("/itsalltext/.*\\(gitlab\\|github\\).*\\.txt$" . gfm-mode)
