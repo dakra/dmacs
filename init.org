@@ -7935,8 +7935,6 @@ in that namespace with ~x~
   ;;             (list "monthly expenses"
   ;;                   (concat "%(binary) -f %(ledger-file) balance expenses "
   ;;                           "--tree --no-total --row-total --average --monthly")))
-  ;; disable whitespace-mode in ledger reports
-  (add-hook 'ledger-report-mode-hook (lambda () (whitespace-mode -1)))
   (setq ledger-post-amount-alignment-column 60))
 
 (use-package flycheck-ledger
