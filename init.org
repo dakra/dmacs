@@ -2075,7 +2075,7 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
   (add-to-list 'dired-compress-file-suffixes '("\\.rar\\'" "" "unrar x %i")))
 
 (use-package wdired
-  :afer dired
+  :after dired
   :config
   ;; Make permission bits editable
   (setq wdired-allow-to-change-permissions t))
