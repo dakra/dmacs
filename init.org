@@ -6694,6 +6694,7 @@ popd
                                    "NOT maildir:/private/Junk AND "
                                    "NOT maildir:/atomx/spam AND "
                                    "NOT maildir:/atomx/trash AND "
+                                   "NOT maildir:/paessler/Deleted\\ Items AND "
                                    "NOT maildir:/gmail/spam AND "
                                    "NOT maildir:/gmail/trash")
                           "All Unread messages" ?A)
