@@ -7486,9 +7486,6 @@ gpaste
          ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
 #+END_SRC
 ** Network
-:PROPERTIES:
-:CREATED:  [2018-06-15 Fri 13:51]
-:END:
 Control network manager from Emacs
 #+BEGIN_SRC emacs-lisp
 (defvar counsel-network-manager-history nil
