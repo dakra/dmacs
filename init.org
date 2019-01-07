@@ -1746,7 +1746,6 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   :config
   ;; Show only basic info for tramp buffers to make it faster
   (setq ivy-rich-parse-remote-buffer nil
-        ivy-rich-switch-buffer-align-virtual-buffer t
         ivy-rich-path-style 'abbrev)
   (ivy-rich-set-display-transformer))
 #+END_SRC
