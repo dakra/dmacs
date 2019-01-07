@@ -4226,10 +4226,11 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   (defun sql-connect--ensure-passwords (&optional connection buf-name)
     "Ensure that sql-connection-alist is populated including passwords."
     (interactive
-     (unless sql-connection-alist
-       (sql-init-passwords))
-     (list (sql-read-connection "Connection: ")
-           current-prefix-arg)))
+     (progn
+       (unless sql-connection-alist
+         (sql-init-passwords))
+       (list (sql-read-connection "Connection: ")
+             current-prefix-arg))))
   ;;(advice-add 'sql-connect :before #'sql-connect--ensure-passwords)
 
   (defun sql-init-passwords ()
