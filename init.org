@@ -7417,19 +7417,27 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
                             ([?\M-v] . [prior])
                             ([?\C-v] . [next])))))
 
+  (defun dakra/emacs-teardown ()
+    "This saves all buffers and runs `kill-emacs-hook' without killing exwm or Emacs."
+    (save-some-buffers t)
+    ;; `run-hooks' doesn't work with let binding.
+    (setq dakra-kill-hook (thread-last kill-emacs-hook
+                            (remove 'exwm--server-stop)
+                            (remove 'server-force-stop)))
+    (run-hooks 'dakra-kill-hook))
   (defun dakra/poweroff ()
     "Clock out, save all Emacs buffers and shut computer down."
     (interactive)
     (when (y-or-n-p "Really want to shut down?")
       (when (org-clock-is-active)
         (org-clock-out))
-      (save-some-buffers t)
+      (dakra/emacs-teardown)
       (start-process-shell-command "poweroff" nil "poweroff")))
   (defun dakra/reboot ()
     "Save all Emacs buffers and reboot."
     (interactive)
     (when (y-or-n-p "Really want to reboot?")
-      (save-some-buffers t)
+      (dakra/emacs-teardown)
       (start-process-shell-command "reboot" nil "reboot")))
 
   ;; Start some apps
