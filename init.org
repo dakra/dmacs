@@ -6694,8 +6694,10 @@ popd
                                    "NOT list:emacs-devel.gnu.org AND "
                                    "NOT list:emacs-orgmode.gnu.org AND "
                                    "NOT maildir:/private/Junk AND "
+                                   "NOT maildir:/private/Trash AND "
                                    "NOT maildir:/atomx/spam AND "
                                    "NOT maildir:/atomx/trash AND "
+                                   "NOT maildir:/paessler/Deleted\\ Items AND "
                                    "NOT maildir:/gmail/spam AND "
                                    "NOT maildir:/gmail/trash")
                           "Unread messages" ?a)
@@ -6703,6 +6705,7 @@ popd
                                    "NOT flag:trashed AND "
                                    "NOT flag:seen AND "
                                    "NOT maildir:/private/Junk AND "
+                                   "NOT maildir:/private/Trash AND "
                                    "NOT maildir:/atomx/spam AND "
                                    "NOT maildir:/atomx/trash AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
