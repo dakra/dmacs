@@ -3244,8 +3244,20 @@ glslang
 #+END_SRC
 ** Fish
 #+BEGIN_SRC emacs-lisp
+(use-package company-shell
+  :defer t)
+
 (use-package fish-mode
-  :mode "\\.fish\\'")
+  :mode "\\.fish\\'"
+  :hook ((fish-mode shell-mode) . fish-mode-init)
+  :config
+  (defun fish-mode-init ()
+    (setq-local company-backends '((company-fish-shell
+                                    company-shell
+                                    company-shell-env
+                                    company-files
+                                    company-dabbrev-code
+                                    company-yasnippet)))))
 #+END_SRC
 ** Go
 For better support install:

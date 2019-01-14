@@ -126,6 +126,9 @@
 [submodule "company-restclient"]
 	path = lib/company-restclient
 	url = git@github.com:iquiw/company-restclient.git
+[submodule "company-shell"]
+	path = lib/company-shell
+	url = git@github.com:Alexander-Miller/company-shell.git
 [submodule "copy-as-format"]
 	path = lib/copy-as-format
 	url = git@github.com:sshaw/copy-as-format.git
