@@ -725,17 +725,28 @@ Allow some commands as safe by default
   ;; Set to 'first-error to stop scrolling on first error
   (setq compilation-scroll-output t))
 #+END_SRC
+** Comint
+Create a terminfo file for Emacs with ANSI color codes and use it in comint.
+From https://old.reddit.com/r/emacs/comments/ad90w4/found_a_simple_solution_to_colorize_ls_on_shell/edf40xm/
+
+#+BEGIN_SRC text :tangle ~/.terminfo/dumb-emacs-ansi.ti
+dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
+    am,
+    colors#8, it#8, ncv#13, pairs#64,
+    bold=\E[1m, cud1=^J, ht=^I, ind=^J, op=\E[39;49m,
+    ritm=\E[23m, rmul=\E[24m, setab=\E[4%p1%dm,
+    setaf=\E[3%p1%dm, sgr0=\E[m, sitm=\E[3m, smul=\E[4m,
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package comint
   :defer t
   :config
+  ;; Set terminfo to a dumb terminal with ANSI color codes
+  (setq comint-terminfo-terminal "dumb-emacs-ansi")
+
   ;; Increase comint buffer size.
   (setq comint-buffer-maximum-size 8192))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(message "Loading early birds...done (%.3fs)"
-         (float-time (time-subtract (current-time) before-user-init-time)))
 #+END_SRC
 ** Subword: CamelCase aware editing operations
 #+BEGIN_SRC emacs-lisp
