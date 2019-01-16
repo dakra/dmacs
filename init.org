@@ -4755,7 +4755,7 @@ displayed anywhere else."
   :config
   (setq avy-background t)
   (setq avy-style 'at-full)
-  (setq avy-timeout-seconds 0.3))
+  (setq avy-timeout-seconds 0.2))
 
 (use-package ace-link
   :bind (:map Info-mode-map ("o" . ace-link-info)
