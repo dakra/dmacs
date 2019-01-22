@@ -2842,6 +2842,12 @@ file to edit."
   :after dired
   :hook (dired-mode . diff-hl-dired-mode))
 #+END_SRC
+** Gitpatch: Easily send patches from dired/magit/ibuffer
+Move point to patch and call `M-x gitpatch-mail`
+#+BEGIN_SRC emacs-lisp
+(use-package gitpatch
+  :defer t)
+#+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
 (use-package gitconfig-mode

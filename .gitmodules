@@ -350,6 +350,9 @@
 [submodule "git-modes"]
 	path = lib/git-modes
 	url = git@github.com:magit/git-modes.git
+[submodule "gitpatch"]
+	path = lib/gitpatch
+	url = git@github.com:tumashu/gitpatch.git
 [submodule "glsl-mode"]
 	path = lib/glsl-mode
 	url = git@github.com:jimhourihan/glsl-mode.git
