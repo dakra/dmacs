@@ -334,6 +334,7 @@
 	no-byte-compile = flyspell-correct-helm.el
 	no-byte-compile = flyspell-correct-ido.el
 	no-byte-compile = flyspell-correct-popup.el
+	no-byte-compile = flyspell-correct-avy-menu.el
 [submodule "forge"]
 	path = lib/forge
 	url = git@github.com:magit/forge.git
