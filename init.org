@@ -611,8 +611,13 @@ Allow some commands as safe by default
          ("M-u" . dakra-upcase-dwim)
          ("M-l" . dakra-downcase-dwim)
          ("M-c" . dakra-capitalize-dwim))
-  :hook (text . turn-on-auto-fill)  ; Use auto-fill in all text modes
+  :hook ((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
   :config
+  (defun text-mode-autofill-setup ()
+    "Set fill-column to 72 and turn on auto-fill-mode."
+    (setq-local fill-column 72)
+    (auto-fill-mode))
+
   ;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
   (setq-default fill-column 80)
 
@@ -3079,8 +3084,8 @@ When called with 2 prefix arguments only open in browser and don't copy."
 ;; Increase fill-column for programming to 100
 (defun dakra-prog-mode-init ()
   ;; Only auto-fill comments in prog-mode
-  (set (make-local-variable 'comment-auto-fill-only-comments) t)
-  (setq fill-column 100))
+  (setq-local comment-auto-fill-only-comments t)
+  (setq-local fill-column 100))
 (add-hook 'prog-mode-hook 'dakra-prog-mode-init)
 #+END_SRC
 *** Flycheck
