@@ -1656,6 +1656,10 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
          ("C-p" . nil)  ; I often still type C-p for UP
          ("C-t p" . treemacs-projectile))
   :config (setq treemacs-header-function #'treemacs-projectile-create-header))
+
+;; Use magit hooks to notify treemacs of git changes
+(use-package treemacs-magit
+  :after treemacs)
 #+END_SRC
 * Ivy
 ** Flx: Fuzzy search
