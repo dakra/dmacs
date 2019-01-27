@@ -8319,6 +8319,11 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 (use-package info-beamer
   :hook (lua-mode . info-beamer-mode))
 #+END_SRC
+** KDEConnect
+#+BEGIN_SRC emacs-lisp
+(use-package kdeconnect
+  :defer t)
+#+END_SRC
 ** Nov: Read EPUBs
 #+BEGIN_SRC emacs-lisp
 (use-package nov
