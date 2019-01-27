@@ -43,6 +43,9 @@
 	disabled = true
 	path = lib/auto-compile
 	url = git@github.com:emacscollective/auto-compile.git
+[submodule "auto-display-battery"]
+	path = lib/auto-display-battery
+	url = git@github.com:dakra/auto-display-battery.git
 [submodule "avy"]
 	path = lib/avy
 	url = git@github.com:abo-abo/avy.git

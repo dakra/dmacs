@@ -7483,7 +7483,10 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 
     ;; (start-process-shell-command "syncthing-gtk" nil "syncthing-gtk --minimized")
     (start-process-shell-command "indicator-kdeconnect" nil "indicator-kdeconnect")
-    (start-process-shell-command "keepassxc" nil "keepassxc"))
+    (start-process-shell-command "keepassxc" nil "keepassxc")
+
+    ;; Toggle battery display
+    (auto-display-battery-mode))
 
   ;; Enable EXWM
   (exwm-enable))
@@ -7754,6 +7757,13 @@ eimp-fit-image-width-to-window=
 (use-package atomx
   :defer t)
 #+END_SRC
+** Auto-display-battery-mode
+Automatically show battery info when laptop is not connected to line power.
+#+BEGIN_SRC emacs-lisp
+(use-package auto-display-battery
+  :defer t)
+#+END_SRC
+
 ** Aurel: Search, vote for and download AUR packages
 #+BEGIN_SRC emacs-lisp
 (use-package aurel
