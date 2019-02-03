@@ -1592,15 +1592,16 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   (setq projectile-mode-line-function 'projectile-short-mode-line)
 
   ;; https://sideshowcoder.com/2017/10/24/projectile-and-tramp/
-  (defadvice projectile-on (around exlude-tramp activate)
-    "This should disable projectile when visiting a remote file"
-    (unless  (--any? (and it (file-remote-p it))
-                     (list
-                      (buffer-file-name)
-                      list-buffers-directory
-                      default-directory
-                      dired-directory))
-      ad-do-it))
+  ;; (defadvice projectile-on (around exlude-tramp activate)
+  ;;   "This should disable projectile when visiting a remote file"
+  ;;   (unless  (--any? (and it (file-remote-p it))
+  ;;                    (list
+  ;;                     (buffer-file-name)
+  ;;                     list-buffers-directory
+  ;;                     default-directory
+  ;;                     dired-directory))
+  ;;     ad-do-it))
+
   ;; cache projectile project files
   ;; projectile-find-files will be much faster for large projects.
   ;; C-u C-c p f to clear cache before search.
