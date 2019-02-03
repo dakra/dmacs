@@ -6862,7 +6862,7 @@ popd
 
   (defun malb/mu4e-contact-rewrite-function (contact)
     (let* ((name (or (plist-get contact :name) ""))
-           (mail (plist-get contact :mail))
+           ;; (mail (plist-get contact :mail))
            (case-fold-search nil))
       (plist-put contact :name (malb/canonicalise-contact-name name))
       contact))
