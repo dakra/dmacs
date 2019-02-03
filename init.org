@@ -2610,8 +2610,6 @@ avfs
                                 (local-set-key [remap eshell-pcomplete] 'completion-at-point)
 
                                 ;;(eshell-smart-initialize)
-                                ;; Integrate eshell with bookmark.el
-                                (eshell-bookmark-setup)
                                 ;; Emacs bug where * gets removed
                                 ;; See https://github.com/company-mode/company-mode/issues/218
                                 ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=18951
@@ -2714,6 +2712,7 @@ file to edit."
       (shell-command full-cmd))))
 
 (use-package eshell-bookmark
+  :hook (eshell-mode . eshell-bookmark-setup)
   :after eshell)
 #+END_SRC
 ** Prompt
