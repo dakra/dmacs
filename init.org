@@ -4357,10 +4357,8 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 (use-package sqlup-mode
   :hook (sql-mode sql-interactive-mode redis-mode)
   :config
-  ;; Don't capitalize `name` or 'type' keyword
-  (add-to-list 'sqlup-blacklist "name")
-  (add-to-list 'sqlup-blacklist "names")
-  (add-to-list 'sqlup-blacklist "type"))
+  ;; Don't capitalize some SQL keywords that I also use as column names
+  (setq sqlup-blacklist '("id" "name" "names" "type")))
 #+END_SRC
 
 ** Typescript
