@@ -821,6 +821,9 @@
 [submodule "solidity-mode"]
 	path = lib/solidity-mode
 	url = git@github.com:ethereum/emacs-solidity.git
+[submodule "speed-type"]
+	path = lib/speed-type
+	url = git@github.com:parkouss/speed-type.git
 [submodule "sphinx-mode"]
 	path = lib/sphinx-mode
 	url = git@github.com:Fuco1/sphinx-mode.git

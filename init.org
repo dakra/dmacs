@@ -7789,6 +7789,11 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
 #+BEGIN_SRC emacs-lisp
 (use-package ipinfo :defer t)
 #+END_SRC
+** Speed-type: Type a text and measure your speed
+#+BEGIN_SRC emacs-lisp
+(use-package speed-type
+  :defer t)
+#+END_SRC
 ** Systemctl
 #+BEGIN_SRC emacs-lisp
 (use-package systemctl
