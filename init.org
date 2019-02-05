@@ -682,7 +682,7 @@ Allow some commands as safe by default
   :unless noninteractive
   :defer 1
   :config
-  (setq savehist-additional-variables '(compile-command regexp-search-ring))
+  (setq savehist-additional-variables '(compile-command kill-ring regexp-search-ring))
   (savehist-mode 1))
 #+END_SRC
 ** Ansi-color
