@@ -873,6 +873,9 @@
 [submodule "typescript-mode"]
 	path = lib/typescript-mode
 	url = git@github.com:ananthakumaran/typescript.el.git
+[submodule "umlaut"]
+	path = lib/umlaut
+	url = git@github.com:dakra/umlaut.el.git
 [submodule "undo-tree"]
 	path = lib/undo-tree
 	url = http://www.dr-qubit.org/git/undo-tree.git

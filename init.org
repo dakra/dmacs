@@ -2340,22 +2340,6 @@ avfs
 #+END_SRC
 * Hydras
 #+BEGIN_SRC emacs-lisp
-;; Switch on 'umlaut-mode' for easier Umlaut usage
-(define-minor-mode umlaut-mode
-  "A mode for conveniently using Umlauts in Emacs"
-  nil
-  :lighter " äöü"
-  :keymap '(("\M-a" . (lambda () (interactive) (insert ?ä)))
-            ("\M-o" . (lambda () (interactive) (insert ?ö)))
-            ("\M-u" . (lambda () (interactive) (insert ?ü)))
-            ("\M-s" . (lambda () (interactive) (insert ?ß)))
-            ("\M-A" . (lambda () (interactive) (insert ?Ä)))
-            ("\M-O" . (lambda () (interactive) (insert ?Ö)))
-            ("\M-U" . (lambda () (interactive) (insert ?Ü)))
-            ("\M-e" . (lambda () (interactive) (insert ?€)))
-            ("\M-p" . (lambda () (interactive) (insert ?£)))
-            ("\M-S" . (lambda () (interactive) (insert "SS")))))
-
 (use-package hydra
   :bind (("C-c S" . hydra-scratchpad/body)
          ("C-x t" . hydra-toggle-stuff/body)
@@ -8462,6 +8446,12 @@ Run ~M-x esup~ to see where the time is spend during emacs startup.
 (use-package esup
   :defer t
   :config (setq esup-user-init-file "~/.emacs.d/emacs.el"))
+#+END_SRC
+** Umlaut mode: A mode for conveniently inserting Umlauts
+#+BEGIN_SRC emacs-lisp
+(use-package umlaut
+  :defer t
+  :hook (message-mode . umlaut-mode))
 #+END_SRC
 ** Unsortet stuff in no packages
 Probably create a `dakra` package (again) to lazy load all those commands.
