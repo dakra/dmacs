@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: SQLAlchemy relationship
+# key: rel
+# --
+$1 = relationship("${1:$(capitalize yas-text)}", back_populates="$2")
+$0

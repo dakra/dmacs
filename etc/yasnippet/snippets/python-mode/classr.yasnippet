@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: RESTAlchemy base class
+# key: classr
+# --
+class $1(BaseMixin, Base):
+    ${2:name = Column(String(64), nullable=False, server_default="")}
+    $0

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: SQLAlchemy relationship attribute
+# key: rel_id
+# --
+$1_id = Column(Integer, ForeignKey("${2:$1s}.id"), nullable=False)
+$0
