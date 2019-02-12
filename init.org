@@ -643,6 +643,19 @@ Allow some commands as safe by default
   (dakra-define-up/downcase-dwim "downcase")
   (dakra-define-up/downcase-dwim "capitalize"))
 #+END_SRC
+** Abbrev
+I often write German mails or comments but have a UK keyboard layout.
+Use abbrev mode to automatically convert words to the correct Umlaut form
+E.g. fuer -> für
+#+BEGIN_SRC emacs-lisp
+(use-package abbrev
+  :hook ((message-mode org-mode markdown-mode rst-mode) . abbrev-mode)
+  :config
+  ;; Don't ask to save abbrevs when saving all buffers
+  (setq save-abbrevs 'silently)
+  ;; I want abbrev saved in my config/version control and not in the var folder
+  (setq abbrev-file-name (no-littering-expand-etc-file-name "abbrev.el")))
+#+END_SRC
 ** Auto-revert: Revert buffer when file changes on disk
 #+BEGIN_SRC emacs-lisp
 (use-package autorevert
