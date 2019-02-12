@@ -1208,6 +1208,20 @@ is already narrowed."
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 #+END_SRC
+** Editorconfig
+Installing =editorconfig-core-c= is not a hard requirement but recommended.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+editorconfig-core-c
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package editorconfig
+  :defer 1
+  :config
+  (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode)
+  (editorconfig-mode 1))
+#+END_SRC
+
 ** Misc
 #+BEGIN_SRC emacs-lisp
 ;; comment-dwim-2 is a replacement for the Emacs' built-in command
@@ -4914,10 +4928,6 @@ displayed anywhere else."
 
 (use-package shrink-whitespace
   :bind ("M-SPC" . shrink-whitespace))
-
-(use-package editorconfig
-  :defer 1
-  :config (editorconfig-mode 1))
 
 ;; backup
 
