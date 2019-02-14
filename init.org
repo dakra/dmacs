@@ -2397,19 +2397,26 @@ avfs
     ("T" (switch-to-buffer "*text*scratchpad.txt"))
     ("m" (switch-to-buffer "*markdown*scratchpad.md")))
 
+  (defmacro hydra-help-toggle (text toggle)
+    `(if (bound-and-true-p ,toggle)
+         (format "[x] %s" ,text)
+       (format "[ ] %s" ,text)))
+
   (defhydra hydra-toggle-stuff (:color blue :hint nil)
     "Toggle"
-    ("b" dakra-toggle-browser "browser - toggle eww/firefox" :column "Misc")
-    ("d" toggle-debug-on-error "debug-on-error")
-    ("s" sticky-buffer-mode "Sticky buffer mode")
-    ("c" column-number-mode "column-number-mode" :column "Text")
-    ("f" auto-fill-mode "fill-mode")
-    ("F" web-server-file-server-toggle  "Toggle file file-server")
-    ("w" whitespace-mode "whitespace-mode")
-    ("l" toggle-truncate-lines "truncate-lines")
-    ("ol" org-toggle-link-display "org link-display" :column "Org")
-    ("op" org-toggle-pretty-entities "org pretty-entities")
-    ("oi" org-toggle-inline-images "org inline-images"))
+    ("a" abbrev-mode (hydra-help-toggle "abbrev" abbrev-mode) :column "Misc")
+    ("b" dakra-toggle-browser (format "[%s] toggle eww/firefox"
+                                      (if (eq browse-url-browser-function 'browse-url-firefox) "Firefox" "eww")))
+    ("d" toggle-debug-on-error (hydra-help-toggle "debug-on-error" debug-on-error))
+    ("s" sticky-buffer-mode (hydra-help-toggle "Sticky buffer mode" sticky-buffer-mode))
+    ("c" column-number-mode (hydra-help-toggle "column-number-mode" column-number-mode) :column "Text")
+    ("f" auto-fill-mode (hydra-help-toggle "fill-mode" auto-fill-function))
+    ("F" web-server-file-server-toggle (hydra-help-toggle "Toggle file file-server" web-server-file-server))
+    ("w" whitespace-mode (hydra-help-toggle "whitespace-mode" whitespace-mode))
+    ("l" toggle-truncate-lines (hydra-help-toggle "truncate-lines" truncate-lines))
+    ("ol" org-toggle-link-display (hydra-help-toggle "org link-display" org-descriptive-links) :column "Org")
+    ("op" org-toggle-pretty-entities (hydra-help-toggle "org pretty-entities" org-pretty-entities))
+    ("oi" org-toggle-inline-images (hydra-help-toggle "org inline-images" org-inline-image-overlays)))
 
   (defun ansi-term-bash ()
     "Start ansi-term with bash."
