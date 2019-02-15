@@ -2893,14 +2893,15 @@ Move point to patch and call `M-x gitpatch-mail`
 
 (use-package magit
   :bind (("C-x g" . magit-status)
-         ("C-x G" . magit-dispatch-popup)
-         ("C-x M-g" . magit-dispatch-popup)
+         ("C-x G" . magit-dispatch)
+         ("C-x M-g" . magit-dispatch)
          ("s-m p" . magit-list-repositories)
          ("s-m m" . magit-status)
-         ("s-m f" . magit-file-popup)
-         ("s-m l" . magit-log-popup)
+         ("s-m f" . magit-file-dispatch)
+         ("s-m l" . magit-log)
          ("s-m L" . magit-log-buffer-file)
-         ("s-m b" . magit-blame-addition))
+         ("s-m b" . magit-blame-addition)
+         ("s-m B" . magit-blame))
   :defines (magit-ediff-dwim-show-on-hunks)
   :init
   (defcustom magit-push-protected-branch nil
@@ -2909,6 +2910,7 @@ Move point to patch and call `M-x gitpatch-mail`
     :safe #'stringp
     :group 'magit)
   :config
+  (require 'magit-popup)  ;; Some libs don't have explicit dependency listed
   (defun magit-push--protected-branch (magit-push-fun &rest args)
     "Ask for confirmation before pushing a protected branch."
     (if (equal magit-push-protected-branch (magit-get-current-branch))
@@ -2922,8 +2924,8 @@ Move point to patch and call `M-x gitpatch-mail`
   (advice-add 'magit-push-current-to-upstream :around #'magit-push--protected-branch)
 
   ;; Add switch to invert the filter e.g. show all authors but `--author=foo'
-  (magit-define-popup-switch 'magit-log-popup
-    ?i "Invert filter" "--invert-grep")
+  ;; (magit-define-popup-switch 'magit-log-popup
+  ;;   ?i "Invert filter" "--invert-grep")
 
   (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
@@ -2942,37 +2944,19 @@ Move point to patch and call `M-x gitpatch-mail`
           ("~/e5" . 5)
           ("~/projects" . 5)))
 
-  ;; Add action to easily create a release tag to tag popup
-  (magit-define-popup-action 'magit-tag-popup
-    ?r "Release" 'magit-tag-release)
-
   ;; "b b" is only for checkout and doesn't automatically create a new branch
   ;; remap to `magit-branch-or-checkout' that checks out an existing branch
   ;; or asks to create a new one if it doesn't exist
-  (magit-remove-popup-key 'magit-branch-popup :action ?b)
-  (magit-define-popup-action 'magit-branch-popup
-    ?b "Checkout or create" 'magit-branch-or-checkout
-    'magit-branch t)
-
-  ;; Add reshelve command to commit popup to change date of commit
-  (magit-define-popup-action 'magit-commit-popup
-    ?n "Reshelve" 'magit-commit-reshelve)
+  ;; (magit-remove-popup-key 'magit-branch-popup :action ?b)
+  ;; (magit-define-popup-action 'magit-branch-popup
+  ;;   ?b "Checkout or create" 'magit-branch-or-checkout
+  ;;   'magit-branch t)
 
   ;; Show submodules section to magit status
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
                           'append)
-
-  ;; Add more operations to the file popup
-  (magit-define-popup-action 'magit-file-popup
-    ?R "Rename file" 'magit-file-rename)
-  (magit-define-popup-action 'magit-file-popup
-    ?K "Delete file" 'magit-file-delete)
-  (magit-define-popup-action 'magit-file-popup
-    ?U "Untrack file" 'magit-file-untrack)
-  (magit-define-popup-action 'magit-file-popup
-    ?C "Checkout file" 'magit-file-checkout)
 
   ;; Show ignored files section to magit status
   (magit-add-section-hook 'magit-status-sections-hook
@@ -2993,7 +2977,7 @@ Move point to patch and call `M-x gitpatch-mail`
   (setq magit-commit-reword-override-date nil)
 
   ;; Set remote.pushDefault
-  (setq magit-push-current-set-remote-if-missing 'default)
+  (setq magit-remote-set-if-missing 'default)
 
   ;; When showing refs (In magit status press `y y') show only merged into master by default
   (setq magit-show-refs-arguments '("--merged=master"))
@@ -3012,23 +2996,13 @@ Move point to patch and call `M-x gitpatch-mail`
   (setq magit-bury-buffer-function 'magit-mode-quit-window)
 
   ;; Show magit status in the same window
-  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  ;; Display magit status in full frame
-  ;;(setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-  )
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package magit-wip
   :after magit
   :config
   ;; Disable more safety nets that can be reverted with WIP mode
   (add-to-list 'magit-no-confirm 'safe-with-wip t)
-
-  ;; Access WIP logs from log popup
-  (magit-define-popup-action 'magit-log-popup
-    ?w "Log WIP current" 'magit-wip-log-current)
-  (magit-define-popup-action 'magit-log-popup
-    ?W "Log WIP" 'magit-wip-log)
-
   (magit-wip-mode))
 #+END_SRC
 ** Smerge

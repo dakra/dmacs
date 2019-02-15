@@ -857,6 +857,10 @@
 [submodule "toml-mode"]
 	path = lib/toml-mode
 	url = git@github.com:dryman/toml-mode.el.git
+[submodule "transient"]
+	path = lib/transient
+	url = git@github.com:magit/transient.git
+	info-path = docs
 [submodule "transmission"]
 	path = lib/transmission
 	url = git@github.com:holomorph/transmission.git
