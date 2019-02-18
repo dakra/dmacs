@@ -481,6 +481,9 @@
 [submodule "kdeconnect"]
 	path = lib/kdeconnect
 	url = git@github.com:dakra/kdeconnect.el.git
+[submodule "keepassxc"]
+	path = lib/keepassxc
+	url = git@github.com:dakra/keepassxc.el.git
 [submodule "know-your-http-well"]
 	path = lib/know-your-http-well
 	url = git@github.com:for-GET/know-your-http-well.git

@@ -8325,6 +8325,13 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 (use-package kdeconnect
   :defer t)
 #+END_SRC
+** KeePassXC
+#+BEGIN_SRC emacs-lisp
+(use-package keepassxc
+  :defer t
+  :config
+  (setq keepassxc-database-file "/home/daniel/Nextcloud/keepass.kdbx"))
+#+END_SRC
 ** Nov: Read EPUBs
 #+BEGIN_SRC emacs-lisp
 (use-package nov
