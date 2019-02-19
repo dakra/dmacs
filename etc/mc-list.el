@@ -4,6 +4,14 @@
 (setq mc/cmds-to-run-for-all
       '(
         beginning-of-defun
+        c-electric-brace
+        c-electric-colon
+        c-electric-delete-forward
+        c-electric-paren
+        c-electric-semi&comma
+        c-electric-slash
+        c-electric-star
+        c-indent-line-or-region
         comment-dwim-2
         counsel-yank-pop
         crux-move-beginning-of-line
