@@ -614,8 +614,8 @@ Allow some commands as safe by default
   :hook ((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
   :config
   (defun text-mode-autofill-setup ()
-    "Set fill-column to 72 and turn on auto-fill-mode."
-    (setq-local fill-column 72)
+    "Set fill-column to 62 and turn on auto-fill-mode."
+    (setq-local fill-column 62)
     (auto-fill-mode))
 
   ;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
