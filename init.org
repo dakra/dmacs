@@ -3126,6 +3126,48 @@ shellcheck
   (setq flycheck-python-mypy-cache-dir "/home/daniel/.mypy-cache")
   (setq flycheck-flake8-maximum-line-length 110))
 #+END_SRC
+** LSP: Language Server Protocol
+For C/C++/Objective C support install ~ccls~ and =lldb= for debugging.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+ccls
+lldb
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :defer t
+  :config
+  (setq lsp-prefer-flymake nil)
+  (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
+(use-package lsp-ui
+  :defer t
+  :config
+  (setq lsp-ui-doc-use-childframe nil)
+  (setq lsp-ui-sideline-show-symbol nil))
+(use-package company-lsp
+  :defer t)
+
+(use-package dap-mode
+  :after lsp-mode
+  :config
+  (dap-mode)
+  (dap-ui-mode))
+
+(use-package ccls
+  :hook ((c++-mode c-mode objc-mode java-mode) . ccls-init-lsp)
+  :config
+  (defun ccls-init-lsp ()
+    "We need to require ccls before loading lsp in a C buffer.
+Otherwise lsp would use the default clangd backend.
+use-package will load ccls for us simply by calling this function."
+    (lsp)))
+(use-package dap-lldb :after ccls)
+
+(use-package lsp-java
+  :hook (java-mode . lsp))
+(use-package dap-java :after lsp-java)
+(use-package lsp-java-treemacs :after lsp-java)
+#+END_SRC
 
 ** C/C++
 #+BEGIN_SRC emacs-lisp
@@ -3136,6 +3178,7 @@ shellcheck
   :mode ("CMakeLists.txt" "\\.cmake\\'"))
 
 (use-package irony
+  :disabled t
   :hook (((c++-mode c-mode objc-mode) . irony-mode-on-maybe)
          (irony-mode . irony-cdb-autosetup-compile-options))
   :config
