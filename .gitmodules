@@ -839,6 +839,10 @@
 [submodule "smex"]
 	path = lib/smex
 	url = git@github.com:nonsequitur/smex.git
+[submodule "sodium"]
+	path = lib/sodium
+	url = git@github.com:dakra/sodium.el.git
+	build-step = make
 [submodule "solidity-mode"]
 	path = lib/solidity-mode
 	url = git@github.com:ethereum/emacs-solidity.git
