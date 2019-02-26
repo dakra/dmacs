@@ -898,6 +898,8 @@ With a prefix argument, copy the link to the online manual instead."
   :unless noninteractive
   :defer 10
   :config
+  ;; Don't dim hydra and transient buffers
+  (setq dimmer-exclusion-regexp " \\*LV\\*")
   (setq dimmer-fraction 0.25)
   ;;(setq dimmer-use-colorspace ':rgb)
   (dimmer-mode))
