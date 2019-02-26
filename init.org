@@ -3143,9 +3143,12 @@ lldb
   :defer t
   :config
   (setq lsp-ui-doc-use-childframe nil)
+  (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-symbol nil))
 (use-package company-lsp
-  :defer t)
+  :defer t
+  :config
+  (setq company-lsp-enable-snippet t))
 
 (use-package dap-mode
   :after lsp-mode
@@ -3154,9 +3157,9 @@ lldb
   (dap-ui-mode))
 
 (use-package ccls
-  :hook ((c++-mode c-mode objc-mode java-mode) . ccls-init-lsp)
+  :hook ((c++-mode c-mode objc-mode) . ccls-lsp-init)
   :config
-  (defun ccls-init-lsp ()
+  (defun ccls-lsp-init ()
     "We need to require ccls before loading lsp in a C buffer.
 Otherwise lsp would use the default clangd backend.
 use-package will load ccls for us simply by calling this function."
@@ -3164,7 +3167,12 @@ use-package will load ccls for us simply by calling this function."
 (use-package dap-lldb :after ccls)
 
 (use-package lsp-java
-  :hook (java-mode . lsp))
+  :hook (java-mode . java-lsp-init)
+  :config
+  (defun java-lsp-init ()
+    "We need to require java-lsp before loading lsp in a Java buffer.
+use-package will load java-lsp for us simply by calling this function."
+    (lsp)))
 (use-package dap-java :after lsp-java)
 (use-package lsp-java-treemacs :after lsp-java)
 #+END_SRC
