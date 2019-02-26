@@ -118,7 +118,7 @@
 	url = git@github.com:sebastiencs/company-box.git
 [submodule "company-glsl"]
 	path = lib/company-glsl
-	url = git@github.com:GuidoSchmidt/company-glsl.git
+	url = git@github.com:guidoschmidt/company-glsl.git
 [submodule "company-go"]
 	path = lib/company-go
 	url = git@github.com:mdempsky/gocode.git
@@ -468,7 +468,7 @@
 	url = git@github.com:abo-abo/swiper.git
 [submodule "ivy-rich"]
 	path = lib/ivy-rich
-	url = git@github.com:yevgnen/ivy-rich.git
+	url = git@github.com:Yevgnen/ivy-rich.git
 [submodule "jira-markup-mode"]
 	path = lib/jira-markup-mode
 	url = git@github.com:mnuessler/jira-markup-mode.git
