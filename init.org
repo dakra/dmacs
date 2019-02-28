@@ -7714,6 +7714,13 @@ It only works for frames with exactly two windows."
 (use-package transmission
   :defer t
   :config
+  ;; Suggest the latest torrent in my Download folder when calling `transmission-add'
+  (setq transmission-default-torrent-dir (expand-file-name "~/Download"))
+  (defun transmission-find-last-torrent-file ()
+    "Return latest torrent file from folder `transmission-default-torrent-dir'."
+    (car (sort (directory-files (expand-file-name "~/Downloads") t "\\.torrent\\'" t) #'file-newer-than-file-p)))
+  (add-to-list 'transmission-torrent-functions #'transmission-find-last-torrent-file)
+
   ;; Auto refresh for all transmission buffers
   (setq transmission-refresh-modes '(transmission-mode
                                      transmission-files-mode
