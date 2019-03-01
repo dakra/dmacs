@@ -2,6 +2,7 @@
 (define-abbrev-table 'global-abbrev-table
   '(
     ("angehaengt" "angehängt")
+    ("aendern" "ändern")
     ("ausfuellen" "ausfüllen")
     ("ausgefuellt" "ausgefüllt")
     ("ausgefuelltes" "ausgefülltes")
@@ -18,6 +19,7 @@
     ("duerfen" "dürfen")
     ("erklaert" "erklärt")
     ("erklaerte" "erklärte")
+    ("ergaenzen" "ergänzen")
     ("europaeischen" "europäischen")
     ("frueh" "früh")
     ("frueher" "früher")
@@ -30,6 +32,8 @@
     ("gehoeren" "gehören")
     ("gehoert" "gehört")
     ("geklaert" "geklärt")
+    ("glueck" "glück")
+    ("gluecklich" "glücklich")
     ("gross" "groß")
     ("grossen" "großen")
     ("gruenen" "grünen")
