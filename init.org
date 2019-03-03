@@ -3141,16 +3141,21 @@ lldb
   :config
   (setq lsp-prefer-flymake nil)
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
+
 (use-package lsp-ui
   :defer t
   :config
   (setq lsp-ui-doc-use-childframe nil)
   (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-symbol nil))
+
 (use-package company-lsp
   :defer t
   :config
   (setq company-lsp-enable-snippet t))
+
+(use-package lsp-treemacs
+  :defer t)
 
 (use-package dap-mode
   :after lsp-mode
@@ -3178,7 +3183,6 @@ use-package will load java-lsp for us simply by calling this function."
 (use-package dap-java :after lsp-java)
 (use-package lsp-java-treemacs :after lsp-java)
 #+END_SRC
-
 ** C/C++
 #+BEGIN_SRC emacs-lisp
 (use-package cmake-font-lock

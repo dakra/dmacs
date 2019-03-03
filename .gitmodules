@@ -533,6 +533,9 @@
 [submodule "lsp-mode"]
 	path = lib/lsp-mode
 	url = git@github.com:emacs-lsp/lsp-mode.git
+[submodule "lsp-treemacs"]
+	path = lib/lsp-treemacs
+	url = git@github.com:emacs-lsp/lsp-treemacs.git
 [submodule "lsp-ui"]
 	path = lib/lsp-ui
 	url = git@github.com:emacs-lsp/lsp-ui.git
