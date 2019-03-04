@@ -150,6 +150,9 @@
 [submodule "counsel-projectile"]
 	path = lib/counsel-projectile
 	url = git@github.com:ericdanan/counsel-projectile.git
+[submodule "crontab-mode"]
+	path = lib/crontab-mode
+	url = git@github.com:emacs-pe/crontab-mode.git
 [submodule "crux"]
 	path = lib/crux
 	url = git@github.com:bbatsov/crux.git

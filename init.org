@@ -3184,6 +3184,11 @@ use-package will load java-lsp for us simply by calling this function."
 (use-package dap-java :after lsp-java)
 (use-package lsp-java-treemacs :after lsp-java)
 #+END_SRC
+** Crontab
+#+BEGIN_SRC emacs-lisp
+(use-package crontab-mode
+  :defer t)
+#+END_SRC
 ** C/C++
 #+BEGIN_SRC emacs-lisp
 (use-package cmake-font-lock
