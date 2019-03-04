@@ -2440,6 +2440,7 @@ avfs
     ("a" ansi-term-bash "Ansi Terminal"  :column "Misc")
     ("b" brain-fm-play "brain.fm - Stream music")
     ("E" elisp-index-search "elisp-index-search")
+    ("S" scrot "Screenshot with scrot")
     ("w" woman "woman - Man page viewer")
     ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
     ("z" zone "Zone - Screensaver"))
