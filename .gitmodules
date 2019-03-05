@@ -36,6 +36,15 @@
 [submodule "atomx"]
 	path = lib/atomx
 	url = git@github.com:atomx/atomx-api-elisp.git
+[submodule "auctex"]
+	path = lib/auctex
+	url = https://git.savannah.gnu.org/git/auctex.git
+	build-step = ./autogen.sh
+	build-step = ./configure
+	build-step = make
+	#build-step = make install
+        build-step = "(borg-update-autoloads \"auctex\")"
+	info-path = doc
 [submodule "aurel"]
 	path = lib/aurel
 	url = git@github.com:alezost/aurel.git
@@ -112,6 +121,9 @@
 [submodule "company-anaconda"]
 	path = lib/company-anaconda
 	url = git@github.com:proofit404/company-anaconda.git
+[submodule "company-auctex"]
+	path = lib/company-auctex
+	url = git@github.com:alexeyr/company-auctex.git
 [submodule "company-box"]
 	disabled = true
 	path = lib/company-box
@@ -298,6 +310,9 @@
 	no-byte-compile = esxml-form.el
 	no-byte-compile = esxml-html.el
 	no-byte-compile = esxpath.el
+[submodule "etexshow"]
+	path = lib/etexshow
+	url = git@github.com:pgundlach/etexshow.git
 [submodule "expand-region"]
 	path = lib/expand-region
 	url = git@github.com:magnars/expand-region.el.git

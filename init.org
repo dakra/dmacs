@@ -4417,6 +4417,25 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   (setq sqlup-blacklist '("id" "name" "names" "type")))
 #+END_SRC
 
+** Tex
+You also need to configure and install auctex in the system.
+Borg does only build the elisp part.
+#+BEGIN_SRC sh :tangle no :var auctexdir=(expand-file-name "auctex" borg-drone-directory)
+cd $auctexdir
+./autogen.sh
+./configure
+make
+sudo make install
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package auctex :defer t)
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+(use-package company-auctex
+  :after auctex
+  :config (company-auctex-init))
+#+END_SRC
 ** Typescript
 Format options can be specified in the ~tide-format-options~ variable
 or via tsfmt.json (present in the root folder along with tsconfig.json):
@@ -6625,13 +6644,11 @@ Borg does only build mu4e as building mu every time is
 unnecessary.
 #+BEGIN_SRC sh :tangle no :var mudir=(expand-file-name "mu4e" borg-drone-directory)
 # Install mu for mu4e
-pushd .
-echo cd $mudir
+cd $mudir
 test -e ./configure || autoreconf -i
 ./configure
 make
 sudo make install
-popd
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
