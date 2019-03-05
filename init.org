@@ -3854,11 +3854,21 @@ $ sbcl
 ** Nim
 You need to install the =nim= package, plus
 =nimble= and =nimsuggest=.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+nim
+nimble
+nimsuggest
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package nim-mode
   :hook (nim-mode . nimsuggest-mode))
 #+END_SRC
 ** Octave
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+octave
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package octave
   :mode ("\\.m\\'" . octave-mode)
@@ -4418,6 +4428,14 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 #+END_SRC
 
 ** Tex
+Some useful packages and necessary for `org-timesheet`.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+rubber
+texlive-bin
+texlive-fontsextra
+texlive-latexextra
+#+END_SRC
+
 You also need to configure and install auctex in the system.
 Borg does only build the elisp part.
 #+BEGIN_SRC sh :tangle no :var auctexdir=(expand-file-name "auctex" borg-drone-directory)
