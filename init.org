@@ -318,7 +318,7 @@ Disable Tool- and Menubar
 Set fringe to a small value so we don't have big borders in exwm
 but can still see our diff-hl colors in the fringe
 #+BEGIN_SRC emacs-lisp
-(fringe-mode '(3 . 1))
+(fringe-mode '(7 . 1))
 #+END_SRC
 
 Disable startup screen and startup echo area message and select the
@@ -2936,7 +2936,7 @@ Move point to patch and call `M-x gitpatch-mail`
   (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
   ;; Don't show fringe indicators (Not really visible with our small exwm fringe)
-  (setq magit-section-visibility-indicator nil)
+  ;;(setq magit-section-visibility-indicator nil)
 
   ;; Always show recent/unpushed/unpulled commits
   (setq magit-section-initial-visibility-alist '((unpushed . show)
