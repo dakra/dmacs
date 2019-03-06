@@ -2894,6 +2894,13 @@ Move point to patch and call `M-x gitpatch-mail`
                        (eq m 'git-commit-elisp-text-mode))))
   :config (setq git-commit-major-mode 'gfm-mode))
 
+(use-package transient
+  :defer t
+  :config
+  ;; Display transient buffer below current window
+  ;; and not bottom of the complete frame (minibuffer like)
+  (setq transient-display-buffer-action '(display-buffer-below-selected)))
+
 (use-package magit
   :bind (("C-x g" . magit-status)
          ("C-x G" . magit-dispatch)
