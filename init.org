@@ -1998,11 +1998,13 @@ go up multiple parent directories."
 #+END_SRC
 ** PDF Tools
 Better pdf viewer with search, annotate, highlighting etc
-'poppler' and 'poppler-glib' must be installed.
+=poppler= and =poppler-glib= must be installed.
+For "easier" printing with cups use =gtklp=.
 
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
 poppler
 poppler-glib
+gtklp
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -2013,10 +2015,17 @@ poppler-glib
   ;; (pdf-tools-install t t t)
   :magic ("%PDF" . pdf-view-mode)
   :mode (("\\.pdf\\'" . pdf-view-mode))
+  :hook (pdf-view-mode . pdf-view-init)
   :bind (:map pdf-view-mode-map
          ("C-s" . isearch-forward)
+         ("M-w" . pdf-view-kill-ring-save)
          ("M-p" . print-pdf))
   :config
+  (defun pdf-view-init ()
+    "Enable dark theme and disable while-line-or-region to free keybindings."
+    (whole-line-or-region-local-mode -1)
+    (pdf-view-midnight-minor-mode))
+
   ;; Use `gtklp' to print as it has better cups support
   (defun print-pdf (&optional pdf)
     "Print PDF using external program `gtklp'."
@@ -2028,9 +2037,7 @@ poppler-glib
   (setq pdf-view-resize-factor 1.1)
   ;; Always use midnight-mode and almost same color as default font.
   ;; Just slightly brighter background to see the page boarders
-  (setq pdf-view-midnight-colors '("#c6c6c6" . "#363636"))
-  (add-hook 'pdf-view-mode-hook (lambda ()
-                                  (pdf-view-midnight-minor-mode))))
+  (setq pdf-view-midnight-colors '("#c6c6c6" . "#363636")))
 #+END_SRC
 ** atomic-chrome / GhostText: Edit text area in browser
 You need to install the Firefox extension [[https://github.com/GhostText/GhostText][GhostText]]
