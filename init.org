@@ -6182,7 +6182,7 @@ See `org-html-format-headline-function' for details."
 #+END_SRC
 **** Org-man: Make org-links work with man pages
 #+BEGIN_SRC emacs-lisp
-(use-package org-man
+(use-package ol-man
   :after org
   :config
   (setq org-man-command 'woman))  ; open org-link man pages with woman
