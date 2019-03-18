@@ -3197,6 +3197,9 @@ use-package will load java-lsp for us simply by calling this function."
     (lsp)))
 (use-package dap-java :after lsp-java)
 (use-package lsp-java-treemacs :after lsp-java)
+
+;; For groovy and gradle support
+(use-package groovy-mode :defer t)
 #+END_SRC
 ** Crontab
 #+BEGIN_SRC emacs-lisp

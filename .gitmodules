@@ -414,6 +414,9 @@
 [submodule "grep-context"]
 	path = lib/grep-context
 	url = git@github.com:mkcms/grep-context.git
+[submodule "groovy-mode"]
+	path = lib/groovy-mode
+	url = git@github.com:Groovy-Emacs-Modes/groovy-emacs-modes.git
 [submodule "guess-language"]
 	path = lib/guess-language
 	url = git@github.com:tmalsburg/guess-language.el.git
