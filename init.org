@@ -3852,6 +3852,9 @@ $ sbcl
 #+END_SRC
 ** Markup Languages
 #+BEGIN_SRC emacs-lisp
+(use-package adoc-mode
+  :mode ("\\.adoc\\'"))
+
 (use-package jira-markup-mode
   :mode ("\\.confluence\\'" "\\.jira\\'"))
 

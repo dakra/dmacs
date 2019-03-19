@@ -9,6 +9,9 @@
 [submodule "add-node-modules-path"]
 	path = lib/add-node-modules-path
 	url = git@github.com:codesuki/add-node-modules-path.git
+[submodule "adoc-mode"]
+	path = lib/adoc-mode
+	url = git@github.com:sensorflo/adoc-mode.git
 [submodule "aggressive-indent"]
 	path = lib/aggressive-indent
 	url = git@github.com:Malabarba/aggressive-indent-mode.git
@@ -582,6 +585,9 @@
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = git@github.com:jrblevin/markdown-mode.git
+[submodule "markup-faces"]
+	path = lib/markup-faces
+	url = git@github.com:sensorflo/markup-faces.git
 [submodule "minions"]
 	path = lib/minions
 	url = git@github.com:tarsius/minions.git
