@@ -811,9 +811,6 @@
 	path = lib/restclient
 	url = git@github.com:pashky/restclient.el.git
 	no-byte-compile = restclient-helm.el
-[submodule "rich-minority"]
-	path = lib/rich-minority
-	url = git@github.com:Malabarba/rich-minority.git
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = git@github.com:rust-lang/rust-mode.git
