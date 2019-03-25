@@ -3276,6 +3276,11 @@ glslang
   (add-hook 'yaml-mode-hook
             (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t))))
 #+END_SRC
+*** CDS Core Data Services
+#+BEGIN_SRC emacs-lisp
+(use-package cds-mode
+  :defer t)
+#+END_SRC
 *** Systemd
 #+BEGIN_SRC emacs-lisp
 (use-package systemd

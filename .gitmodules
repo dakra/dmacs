@@ -94,6 +94,9 @@
 [submodule "ccls"]
 	path = lib/ccls
 	url = git@github.com:MaskRay/emacs-ccls.git
+[submodule "cds-mode"]
+	path = lib/cds-mode
+	url = git@github.com:dakra/cds-mode.git
 [submodule "cider"]
 	path = lib/cider
 	url = git@github.com:clojure-emacs/cider.git
@@ -128,7 +131,6 @@
 	path = lib/company-auctex
 	url = git@github.com:alexeyr/company-auctex.git
 [submodule "company-box"]
-	disabled = true
 	path = lib/company-box
 	url = git@github.com:sebastiencs/company-box.git
 [submodule "company-glsl"]
