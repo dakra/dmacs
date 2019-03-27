@@ -5712,7 +5712,7 @@ session as the current block. ARG has same meaning as in
     (format "<script type=\"text/javascript\">\n%s\n</script>" body))
 
   ;; Path when plantuml is installed from AUR (package `plantuml')
-  (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
+  (setq org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar")
 
   ;; add all languages to org mode
   (org-babel-do-load-languages
