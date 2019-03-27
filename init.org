@@ -3259,6 +3259,11 @@ glslang
 (use-package graphviz-dot-mode
   :mode ("\\.dot\\'"))
 
+(use-package plantuml-mode
+  :mode ("\\.plantuml\\'")
+  :config
+  (setq plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar"))
+
 ;; Edit GNU gettext PO files
 (use-package po-mode
   :mode ("\\.po\\'" "\\.po\\."))
@@ -5714,6 +5719,7 @@ session as the current block. ARG has same meaning as in
 
   ;; Path when plantuml is installed from AUR (package `plantuml')
   (setq org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar")
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 
   ;; add all languages to org mode
   (org-babel-do-load-languages
