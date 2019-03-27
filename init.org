@@ -3152,7 +3152,8 @@ lldb
 
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
-  :defer t
+  :bind (:map lsp-mode-map
+         ("C-c C-a" . lsp-ui-sideline-apply-code-actions))
   :config
   (setq lsp-prefer-flymake nil)
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
