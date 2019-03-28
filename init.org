@@ -3195,6 +3195,7 @@ use-package will load ccls for us simply by calling this function."
   (defun java-lsp-init ()
     "We need to require java-lsp before loading lsp in a Java buffer.
 use-package will load java-lsp for us simply by calling this function."
+    (setq electric-indent-inhibit nil)  ; Auto-indent code after e.g. {}
     (lsp)))
 (use-package dap-java :after lsp-java)
 (use-package lsp-java-treemacs :after lsp-java)
@@ -3209,6 +3210,17 @@ use-package will load java-lsp for us simply by calling this function."
 #+END_SRC
 ** C/C++
 #+BEGIN_SRC emacs-lisp
+(use-package cc-mode
+  :bind (:map c-mode-base-map
+         ("C-c C-a" . nil)
+         ;; I want to use smartparens for () and {} instead of c-electric
+         ("(" . nil)
+         (")" . nil)
+         ("{" . nil)
+         ("}" . nil)
+         (";" . nil)
+         ("," . nil)))
+
 (use-package cmake-font-lock
   :hook (cmake-mode . cmake-font-lock-activate))
 
