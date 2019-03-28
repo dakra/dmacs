@@ -4867,6 +4867,10 @@ displayed anywhere else."
   (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
 
   (with-eval-after-load 'multiple-cursors-core
+    ;; Immediately load mc list, otherwise it will show as
+    ;; changed as empty in my git repo
+    (mc/load-lists)
+
     (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
     (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
