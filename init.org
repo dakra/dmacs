@@ -3269,7 +3269,9 @@ glslang
   :mode "PKGBUILD\\'")
 
 (use-package graphviz-dot-mode
-  :mode ("\\.dot\\'"))
+  :mode ("\\.dot\\'")
+  :config
+  (setq graphviz-dot-indent-width 4))
 
 (use-package plantuml-mode
   :mode ("\\.plantuml\\'")
