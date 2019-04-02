@@ -2834,6 +2834,8 @@ file to edit."
 (use-package ediff
   :defer t
   :config
+  ;; Always expand files before diffing (especially org files)
+  (add-hook 'ediff-prepare-buffer-hook #'outline-show-all)
   ;; Do everything in one frame
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
   ;; Split ediff windows horizontally by default
