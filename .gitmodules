@@ -572,6 +572,9 @@
 	path = lib/magit
 	url = git@github.com:magit/magit.git
 	info-path = Documentation
+[submodule "magit-gerrit"]
+	path = lib/magit-gerrit
+	url = git@github.com:darcylee/magit-gerrit.git
 [submodule "magit-imerge"]
 	path = lib/magit-imerge
 	url = git@github.com:magit/magit-imerge.git

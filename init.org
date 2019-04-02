@@ -3076,6 +3076,11 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
                  "gitlab.paesslergmbh.de"
                  forge-gitlab-repository)))
 #+END_SRC
+XXX: Only use =magit-gerrit= until functionality is implemented in =forge=.
+#+BEGIN_SRC emacs-lisp
+(use-package magit-gerrit
+  :after magit)
+#+END_SRC
 ** Browse-at-remote: Open website (github/gitlab) for current buffer/line/log
 #+BEGIN_SRC emacs-lisp
 ;; open current line/region/dired/commit in github
