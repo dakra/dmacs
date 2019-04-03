@@ -4479,6 +4479,18 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   (setq sqlup-blacklist '("id" "name" "names" "type")))
 #+END_SRC
 
+** MongoDB
+For org-babel support
+#+BEGIN_SRC emacs-lisp
+(use-package ob-mongo
+  :defer t)
+#+END_SRC
+
+Start inferior mongodb shell
+#+BEGIN_SRC emacs-lisp
+(use-package inf-mongo
+  :defer t)
+#+END_SRC
 ** Tex
 Some useful packages and necessary for `org-timesheet`.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt

@@ -470,6 +470,9 @@
 [submodule "indium"]
 	path = lib/indium
 	url = git@github.com:NicolasPetton/Indium.git
+[submodule "inf-mongo"]
+	path = lib/inf-mongo
+	url = git@github.com:endofunky/inf-mongo.git
 [submodule "inf-ruby"]
 	path = lib/inf-ruby
 	url = git@github.com:nonsequitur/inf-ruby.git
@@ -641,6 +644,9 @@
 [submodule "ob-ipython"]
 	path = lib/ob-ipython
 	url = git@github.com:gregsexton/ob-ipython.git
+[submodule "ob-mongo"]
+	path = lib/ob-mongo
+	url = git@github.com:krisajenkins/ob-mongo.git
 [submodule "ob-restclient"]
 	path = lib/ob-restclient
 	url = git@github.com:alf/ob-restclient.el.git
