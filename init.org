@@ -1994,7 +1994,12 @@ go up multiple parent directories."
 
 ;; Logview provides syntax highlighting, filtering and other features for various log files
 (use-package logview
-  :defer t)
+  :defer t
+  :config
+  (setq logview-additional-submodes
+        '(("Logback4me"
+           (format . "TIMESTAMP [THREAD] {} LEVEL NAME -")
+           (levels . "SLF4J")))))
 #+END_SRC
 ** PDF Tools
 Better pdf viewer with search, annotate, highlighting etc
