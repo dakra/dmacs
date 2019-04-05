@@ -769,7 +769,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 ** Subword: CamelCase aware editing operations
 #+BEGIN_SRC emacs-lisp
 (use-package subword
-  :hook ((python-mode yaml-mode go-mode clojure-mode cider-repl-mode) . subword-mode))
+  :hook ((python-mode yaml-mode go-mode clojure-mode cider-repl-mode java-mode cds-mode) . subword-mode))
 #+END_SRC
 ** Shr: Simple html renderer
 #+BEGIN_SRC emacs-lisp
@@ -1161,8 +1161,8 @@ is already narrowed."
 (use-package smartparens
   :defer 1
   :hook ((
-          emacs-lisp-mode lisp-mode hy-mode go-mode
-          python-mode typescript-mode javascript-mode
+          emacs-lisp-mode lisp-mode hy-mode go-mode cc-mode
+          python-mode typescript-mode javascript-mode java-mode
           ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
