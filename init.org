@@ -5761,7 +5761,6 @@ session as the current block. ARG has same meaning as in
 
   ;; Path when plantuml is installed from AUR (package `plantuml')
   (setq org-plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar")
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
 
   ;; add all languages to org mode
   (org-babel-do-load-languages
