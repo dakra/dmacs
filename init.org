@@ -1663,7 +1663,7 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
                     (delete-window (treemacs-get-local-window))
                   (treemacs--select-visible-window)))
       ('exists  (treemacs-select-window))
-      ('none    (treemacs--init (treemacs--read-first-project-path)))))
+      ('none    (treemacs--init))))
 
   (defun treemacs-ignore-python-files (file _)
     (or (s-ends-with-p ".pyc" file)
