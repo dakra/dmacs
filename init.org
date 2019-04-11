@@ -2086,6 +2086,10 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
          ("e" . dired-ediff-files)
          ("C-c C-e" . dired-toggle-read-only))
   :config
+  ;; Tell dired-x to not bind "I" key to `dired-info' or "N" to `dired-man'
+  (setq dired-bind-info nil)
+  (setq dired-bind-man nil)
+
   ;; When point is on a file name only search file names
   (setq dired-isearch-filenames 'dwim)
 
