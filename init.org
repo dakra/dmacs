@@ -6876,6 +6876,7 @@ sudo make install
 
   (setq mu4e-bookmarks `((,(concat "maildir:/private/Inbox OR "
                                    "maildir:/paessler/Inbox OR "
+                                   "maildir:/sap/Inbox OR "
                                    "maildir:/gmail/inbox OR "
                                    "maildir:/atomx/inbox OR "
                                    "maildir:/hogaso/inbox OR "
@@ -6892,6 +6893,7 @@ sudo make install
                                    "NOT maildir:/atomx/spam AND "
                                    "NOT maildir:/atomx/trash AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
+                                   "NOT maildir:/sap/Deleted\\ Items AND "
                                    "NOT maildir:/gmail/spam AND "
                                    "NOT maildir:/gmail/trash")
                           "Unread messages" ?a)
@@ -6903,6 +6905,7 @@ sudo make install
                                    "NOT maildir:/atomx/spam AND "
                                    "NOT maildir:/atomx/trash AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
+                                   "NOT maildir:/sap/Deleted\\ Items AND "
                                    "NOT maildir:/gmail/spam AND "
                                    "NOT maildir:/gmail/trash")
                           "All Unread messages" ?A)
@@ -6968,6 +6971,8 @@ sudo make install
           "daniel@skor.buzz"
           "daniel@atomx.com"
           "daniel@hogaso.com"
+          "daniel@restalchemy.org" "daniel@restalchemy.com"
+          "d.kraus@sap.com"
           "daniel.kraus@paessler.com"
           "daniel.kraus@ebenefuenf.de"))
   (setq mu4e-compose-dont-reply-to-self t)
@@ -7135,15 +7140,29 @@ sudo make install
              :enter-func (lambda () (mu4e-message "Switch to the e5 context"))
              :match-func (mu4e-context-match-fun "^/e5")
              :vars '(( user-mail-address  . "daniel.kraus@ebenefuenf.de" )
-                     ( mu4e-maildir-shortcuts . (("/e5/Inbox"      . ?i)
-                                                 ("/e5/Sent"  . ?s)
-                                                 ("/e5/Trash"      . ?t)
-                                                 ("/e5/Drafts"     . ?d)
-                                                 ("/e5/Archive"    . ?a)))
+                     ( mu4e-maildir-shortcuts . (("/e5/Inbox"   . ?i)
+                                                 ("/e5/Sent"    . ?s)
+                                                 ("/e5/Trash"   . ?t)
+                                                 ("/e5/Drafts"  . ?d)
+                                                 ("/e5/Archive" . ?a)))
                      ( mu4e-drafts-folder . "/e5/Drafts" )
                      ( mu4e-sent-folder   . "/e5/Sent" )
                      ( mu4e-trash-folder  . "/e5/Trash" )
                      ( mu4e-refile-folder . "/e5/Archive" )))
+           ,(make-mu4e-context
+             :name "SAP"
+             :enter-func (lambda () (mu4e-message "Switch to the SAP context"))
+             :match-func (mu4e-context-match-fun "^/sap")
+             :vars '(  ( user-mail-address  . "d.kraus@sap.com" )
+                       ( mu4e-maildir-shortcuts . (("/sap/Inbox"         . ?i)
+                                                   ("/sap/Outbox"        . ?s)
+                                                   ("/sap/Deleted Items" . ?t)
+                                                   ("/sap/Drafts"        . ?d)
+                                                   ("/sap/Archive"       . ?a)))
+                       ( mu4e-drafts-folder . "/sap/Drafts" )
+                       ( mu4e-sent-folder   . "/sap/Sent" )
+                       ( mu4e-trash-folder  . "/sap/Deleted Items" )
+                       ( mu4e-refile-folder . "/sap/Archive" )))
            ,(make-mu4e-context
              :name "Paessler"
              :enter-func (lambda () (mu4e-message "Switch to the paessler context"))
