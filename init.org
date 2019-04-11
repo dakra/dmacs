@@ -5199,9 +5199,6 @@ Show clock history when not in org buffer or when called with prefix argument."
   ;; Enter key follows links (= C-c C-o)
   (setq org-return-follows-link t)
 
-  ;; Don't remove links after inserting
-  (setq org-keep-stored-link-after-insertion t)
-
   ;; Never show 'days' in clocksum (e.g. in report clocktable)
   ;; format string used when creating CLOCKSUM lines and when generating a
   ;; time duration (avoid showing days)
@@ -5355,36 +5352,6 @@ Show clock history when not in org buffer or when called with prefix argument."
       (make-local-variable 'minor-mode-overriding-map-alist)
       (push `(prelude-mode . ,newmap) minor-mode-overriding-map-alist)))
   (add-hook 'org-mode-hook 'prelude-org-mode-defaults)
-
-  (require 'org-link-edit)
-  (defun jk/unlinkify ()
-    "Replace an org-link with the description, or if this is absent, the path."
-    (interactive)
-    (let ((eop (org-element-context)))
-      (when (eq 'link (car eop))
-        (message "%s" eop)
-        (let* ((start (org-element-property :begin eop))
-               (end (org-element-property :end eop))
-               (contents-begin (org-element-property :contents-begin eop))
-               (contents-end (org-element-property :contents-end eop))
-               (path (org-element-property :path eop))
-               (desc (and contents-begin
-                          contents-end
-                          (buffer-substring contents-begin contents-end))))
-          (setf (buffer-substring start end)
-                (concat (or desc path)
-                        (make-string (org-element-property :post-blank eop) ?\s)))))))
-
-  (define-key org-mode-map (kbd "C-c )")
-    (defhydra hydra-org-link-edit (:color red)
-      "Org Link Edit"
-      (")" org-link-edit-forward-slurp "forward slurp")
-      ("}" org-link-edit-forward-barf "forward barf")
-      ("(" org-link-edit-backward-slurp "backward slurp")
-      ("{" org-link-edit-backward-barf "backward barf")
-      ("t" org-toggle-link-display "Toggle link display")
-      ("r" jk/unlinkify "remove link")
-      ("q" nil "cancel" :color blue)))
 
   ;; Targets include this file and any file contributing to the agenda - up to 9 levels deep
   (setq org-refile-targets '((nil :maxlevel . 9)
@@ -6353,6 +6320,44 @@ See `org-html-format-headline-function' for details."
   :config
   (setq org-github-default-owner "atomx")
   (setq org-github-default-name "api"))
+#+END_SRC
+**** Org-link
+#+BEGIN_SRC emacs-lisp
+(use-package ol
+  :bind (:map org-mode-map
+         ("C-c )" . hydra-org-link-edit/body))
+  :config
+  ;; Don't remove links after inserting
+  (setq org-link-keep-stored-after-insertion t)
+
+  (require 'org-link-edit)
+  (defun org-link-unlinkify ()
+    "Replace an org-link with the description, or if this is absent, the path."
+    (interactive)
+    (let ((eop (org-element-context)))
+      (when (eq 'link (car eop))
+        (message "%s" eop)
+        (let* ((start (org-element-property :begin eop))
+               (end (org-element-property :end eop))
+               (contents-begin (org-element-property :contents-begin eop))
+               (contents-end (org-element-property :contents-end eop))
+               (path (org-element-property :path eop))
+               (desc (and contents-begin
+                          contents-end
+                          (buffer-substring contents-begin contents-end))))
+          (setf (buffer-substring start end)
+                (concat (or desc path)
+                        (make-string (org-element-property :post-blank eop) ?\s)))))))
+
+  (defhydra hydra-org-link-edit (:color red)
+    "Org Link Edit"
+    (")" org-link-edit-forward-slurp "Forward slurp")
+    ("}" org-link-edit-forward-barf "Forward barf")
+    ("(" org-link-edit-backward-slurp "Backward slurp")
+    ("{" org-link-edit-backward-barf "Backward barf")
+    ("t" org-toggle-link-display "Toggle link display")
+    ("r" org-link-unlinkify "Remove link")
+    ("q" nil "Cancel" :color blue)))
 #+END_SRC
 **** Orgit: org-link support for magit buffers
 #+BEGIN_SRC emacs-lisp
