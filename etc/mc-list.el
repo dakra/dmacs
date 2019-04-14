@@ -67,6 +67,7 @@
 (setq mc/cmds-to-run-once
       '(
         counsel-M-x
+        dakra-ivy-switch-buffer
         end-of-buffer
         exwm-windmove-down
         exwm-windmove-left
