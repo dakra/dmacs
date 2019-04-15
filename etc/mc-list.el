@@ -20,6 +20,7 @@
         dakra-downcase-dwim
         dakra-upcase-dwim
         delete-horizontal-space
+        downcase-region
         electric-newline-and-maybe-indent
         emmet-expand-line
         emmet-next-edit-point
@@ -57,6 +58,7 @@
         sp-splice-sexp
         sp-up-sexp
         sql-magic-go
+        upcase-region
         web-mode-comment-or-uncomment
         wgrep-mark-deletion
         whole-line-or-region-kill-region
