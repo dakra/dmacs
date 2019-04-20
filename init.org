@@ -7670,6 +7670,9 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     (start-process-shell-command "indicator-kdeconnect" nil "indicator-kdeconnect")
     (start-process-shell-command "keepassxc" nil "keepassxc")
 
+    ;; Set face attribute for new (child-)frames to our current font
+    (set-face-attribute 'default nil :font "Operator Mono-7:weight=medium:width=normal")
+
     ;; Toggle battery display
     (auto-display-battery-mode))
 
