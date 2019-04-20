@@ -7893,6 +7893,11 @@ It only works for frames with exactly two windows."
   (setq emms-player-list '(emms-player-mpv))
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
 #+END_SRC
+** Spotify: counsel-spotify
+#+BEGIN_SRC emacs-lisp
+(use-package counsel-spotify
+  :defer t)
+#+END_SRC
 ** YouTube Download
 #+BEGIN_SRC emacs-lisp
 (use-package youtube-dl
