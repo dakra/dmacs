@@ -41,6 +41,7 @@
         org-force-self-insert
         org-kill-line
         org-self-insert-command
+        org-shiftmetaup
         org-todo
         outshine-self-insert-command
         selected-off
