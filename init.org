@@ -1965,6 +1965,14 @@ go up multiple parent directories."
          ("C-c i" . ivy-imenu-anywhere)))
 #+END_SRC
 
+** Xref
+Select from xref candidates with ivy
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-xref
+  :after (ivy xref)
+  :config
+  (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+#+END_SRC
 * TODO Sort packages
 ** Recentf
 #+BEGIN_SRC emacs-lisp

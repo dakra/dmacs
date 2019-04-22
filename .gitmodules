@@ -501,6 +501,9 @@
 [submodule "ivy-rich"]
 	path = lib/ivy-rich
 	url = git@github.com:Yevgnen/ivy-rich.git
+[submodule "ivy-xref"]
+	path = lib/ivy-xref
+	url = git@github.com:alexmurray/ivy-xref.git
 [submodule "jira-markup-mode"]
 	path = lib/jira-markup-mode
 	url = git@github.com:mnuessler/jira-markup-mode.git
