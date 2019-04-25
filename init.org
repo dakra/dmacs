@@ -860,6 +860,15 @@ With a prefix argument, copy the link to the online manual instead."
   ;; Highlight public holidays
   (setq calendar-holiday-marker t))
 #+END_SRC
+** Network net-utils
+#+BEGIN_SRC emacs-lisp
+(use-package net-utils
+  :defer t
+  :config
+  ;; Set default netstat options
+  ;; so when I call it, it will list all open ports with processes
+  (setq netstat-program-options '("-tulpn")))
+#+END_SRC
 * UI
 ** Alert: Growl-style notification system
 #+BEGIN_SRC emacs-lisp
