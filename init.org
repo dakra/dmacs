@@ -2059,6 +2059,9 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
   :if (daemonp)
   :defer 10
   :config
+  ;; Set port to a less common one
+  ;; Must be changed in Firefox too!
+  (setq atomic-chrome-server-ghost-text-port 8326)
   (setq atomic-chrome-default-major-mode 'gfm-mode)
   (setq atomic-chrome-url-major-mode-alist
         '(("reddit\\.com" . markdown-mode)
