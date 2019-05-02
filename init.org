@@ -7284,22 +7284,6 @@ there are no attachments."
 
   (add-hook 'message-send-hook #'mbork/message-warn-if-no-attachments))
 
-
-;; for org capture
-(use-package org-mu4e
-  :after (:any org mu4e)
-  :config
-  ;; when mail is sent, automatically convert org body to HTML
-  (setq-default org-mu4e-convert-to-html t)
-
-  (defalias 'org-mail 'org-mu4e-compose-org-mode)
-
-  ;; FIXME: only set this during mu4e usage
-  (setq-default org-export-with-toc nil)  ; turn off table of contents
-
-  ;; Store link to message if in header view, not to header query
-  (setq-default org-mu4e-link-query-in-headers-mode nil))
-
 ;; Show overview of unread/all mails for each maildir/bookmarks in mu4e main window
 (use-package mu4e-maildirs-extension
   :disabled t
@@ -7308,23 +7292,6 @@ there are no attachments."
   (setq-default mu4e-maildirs-extension-use-bookmarks t)
   (setq-default mu4e-maildirs-extension-use-maildirs nil)
   (mu4e-maildirs-extension))
-
-
-;; XXX: Play more with org-mime instead of mu4e-compose-org-mode
-;; Look at: http://kitchingroup.cheme.cmu.edu/blog/2016/10/29/Sending-html-emails-from-org-mode-with-org-mime/
-(use-package org-mime
-  :commands (org-mime-htmlize org-mime-org-buffer-htmlize org-mime-org-subtree-htmlize)
-  :bind (:map message-mode-map ("C-c M-o" . org-mime-htmlize)
-         :map org-mode-map ("C-c M-o" . org-mime-org-subtree-htmlize))
-  :config
-  (setq org-mime-export-options '(:section-numbers nil
-                                  :with-author nil
-                                  :with-toc nil)))
-
-;; Auto sign mails
-(use-package mml-sec
-  :hook (mu4e-compose-mode . mml-secure-message-sign-pgpmime))
-;; Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 
 ;; use helm-mu for search
 (use-package helm-mu
@@ -7351,7 +7318,6 @@ there are no attachments."
   ;;                                             "maildir:/private/Sent)"))
   )
 
-
 ;; (define-key mu4e-headers-mode-map (kbd "d") 'my-move-to-trash)
 ;; (define-key mu4e-view-mode-map (kbd "d") 'my-move-to-trash)
 ;; ;; Overwrite normal 'D' keybinding
@@ -7361,10 +7327,46 @@ there are no attachments."
 ;; ;; Mark all as read with 'M'
 ;; (define-key mu4e-headers-mode-map (kbd "M") 'mu4e-headers-mark-all-unread-read)
 
+#+END_SRC
+** Org and mails
+#+BEGIN_SRC emacs-lisp
+;; for org capture
+(use-package org-mu4e
+  :after (:any org mu4e)
+  :config
+  ;; when mail is sent, automatically convert org body to HTML
+  (setq-default org-mu4e-convert-to-html t)
 
-;; Attach files from dired (C-c RET C-a)
+  (defalias 'org-mail 'org-mu4e-compose-org-mode)
+
+  ;; FIXME: only set this during mu4e usage
+  (setq-default org-export-with-toc nil)  ; turn off table of contents
+
+  ;; Store link to message if in header view, not to header query
+  (setq-default org-mu4e-link-query-in-headers-mode nil))
+
+;; XXX: Play more with org-mime instead of mu4e-compose-org-mode
+;; Look at: http://kitchingroup.cheme.cmu.edu/blog/2016/10/29/Sending-html-emails-from-org-mode-with-org-mime/
+(use-package org-mime
+  :commands (org-mime-htmlize org-mime-org-buffer-htmlize org-mime-org-subtree-htmlize)
+  :bind (:map message-mode-map ("C-c M-o" . org-mime-htmlize)
+         :map org-mode-map ("C-c M-o" . org-mime-org-subtree-htmlize))
+  :config
+  (setq org-mime-export-options '(:section-numbers nil
+                                  :with-author nil
+                                  :with-toc nil)))
+#+END_SRC
+** mml-sec: Auto sign mails
+Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
+#+BEGIN_SRC emacs-lisp
+(use-package mml-sec
+  :hook (mu4e-compose-mode . mml-secure-message-sign-pgpmime))
+#+END_SRC
+** Gnus-dired: Attach files from dired (C-c RET C-a)
+#+BEGIN_SRC emacs-lisp
 (use-package gnus-dired
   :after mu4e
+  :hook (dired-mode . turn-on-gnus-dired-mode)
   :config
   ;; make the `gnus-dired-mail-buffers' function also work on
   ;; message-mode derived modes, such as mu4e-compose-mode
@@ -7379,10 +7381,10 @@ there are no attachments."
             (push (buffer-name buffer) buffers))))
       (nreverse buffers)))
 
-  (setq gnus-dired-mail-mode 'mu4e-user-agent)
-  (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode))
-
-;; display html messages
+  (setq gnus-dired-mail-mode 'mu4e-user-agent))
+#+END_SRC
+** mu4e-contrib: Display html messages
+#+BEGIN_SRC emacs-lisp
 (use-package mu4e-contrib
   :after mu4e
   :config
@@ -7394,7 +7396,11 @@ there are no attachments."
               (local-set-key (kbd "<tab>") 'shr-next-link)
               (local-set-key (kbd "<backtab>") 'shr-previous-link))))
 #+END_SRC
-
+** mu4e-patch: Colorize patch-based emails
+#+BEGIN_SRC emacs-lisp
+(use-package mu4e-patch
+  :hook (mu4e-view-mode . mu4e-patch-highlight))
+#+END_SRC
 * Window Manager
 ** Exwm
 #+BEGIN_SRC emacs-lisp

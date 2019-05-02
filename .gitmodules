@@ -630,6 +630,9 @@
 [submodule "mu4e-maildirs-extension"]
 	path = lib/mu4e-maildirs-extension
 	url = git@github.com:agpchil/mu4e-maildirs-extension.git
+[submodule "mu4e-patch"]
+	path = lib/mu4e-patch
+	url = git@github.com:seanfarley/mu4e-patch.git
 [submodule "multiple-cursors"]
 	path = lib/multiple-cursors
 	url = git@github.com:magnars/multiple-cursors.el.git
