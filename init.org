@@ -2102,6 +2102,7 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
 (use-package dired
   :bind (("C-x d" . dired)
          :map dired-mode-map
+         ("j" . swiper)
          ("M-RET" . emms-play-dired)
          ("e" . dired-ediff-files)
          ("C-c C-e" . dired-toggle-read-only))
