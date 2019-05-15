@@ -1,5 +1,8 @@
 [borg]
 	pushDefault = dakra
+[submodule "a"]
+	path = lib/a
+	url = git@github.com:plexus/a.el.git
 [submodule "ace-link"]
 	path = lib/ace-link
 	url = git@github.com:abo-abo/ace-link.git
@@ -733,6 +736,12 @@
 [submodule "packed"]
 	path = lib/packed
 	url = git@github.com:emacscollective/packed.git
+[submodule "parseclj"]
+	path = lib/parseclj
+	url = git@github.com:clojure-emacs/parseclj.git
+[submodule "parseedn"]
+	path = lib/parseedn
+	url = git@github.com:clojure-emacs/parseedn.git
 [submodule "pcmpl-git"]
 	path = lib/pcmpl-git
 	url = git@github.com:leoliu/pcmpl-git-el.git
