@@ -476,6 +476,7 @@
 [submodule "indium"]
 	path = lib/indium
 	url = git@github.com:NicolasPetton/Indium.git
+	info-path = doc
 [submodule "inf-mongo"]
 	path = lib/inf-mongo
 	url = git@github.com:endofunky/inf-mongo.git
