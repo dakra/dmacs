@@ -613,6 +613,9 @@
 [submodule "minions"]
 	path = lib/minions
 	url = git@github.com:tarsius/minions.git
+[submodule "mocha"]
+	path = lib/mocha
+	url = git@github.com:scottaj/mocha.el.git
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el.git

@@ -3700,6 +3700,11 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
 #+BEGIN_SRC emacs-lisp
 (use-package ng2-mode :defer t)
 #+END_SRC
+
+Testing with mocha
+#+BEGIN_SRC emacs-lisp
+(use-package mocha :defer t)
+#+END_SRC
 ** Lisps
 #+BEGIN_SRC emacs-lisp
 ;; Nicer elisp regex syntax highlighting
