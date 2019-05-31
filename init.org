@@ -769,7 +769,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 ** Subword: CamelCase aware editing operations
 #+BEGIN_SRC emacs-lisp
 (use-package subword
-  :hook ((python-mode yaml-mode go-mode clojure-mode cider-repl-mode java-mode cds-mode) . subword-mode))
+  :hook ((python-mode yaml-mode go-mode clojure-mode cider-repl-mode java-mode cds-mode js2-mode) . subword-mode))
 #+END_SRC
 ** Shr: Simple html renderer
 #+BEGIN_SRC emacs-lisp
