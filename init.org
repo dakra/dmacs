@@ -2208,6 +2208,11 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
 
 ** Dired-hacks
 #+BEGIN_SRC emacs-lisp
+(use-package dired-hacks-utils
+  :hook (dired-mode . dired-utils-format-information-line-mode))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package dired-rainbow
   :after dired
   :config
