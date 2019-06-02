@@ -3206,7 +3206,7 @@ lldb
 (use-package lsp-ui
   :defer t
   :config
-  (setq lsp-ui-doc-use-childframe nil)
+  (setq lsp-ui-doc-use-childframe t)
   (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-symbol nil))
 
