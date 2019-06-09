@@ -3984,6 +3984,44 @@ octave
   :defer t)
 #+END_SRC
 ** Python
+*** LSP with the Microsoft language server
+This needs the =dotnet-sdk= and the microsoft-python-language-server installed.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+dotnet-sdk
+#+END_SRC
+
+Get the python language server from github:
+#+BEGIN_SRC shell :tangle no :dir ~/repos
+git clone git@github.com:microsoft/python-language-server.git
+#+END_SRC
+
+Then build it:
+#+BEGIN_SRC shell :tangle no :dir ~/repos/python-language-server/src/LanguageServer/Impl
+dotnet build -c Release
+dotnet publish -c Release -r linux-x64
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-python-ms
+  :defer t
+  ;;:hook (python-mode . lsp-python-ms-init)
+  :config
+  (defun lsp-python-ms-init ()
+    "We need to require ccls before loading lsp in a C buffer.
+Otherwise lsp would use the default clangd backend.
+use-package will load ccls for us simply by calling this function."
+    (lsp))
+
+  ;; Set cache dir to nolitering standards
+  (setq lsp-python-ms-cache-dir (no-littering-expand-var-file-name "lsp-python-ms/cache"))
+
+  (setq lsp-python-ms-dir
+        (expand-file-name "~/repos/python-language-server/output/bin/Release/"))
+
+  (setq lsp-python-ms-executable
+        (expand-file-name "~/repos/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")))
+#+END_SRC
+
 *** Cython
 #+BEGIN_SRC emacs-lisp
 (use-package cython-mode
@@ -4279,7 +4317,7 @@ indent=4
   :defer t)
 #+END_SRC
 *** Blacken: Auto format Python buffer with black
-If you want =blacken= called as after-save-hook in your project
+If you want =blacken= called as before-save-hook in your project
 put something like this in your =.dir-locals.el=:
 #+BEGIN_SRC emacs-lisp :tangle no
 ((python-mode . ((flycheck-checker . python-mypy)
