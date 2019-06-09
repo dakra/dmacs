@@ -57,6 +57,7 @@
         sp-kill-hybrid-sexp
         sp-kill-word
         sp-splice-sexp
+        sp-split-sexp
         sp-up-sexp
         sql-magic-go
         upcase-region
