@@ -1980,7 +1980,9 @@ Select from xref candidates with ivy
 (use-package ivy-xref
   :after (ivy xref)
   :config
-  (setq xref-show-xrefs-function #'ivy-xref-show-xrefs))
+  (if (< emacs-major-version 27)
+      (setq xref-show-xrefs-function #'ivy-xref-show-xrefs)
+    (setq xref-show-definitions-function #'ivy-xref-show-defs)))
 #+END_SRC
 * TODO Sort packages
 ** Recentf
