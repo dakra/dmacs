@@ -1811,7 +1811,9 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
 ** Swiper: Search with ivy
 #+BEGIN_SRC emacs-lisp
 (use-package swiper
-  :bind (;;("C-s" . swiper)  ; Use counsel-grep-or-swiper
+  :bind (;; When using swiper-isearch then comment out the counsel-grep-or-swiper binding
+         ;; in the counsel package below
+         ;; ("C-s" . swiper-isearch)
          :map swiper-map
          ("M-h" . swiper-avy)
          ("M-c" . swiper-mc)))
