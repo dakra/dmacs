@@ -2718,7 +2718,7 @@ So if we're connected with sudo to 'remotehost'
       (eshell/cd directory)))
 
   (defun eshell/gst (&rest args)
-    (magit-status-internal (or (pop args) default-directory))
+    (magit-status-setup-buffer (or (pop args) default-directory))
     (eshell/echo))   ;; The echo command suppresses output
 
   (defun eshell/f (filename &optional dir try-count)
