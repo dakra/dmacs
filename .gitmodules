@@ -526,6 +526,12 @@
 [submodule "json-snatcher"]
 	path = lib/json-snatcher
 	url = git@github.com:Sterlingg/json-snatcher.git
+[submodule "jupyter"]
+	path = lib/jupyter
+	url = git@github.com:dzop/emacs-jupyter.git
+	build-step = make -C widgets > /dev/null
+	build-step = borg-byte-compile
+        build-step = borg-update-autoloads
 [submodule "kdeconnect"]
 	path = lib/kdeconnect
 	url = git@github.com:dakra/kdeconnect.el.git
@@ -664,9 +670,6 @@
 [submodule "nov"]
 	path = lib/nov
 	url = git@github.com:wasamasa/nov.el.git
-[submodule "ob-ipython"]
-	path = lib/ob-ipython
-	url = git@github.com:gregsexton/ob-ipython.git
 [submodule "ob-mongo"]
 	path = lib/ob-mongo
 	url = git@github.com:krisajenkins/ob-mongo.git
@@ -885,6 +888,9 @@
 [submodule "shut-up"]
 	path = lib/shut-up
 	url = git@github.com:cask/shut-up.git
+[submodule "simple-httpd"]
+	path = lib/simple-httpd
+	url = git@github.com:skeeto/emacs-web-server.git
 [submodule "slime"]
 	path = lib/slime
 	url = git@github.com:slime/slime.git
@@ -1043,6 +1049,11 @@
 [submodule "youtube-dl"]
 	path = lib/youtube-dl
 	url = git@github.com:skeeto/youtube-dl-emacs.git
+[submodule "zmq"]
+	path = lib/zmq
+	url = git@github.com:dzop/emacs-zmq.git
+	build-step = make
+	build-step = borg-update-autoloads
 [submodule "zop-to-char"]
 	path = lib/zop-to-char
 	url = git@github.com:thierryvolpiatto/zop-to-char.git

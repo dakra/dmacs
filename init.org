@@ -4032,6 +4032,19 @@ use-package will load ccls for us simply by calling this function."
 (use-package flycheck-cython
   :after (cython-mode flycheck))
 #+END_SRC
+*** Jupyter
+#+BEGIN_SRC emacs-lisp
+(use-package zmq
+  :defer t)
+
+(use-package jupyter
+  :after ob  ;; Load after org-babel
+  :config
+  ;; Set a default session and make execution async by default
+  (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                       (:kernel . "python")
+                                                       (:session . "py-default"))))
+#+END_SRC
 *** Main Python setup
 #+BEGIN_SRC emacs-lisp
 (use-package python
@@ -5843,7 +5856,6 @@ session as the current block. ARG has same meaning as in
      (picolisp)
      (plantuml . t)
      (python . t)
-     (ipython . t)
      (restclient . t)
      (ref)
      (ruby)
@@ -5855,59 +5867,16 @@ session as the current block. ARG has same meaning as in
      (shen)
      (snippet)
      (sql . t)
-     (sqlite . t)))
+     (sqlite . t)
+     ;; jupyter should be the last element as it depends on other lang-modes.
+     ;; See jupyter readme for more info.
+     (jupyter . t)))
 
   ;; Load personal library of babel
   (org-babel-lob-ingest (no-littering-expand-etc-file-name "library-of-babel.org")))
 
 (use-package ob-restclient
   :after ob)
-
-(use-package ob-ipython
-  :after ob
-  :config
-  ;; Show multiple inline figures and results in one cell for ob-ipython.
-  ;; http://kitchingroup.cheme.cmu.edu/blog/2017/01/29/ob-ipython-and-inline-figures-in-org-mode/
-  ;; results must be in a drawer. So set a header like:
-  ;; #+BEGIN_SRC ipython :session :results output drawer
-  (defun ob-ipython-inline-image (b64-string)
-    "Write the b64-string to a temporary file.
-Returns an org-link to the file."
-    (let* ((tfile (make-temp-file "ob-ipython-" nil ".png"))
-           (link (format "[[file:%s]]" tfile)))
-      (ob-ipython--write-base64-string tfile b64-string)
-      link))
-
-  (defun org-babel-execute:ipython (body params)
-    "Execute a block of IPython code with Babel.
-This function is called by `org-babel-execute-src-block'."
-    (let* ((file (cdr (assoc :file params)))
-           (session (cdr (assoc :session params)))
-           (result-type (cdr (assoc :result-type params))))
-      (org-babel-ipython-initiate-session session params)
-      (-when-let (ret (ob-ipython--eval
-                       (ob-ipython--execute-request
-                        (org-babel-expand-body:generic (encode-coding-string body 'utf-8)
-                                                       params (org-babel-variable-assignments:python params))
-                        (ob-ipython--normalize-session session))))
-        (let ((result (cdr (assoc :result ret)))
-              (output (cdr (assoc :output ret))))
-          (if (eq result-type 'output)
-              (concat
-               output
-               (format "%s"
-                       (mapconcat 'identity
-                                  (loop for res in result
-                                        if (eq 'image/png (car res))
-                                        collect (ob-ipython-inline-image (cdr res)))
-                                  "\n")))
-            (ob-ipython--create-stdout-buffer output)
-            (cond ((and file (string= (f-ext file) "png"))
-                   (->> result (assoc 'image/png) cdr (ob-ipython--write-base64-string file)))
-                  ((and file (string= (f-ext file) "svg"))
-                   (->> result (assoc 'image/svg+xml) cdr (ob-ipython--write-string-to-file file)))
-                  (file (error "%s is currently an unsupported file extension." (f-ext file)))
-                  (t (->> result (assoc 'text/plain) cdr)))))))))
 #+END_SRC
 **** Org-src
 #+BEGIN_SRC emacs-lisp
