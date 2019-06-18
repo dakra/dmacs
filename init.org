@@ -1479,10 +1479,11 @@ Simple but effective sorting and filtering for Emacs
   :bind (:map company-active-map
          ([return] . nil)
          ("RET" . nil)
-         ("TAB" . company-select-next)
-         ([tab] . company-select-next)
-         ("S-TAB" . company-select-previous)
-         ([backtab] . company-select-previous)
+
+         ("TAB" . company-complete-selection)
+         ([tab] . company-complete-selection)
+         ;; ("S-TAB" . company-select-previous)
+         ;; ([backtab] . company-select-previous)
          ("C-j" . company-complete-selection))
   :config
   ;; company-tng (tab and go) allows you to use TAB to both select a
@@ -1494,10 +1495,10 @@ Simple but effective sorting and filtering for Emacs
   ;; inserts it in the buffer. Pressing TAB again selects the second
   ;; item and replaces the inserted item with the second one. This can
   ;; continue as long as the user wishes to cycle through the menu.
-  (require 'company-tng)
-  (setq company-frontends '(company-tng-frontend
-                            company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend))
+  ;; (require 'company-tng)
+  ;; (setq company-frontends '(company-tng-frontend
+  ;;                           company-pseudo-tooltip-frontend
+  ;;                           company-echo-metadata-frontend))
 
   (setq company-idle-delay 0.1)
   (setq company-tooltip-limit 10)
