@@ -7660,6 +7660,8 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
            floating-mode-line nil
            width 0.6
            height 0.8)
+          ((equal exwm-class-name "rdesktop")
+           floating nil)
           ((equal exwm-class-name "Firefox Developer Edition")
            simulation-keys (([?\C-q] . [?\C-w])  ; close tab instead of quitting Firefox
                             ([?\C-b] . [left])
