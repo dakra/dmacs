@@ -710,6 +710,12 @@
 [submodule "org-pomodoro"]
 	path = lib/org-pomodoro
 	url = git@github.com:lolownia/org-pomodoro.git
+[submodule "org-ql"]
+	path = lib/org-ql
+	url = git@github.com:alphapapa/org-ql.git
+[submodule "org-super-agenda"]
+	path = lib/org-super-agenda
+	url = git@github.com:alphapapa/org-super-agenda.git
 [submodule "org-web-tools"]
 	path = lib/org-web-tools
 	url = git@github.com:alphapapa/org-web-tools.git
