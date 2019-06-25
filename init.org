@@ -8014,9 +8014,8 @@ eimp-fit-image-width-to-window=
 Automatically show battery info when laptop is not connected to line power.
 #+BEGIN_SRC emacs-lisp
 (use-package auto-display-battery
-  :defer t)
+  :disabled t)  ;; I just use external cbatticon systray icon
 #+END_SRC
-
 ** Aurel: Search, vote for and download AUR packages
 #+BEGIN_SRC emacs-lisp
 (use-package aurel
