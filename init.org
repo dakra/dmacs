@@ -7944,7 +7944,7 @@ It only works for frames with exactly two windows."
   :defer t)
 
 (use-package emms-player-mpv
-  :after emms
+  :after (:any emms dired)
   :config
   (setq emms-player-list '(emms-player-mpv))
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
