@@ -692,6 +692,10 @@
 [submodule "org-bullets"]
 	path = lib/org-bullets
 	url = git@github.com:emacsorphanage/org-bullets.git
+[submodule "org-caldav"]
+	path = lib/org-caldav
+	url = git@github.com:dengste/org-caldav.git
+	remote = dakra git@github.com:dakra/org-caldav.git
 [submodule "org-github"]
 	path = lib/org-github
 	url = git@github.com:dakra/org-github.git
