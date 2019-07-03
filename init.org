@@ -2454,7 +2454,7 @@ avfs
     ("T" (switch-to-buffer "*text*scratchpad.txt"))
     ("m" (switch-to-buffer "*markdown*scratchpad.md")))
 
-  (eval-when-compile
+  (eval-and-compile
     (defmacro hydra-help-toggle (text toggle)
       `(if (bound-and-true-p ,toggle)
            (format "[x] %s" ,text)
