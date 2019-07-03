@@ -7734,11 +7734,12 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     (start-process-shell-command "indicator-kdeconnect" nil "indicator-kdeconnect")
     (start-process-shell-command "keepassxc" nil "keepassxc")
 
-    ;; Set face attribute for new (child-)frames to our current font
-    (set-face-attribute 'default nil :font "Operator Mono-7:weight=medium:width=normal")
-
     ;; Toggle battery display
-    (auto-display-battery-mode))
+    (auto-display-battery-mode)
+    (start-process-shell-command "cbatticon" nil "cbatticon")
+
+    ;; Set face attribute for new (child-)frames to our current font
+    (set-face-attribute 'default nil :font "Operator Mono-7:weight=medium:width=normal"))
 
   ;; Enable EXWM
   (exwm-enable))
@@ -8025,7 +8026,7 @@ eimp-fit-image-width-to-window=
 Automatically show battery info when laptop is not connected to line power.
 #+BEGIN_SRC emacs-lisp
 (use-package auto-display-battery
-  :disabled t)  ;; I just use external cbatticon systray icon
+  :defer t)
 #+END_SRC
 ** Aurel: Search, vote for and download AUR packages
 #+BEGIN_SRC emacs-lisp
