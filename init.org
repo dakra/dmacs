@@ -8207,6 +8207,13 @@ in that namespace with ~x~
   (setq ovpn-mode-ipv6-auto-toggle t)  ; Always turn off ipv6 when starting vpn
   (setq ovpn-mode-base-directory "~/vpn"))
 #+END_SRC
+** F5 VPN
+#+BEGIN_SRC emacs-lisp
+(use-package f5vpn
+  :defer t
+  :config
+  (setq f5vpn-host "connectwdf.sap.com"))
+#+END_SRC
 ** Ledger: Accounting
 #+BEGIN_SRC emacs-lisp
 ;; ledger-mode for bookkeeping

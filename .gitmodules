@@ -336,6 +336,9 @@
 [submodule "f"]
 	path = lib/f
 	url = git@github.com:rejeep/f.el.git
+[submodule "f5vpn"]
+	path = lib/f5vpn
+	url = git@github.com:dakra/f5vpn.el.git
 [submodule "fabric"]
 	path = lib/fabric
 	url = git@github.com:nlamirault/fabric.el.git
