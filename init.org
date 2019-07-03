@@ -8628,6 +8628,25 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("ufc" youtube mma)
     ("MMAFightingonSBN" youtube mma)))
 #+END_SRC
+** Rdesktop
+#+BEGIN_SRC emacs-lisp
+;; Set rdesktop-host to SAP VDI (persistent WTS) host
+(setq rdesktop-host "10.76.99.117")
+;; Set resolution to laptop display minus Emacs modeline and map home dir
+(setq rdesktop-options "-P -x l -g 1920x1040 -r disk:sap=/home/daniel/sap")
+
+(defun rdesktop ()
+  "Start rdesktop session."
+  (interactive)
+  (if-let ((plist (car (auth-source-search :host rdesktop-host :max 1)))
+           (user (plist-get plist :user))
+           (pass (funcall (plist-get plist :secret))))
+      (start-process-shell-command
+       "SAP Desktop" nil
+       (format "rdesktop %s -u %s -p %s %s"
+               rdesktop-options user pass rdesktop-host))
+    (error "No user / password found in authinfo")))
+#+END_SRC
 ** Info-beamer
 #+BEGIN_SRC emacs-lisp
 (use-package info-beamer
