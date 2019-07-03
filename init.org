@@ -5227,7 +5227,7 @@ displayed anywhere else."
 A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
 #+BEGIN_SRC emacs-lisp
 (use-package org
-  :mode ("\\.org\\'"  . org-mode)
+  :mode ("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode)
   :bind (("C-c a"   . org-agenda)
          ("<f6>"    . org-agenda)
          ("<f7>"    . org-clock-goto)
