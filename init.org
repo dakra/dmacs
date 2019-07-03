@@ -2445,10 +2445,11 @@ avfs
     ("T" (switch-to-buffer "*text*scratchpad.txt"))
     ("m" (switch-to-buffer "*markdown*scratchpad.md")))
 
-  (defmacro hydra-help-toggle (text toggle)
-    `(if (bound-and-true-p ,toggle)
-         (format "[x] %s" ,text)
-       (format "[ ] %s" ,text)))
+  (eval-when-compile
+    (defmacro hydra-help-toggle (text toggle)
+      `(if (bound-and-true-p ,toggle)
+           (format "[x] %s" ,text)
+         (format "[ ] %s" ,text))))
 
   (defhydra hydra-toggle-stuff (:color blue :hint nil)
     "Toggle"
