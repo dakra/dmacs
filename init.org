@@ -8071,6 +8071,13 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
 (use-package systemctl
   :commands (hydra-systemctl/body services-run)
   :config
+  (defun forme-backend-start ()
+    (interactive)
+    (let ((default-directory (projectile-project-root)))
+      (compilation-start "./gradlew dev" nil (lambda (_mode) "*4me - dev"))
+      (sleep-for 2)
+      (compilation-start "./gradlew run" nil (lambda (_mode) "*4me - run"))))
+
   ;; FIXME: Loot at https://github.com/rejeep/prodigy.el
   (setq services-list
         '((:project-root "/home/daniel/atomx/api/"
@@ -8098,12 +8105,25 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
                       t  ; Use compilation-shell-minor-mode under comint-mode
                       (lambda (_mode) "*skor front-end*")))
 
+          (:project-root "/home/daniel/sap/forme-backend/"
+           :services ()
+           :fun forme-backend-start
+           :fun-args ())
+
+          (:project-root "/home/daniel/sap/forme-frontend/"
+           :services ()
+           :fun compilation-start
+           :fun-args ("gulp dev"
+                      nil
+                      (lambda (_mode) "*forme frontend*")))
+
           (:project-root "/home/daniel/projects/bush-kennels.uk/"
            :services ()
            :fun compilation-start
            :fun-args ("yarn serve"
                       t  ; Use compilation-shell-minor-mode under comint-mode
                       (lambda (_mode) "*yarn serve bush-kennels.uk*")))
+
           (:project-root "/home/daniel/e5/blif/blif-frontend/"
            :services ()
            :fun compilation-start
