@@ -342,9 +342,6 @@
 [submodule "fancy-narrow"]
 	path = lib/fancy-narrow
 	url = git@github.com:Malabarba/fancy-narrow.git
-[submodule "fill-column-indicator"]
-	path = lib/fill-column-indicator
-	url = git@github.com:alpaker/Fill-Column-Indicator.git
 [submodule "fish-completion"]
 	path = lib/fish-completion
 	url = git@gitlab.com:Ambrevar/emacs-fish-completion.git

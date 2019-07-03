@@ -930,8 +930,8 @@ With a prefix argument, copy the link to the online manual instead."
 #+END_SRC
 ** Fill-column-indicator
 #+BEGIN_SRC emacs-lisp
-(use-package fill-column-indicator
-  :hook ((emacs-lisp git-commit-setup) . fci-mode))
+(use-package display-fill-column-indicator
+  :hook ((git-commit-setup) . display-fill-column-indicator-mode))
 #+END_SRC
 ** Volatile highlights
 Visual feedback on some operations like yank,kill,undo
