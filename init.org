@@ -3214,6 +3214,7 @@ lldb
   :bind (:map lsp-mode-map
          ("C-c C-a" . lsp-ui-sideline-apply-code-actions))
   :config
+  (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
   (setq lsp-prefer-flymake nil)
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
 
