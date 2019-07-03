@@ -6245,6 +6245,14 @@ See `org-html-format-headline-function' for details."
   ;; Don't export ^ or _ as super/subscripts
   (setq org-export-with-sub-superscripts nil))
 
+;; Export tasks to ical (used for org-vcal)
+(use-package ox-icalendar
+  :after ox
+  :config
+  (setq org-icalendar-timezone "Europe/Berlin")
+  ;; Include maximum of 2048 characters in calendar description
+  (setq org-icalendar-include-body 2048))
+
 ;; Export blog posts to hugo
 (use-package ox-hugo
   :after ox)
