@@ -3,6 +3,9 @@
 [submodule "a"]
 	path = lib/a
 	url = git@github.com:plexus/a.el.git
+[submodule "abap-mode"]
+	path = lib/abap-mode
+	url = git@github.com:qianmarv/sap-abap-mode.git
 [submodule "ace-link"]
 	path = lib/ace-link
 	url = git@github.com:abo-abo/ace-link.git

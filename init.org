@@ -3263,6 +3263,11 @@ use-package will load java-lsp for us simply by calling this function."
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
 #+END_SRC
+** ABAP
+#+BEGIN_SRC emacs-lisp
+(use-package abap-mode
+  :mode ("\\.abap\\'"))
+#+END_SRC
 ** Crontab
 #+BEGIN_SRC emacs-lisp
 (use-package crontab-mode
@@ -5838,6 +5843,7 @@ session as the current block. ARG has same meaning as in
    'org-babel-load-languages
    '((C . t)
      ;;(R . t)
+     (abap)
      (asymptote)
      (awk)
      (calc . t)
