@@ -259,6 +259,12 @@
 [submodule "eimp"]
 	path = lib/eimp
 	url = git@github.com:nicferrier/eimp.git
+[submodule "ejira"]
+	path = lib/ejira
+	url = git@github.com:nyyManni/ejira.git
+	no-byte-compile = ejira.el
+	no-byte-compile = helm-ejira.el
+	no-byte-compile = ejira-hourmarking.el
 [submodule "el2markdown"]
 	path = lib/el2markdown
 	url = git@github.com:Lindydancer/el2markdown.git
@@ -551,6 +557,9 @@
 [submodule "langtool"]
 	path = lib/langtool
 	url = git@github.com:mhayashi1120/Emacs-langtool.git
+[submodule "language-detection"]
+	path = lib/language-detection
+	url = git@github.com:andreasjansson/language-detection.el.git
 [submodule "ledger-mode"]
 	path = lib/ledger-mode
 	url = git@github.com:ledger/ledger-mode.git

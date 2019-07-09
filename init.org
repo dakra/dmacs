@@ -8836,6 +8836,24 @@ Probably create a `dakra` package (again) to lazy load all those commands.
                         (format "submodule.%s.url" drone) b))
         (process-file "git" nil nil nil "submodule" "sync")))))
 #+END_SRC
+* Libraries
+Here are helper functions and utility libraries for other
+elisp packages to use and not for actual direct user usage.
+** jiralib2: Provide connectivity to JIRA REST services.
+#+BEGIN_SRC emacs-lisp
+(use-package jiralib2
+  :defer t)
+#+END_SRC
+** ejira-parser: Parsing to and from JIRA markup.
+#+BEGIN_SRC emacs-lisp
+(use-package ejira-parser
+  :defer t)
+#+END_SRC
+** language-detection: Detect programming language in a buffer
+#+BEGIN_SRC emacs-lisp
+(use-package language-detection
+  :defer t)
+#+END_SRC
 * Post Initialization
 #+BEGIN_SRC emacs-lisp
 (message "Loading %s...done (%.3fs)" user-init-file
