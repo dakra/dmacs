@@ -5805,6 +5805,48 @@ Late deadlines first, then scheduled, then non-late deadlines"
        ;; finally default to unsorted
        (t (setq result nil)))
       result))
+**** Org-caldav: Sync your calendars with your agenda / org tasks
+FIXME: automatically call =(org-caldav-sync)= before showing agenda.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-caldav
+  :defer t  ; Only autoloaded command is org-caldav-sync
+  :config
+  (setq org-caldav-debug-level 2)
+  ;; Skip all entries without a scheduled or deadline property
+  (setq org-caldav-skip-conditions '(nottimestamp))
+  ;; Mailbox.org (doesn't work with office 365 ical links and doesn't sync very old items)
+  ;; https://userforum-en.mailbox.org/topic/office365-and-subscribe-via-ics
+  ;; (setq org-caldav-url "https://dav.mailbox.org/caldav")
+  ;; (setq org-caldav-calendars
+  ;;       `(;; All personal stuff goes in the shared family calendar
+  ;;         (:calendar-id "Y2FsOi8vMC84MA"  ; family calendar id
+  ;;          :inbox ,(expand-file-name "caldav-inbox-family.org" org-directory)
+  ;;          :files (,(expand-file-name "personal.org" org-directory)))
+  ;;         ;; Everything but personal.org is work related and goes in my peronsal calendar
+  ;;         (:calendar-id "Y2FsOi8vMC84MQ"  ; work calendar id
+  ;;          :inbox ,(expand-file-name "caldav-inbox-personal.org" org-directory)
+  ;;          :files ,(delete (expand-file-name "caldav-inbox-family.org" org-directory)
+  ;;                          (delete (expand-file-name "personal.org" org-directory) (org-agenda-files))))))
+
+  ;; Nextcloud
+  (setq org-caldav-url "https://nx599.your-next.cloud/remote.php/dav/calendars/dakra")
+  (setq org-caldav-calendars
+        `(;; All personal stuff goes in the shared family calendar
+          (:calendar-id "family"  ; family calendar id
+           :inbox ,(expand-file-name "caldav-inbox-family.org" org-directory)
+           :files (,(expand-file-name "personal.org" org-directory)))
+          ;; Everything but personal.org is work related and goes in my peronsal calendar
+          (:calendar-id "work"  ; work calendar id
+           :inbox ,(expand-file-name "caldav-inbox-work.org" org-directory)
+           :files ,(delete (expand-file-name "caldav-inbox-family.org" org-directory)
+                           (delete (expand-file-name "personal.org" org-directory) (org-agenda-files))))))
+
+  ;; For debugging problems only
+  ;; (setq org-caldav-inbox (expand-file-name "caldav-testinbox.org" org-directory))
+  ;; (setq org-caldav-url "https://nx599.your-next.cloud/remote.php/dav/calendars/dakra")
+  ;; (setq org-caldav-calendar-id "testdav")
+  ;; (setq org-caldav-files `(,(expand-file-name "test-caldav.org" org-directory)))
   )
 #+END_SRC
 **** Org-babel
