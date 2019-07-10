@@ -8854,6 +8854,11 @@ elisp packages to use and not for actual direct user usage.
 (use-package language-detection
   :defer t)
 #+END_SRC
+** Oauth2: OAuth 2.0 Authorization Protocol
+#+BEGIN_SRC emacs-lisp
+(use-package oauth2
+  :defer t)
+#+END_SRC
 * Post Initialization
 #+BEGIN_SRC emacs-lisp
 (message "Loading %s...done (%.3fs)" user-init-file

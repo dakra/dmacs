@@ -682,6 +682,9 @@
 [submodule "nov"]
 	path = lib/nov
 	url = git@github.com:wasamasa/nov.el.git
+[submodule "oauth2"]
+	path = lib/oauth2
+	url = git@github.com:emacsmirror/oauth2.git
 [submodule "ob-mongo"]
 	path = lib/ob-mongo
 	url = git@github.com:krisajenkins/ob-mongo.git
