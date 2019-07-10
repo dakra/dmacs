@@ -591,6 +591,7 @@
 [submodule "lsp-java"]
 	path = lib/lsp-java
 	url = git@github.com:emacs-lsp/lsp-java.git
+	no-byte-compile = lsp-java-treemacs.el
 [submodule "lsp-mode"]
 	path = lib/lsp-mode
 	url = git@github.com:emacs-lsp/lsp-mode.git

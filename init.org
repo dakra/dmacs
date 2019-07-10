@@ -3258,7 +3258,6 @@ use-package will load java-lsp for us simply by calling this function."
     (setq electric-indent-inhibit nil)  ; Auto-indent code after e.g. {}
     (lsp-deferred)))
 (use-package dap-java :after lsp-java)
-(use-package lsp-java-treemacs :after lsp-java)
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
