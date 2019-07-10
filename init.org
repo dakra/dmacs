@@ -6298,6 +6298,9 @@ as the default task."
   :commands org-formatted-copy
   ;;:bind ("C-c e" . org-formatted-copy)
   :config
+  ;; Don't evaluate babel source blocks during export
+  (setq org-export-use-babel nil)
+
   ;; copy org text as rich text
   (defun org-formatted-copy ()
     "Export region to HTML, and copy it to the clipboard."
