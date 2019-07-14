@@ -752,6 +752,12 @@ E.g. fuer -> für
   (setq savehist-additional-variables '(compile-command kill-ring regexp-search-ring))
   (savehist-mode 1))
 #+END_SRC
+** So-long: Mitigating slowness due to extremely long lines
+#+BEGIN_SRC emacs-lisp
+(use-package so-long
+  :config
+  (global-so-long-mode))
+#+END_SRC
 ** Ansi-color
 #+BEGIN_SRC emacs-lisp
 (use-package ansi-color
