@@ -6908,6 +6908,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 #+END_SRC
 
 * Email
+** Mu4e
 You also need to configure and install mu in the system.
 Borg does only build mu4e as building mu every time is
 unnecessary.
@@ -6915,7 +6916,9 @@ unnecessary.
 # Install mu for mu4e
 cd $mudir
 test -e ./configure || autoreconf -i
-./configure
+# Maybe you have to run distclean first
+# make distclean
+./configure --enable-shared
 make
 sudo make install
 #+END_SRC
@@ -7473,6 +7476,19 @@ there are no attachments."
 ;; ;; Mark all as read with 'M'
 ;; (define-key mu4e-headers-mode-map (kbd "M") 'mu4e-headers-mark-all-unread-read)
 
+#+END_SRC
+** Mail (mu4e/gnus) icalendar / org integration
+#+BEGIN_SRC emacs-lisp
+(use-package mu4e-icalendar
+  :after mu4e
+  :config
+  ;; Setup Email ical to org sync
+  (setq gnus-icalendar-org-capture-file "~/org/inbox.org")
+  (setq gnus-icalendar-org-capture-headline '("Calendar"))
+  (gnus-icalendar-org-setup)
+
+  (setq mu4e-icalendar-trash-after-reply nil)
+  (mu4e-icalendar-setup))
 #+END_SRC
 ** Org and mails
 #+BEGIN_SRC emacs-lisp
