@@ -1227,8 +1227,8 @@ is already narrowed."
 (use-package smartparens
   :defer 1
   :hook ((
-          emacs-lisp-mode lisp-mode hy-mode go-mode cc-mode
-          python-mode typescript-mode javascript-mode java-mode
+          emacs-lisp-mode lisp-mode clojure-mode cider-repl-mode hy-mode
+          go-mode cc-mode python-mode typescript-mode javascript-mode java-mode
           ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
@@ -3967,7 +3967,15 @@ $ sbcl
 **** CIDER
 #+BEGIN_SRC emacs-lisp
 (use-package cider
-  :hook ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion))
+  :bind (:map cider-mode-map
+         ("M-?" . cider-doc))
+  :hook ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+  :config
+  ;; When loading the buffer (C-c C-k) save first without asking
+  (setq cider-save-file-on-load t)
+
+  (setq cider-eldoc-display-context-dependent-info t)
+  (setq cider-prompt-for-symbol nil))
 #+END_SRC
 *** Hy
 #+BEGIN_SRC emacs-lisp
