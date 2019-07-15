@@ -7639,6 +7639,14 @@ Only works *before* exwm in initialized."
    '("s-d"       . counsel-linux-app)
    '("s-D"       . exwm-launch-shell-command))
 
+  ;; XXX: There is `framemove` in elpa which does something similar and
+  ;;      maybe better as it checks the shortest distance to the next frame
+  ;;      to decide where to jump so you don't have to hard code your monitor
+  ;;      setup in like here. But I don't switch my monitor layout often
+  ;;      and `framemove` doesn't "switch" exwm workspaces.
+  ;; TODO Maybe create a `exwm-winmove` package that combines
+  ;;      winmove, framemove and some of this code.
+
   ;; We start workspaces at 1 instead of 0
   (defun exwm-workspace-number-to-string (number)
     (number-to-string (1+ number)))
