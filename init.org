@@ -6953,6 +6953,11 @@ sudo make install
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash))
   :init
+  ;; Use gnus view-mode by default
+  (setq mu4e-view-use-gnus t)
+  ;; and prefer text over html/ritchtext
+  (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
+
   ;; Use completing-read (which is ivy) instead of ido
   (setq mu4e-completing-read-function 'completing-read)
 
