@@ -5111,7 +5111,8 @@ displayed anywhere else."
   :bind (:map Info-mode-map ("o" . ace-link-info)
          :map help-mode-map ("o" . ace-link-help)
          :map compilation-mode-map ("o" . ace-link-compilation)
-         :map org-mode-map ("M-o" . ace-link-org))
+         :map org-mode-map ("M-o" . ace-link-org)
+         :map mu4e-view-mode-map ("M-o" . ace-link-mu4e))
   :init
   (eval-after-load "woman"
     `(define-key woman-mode-map ,"o" 'ace-link-woman))
