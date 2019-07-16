@@ -3267,7 +3267,8 @@ lldb
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
   :bind (:map lsp-mode-map
-         ("C-c C-a" . lsp-ui-sideline-apply-code-actions))
+         ("C-c C-a" . lsp-ui-sideline-apply-code-actions)
+         ("M-," . lsp-find-references))
   :config
   (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
   (setq lsp-prefer-flymake nil)
@@ -3283,6 +3284,7 @@ lldb
 (use-package company-lsp
   :defer t
   :config
+  (setq company-lsp-cache-candidates 'auto)
   (setq company-lsp-enable-snippet t))
 
 (use-package lsp-treemacs
