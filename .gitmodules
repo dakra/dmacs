@@ -823,6 +823,9 @@
 [submodule "pos-tip"]
 	path = lib/pos-tip
 	url = git@github.com:pitkali/pos-tip.git
+[submodule "posframe"]
+	path = lib/posframe
+	url = git@github.com:tumashu/posframe.git
 [submodule "prescient"]
 	path = lib/prescient
 	url = git@github.com:raxod502/prescient.el.git
@@ -963,6 +966,9 @@
 [submodule "sqlup-mode"]
 	path = lib/sqlup-mode
 	url = git@github.com:Trevoke/sqlup-mode.el.git
+[submodule "statusbar"]
+	path = lib/statusbar
+	url = git@github.com:dakra/statusbar.el.git
 [submodule "symbol-overlay"]
 	path = lib/symbol-overlay
 	url = git@github.com:wolray/symbol-overlay.git

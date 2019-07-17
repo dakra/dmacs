@@ -7902,6 +7902,11 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
   ;; Enable EXWM
   (exwm-enable))
 #+END_SRC
+** Statusbar
+#+BEGIN_SRC emacs-lisp
+(use-package statusbar
+  :hook (exwm-init . statusbar-mode))
+#+END_SRC
 ** Gpastel: gpaste clipboard manager synchronization with kill-ring
 You need to have the ~gpaste~ daemon installed (arch package ~gpaste~)
 and started. E.g. have this line in you .xprofile:
@@ -9002,6 +9007,14 @@ elisp packages to use and not for actual direct user usage.
 #+BEGIN_SRC emacs-lisp
 (use-package oauth2
   :defer t)
+#+END_SRC
+** Posframe: Pop a child frame at point
+#+BEGIN_SRC emacs-lisp
+(use-package posframe
+  :defer t
+  :config
+  ;; Don't reset the mouse cursor when showing a posframe
+  (setq posframe-mouse-banish nil))
 #+END_SRC
 * Post Initialization
 #+BEGIN_SRC emacs-lisp
