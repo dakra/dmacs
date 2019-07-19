@@ -566,7 +566,7 @@ Code from `read-envvar-name'."
   (global-set-key (kbd "C-x C-c") 'kill-buffer-and-window))
 ;; Always just use left-to-right text
 ;; This makes Emacs a bit faster for very long lines
-(setq-default bidi-display-reordering nil)
+(setq-default bidi-paragraph-direction 'left-to-right)
 
 (setq-default indent-tabs-mode nil)   ; don't use tabs to indent
 (setq-default tab-width 8)            ; but maintain correct appearance
