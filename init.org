@@ -3258,9 +3258,23 @@ lldb
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-mode
   :bind (:map lsp-mode-map
-         ("C-c C-a" . lsp-ui-sideline-apply-code-actions)
-         ("M-," . lsp-find-references))
+         ("C-c C-a" . lsp-execute-code-action)
+         ("M-." . lsp-find-definition-other)
+         ("M-," . lsp-find-references-other))
   :config
+  (defun lsp-find-definition-other (other?)
+    "Like `lsp-find-definition' but open in other window when called with prefix arg."
+    (interactive "P")
+    (if other?
+        (lsp-find-definition :display-action 'window)
+      (lsp-find-definition)))
+  (defun lsp-find-references-other (other?)
+    "Like `lsp-find-references' but open in other window when called with prefix arg."
+    (interactive "P")
+    (if other?
+        (lsp-find-references :display-action 'window)
+      (lsp-find-references)))
+
   (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
   (setq lsp-prefer-flymake nil)
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
@@ -3269,6 +3283,7 @@ lldb
   :defer t
   :config
   (setq lsp-ui-doc-use-childframe t)
+  (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-symbol nil))
 
@@ -3304,6 +3319,7 @@ use-package will load ccls for us simply by calling this function."
     "We need to require java-lsp before loading lsp in a Java buffer.
 use-package will load java-lsp for us simply by calling this function."
     (setq electric-indent-inhibit nil)  ; Auto-indent code after e.g. {}
+    (setq company-lsp-cache-candidates nil)  ; Company cache should be disabled for lsp-java
     (lsp-deferred)))
 (use-package dap-java :after lsp-java)
 
