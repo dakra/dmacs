@@ -2646,7 +2646,6 @@ avfs
          ;;("C-d" . dakra-eshell-quit-or-delete-char)
          ;;("M-N" . eshell-next-prompt)
          ;;("M-R" . eshell-list-history)
-         ;;("M-r" . dakra-eshell-read-history)
          )
   :init (setq eshell-aliases-file (no-littering-expand-etc-file-name "eshell-aliases"))
   :config
@@ -2696,13 +2695,6 @@ avfs
   ;; Increase eshell history size from default of only 128
   (setq eshell-history-size 8192)
 
-  (defun dakra-eshell-read-history ()
-    (interactive)
-    (insert
-     (completing-read "Eshell history: "
-                      (delete-dups
-                       (ring-elements eshell-history-ring)))))
-
   ;; Used to C-d exiting from a shell? Want it to keep working, but still allow deleting a character?
   ;; We can have it both
   (require 'em-prompt)
@@ -2733,8 +2725,7 @@ avfs
                                 (local-set-key (kbd "M-P") 'eshell-previous-prompt)
                                 (local-set-key (kbd "M-N") 'eshell-next-prompt)
                                 (local-set-key (kbd "M-R") 'eshell-list-history)
-                                (local-set-key (kbd "M-r") 'dakra-eshell-read-history)
-                                (local-set-key (kbd "C-r") 'dakra-eshell-read-history)
+                                (local-set-key (kbd "C-r") 'counsel-esh-history)
                                 (local-set-key (kbd "C-d") 'dakra-eshell-quit-or-delete-char)
                                 (local-set-key (kbd "DEL") 'eshell-delete-backward-char)
                                 ;; Use helm as completion menu
