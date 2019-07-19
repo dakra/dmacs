@@ -829,7 +829,8 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 ** Subword: CamelCase aware editing operations
 #+BEGIN_SRC emacs-lisp
 (use-package subword
-  :hook ((python-mode yaml-mode go-mode clojure-mode cider-repl-mode java-mode cds-mode js2-mode) . subword-mode))
+  :hook ((python-mode yaml-mode go-mode clojure-mode cider-repl-mode
+                      java-mode cds-mode js-mode) . subword-mode))
 #+END_SRC
 ** Shr: Simple html renderer
 #+BEGIN_SRC emacs-lisp
@@ -3650,13 +3651,13 @@ Formatting is according to the commit message conventions."
 Instead of calling =prettier-js= for all projects, rather put this in
 your =.dir-locals.el= where you want the prettier after save hook activated:
 #+BEGIN_SRC emacs-lisp :tangle no
-((js2-mode . ((eval . (prettier-js-mode)))))
+((js-mode . ((eval . (prettier-js-mode)))))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 (use-package prettier-js
   :defer t
-  ;;:hook (js2-mode . prettier-js-mode)
+  ;;:hook (js-mode . prettier-js-mode)
   :init
   (put 'prettier-js-args 'safe-local-variable 'listp)
   :config
@@ -3672,23 +3673,19 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
 (use-package json-mode
   :mode "\\.json\\'")
 
+(use-package js
+  :defer t
+  :config
+  (setq js-indent-level 4))
+
 (use-package js2-mode
-  :interpreter "node"
-  :mode ("\\.js\\'" "\\.pac\\'" "\\.node\\'")
-  :init
-  (add-hook 'js2-mode-hook (lambda ()
-                             ;; electric-layout-mode doesn't play nice with smartparens
-                             ;;(setq-local electric-layout-rules '((?\; . after)))
-                             (setq mode-name "JS2")))
+  :hook (js-mode . js2-minor-mode)
   :config
   ;; Don't warn about trailing commas
-  (setq js2-strict-trailing-comma-warning nil)
-
-  (setq js2-basic-offset 2)  ; set javascript indent to 2 spaces
-  )
+  (setq js2-strict-trailing-comma-warning nil))
 
 (use-package js2-imenu-extras
-  :hook (js2-mode . js2-imenu-extras-mode))
+  :hook (js2-minor-mode . js2-imenu-extras-mode))
 
 ;; Connect to chrome
 ;; chromium --remote-debugging-port=9222 https://localhost:3000
@@ -3713,7 +3710,7 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
   (setq indium-chrome-executable "google-chrome-stable"))
 
 (use-package js2-refactor
-  :hook (js2-mode . js2-refactor-mode)
+  :hook (js2-minor-mode . js2-refactor-mode)
   :config
   (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
   (define-key js2-refactor-mode-map (kbd "C-c r")
@@ -3773,15 +3770,15 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
   :commands skewer-mode
   :init
   (setq httpd-port 8079)  ; set port for simple-httpd used by skewer
-  (add-hook 'js2-mode-hook 'skewer-mode)
+  (add-hook 'js-mode-hook 'skewer-mode)
   (add-hook 'css-mode-hook 'skewer-css-mode)
   (add-hook 'html-mode-hook 'skewer-html-mode))
 
 ;; Adds the node_modules/.bin directory to the buffer exec_path.
 ;; E.g. support project local eslint installations.
 ;; XXX: Maybe add autoload for web and js2 mode?
-;; (eval-after-load 'js2-mode
-;;   '(add-hook 'js2-mode-hook #'add-node-modules-path))
+;; (eval-after-load 'js
+;;   '(add-hook 'js-mode-hook #'add-node-modules-path))
 (use-package add-node-modules-path :defer t)
 #+END_SRC
 
@@ -4743,7 +4740,7 @@ true.
   (setq typescript-indent-level 2))
 
 (use-package tide
-  :hook ((typescript-mode js2-mode) . tide-setup)
+  :hook ((typescript-mode js-mode) . tide-setup)
   :config
   ;; Configure javascript-tide checker to run after your default javascript checker
   (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
@@ -4989,7 +4986,7 @@ displayed anywhere else."
 ;;(crux-reopen-as-root-mode)
 
 (use-package aggressive-indent
-  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js2-mode) . aggressive-indent-mode))
+  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js-mode) . aggressive-indent-mode))
 
 (use-package undo-tree
   :demand t
@@ -5158,7 +5155,7 @@ displayed anywhere else."
                 font-lock-variable-name-face
                 font-lock-string-face
                 font-lock-function-name-face))))
-  (put 'js2-mode 'flyspell-mode-predicate 'js-flyspell-verify)
+  (put 'js-mode 'flyspell-mode-predicate 'js-flyspell-verify)
   (put 'rjsx-mode 'flyspell-mode-predicate 'js-flyspell-verify)
   ;; }}
 
