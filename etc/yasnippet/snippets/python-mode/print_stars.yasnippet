@@ -2,5 +2,5 @@
 # name: print line of stars
 # key: prints
 # --
-print('*' * 80)
+print("${1:*}${1:$(s-repeat 50 (substring yas-text 0 1))}")
 $0
