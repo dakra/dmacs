@@ -6976,6 +6976,7 @@ sudo make install
          ("D" . my-move-to-trash)
          ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
          :map mu4e-view-mode-map
+         ("A" . mu4e-view-attachment-action)
          ("M-o" . ace-link-mu4e)
          ("o" . ace-link-mu4e)
          ("n" . mu4e-scroll-up)
