@@ -3282,9 +3282,20 @@ lldb
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
 
 (use-package lsp-ui
-  :defer t
+  :bind (:map lsp-mode-map
+         ("M-?" . lsp-ui-doc-toggle))
   :config
+  (defun lsp-ui-doc-toggle ()
+    "Shows or hides lsp-ui-doc popup."
+    (interactive)
+    (if lsp-ui-doc--bounds
+        (lsp-ui-doc-hide)
+      (lsp-ui-doc-show)))
+
+  (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-doc-use-childframe t)
+  (setq lsp-ui-doc-include-signature t)
+  (setq lsp-ui-doc-position 'at-point)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-symbol nil))
