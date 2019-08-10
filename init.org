@@ -3169,6 +3169,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :after magit
   :hook ((prog-mode log-view-mode git-commit-setup) . forge-bug-reference-setup)
   :config
+  (setq forge-pull-notifications nil)
   (add-to-list 'forge-alist
                '("gitlab.paesslergmbh.de"
                  "gitlab.paesslergmbh.de/api/v4"
