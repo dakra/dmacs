@@ -3974,14 +3974,29 @@ $ sbcl
 #+BEGIN_SRC emacs-lisp
 (use-package cider
   :bind (:map cider-mode-map
+         ("M-?" . cider-doc)
+         :map cider-repl-mode-map
          ("M-?" . cider-doc))
   :hook ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+  :init
+  (add-to-list 'safe-local-variable-values '(cider-shadow-cljs-default-options . "app"))
+  (add-to-list 'safe-local-variable-values '(cider-default-cljs-repl . shadow))
   :config
   ;; When loading the buffer (C-c C-k) save first without asking
   (setq cider-save-file-on-load t)
 
   (setq cider-eldoc-display-context-dependent-info t)
   (setq cider-prompt-for-symbol nil))
+#+END_SRC
+**** clj-refactor
+#+BEGIN_SRC emacs-lisp
+(use-package clj-refactor
+  :hook (clojure-mode . clj-refactor-mode))
+#+END_SRC
+**** ivy-clojuredocs
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-clojuredocs
+  :defer t)
 #+END_SRC
 *** Hy
 #+BEGIN_SRC emacs-lisp
