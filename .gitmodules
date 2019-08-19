@@ -1030,6 +1030,9 @@
 [submodule "treepy"]
 	path = lib/treepy
 	url = git@github.com:volrath/treepy.el.git
+[submodule "ts"]
+	path = lib/ts
+	url = git@github.com:alphapapa/ts.el.git
 [submodule "typescript-mode"]
 	path = lib/typescript-mode
 	url = git@github.com:ananthakumaran/typescript.el.git
