@@ -4014,7 +4014,12 @@ $ sbcl
 *** Clojure
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
-  :defer t)
+  :defer t
+  :config
+  ;; Indent fn-traced and defn-traced the same as a regular defn.
+  ;; The macros are for re-frame-10x tracing.
+  (put-clojure-indent 'fn-traced :defn)
+  (put-clojure-indent 'defn-traced :defn))
 #+END_SRC
 **** CIDER
 #+BEGIN_SRC emacs-lisp
