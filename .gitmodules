@@ -907,6 +907,9 @@
 	path = lib/restclient
 	url = git@github.com:pashky/restclient.el.git
 	no-byte-compile = restclient-helm.el
+[submodule "rmsbolt"]
+	path = lib/rmsbolt
+	url = git@gitlab.com:jgkamat/rmsbolt.git
 [submodule "rust-mode"]
 	path = lib/rust-mode
 	url = git@github.com:rust-lang/rust-mode.git
