@@ -1287,6 +1287,9 @@ is already narrowed."
            '(((lambda (&rest _ignored)
                 (crux-smart-open-line-above)) "RET")))
 
+  ;; Don't include semicolon ; when slurping
+  (add-to-list 'sp-sexp-suffix '(java-mode regexp ""))
+
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 #+END_SRC
