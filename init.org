@@ -8670,7 +8670,9 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
         ((string-match-p "-youtube" elfeed-search-filter)
          (re " *-youtube" " +emacs" elfeed-search-filter))
         ((string-match-p "\\+emacs" elfeed-search-filter)
-         (re " *\\+emacs" " +python" elfeed-search-filter))
+         (re " *\\+emacs" " +clojure" elfeed-search-filter))
+        ((string-match-p "\\+clojure" elfeed-search-filter)
+         (re " *\\+clojure" " +python" elfeed-search-filter))
         ((string-match-p "\\+python" elfeed-search-filter)
          (re " *\\+python" " +dev" elfeed-search-filter))
         ((string-match-p "\\+dev" elfeed-search-filter)
@@ -8833,6 +8835,9 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("http://lisperator.net/atom" dev emacs)
     ("http://planet.lisp.org/rss20.xml" dev lisp)
     ("https://emacs.stackexchange.com/feeds" dev stackexchange emacs)
+
+    ("http://planet.clojure.in/atom.xml" dev clojure)
+    ("https://code.thheller.com/feed.xml" dev clojure)
 
     ("http://nutrientjournal.com/feed/" health)
     ("http://suppversity.blogspot.com/feeds/posts/default" health)
