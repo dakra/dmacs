@@ -541,6 +541,9 @@
 [submodule "json-mode"]
 	path = lib/json-mode
 	url = git@github.com:joshwnj/json-mode.git
+[submodule "json-process-client"]
+	path = lib/json-process-client
+	url = https://gitlab.petton.fr/nico/json-process-client.git
 [submodule "json-reformat"]
 	path = lib/json-reformat
 	url = git@github.com:gongo/json-reformat.git
