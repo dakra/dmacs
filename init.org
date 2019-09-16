@@ -3339,7 +3339,46 @@ use-package will load java-lsp for us simply by calling this function."
     (setq electric-indent-inhibit nil)  ; Auto-indent code after e.g. {}
     (setq company-lsp-cache-candidates nil)  ; Company cache should be disabled for lsp-java
     (lsp-deferred)))
-(use-package dap-java :after lsp-java)
+
+(use-package dap-java
+  :after lsp-java
+  :bind (:map dap-mode-map
+         ([f9] . dap-continue)
+         ([S-f9] . dap-disconnect)
+         ([f10] . dap-next)
+         ([f11] . dap-step-in)
+         ([S-f11] . dap-step-out)
+         ([f12] . dap-hide/show-ui))
+  :config
+  ;; FIXME: Create nice soltion instead of a hack
+  (defvar dap-hide/show-ui-hidden? t)
+  (defun dap-hide/show-ui ()
+    "Hide/show dap ui. FIXME"
+    (interactive)
+    (if dap-hide/show-ui-hidden?
+        (progn
+          (setq dap-hide/show-ui-hidden? nil)
+          (dap-ui-locals)
+          (dap-ui-repl))
+      (kill-buffer "*dap-ui-inspect*")
+      (kill-buffer "*dap-ui-locals*")
+      (kill-buffer "*dap-ui-repl*")
+      (kill-buffer "*dap-ui-sessions*")
+      (setq dap-hide/show-ui-hidden? t)))
+
+  (dap-register-debug-template "VulpxLauncher"
+                               (list :type "java"
+                                     :request "launch"
+                                     :args ""
+                                     :cwd nil
+                                     :stopOnEntry :json-false
+                                     :host "localhost"
+                                     :request "launch"
+                                     :modulePaths []
+                                     :classPaths nil
+                                     :name "VulpxLauncher"
+                                     :projectName "forme-backend"
+                                     :mainClass "io.vulpx.VulpxLauncher")))
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
