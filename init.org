@@ -1754,7 +1754,7 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
         treemacs-never-persist              t
         treemacs-is-never-other-window      t)
   (treemacs-filewatch-mode t)
-  (treemacs-follow-mode -1)
+  ;; (treemacs-follow-mode -1)
   (treemacs-git-mode 'simple))
 
 (use-package treemacs-projectile
