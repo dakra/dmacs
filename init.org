@@ -5581,7 +5581,7 @@ Show clock history when not in org buffer or when called with prefix argument."
   ;; is very convenient when all you want to do is fix up the status of an entry.
   (setq org-treat-S-cursor-todo-selection-as-state-change nil)
 
-  (setq org-default-notes-file (concat org-directory "refile.org"))
+  (setq org-default-notes-file (concat org-directory "inbox.org"))
 
   ;; FIXME: Merge with org mode org-cycle-hide-drawers
   ;;        Using only this would always show all drawers expanded by default
@@ -7618,7 +7618,7 @@ there are no attachments."
   :after mu4e
   :config
   ;; Setup Email ical to org sync
-  (setq gnus-icalendar-org-capture-file "~/org/personal.org")
+  (setq gnus-icalendar-org-capture-file "~/org/inbox.org")
   (setq gnus-icalendar-org-capture-headline '("Calendar"))
   (gnus-icalendar-org-setup)
 
