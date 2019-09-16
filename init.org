@@ -7707,7 +7707,8 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 (use-package exwm
   :if (daemonp)
   :demand t
-  :hook (exwm-init . exwm-startup-apps)
+  :hook ((exwm-init . exwm-startup-apps)
+         (exwm-update-title . exwm-rename-buffer-to-class+title))
   :bind (:map exwm-mode-map
          ;; The following can only apply to EXWM buffers, else it could have unexpected effects.
          ("s-SPC" . exwm-floating-toggle-floating)
@@ -7716,6 +7717,14 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
          ("s-F" . exwm-layout-toggle-fullscreen)
          ("M-y" . exwm-counsel-yank-pop))
   :config
+  (defun exwm-rename-buffer-to-class+title ()
+    "Update exwm buffer name with the X class name and the actual X window name."
+    (let ((title (concat exwm-class-name " - " exwm-title)))
+      (exwm-workspace-rename-buffer
+       (if (< (length title) 42)
+           exwm-title
+         (concat (substring title 0 42) "...")))))
+
   (defun exwm-counsel-yank-pop ()
     "Same as `counsel-yank-pop' and paste into exwm buffer."
     (interactive)
