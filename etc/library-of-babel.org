@@ -9,8 +9,8 @@ If ~attr~ is given, only return this json attribute.
 E.g:
 You make a restclient call with NAME ~foo~,
 then when you work with the result you can do
-~BEGIN_SRC python :var myattr=restclient-json-filter(data=foo, attr="myattr")~
-to have ~foo.myattr~ as python variable ~myattr~.
+~BEGIN_SRC python :var myattr=restclient-json-filter(data=foo, attr="ret_value")~
+to have ~foo.ret_value~ as python variable ~myattr~.
 
 #+NAME: restclient-json-filter
 #+BEGIN_SRC python :results value pp :var data="" :var attr=""
@@ -21,4 +21,18 @@ if attr:
    r = json.loads(res)
    res = r.get(attr)
 return res
+#+END_SRC
+
+* forme-backend - get mongodb port from vcap json
+#+NAME: forme-get-mongodb-port
+#+BEGIN_SRC emacs-lisp
+(defun forme-get-mongodb-port ()
+  "Return the port of the mongodb tunnel when running the forme backend locally."
+  (let* ((vcap-file   (expand-file-name "~/sap/forme-backend/VCAP_SERVICES.json"))
+         (vcap        (json-read-file vcap-file))
+         (mongo       (assoc-default 'mongodb vcap))
+         (credentials (assoc-default 'credentials (aref mongo 0)))
+         (end-points  (assoc-default 'end_points credentials))
+         (port        (assoc-default 'port (aref end-points 0))))
+    port))
 #+END_SRC
