@@ -8363,7 +8363,7 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
     (let ((default-directory (projectile-project-root)))
       (compilation-start "./gradlew dev" nil (lambda (_mode) "*4me - dev"))
       (sleep-for 2)
-      (compilation-start "./gradlew run" nil (lambda (_mode) "*4me - run"))))
+      (compilation-start "./gradlew -x pmdMain -x spotbugsMain -x spotlessJava run" nil (lambda (_mode) "*4me - run"))))
 
   ;; FIXME: Loot at https://github.com/rejeep/prodigy.el
   (setq services-list
