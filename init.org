@@ -4070,7 +4070,8 @@ $ sbcl
          ("M-?" . cider-doc)
          :map cider-repl-mode-map
          ("M-?" . cider-doc))
-  :hook ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+  :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+         ((cider-mode cider-repl-mode) . eldoc-mode))
   :init
   (add-to-list 'safe-local-variable-values '(cider-shadow-cljs-default-options . "app"))
   (add-to-list 'safe-local-variable-values '(cider-default-cljs-repl . shadow))
@@ -4090,6 +4091,19 @@ $ sbcl
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-clojuredocs
   :defer t)
+#+END_SRC
+**** datomic yasnippets
+Yasnippets for Datomic.
+
+*Usage*
+- =dsa= Insert a datomic schema attribute
+- =dsf= Insert a datomic schema function
+- =dst= List all datomic schema types
+- =:db= List additional attribute attributes.
+
+#+BEGIN_SRC emacs-lisp
+(use-package datomic-snippets
+  :after yasnippet)
 #+END_SRC
 *** Hy
 #+BEGIN_SRC emacs-lisp
