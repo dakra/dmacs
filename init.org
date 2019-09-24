@@ -3289,6 +3289,10 @@ lldb
         (lsp-find-references :display-action 'window)
       (lsp-find-references)))
 
+  ;; Don't watch `build' and `.gradle' directories for file changes
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]build$")
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
+
   (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
   (setq lsp-prefer-flymake nil)
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
