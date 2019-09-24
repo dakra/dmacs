@@ -7738,7 +7738,7 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
     (let ((title (concat exwm-class-name " - " exwm-title)))
       (exwm-workspace-rename-buffer
        (if (< (length title) 42)
-           exwm-title
+           title
          (concat (substring title 0 42) "...")))))
 
   (defun exwm-counsel-yank-pop ()
