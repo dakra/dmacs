@@ -5988,7 +5988,7 @@ FIXME: automatically call =(org-caldav-sync)= before showing agenda.
   ;;                          (delete (expand-file-name "personal.org" org-directory) (org-agenda-files))))))
 
   ;; Nextcloud
-  (setq org-caldav-url "https://nx599.your-next.cloud/remote.php/dav/calendars/dakra")
+  (setq org-caldav-url "https://nx599.your-storageshare.de/remote.php/dav/calendars/dakra")
   (setq org-caldav-calendars
         `(;; All personal stuff goes in the shared family calendar
           (:calendar-id "family"  ; family calendar id
@@ -5998,14 +5998,7 @@ FIXME: automatically call =(org-caldav-sync)= before showing agenda.
           (:calendar-id "work"  ; work calendar id
            :inbox ,(expand-file-name "caldav-inbox-work.org" org-directory)
            :files ,(delete (expand-file-name "caldav-inbox-family.org" org-directory)
-                           (delete (expand-file-name "personal.org" org-directory) (org-agenda-files))))))
-
-  ;; For debugging problems only
-  ;; (setq org-caldav-inbox (expand-file-name "caldav-testinbox.org" org-directory))
-  ;; (setq org-caldav-url "https://nx599.your-next.cloud/remote.php/dav/calendars/dakra")
-  ;; (setq org-caldav-calendar-id "testdav")
-  ;; (setq org-caldav-files `(,(expand-file-name "test-caldav.org" org-directory)))
-  )
+                           (delete (expand-file-name "personal.org" org-directory) (org-agenda-files)))))))
 #+END_SRC
 **** Org-babel
 #+BEGIN_SRC emacs-lisp
