@@ -2653,6 +2653,15 @@ avfs
          )
   :init (setq eshell-aliases-file (no-littering-expand-etc-file-name "eshell-aliases"))
   :config
+  ;; Synchronize eshell buffer name on directory change.
+  ;; From https://github.com/manateelazycat/aweshell
+  (defun eshell-sync-dir-buffer-name ()
+    "Change eshell buffer name by directory change."
+    (when (equal major-mode 'eshell-mode)
+      (rename-buffer (format "*eshell: %s*" (epe-fish-path default-directory)) t)))
+  (add-hook 'eshell-directory-change-hook #'eshell-sync-dir-buffer-name)
+  (add-hook 'eshell-mode-hook #'eshell-sync-dir-buffer-name)
+  
   (defun dakra-eshell-split (&optional arg)
     "Like eshell but use pop-to-buffer to display."
     (interactive "P")
