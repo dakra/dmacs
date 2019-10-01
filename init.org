@@ -3327,6 +3327,13 @@ lldb
 
 (use-package dap-mode
   :after lsp-mode
+  :bind (:map dap-mode-map
+         ([f9] . dap-continue)
+         ([S-f9] . dap-disconnect)
+         ([f10] . dap-next)
+         ([f11] . dap-step-in)
+         ([S-f11] . dap-step-out)
+         ([f12] . dap-hide/show-ui))
   :config
   (dap-mode)
   (dap-ui-mode))
@@ -3355,13 +3362,6 @@ use-package will load java-lsp for us simply by calling this function."
 
 (use-package dap-java
   :after lsp-java
-  :bind (:map dap-mode-map
-         ([f9] . dap-continue)
-         ([S-f9] . dap-disconnect)
-         ([f10] . dap-next)
-         ([f11] . dap-step-in)
-         ([S-f11] . dap-step-out)
-         ([f12] . dap-hide/show-ui))
   :config
   ;; FIXME: Create nice soltion instead of a hack
   (defvar dap-hide/show-ui-hidden? t)
@@ -3379,7 +3379,21 @@ use-package will load java-lsp for us simply by calling this function."
       (kill-buffer "*dap-ui-sessions*")
       (setq dap-hide/show-ui-hidden? t)))
 
-  (dap-register-debug-template "VulpxLauncher"
+  (dap-register-debug-template "VulpxLauncher - Run"
+                               (list :type "java"
+                                     :request "launch"
+                                     :noDebug t
+                                     :args ""
+                                     :cwd nil
+                                     :stopOnEntry :json-false
+                                     :host "localhost"
+                                     :request "launch"
+                                     :modulePaths []
+                                     :classPaths nil
+                                     :name "VulpxLauncher - Run"
+                                     :projectName "forme-backend"
+                                     :mainClass "io.vulpx.VulpxLauncher"))
+  (dap-register-debug-template "VulpxLauncher - Debug"
                                (list :type "java"
                                      :request "launch"
                                      :args ""
@@ -3389,7 +3403,7 @@ use-package will load java-lsp for us simply by calling this function."
                                      :request "launch"
                                      :modulePaths []
                                      :classPaths nil
-                                     :name "VulpxLauncher"
+                                     :name "VulpxLauncher - Debug"
                                      :projectName "forme-backend"
                                      :mainClass "io.vulpx.VulpxLauncher")))
 
