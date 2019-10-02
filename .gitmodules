@@ -535,6 +535,9 @@
 [submodule "jira-markup-mode"]
 	path = lib/jira-markup-mode
 	url = git@github.com:mnuessler/jira-markup-mode.git
+[submodule "jiralib2"]
+	path = lib/jiralib2
+	url = git@github.com:nyyManni/jiralib2.git
 [submodule "js2-mode"]
 	path = lib/js2-mode
 	url = git@github.com:mooz/js2-mode.git
