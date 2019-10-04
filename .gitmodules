@@ -378,6 +378,9 @@
 [submodule "flycheck"]
 	path = lib/flycheck
 	url = git@github.com:flycheck/flycheck.git
+[submodule "flycheck-clj-kondo"]
+	path = lib/flycheck-clj-kondo
+	url = git@github.com:borkdude/flycheck-clj-kondo.git
 [submodule "flycheck-cython"]
 	path = lib/flycheck-cython
 	url = git@github.com:lbolla/emacs-flycheck-cython.git

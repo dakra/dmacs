@@ -4119,6 +4119,17 @@ $ sbcl
 (use-package ivy-clojuredocs
   :defer t)
 #+END_SRC
+**** clj-kondo Flycheck integration with the clj-kondo linter
+You need the =clj-kondo= tool installed.
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+clj-kondo-bin
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck-clj-kondo
+  :after (flycheck clojure-mode))
+#+END_SRC
 **** datomic yasnippets
 Yasnippets for Datomic.
 
