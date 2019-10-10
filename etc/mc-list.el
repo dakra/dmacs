@@ -12,6 +12,7 @@
         c-electric-slash
         c-electric-star
         c-indent-line-or-region
+        cljr-slash
         comment-dwim-2
         counsel-yank-pop
         crux-move-beginning-of-line

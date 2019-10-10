@@ -4111,13 +4111,20 @@ $ sbcl
   ;; When loading the buffer (C-c C-k) save first without asking
   (setq cider-save-file-on-load t)
 
+  ;; Don't show cider help text in repl after jack-in
+  (setq cider-repl-display-help-banner nil)
   (setq cider-eldoc-display-context-dependent-info t)
   (setq cider-prompt-for-symbol nil))
 #+END_SRC
 **** clj-refactor
 #+BEGIN_SRC emacs-lisp
 (use-package clj-refactor
-  :hook (clojure-mode . clj-refactor-mode))
+  :hook (clojure-mode . clj-refactor-mode)
+  :config
+  (add-to-list 'cljr-magic-require-namespaces '("edn" . "clojure.edn"))
+  (add-to-list 'cljr-magic-require-namespaces '("http" . "clj-http.client"))
+  (add-to-list 'cljr-magic-require-namespaces '("reagent" . "reagent.core"))
+  (add-to-list 'cljr-magic-require-namespaces '("re-frame" . "re-frame.core")))
 #+END_SRC
 **** ivy-clojuredocs
 #+BEGIN_SRC emacs-lisp
