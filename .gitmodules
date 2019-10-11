@@ -1076,6 +1076,12 @@
 [submodule "volatile-highlights"]
 	path = lib/volatile-highlights
 	url = git@github.com:k-talo/volatile-highlights.el.git
+[submodule "vterm"]
+	path = lib/vterm
+	url = git@github.com:akermu/emacs-libvterm.git
+	;; build-step = cd build && cmake .. && make
+	build-step = borg-byte-compile
+        build-step = borg-update-autoloads
 [submodule "web-mode"]
 	path = lib/web-mode
 	url = git@github.com:fxbois/web-mode.git

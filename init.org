@@ -2928,6 +2928,20 @@ file to edit."
 (use-package pcmpl-pip
   :after pcomplete)
 #+END_SRC
+* Shell
+For prompt tracking in the fish shell,
+add the following line somewhere in your fish config
+=functions/fish_prompt.fish=:
+#+BEGIN_SRC fish :tangle no
+echo -e -n -s "\e]51;A" (pwd) "\e\\"
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package vterm
+  :defer t
+  :config
+  (setq vterm-shell "/usr/bin/fish"))
+#+END_SRC
 * Version Control
 ** Emacs vc settings
 #+BEGIN_SRC emacs-lisp
