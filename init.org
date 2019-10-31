@@ -2939,8 +2939,8 @@ echo -e -n -s "\e]51;A" (pwd) "\e\\"
 #+BEGIN_SRC emacs-lisp
 (use-package vterm
   :defer t
-  :config
-  (setq vterm-shell "/usr/bin/fish"))
+  :init
+  (setq vterm-shell "/usr/bin/bash"))
 #+END_SRC
 * Version Control
 ** Emacs vc settings
