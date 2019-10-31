@@ -5117,6 +5117,9 @@ displayed anywhere else."
   :mode ("\\.rest\\'" . restclient-mode)
   :hook (restclient-mode . restclient-outline-mode)
   :config
+  ;; Open application/edn responses in clojure mode
+  (add-to-list 'restclient-content-type-modes '("application/edn" . clojure-mode))
+
   (defun restclient-outline-mode ()
     (outline-minor-mode)
     (setq-local outline-regexp "##+")))
