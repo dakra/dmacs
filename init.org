@@ -8100,8 +8100,9 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 #+END_SRC
 ** Statusbar
 #+BEGIN_SRC emacs-lisp
-(use-package statusbar
-  :hook (exwm-init . statusbar-mode))
+;;(use-package statusbar
+;;  :defer 5
+;;  :hook (exwm-init . statusbar-mode))
 #+END_SRC
 ** Gpastel: gpaste clipboard manager synchronization with kill-ring
 You need to have the ~gpaste~ daemon installed (arch package ~gpaste~)
