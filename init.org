@@ -4104,6 +4104,8 @@ $ sbcl
 (use-package clojure-mode
   :defer t
   :config
+  ;; Eval top level forms inside comment forms instead of the comment form itself
+  (setq clojure-toplevel-inside-comment-form t)
   ;; Indent fn-traced and defn-traced the same as a regular defn.
   ;; The macros are for re-frame-10x tracing.
   (put-clojure-indent 'fn-traced :defn)
@@ -4113,14 +4115,11 @@ $ sbcl
 #+BEGIN_SRC emacs-lisp
 (use-package cider
   :bind (:map cider-mode-map
-         ("M-?" . cider-doc)
+         ("M-?" . cider-clojuredocs)
          :map cider-repl-mode-map
-         ("M-?" . cider-doc))
+         ("M-?" . cider-clojuredocs))
   :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          ((cider-mode cider-repl-mode) . eldoc-mode))
-  :init
-  (add-to-list 'safe-local-variable-values '(cider-shadow-cljs-default-options . "app"))
-  (add-to-list 'safe-local-variable-values '(cider-default-cljs-repl . shadow))
   :config
   ;; When loading the buffer (C-c C-k) save first without asking
   (setq cider-save-file-on-load t)
