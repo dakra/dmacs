@@ -204,6 +204,9 @@
 [submodule "datetime"]
 	path = lib/datetime
 	url = git@github.com:doublep/datetime.git
+[submodule "datomic"]
+	path = lib/datomic
+	url = git@github.com:dakra/datomic.el
 [submodule "datomic-snippets"]
 	path = lib/datomic-snippets
 	url = git@github.com:magnars/datomic-snippets.git

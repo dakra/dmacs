@@ -4155,7 +4155,7 @@ clj-kondo-bin
 (use-package flycheck-clj-kondo
   :after (flycheck clojure-mode))
 #+END_SRC
-**** datomic yasnippets
+**** Datomic yasnippets
 Yasnippets for Datomic.
 
 *Usage*
@@ -4168,6 +4168,15 @@ Yasnippets for Datomic.
 (use-package datomic-snippets
   :after yasnippet)
 #+END_SRC
+**** Datomic utility functions
+#+BEGIN_SRC emacs-lisp
+(use-package datomic
+  :defer t
+  :config
+  (setq datomic-access-program (expand-file-name "~/clojure/datomic-aws/datomic-cli/datomic-access"))
+  (setq datomic-systems '("arlo")))
+#+END_SRC
+
 *** Hy
 #+BEGIN_SRC emacs-lisp
 ;;; Lisp in python vm
