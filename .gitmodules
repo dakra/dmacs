@@ -142,6 +142,8 @@
 [submodule "company-box"]
 	path = lib/company-box
 	url = git@github.com:sebastiencs/company-box.git
+	no-byte-compile = company-box-all-the-icons.el
+	remote = dakra git@github.com:dakra/company-box.git
 [submodule "company-glsl"]
 	path = lib/company-glsl
 	url = git@github.com:guidoschmidt/company-glsl.git
