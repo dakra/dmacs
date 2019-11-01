@@ -1535,7 +1535,9 @@ Simple but effective sorting and filtering for Emacs
   :config (prescient-persist-mode))
 (use-package ivy-prescient
   :after ivy
-  :config (ivy-prescient-mode))
+  :config
+  (setq ivy-prescient-sort-commands '(:not swiper ivy-switch-buffer counsel-yank-pop))
+  (ivy-prescient-mode))
 (use-package company-prescient
   :after company
   :config (company-prescient-mode))
