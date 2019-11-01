@@ -350,10 +350,23 @@ compiler warnings.
 #+END_SRC
 
 ** Set some early UI settings
-Disable Tool- and Menubar
+Disable Tool- and Menubar in the early-init file via
+=default-frame-alist=. This is slightly faster than first loading the
+tool-/menu-bar and then turning it off again.
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(menu-bar-lines . 0) default-frame-alist)
+#+END_SRC
+
+Deactivate tool- and menu-bar for terminal Emacs as well.
 #+BEGIN_SRC emacs-lisp
-(tool-bar-mode -1)
-(menu-bar-mode -1)
+(unless (display-graphic-p)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1))
+#+END_SRC
+
+Disable the scroll-bar
+#+BEGIN_SRC emacs-lisp
 (scroll-bar-mode -1)
 #+END_SRC
 
