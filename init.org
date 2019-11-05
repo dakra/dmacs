@@ -3361,7 +3361,9 @@ lldb
 
 (use-package dap-mode
   :after lsp-mode
-  :bind (:map dap-mode-map
+  :bind (:map dap-server-log-mode-map
+         ("g" . recompile)
+         :map dap-mode-map
          ([f9] . dap-continue)
          ([S-f9] . dap-disconnect)
          ([f10] . dap-next)
