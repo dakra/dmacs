@@ -237,6 +237,7 @@
 [submodule "dired-rsync"]
 	path = lib/dired-rsync
 	url = git@github.com:stsquad/dired-rsync.git
+	no-byte-compile = dired-rsync-ert.el
 [submodule "discover-my-major"]
 	path = lib/discover-my-major
 	url = https://framagit.org/steckerhalter/discover-my-major.git
@@ -304,6 +305,7 @@
 [submodule "emms"]
 	path = lib/emms
 	url = https://git.savannah.gnu.org/git/emms.git
+	info-path = doc
 [submodule "epc"]
 	path = lib/epc
 	url = git@github.com:kiwanami/emacs-epc.git
