@@ -806,7 +806,9 @@ E.g. fuer -> für
     "Insert separator in read-only buffer."
     (interactive)
     (let ((inhibit-read-only t))
-      (insert "\n------------------------\n\n")))
+      (insert "\n---------------------------------\n\n")
+      (point-max)
+      (comint-set-process-mark)))
 
   ;; Always save before compiling
   (setq compilation-ask-about-save nil)
