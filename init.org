@@ -3368,7 +3368,10 @@ lldb
   (setq company-lsp-enable-snippet t))
 
 (use-package lsp-treemacs
-  :defer t)
+  :after lsp-mode
+  :config
+  ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
+  (lsp-treemacs-sync-mode))
 
 (use-package dap-mode
   :after lsp-mode
