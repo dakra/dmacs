@@ -2954,8 +2954,30 @@ file to edit."
 For prompt tracking in the fish shell,
 add the following line somewhere in your fish config
 =functions/fish_prompt.fish=:
+
 #+BEGIN_SRC fish :tangle no
 echo -e -n -s "\e]51;A" (pwd) "\e\\"
+#+END_SRC
+
+For =bash= add this to your =.bashrc=:
+#+BEGIN_SRC bash :tangle no
+if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
+    vterm_prompt_end(){
+        printf "\e]51;A$(whoami)@$(hostname):$(pwd)\e\\"
+    }
+    PS1=$PS1'$(vterm_prompt_end)'
+
+    function clear(){
+        printf "\e]51;Evterm-clear-scrollback\e\\";
+        tput clear;
+    }
+    function ee(){
+        printf "\e]51;Efind-file \"$@\"\e\\"
+    }
+    function gst(){
+        printf "\e]51;Emagit-status-setup-buffer $(pwd)\e\\"
+    }
+fi
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -2967,7 +2989,13 @@ echo -e -n -s "\e]51;A" (pwd) "\e\\"
   ;; Disable whole-line-or-region otherwise I can't bind "C-y"
   :hook (vterm-mode . (lambda () (whole-line-or-region-local-mode -1)))
   :init
-  (setq vterm-shell "/usr/bin/bash"))
+  (setq vterm-shell "/usr/bin/bash")
+  :config
+  ;; Allow vterm to invoke some elisp functions
+  (setq vterm-eval-cmds '(("magit-status-setup-buffer" magit-status-setup-buffer)
+                          ("find-file" find-file)
+                          ("message" message)
+                          ("vterm-clear-scrollback" vterm-clear-scrollback))))
 #+END_SRC
 * Version Control
 ** Emacs vc settings
