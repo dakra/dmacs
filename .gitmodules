@@ -51,7 +51,7 @@
 	build-step = ./autogen.sh
 	build-step = ./configure
 	build-step = make
-	#build-step = make install
+	# build-step = make install
         build-step = "(borg-update-autoloads \"auctex\")"
 	info-path = doc
 [submodule "aurel"]
@@ -1085,7 +1085,7 @@
 [submodule "vterm"]
 	path = lib/vterm
 	url = git@github.com:akermu/emacs-libvterm.git
-	;; build-step = cd build && cmake .. && make
+	build-step = cd build && cmake .. && make
 	build-step = borg-byte-compile
         build-step = borg-update-autoloads
 [submodule "web-mode"]
