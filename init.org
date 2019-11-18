@@ -980,8 +980,13 @@ With a prefix argument, copy the link to the online manual instead."
   :unless noninteractive
   :defer 10
   :config
-  ;; Don't dim hydra and transient buffers
-  (setq dimmer-exclusion-regexp " \\*\\(LV\\|transient\\)\\*")
+  ;; Don't dim hydra, transient buffers or minibuffers
+  (setq dimmer-exclusion-regexp-list '(" \\*\\(LV\\|transient\\)\\*"
+                                       "^\\*Minibuf-[0-9]+\\*"
+                                       "^.\\*which-key\\*$"
+                                       "^.\\*Echo.*\\*"))
+  (setq dimmer-exclusion-predicates '(window-minibuffer-p))
+
   (setq dimmer-fraction 0.25)
   ;;(setq dimmer-use-colorspace ':rgb)
   (dimmer-mode))
