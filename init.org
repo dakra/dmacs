@@ -2945,7 +2945,7 @@ file to edit."
 (use-package pcmpl-pip
   :after pcomplete)
 #+END_SRC
-* Shell
+* vterm
 For prompt tracking in the fish shell,
 add the following line somewhere in your fish config
 =functions/fish_prompt.fish=:
@@ -2956,6 +2956,11 @@ echo -e -n -s "\e]51;A" (pwd) "\e\\"
 #+BEGIN_SRC emacs-lisp
 (use-package vterm
   :defer t
+  :bind (:map vterm-mode-map
+         ("C-y" . vterm-yank)
+         ("M-y" . vterm-yank-pop))
+  ;; Disable whole-line-or-region otherwise I can't bind "C-y"
+  :hook (vterm-mode . (lambda () (whole-line-or-region-local-mode -1)))
   :init
   (setq vterm-shell "/usr/bin/bash"))
 #+END_SRC
