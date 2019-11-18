@@ -7899,16 +7899,22 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
          (concat (substring title 0 42) "...")))))
 
   (defun exwm-counsel-yank-pop ()
-    "Same as `counsel-yank-pop' and paste into exwm buffer."
+    "Same as `counsel-yank-pop' but also works for exwm buffers.
+It copies the selected entry to the clipboard and then sends `C-v' to the
+X11 Application. Sometimes this doesn't work.
+Then you can call this method with a prefix argument and each character
+from the copied entry will be send separately."
     (interactive)
-    (let ((inhibit-read-only t)
-          ;; Make sure we send selected yank-pop candidate to
-          ;; clipboard:
-          (yank-pop-change-selection t))
-      (call-interactively #'counsel-yank-pop))
-    (when (derived-mode-p 'exwm-mode)
-      (exwm-input--set-focus (exwm--buffer->id (window-buffer (selected-window))))
-      (exwm-input--fake-key ?\C-v)))
+    (if (not (derived-mode-p 'exwm-mode))
+        (call-interactively #'counsel-yank-pop)
+      (let ((inhibit-read-only t)
+            ;; Make sure we send selected yank-pop candidate to the clipboard
+            (yank-pop-change-selection t))
+        (exwm-input--set-focus (exwm--buffer->id (window-buffer (selected-window))))
+        (if current-prefix-arg
+            (mapc #'exwm-input--fake-key (string-to-list (call-interactively #'counsel-yank-pop)))
+          (call-interactively #'counsel-yank-pop)
+          (exwm-input--fake-key ?\C-v)))))
 
   ;; Set the initial workspace number.
   (setq exwm-workspace-number 4)
