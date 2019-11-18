@@ -7939,6 +7939,7 @@ Only works *before* exwm in initialized."
    '("s-R"       . exwm-reset)
    '("s-w"       . exwm-workspace-switch)
    ;; Moving/editing windows
+   '("s-h"       . winner-wrong-window)
    '("s-j"       . exwm-windmove-left)
    '("s-k"       . exwm-windmove-down)
    '("s-i"       . exwm-windmove-up)
@@ -8387,7 +8388,18 @@ It only works for frames with exactly two windows."
 #+BEGIN_SRC emacs-lisp
 (use-package winner
   :defer 3
-  :config (winner-mode 1))
+  :config
+  (defun winner-wrong-window ()
+    "Open the last opened buffer in the other window."
+    (interactive)
+    (let* ((current (window-list))
+           (previous (save-window-excursion (winner-undo) (window-list)))
+           (window (seq-some (lambda (w) (not (memq w previous))) current))
+           (buffer (window-buffer window)))
+      (winner-undo)
+      (other-window 1)
+      (switch-to-buffer buffer)))
+  (winner-mode 1))
 #+END_SRC
 * Transmission: Bittorent
 #+BEGIN_SRC emacs-lisp
