@@ -4979,6 +4979,31 @@ true.
                               :placeOpenBraceOnNewLineForFunctions nil)))
 #+END_SRC
 ** Web
+Helper function for URL encode / decode
+#+BEGIN_SRC emacs-lisp
+(defun url-encode-region (start end)
+  "URL encode region."
+  (interactive
+   (if (or (use-region-p) (not transient-mark-mode))
+       (prog1 (list (region-beginning) (region-end))
+         (deactivate-mark))
+     (user-error "No region")))
+  (let ((encoded (url-hexify-string (buffer-substring-no-properties start end))))
+    (delete-region start end)
+    (insert encoded)))
+
+(defun url-decode-region (start end)
+  "URL decode region."
+  (interactive
+   (if (or (use-region-p) (not transient-mark-mode))
+       (prog1 (list (region-beginning) (region-end))
+         (deactivate-mark))
+     (user-error "No region")))
+  (let ((decoded (url-unhex-string (buffer-substring-no-properties start end))))
+    (delete-region start end)
+    (insert decoded)))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package emmet-mode
   :hook (web-mode sgml-mode css-mode)
