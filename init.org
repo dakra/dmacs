@@ -2012,6 +2012,18 @@ go up multiple parent directories."
 
   (counsel-projectile-mode))
 #+END_SRC
+** ivy-posframe: Display ivy in child frames instead of minibuffer
+#+BEGIN_SRC emacs-lisp
+(use-package ivy-posframe
+  :disabled t  ;; Doesn't really work nice with multiple monitors yet
+  :after ivy
+  :config
+  ;; Child frames are always under X windows so we have to not make it a child frame
+  (setq ivy-posframe-parameters '((parent-frame nil)))
+  ;; Always display on the bottom left of the current window and not frame
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left))))
+#+END_SRC
+
 * Navigation
 #+BEGIN_SRC emacs-lisp
 (use-package bookmark
