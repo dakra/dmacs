@@ -4718,6 +4718,15 @@ put something like this in your =.dir-locals.el=:
   (venv-initialize-eshell) ;; if you want eshell support
   (setq venv-location "/home/daniel/.virtualenvs/"))
 #+END_SRC
+** Prolog
+#+BEGIN_SRC emacs-lisp
+(use-package prolog
+  :mode (("\\.\\(pl\\|pro\\|lgt\\)\\'" . prolog-mode)
+         ("\\.m\\'" . mercury-mode))
+  :interpreter ("prolog" . prolog-mode)
+  :config
+  (setq-default prolog-system 'swi))
+#+END_SRC
 ** Redis
 #+BEGIN_SRC emacs-lisp
 ;; Commint for redis
