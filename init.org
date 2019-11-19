@@ -3003,6 +3003,25 @@ fi
   :init
   (setq vterm-shell "/usr/bin/bash")
   :config
+  ;; Kill dead vterm buffers
+  (add-hook 'vterm-exit-functions 'kill-buffer)
+
+  ;; Run a shell command in vterm with compilation-minor-mode
+  (defun vterm-compile (command &optional name)
+    (interactive
+     (list
+      (let ((command (eval compile-command)))
+        (if (or compilation-read-command current-prefix-arg)
+	    (compilation-read-command command)
+	  command))
+      (consp current-prefix-arg)))
+    (let ((buffer (generate-new-buffer (or name "*vterm*"))))
+      (with-current-buffer buffer
+        (let ((vterm-shell command))
+          (vterm-mode)
+          (compilation-minor-mode))
+        (pop-to-buffer buffer))))
+
   ;; Allow vterm to invoke some elisp functions
   (setq vterm-eval-cmds '(("magit-status-setup-buffer" magit-status-setup-buffer)
                           ("find-file" find-file)
