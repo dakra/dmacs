@@ -5649,6 +5649,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ("<M-S-return>" . org-meta-return)
          ("M-." . org-open-at-point)  ; So M-. behaves like in source code.
          ("M-," . org-mark-ring-goto)
+         ("M-i" . counsel-org-goto)
          ("C-c C-x C-i" . org-clock-in-or-list)
          ;; Disable adding and removing org-agenda files via keybinding.
          ;; I explicitly specify agenda file directories in the config.
