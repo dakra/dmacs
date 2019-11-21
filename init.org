@@ -2151,8 +2151,8 @@ gtklp
   :config
   (defun pdf-view-init ()
     "Enable dark theme and disable while-line-or-region to free keybindings."
-    (whole-line-or-region-local-mode -1)
-    (pdf-view-midnight-minor-mode))
+    ;; (pdf-view-midnight-minor-mode)
+    (whole-line-or-region-local-mode -1))
 
   ;; Use `gtklp' to print as it has better cups support
   (defun print-pdf (&optional pdf)
