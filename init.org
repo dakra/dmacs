@@ -3323,12 +3323,8 @@ When called with 2 prefix arguments only open in browser and don't copy."
 * Programming
 ** General setup
 #+BEGIN_SRC emacs-lisp
-;; Increase fill-column for programming to 100
-(defun dakra-prog-mode-init ()
-  ;; Only auto-fill comments in prog-mode
-  (setq-local comment-auto-fill-only-comments t)
-  (setq-local fill-column 100))
-(add-hook 'prog-mode-hook 'dakra-prog-mode-init)
+;; Only auto-fill inside comments
+(setq comment-auto-fill-only-comments t)
 #+END_SRC
 *** Flycheck
 To activate shellcheck we need the =shellcheck= package.
