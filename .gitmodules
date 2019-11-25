@@ -29,7 +29,7 @@
 	url = git@github.com:jwiegley/alert.git
 [submodule "anaconda-mode"]
 	path = lib/anaconda-mode
-	url = git@github.com:proofit404/anaconda-mode.git
+	url = git@github.com:pythonic-emacs/anaconda-mode.git
 [submodule "apache-mode"]
 	path = lib/apache-mode
 	url = git@github.com:emacs-php/apache-mode.git
@@ -78,7 +78,7 @@
 	url = git@github.com:tarsius/bicycle.git
 [submodule "blacken"]
 	path = lib/blacken
-	url = git@github.com:proofit404/blacken.git
+	url = git@github.com:pythonic-emacs/blacken.git
 [submodule "blimp"]
 	path = lib/blimp
 	url = git@github.com:walseb/blimp.git
@@ -135,7 +135,7 @@
 	url = git@github.com:company-mode/company-mode.git
 [submodule "company-anaconda"]
 	path = lib/company-anaconda
-	url = git@github.com:proofit404/company-anaconda.git
+	url = git@github.com:pythonic-emacs/company-anaconda.git
 [submodule "company-auctex"]
 	path = lib/company-auctex
 	url = git@github.com:alexeyr/company-auctex.git
@@ -198,7 +198,7 @@
 	url = git@github.com:emacsmirror/cython-mode.git
 [submodule "dap-mode"]
 	path = lib/dap-mode
-	url = git@github.com:yyoncho/dap-mode.git
+	url = git@github.com:emacs-lsp/dap-mode.git
 [submodule "dash"]
 	path = lib/dash
 	url = git@github.com:magnars/dash.el.git
@@ -243,7 +243,7 @@
 	url = https://framagit.org/steckerhalter/discover-my-major.git
 [submodule "djangonaut"]
 	path = lib/djangonaut
-	url = git@github.com:proofit404/djangonaut.git
+	url = git@github.com:pythonic-emacs/djangonaut.git
 [submodule "docker"]
 	path = lib/docker
 	url = git@github.com:Silex/docker.el.git
@@ -559,7 +559,7 @@
 	url = git@github.com:joshwnj/json-mode.git
 [submodule "json-process-client"]
 	path = lib/json-process-client
-	url = https://gitlab.petton.fr/nico/json-process-client.git
+	url = https://gitea.petton.fr/nico/json-process-client.git
 [submodule "json-reformat"]
 	path = lib/json-reformat
 	url = git@github.com:gongo/json-reformat.git
@@ -895,7 +895,7 @@
 	url = git@github.com:emacs-pe/python-test.el.git
 [submodule "pythonic"]
 	path = lib/pythonic
-	url = git@github.com:proofit404/pythonic.git
+	url = git@github.com:pythonic-emacs/pythonic.git
 [submodule "queue"]
 	path = lib/queue
 	url = git@github.com:emacsmirror/queue.git
@@ -1056,13 +1056,13 @@
 	url = git@github.com:alphapapa/ts.el.git
 [submodule "typescript-mode"]
 	path = lib/typescript-mode
-	url = git@github.com:ananthakumaran/typescript.el.git
+	url = git@github.com:emacs-typescript/typescript.el.git
 [submodule "umlaut"]
 	path = lib/umlaut
 	url = git@github.com:dakra/umlaut.el.git
 [submodule "undo-tree"]
 	path = lib/undo-tree
-	url = http://www.dr-qubit.org/git/undo-tree.git
+	url = git@github.com:emacsorphanage/undo-tree.git
 [submodule "use-package"]
 	path = lib/use-package
 	url = git@github.com:jwiegley/use-package.git
