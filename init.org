@@ -5920,7 +5920,7 @@ Show clock history when not in org buffer or when called with prefix argument."
 
   ;; Custom org-sort to sort by TODO and then by priority
   ;; See: https://emacs.stackexchange.com/a/9588/12559
-  (defun todo-to-int (todo)
+  (defun org-sort-todo-to-int (todo)
     (first (-non-nil
             (mapcar (lambda (keywords)
                       (let ((todo-seq
@@ -5929,18 +5929,18 @@ Show clock history when not in org buffer or when called with prefix argument."
                         (cl-position-if (lambda (x) (string= x todo)) todo-seq)))
                     org-todo-keywords))))
 
-  (defun my/org-sort-key ()
+  (defun org-sort-by-todo-and-prio-key ()
     (let* ((todo-max (apply #'max (mapcar #'length org-todo-keywords)))
            (todo (org-entry-get (point) "TODO"))
-           (todo-int (if todo (todo-to-int todo) todo-max))
+           (todo-int (if todo (org-sort-todo-to-int todo) todo-max))
            (priority (org-entry-get (point) "PRIORITY"))
            (priority-int (if priority (string-to-char priority) org-default-priority)))
       (format "%03d %03d" todo-int priority-int)))
 
-  (defun my/org-sort-entries ()
+  (defun org-sort-entries-by-todo-and-prio ()
+    "Sort org entries first by TODO keyword and then priority."
     (interactive)
-    (org-sort-entries nil ?f #'my/org-sort-key))
-  )
+    (org-sort-entries nil ?f #'org-sort-by-todo-and-prio-key)))
 #+END_SRC
 *** Org Packages
 **** Org-agenda
