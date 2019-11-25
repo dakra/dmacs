@@ -3282,7 +3282,7 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   :hook ((prog-mode log-view-mode git-commit-setup) . forge-bug-reference-setup)
   :config
   ;; My GitHub accounts / organizations
-  (setq forge-owned-accounts '("dakra" "pythonic-emacs" "atomx" "restalchemy"))
+  (setq forge-owned-accounts '(("dakra") ("pythonic-emacs") ("atomx") ("restalchemy")))
   ;; Don't pull notifications as it blocks Emacs for a long time
   (setq forge-pull-notifications nil)
   ;; Add private paessler giblab server
