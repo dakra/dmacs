@@ -3445,7 +3445,7 @@ lldb
          ([S-f11] . dap-step-out)
          ([f12] . dap-hide/show-ui))
   :config
-  ;; FIXME: Create nice soltion instead of a hack
+  ;; FIXME: Create nice solution instead of a hack
   (defvar dap-hide/show-ui-hidden? t)
   (defun dap-hide/show-ui ()
     "Hide/show dap ui. FIXME"
@@ -3455,10 +3455,9 @@ lldb
           (setq dap-hide/show-ui-hidden? nil)
           (dap-ui-locals)
           (dap-ui-repl))
-      (kill-buffer "*dap-ui-inspect*")
-      (kill-buffer "*dap-ui-locals*")
-      (kill-buffer "*dap-ui-repl*")
-      (kill-buffer "*dap-ui-sessions*")
+      (dolist (buf '("*dap-ui-inspect*" "*dap-ui-locals*" "*dap-ui-repl*" "*dap-ui-sessions*"))
+        (when (get-buffer buf)
+          (kill-buffer buf)))
       (setq dap-hide/show-ui-hidden? t)))
 
   (dap-mode)
