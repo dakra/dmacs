@@ -3648,7 +3648,6 @@ glslang
 (use-package yaml-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
-  (add-hook 'yaml-mode-hook #'dakra-prog-mode-init)
   (add-hook 'yaml-mode-hook
             (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t))))
 #+END_SRC
