@@ -65,7 +65,7 @@
   -  [[init.org#editor][Editor]]
     -  [[init.org#lossage-live-update-lossage-buffer][Lossage: Live update lossage buffer]]
     -  [[init.org#hippie-exp-expand-by-fuzzy-matching-text-in-open-buffers][hippie-exp: Expand by fuzzy matching text in open buffers]]
-    -  [[init.org#rainbow-delimiters-different-color-for-each-paranthesis-level][rainbow-delimiters: Different color for each paranthesis level]]
+    -  [[init.org#rainbow-delimiters-different-color-for-each-parenthesis-level][rainbow-delimiters: Different color for each parenthesis level]]
     -  [[init.org#fancy-narrow-fancier-narrow][fancy-narrow: Fancier narrow]]
     -  [[init.org#crux-various-small-useful-utility-functions][crux: Various small useful utility functions]]
     -  [[init.org#smartparens][smartparens]]
@@ -505,7 +505,7 @@ If you don't set your Xresources, you can load the font with:
   ;;(set-background-color "black")
   ;;(set-foreground-color "white")
   ;; If you use the default Emacs black theme (no external theme loaded) you have to specify
-  ;; a different color for mode-line-buffer-id or it will be the same as the backround
+  ;; a different color for mode-line-buffer-id or it will be the same as the background
   ;;(set-face-attribute 'mode-line-buffer-id nil :foreground "light sky blue" :weight 'bold)
   ;;(let ((line (face-attribute 'mode-line :underline)))
   ;;  (set-face-attribute 'mode-line nil :overline line)
@@ -601,7 +601,7 @@ Code from `read-envvar-name'."
 ;; Only split vertically on very tall screens
 (setq split-height-threshold 110)
 
-;; Paste with middle mouse button doesn't move the curser
+;; Paste with middle mouse button doesn't move the cursor
 (setq mouse-yank-at-point t)
 
 ;; Save whatever’s in the current (system) clipboard before
@@ -1163,7 +1163,7 @@ M-x rename-buffer Lossage RET"
                                            try-complete-lisp-symbol-partially
                                            try-complete-lisp-symbol)))
 #+END_SRC
-** rainbow-delimiters: Different color for each paranthesis level
+** rainbow-delimiters: Different color for each parenthesis level
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
@@ -1467,7 +1467,7 @@ mark the string and call `edit-indirect-region' with it."
            (mode-str (concat lang "-mode"))
            (mode (intern mode-str)))
       (unless (functionp mode)
-        (error "Invalide mode `%s'" mode-str))
+        (error "Invalid mode `%s'" mode-str))
       (funcall mode)))
   (setq edit-indirect-guess-mode-function #'edit-indirect-guess-mode-fn))
 #+END_SRC
@@ -2675,7 +2675,7 @@ avfs
 (setenv "PAGER" "cat")
 
 ;; Fixme eshell-mode-map maps to global keybindings? Check "C-d"
-;; Isssue: https://github.com/jwiegley/use-package/issues/332
+;; Issue: https://github.com/jwiegley/use-package/issues/332
 (use-package eshell
   :bind (("C-x m" . eshell)
          ("C-x M" . dakra-eshell-split)
@@ -2767,7 +2767,7 @@ avfs
       (delete-char (- n))))
 
   ;; Fixme eshell-mode-map maps to global keybindings? Check "C-d"
-  ;; Isssue: https://github.com/jwiegley/use-package/issues/332
+  ;; Issue: https://github.com/jwiegley/use-package/issues/332
   (add-hook 'eshell-mode-hook (lambda ()
                                 (local-set-key (kbd "M-P") 'eshell-previous-prompt)
                                 (local-set-key (kbd "M-N") 'eshell-next-prompt)
@@ -3306,7 +3306,7 @@ XXX: Only use =magit-gerrit= until functionality is implemented in =forge=.
   (defun dakra-browse-at-remote (p)
     "Like browse-at-remote but will also copy the url in the kill ring.
 When called with one prefix argument only copy the url in the kill ring
-and don't open in the brower.
+and don't open in the browser.
 When called with 2 prefix arguments only open in browser and don't copy."
     (interactive "p")
     (case p
@@ -4807,7 +4807,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
          ("DEL" . sql-delete-backward-char)
          ("C-d" . dakra/sql-quit-or-delete-char))
   :init
-  ;; Persist sqli history accross multiple sessions
+  ;; Persist sqli history across multiple sessions
   (setq-default sql-input-ring-file-name
                 (no-littering-expand-var-file-name "sql-input-ring"))
   :config
@@ -5414,9 +5414,9 @@ displayed anywhere else."
   :bind (("<escape>" . god-local-mode)
          :map god-local-mode-map ("i" . god-local-mode))
   :config
-  ;; change curser to bar when in god-mode
+  ;; change cursor to bar when in god-mode
   (defun god-update-cursor ()
-    "Toggle curser style to bar when in god-mode"
+    "Toggle cursor style to bar when in god-mode"
     (setq cursor-type (if (or god-local-mode buffer-read-only)
                           'bar
                         'box)))
@@ -5792,7 +5792,7 @@ Show clock history when not in org buffer or when called with prefix argument."
   (setq org-pretty-entities-include-sub-superscripts nil)
   ;; And also don't display ^ or _ as super/subscripts
   (setq org-use-sub-superscripts nil)
-  ;; undone TODO entries will block switching the parent to DONE
+  ;; Undone TODO entries will block switching the parent to DONE
   (setq org-enforce-todo-dependencies t)
 
   (setq org-use-fast-todo-selection t)
@@ -6207,7 +6207,7 @@ FIXME: automatically call =(org-caldav-sync)= before showing agenda.
   ;; display/update images in the buffer after I evaluate
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
   :config
-  (setq org-confirm-babel-evaluate nil)  ; don't prompt me to confirm everytime I want to evaluate a block
+  (setq org-confirm-babel-evaluate nil)  ; don't prompt me to confirm every time I want to evaluate a block
 
   (defun org-babel-restart-session-to-point (&optional arg)
     "Restart session up to the src-block in the current point.
@@ -6454,7 +6454,7 @@ NAME may be nil for unnamed sessions."
 
 ;; FIXME: install bookmarklet and shell script (integrate with org-capture plugin?!)
 (use-package org-protocol-capture-html
-  :disabled t  ; Usefule but never used since bookmarklet not configured yet
+  :disabled t  ; Useful but never used since bookmarklet not configured yet
   :after org-capture)
 #+END_SRC
 **** Org-clock:
@@ -7456,14 +7456,14 @@ sudo make install
 
   ;;; Use 'fancy' non-ascii characters in various places in mu4e
   (setq mu4e-use-fancy-chars t)
-  ;; And change default threading characers to some "nicer" looking chars
+  ;; And change default threading characters to some "nicer" looking chars
   (setq mu4e-headers-thread-child-prefix '("├>" . "├▶ "))
   (setq mu4e-headers-thread-last-child-prefix '("└>" . "└▶ "))
   (setq mu4e-headers-thread-connection-prefix '("│" . "│ "))
   (setq mu4e-headers-thread-orphan-prefix '("┬>" . "┬▶ "))
   (setq mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶ "))
 
-  ;; Also change to some nicer characers for marks
+  ;; Also change to some nicer characters for marks
   (setq mu4e-headers-new-mark    '("N" . "☉"))
   (setq mu4e-headers-passed-mark  '("P" . "›"))
   (setq mu4e-headers-replied-mark '("R" . "‹"))
@@ -7477,7 +7477,7 @@ sudo make install
   ;; special line continuation characters.
   (setq mu4e-compose-format-flowed nil)
 
-  ;; Dont open new frame for composing mails
+  ;; Don't open new frame for composing mails
   (setq mu4e-compose-in-new-frame nil)
 
   ;; Don't reply to self
@@ -8053,7 +8053,7 @@ no window on the right."
     (if (or (<= exwm-connected-displays 1) (windmove-find-other-window 'right arg))
         (windmove-do-window-select 'right arg)
       ;; No window to the left
-      ;; Switch to previous workspace and select rightmost window
+      ;; Switch to next workspace and select leftmost window
       (exwm-workspace-switch-next 1)
       (while (windmove-find-other-window 'left arg)
         (windmove-do-window-select 'left arg))))
@@ -9258,7 +9258,7 @@ and http://eschulte.github.io/emacs-web-server/File-Server.html#File-Server
   (defvar web-server-file-server nil
     "Is the file server running? Holds an instance if so.")
   (defvar web-server-file-server-default-port 8888
-    "Default port the file web server listens to when not calles with prefix argument.")
+    "Default port the file web server listens to when not calls with prefix argument.")
   (defvar web-server-old-global-mode-string nil)  ; XXX: Make nicer solution to display in mode line
 
   (defun web-server-file-server-toggle ()
