@@ -4206,18 +4206,25 @@ $ sbcl
 #+BEGIN_SRC emacs-lisp
 (use-package cider
   :bind (:map cider-mode-map
-         ("M-?" . cider-clojuredocs)
+         ("M-?" . cider-maybe-clojuredocs)
          :map cider-repl-mode-map
-         ("M-?" . cider-clojuredocs))
+         ("M-?" . cider-doc))
   :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          ((cider-mode cider-repl-mode) . eldoc-mode))
   :config
+  (defun cider-maybe-clojuredocs (&optional arg)
+    "Call `cider-clojuredocs' in `clojure-mode' and `cider-doc' in `clojurescript-mode'."
+    (interactive "P")
+    (if (eq major-mode 'clojure-mode)
+        (cider-clojuredocs arg)
+      (cider-doc)))
   ;; When loading the buffer (C-c C-k) save first without asking
   (setq cider-save-file-on-load t)
-
   ;; Don't show cider help text in repl after jack-in
   (setq cider-repl-display-help-banner nil)
+  ;; Display context dependent info in the eldoc where possible.
   (setq cider-eldoc-display-context-dependent-info t)
+  ;; Just use symbol under point and don't prompt for symbol in e.g. cider-doc.
   (setq cider-prompt-for-symbol nil))
 #+END_SRC
 **** clj-refactor
