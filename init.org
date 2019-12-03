@@ -3113,12 +3113,24 @@ Move point to patch and call `M-x gitpatch-mail`
   ;; Highlight issue ids in commit messages and spellcheck
   :hook (git-commit-setup . git-commit-turn-on-flyspell)
   :init
+  (define-derived-mode git-commit-gfm-mode markdown-mode "GIT-GFM"
+    "Major mode for editing commit messages in GitHub Flavored Markdown.
+Like the official markdown gfm-mode but `#' at the beginning of a line
+is not a title but instead is displayed as a comment."
+    (setq markdown-link-space-sub-char "-")
+    (setq markdown-wiki-link-search-subdirectories t)
+    (setq-local markdown-regex-comment-start "^#")
+    (setq-local markdown-regex-comment-end "$")
+    (setq-local markdown-table-at-point-p-function 'gfm--table-at-point-p)
+    (markdown-gfm-parse-buffer-for-languages))
+
   ;; Mark a few major modes as safe
   (put 'git-commit-major-mode 'safe-local-variable
-       (lambda (m) (or (eq m 'gfm-mode)
+       (lambda (m) (or (eq m 'git-commit-gfm-mode)
+                       (eq m 'gfm-mode)
                        (eq m 'text-mode)
                        (eq m 'git-commit-elisp-text-mode))))
-  :config (setq git-commit-major-mode 'gfm-mode))
+  :config (setq git-commit-major-mode 'git-commit-gfm-mode))
 
 (use-package transient
   :defer t
