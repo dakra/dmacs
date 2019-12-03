@@ -1541,7 +1541,9 @@ Simple but effective sorting and filtering for Emacs
   :defer t
   :config (prescient-persist-mode))
 (use-package ivy-prescient
-  :after ivy
+  ;; Use counsel instead of ivy because when loading counsel
+  ;; it'll change some ivy vars like initial-input
+  :after counsel
   :config
   (setq ivy-prescient-sort-commands '(:not swiper ivy-switch-buffer counsel-yank-pop))
   (ivy-prescient-mode))
@@ -1879,9 +1881,6 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   ;; Press C-p when you're on the first candidate to select your input
   (setq ivy-use-selectable-prompt t)
 
-  (setq ivy-initial-inputs-alist '((Man-completion-table . "^")
-                                   (woman . "^")))
-
   ;; Don't quit ivy when pressing backspace on already empty input
   (setq ivy-on-del-error-function nil)
 
@@ -1928,6 +1927,13 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   (define-key minibuffer-local-map (kbd "M-r")
     'counsel-minibuffer-history)
   :config
+  ;; Set ivy initial inputs after loading counsel because counsel adds
+  ;; it's own commands here after it's loaded and we don't want
+  ;; E.g. counsel-M-x to always start with "^"
+  (setq ivy-initial-inputs-alist '((Man-completion-table . "^")
+                                   (woman . "^")))
+
+
   ;; Hide pyc and elc files by default from `counsel-find-file'
   (setq counsel-find-file-ignore-regexp "\\.\\(pyc\\|elc\\)\\'")
   ;; Add action to open file literally
