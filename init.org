@@ -1761,7 +1761,7 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   project to add."
     (interactive)
     (pcase (treemacs-current-visibility)
-      ('visible (if (equal (current-buffer) (cdr (assoc (selected-frame) treemacs--buffer-access)))
+      ('visible (if (string-prefix-p treemacs--buffer-name-prefix (buffer-name))
                     (delete-window (treemacs-get-local-window))
                   (treemacs--select-visible-window)))
       ('exists  (treemacs-select-window))
