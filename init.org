@@ -3150,6 +3150,7 @@ is not a title but instead is displayed as a comment."
          ("s-m L" . magit-log-buffer-file)
          ("s-m b" . magit-blame-addition)
          ("s-m B" . magit-blame))
+  :hook (after-save . magit-after-save-refresh-status)
   :defines (magit-ediff-dwim-show-on-hunks)
   :init
   (defcustom magit-push-protected-branch nil
@@ -3174,8 +3175,6 @@ is not a title but instead is displayed as a comment."
   ;; Add switch to invert the filter e.g. show all authors but `--author=foo'
   ;; (magit-define-popup-switch 'magit-log-popup
   ;;   ?i "Invert filter" "--invert-grep")
-
-  (add-hook 'after-save-hook 'magit-after-save-refresh-status t)
 
   ;; Show gravatars
   (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
