@@ -60,6 +60,7 @@
         sp-splice-sexp
         sp-split-sexp
         sp-up-sexp
+        sp-wrap-round
         sql-magic-go
         upcase-region
         web-mode-comment-or-uncomment
