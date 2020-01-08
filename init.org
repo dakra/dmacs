@@ -7265,7 +7265,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 You also need to configure and install mu in the system.
 Borg does only build mu4e as building mu every time is
 unnecessary.
-#+BEGIN_SRC sh :tangle no :var mudir=(expand-file-name "mu4e" borg-drone-directory)
+#+BEGIN_SRC sh :tangle no :var mudir=(expand-file-name "mu4e" borg-drone-directory) :results none
 # Install mu for mu4e
 cd $mudir
 test -e ./configure || autoreconf -i
@@ -7458,12 +7458,13 @@ sudo make install
 
   ;; allow for updating mail using 'U' in the main view:
   ;; (only update inboxes)
-  (setq mu4e-get-mail-command "mbsync private paessler e5 gmail-inbox atomx-inbox hogaso-inbox")
+  (setq mu4e-get-mail-command "mbsync private:Inbox paessler:Inbox e5:Inbox gmail-inbox atomx-inbox hogaso-inbox")
   ;; for update all:
   ;;(setq mu4e-get-mail-command "mbsync -a")
 
   ;; update database every ten minutes
-  (setq  mu4e-update-interval (* 60 10))
+  ;; (setq  mu4e-update-interval (* 60 10))
+  (setq  mu4e-update-interval nil)
 
   ;; We do a full index (that verify integrity) with a systemd job
   ;; Go fast inside emacs
