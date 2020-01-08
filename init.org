@@ -1085,7 +1085,8 @@ ttf-symbola
 ** Highlight long lines
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace
-  :hook (prog-mode . whitespace-mode)
+  :defer t
+  ;; :hook (prog-mode . whitespace-mode)
   :config
   (setq whitespace-style '(face tabs empty trailing lines-tail))
   ;; highlight lines with more than `fill-column' characters
