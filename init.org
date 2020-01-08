@@ -3504,35 +3504,7 @@ use-package will load java-lsp for us simply by calling this function."
     (lsp-deferred)))
 
 (use-package dap-java
-  :after lsp-java
-  :config
-  (dap-register-debug-template "VulpxLauncher - Run"
-                               (list :type "java"
-                                     :request "launch"
-                                     :noDebug t
-                                     :args ""
-                                     :cwd nil
-                                     :stopOnEntry :json-false
-                                     :host "localhost"
-                                     :request "launch"
-                                     :modulePaths []
-                                     :classPaths nil
-                                     :name "VulpxLauncher - Run"
-                                     :projectName "forme-backend"
-                                     :mainClass "io.vulpx.VulpxLauncher"))
-  (dap-register-debug-template "VulpxLauncher - Debug"
-                               (list :type "java"
-                                     :request "launch"
-                                     :args ""
-                                     :cwd nil
-                                     :stopOnEntry :json-false
-                                     :host "localhost"
-                                     :request "launch"
-                                     :modulePaths []
-                                     :classPaths nil
-                                     :name "VulpxLauncher - Debug"
-                                     :projectName "forme-backend"
-                                     :mainClass "io.vulpx.VulpxLauncher")))
+  :after lsp-java)
 
 ;; For groovy and gradle support
 (use-package groovy-mode :defer t)
