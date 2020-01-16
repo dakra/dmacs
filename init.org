@@ -5306,16 +5306,23 @@ displayed anywhere else."
 (use-package aggressive-indent
   :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js-mode) . aggressive-indent-mode))
 
+(use-package undo-fu
+  :bind (("C-/"   . undo-fu-only-undo)
+         ("C-z"   . undo-fu-only-undo)
+         ("C-S-z" . undo-fu-only-redo)
+         ("C-?"   . undo-fu-only-redo)))
+
 (use-package undo-tree
-  :demand t
+  :disabled t
+  :hook (after-init . global-undo-tree-mode)
   :bind ("C-z" . undo-tree-undo)  ;; Don't (suspend-frame)
   :config
   (setq undo-tree-visualizer-timestamps t)  ; show timestamps in undo-tree
   ;;(setq undo-tree-visualizer-diff t)
 
   ;; autosave the undo-tree history
-  (setq undo-tree-history-directory-alist
-        `((".*" . ,temporary-file-directory)))
+  ;; (setq undo-tree-history-directory-alist
+  ;;       `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t)
 
   ;; Keep region when undoing in region
@@ -5328,9 +5335,7 @@ displayed anywhere else."
           (set-mark m)
           (set-marker p nil)
           (set-marker m nil))
-      ad-do-it))
-
-  (global-undo-tree-mode))
+      ad-do-it)))
 
 
 ;; Smart region guesses what you want to select by one command:

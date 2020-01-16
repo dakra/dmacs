@@ -868,6 +868,7 @@
 [submodule "prescient"]
 	path = lib/prescient
 	url = git@github.com:raxod502/prescient.el.git
+	no-byte-compile = selectrum-prescient.el
 [submodule "prettier-js"]
 	path = lib/prettier-js
 	url = git@github.com:prettier/prettier-emacs.git
@@ -1048,6 +1049,7 @@
 	load-path = src/elisp
 	load-path = src/extra
 	no-byte-compile = src/extra/treemacs-evil.el
+	no-byte-compile = src/extra/treemacs-persp.el
 [submodule "treepy"]
 	path = lib/treepy
 	url = git@github.com:volrath/treepy.el.git
@@ -1060,6 +1062,9 @@
 [submodule "umlaut"]
 	path = lib/umlaut
 	url = git@github.com:dakra/umlaut.el.git
+[submodule "undo-fu"]
+	path = lib/undo-fu
+	url = git@gitlab.com:ideasman42/emacs-undo-fu.git
 [submodule "undo-tree"]
 	path = lib/undo-tree
 	url = git@github.com:emacsorphanage/undo-tree.git
