@@ -599,7 +599,10 @@ Code from `read-envvar-name'."
 (setq search-default-mode 'char-fold-to-regexp)
 
 ;; Only split vertically on very tall screens
-(setq split-height-threshold 110)
+(setq split-height-threshold 120)
+
+;; Only split horizontally if there are at least 90 chars column after splitting
+(setq split-width-threshold 180)
 
 ;; Paste with middle mouse button doesn't move the cursor
 (setq mouse-yank-at-point t)
