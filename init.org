@@ -5556,7 +5556,9 @@ displayed anywhere else."
 (use-package flyspell-correct-ivy
   :after flyspell
   :bind (:map flyspell-mode-map
-         ("C-." . flyspell-correct-previous-word-generic)))
+         ("C-." . flyspell-correct-wrapper))
+  :config
+  (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
 ;; Need to install `languagetool'
 (use-package langtool
