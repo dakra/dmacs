@@ -835,6 +835,9 @@
 [submodule "pip-requirements"]
 	path = lib/pip-requirements
 	url = git@github.com:Wilfred/pip-requirements.el.git
+[submodule "piper"]
+	path = lib/piper
+	url = git@gitlab.com:howardabrams/emacs-piper.git
 [submodule "pippel"]
 	path = lib/pippel
 	url = git@github.com:brotzeit/pippel.git

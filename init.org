@@ -9196,6 +9196,10 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
 #+END_SRC
+** Piper: Shell scripting with Emacs
+#+BEGIN_SRC emacs-lisp
+(use-package piper :defer t)
+#+END_SRC
 ** Pocket reader
 #+BEGIN_SRC emacs-lisp
 ;; Read and manage your pocket (getpocket.com) list
