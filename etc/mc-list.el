@@ -52,6 +52,7 @@
         sp-backward-kill-word
         sp-backward-sexp
         sp-delete-char
+        sp-down-sexp
         sp-forward-barf-sexp
         sp-forward-sexp
         sp-forward-slurp-sexp
