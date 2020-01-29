@@ -1095,6 +1095,14 @@ ttf-symbola
   ;; highlight lines with more than `fill-column' characters
   (setq whitespace-line-column nil))
 #+END_SRC
+** default-text-scale: Zoom font size for all buffers
+#+BEGIN_SRC emacs-lisp
+(use-package default-text-scale
+  :bind (("C-M-=" . default-text-scale-increase)
+         ("C-M--" . default-text-scale-decrease)
+         ("C-M-0" . default-text-scale-reset)))
+#+END_SRC
+
 ** Zone: Emacs screen saver
 #+BEGIN_SRC emacs-lisp
 (use-package zone

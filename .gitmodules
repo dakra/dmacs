@@ -215,6 +215,9 @@
 [submodule "deadgrep"]
 	path = lib/deadgrep
 	url = git@github.com:Wilfred/deadgrep.git
+[submodule "default-text-scale"]
+	path = lib/default-text-scale
+	url = git@github.com:purcell/default-text-scale.git
 [submodule "deferred"]
 	path = lib/deferred
 	url = git@github.com:kiwanami/emacs-deferred.git
