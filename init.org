@@ -1799,9 +1799,10 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-python-files)
 
   (setq treemacs-follow-after-init          t
-        treemacs-collapse-dirs              3
+        treemacs-indentation                1
+        treemacs-width                      30
+        treemacs-collapse-dirs              5
         treemacs-silent-refresh             nil
-        treemacs-never-persist              t
         treemacs-is-never-other-window      t)
   (treemacs-filewatch-mode t)
   ;; (treemacs-follow-mode -1)
