@@ -3645,6 +3645,9 @@ glslang
   :config
   (setq graphviz-dot-indent-width 4))
 
+(use-package company-graphviz-dot
+  :after graphviz-dot-mode)
+
 (use-package plantuml-mode
   :mode ("\\.plantuml\\'")
   :config
