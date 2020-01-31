@@ -3419,6 +3419,7 @@ lldb
          ("C-c C-a" . lsp-execute-code-action)
          ("M-." . lsp-find-definition-other)
          ("M-," . lsp-find-references-other))
+  :init (setq lsp-keymap-prefix nil)  ; Don't map the lsp keymap to any key
   :config
   ;; Increase lsp file watch threshold when lsp shows a warning
   (setq lsp-file-watch-threshold 1500)
