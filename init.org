@@ -872,7 +872,6 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
   :defer t
   :config
   (setq shr-width 80)
-  (setq shr-external-browser 'eww-browse-url)
   (setq shr-color-visible-luminance-min 80))
 #+END_SRC
 ** Info: View info pages
@@ -9256,6 +9255,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
       (setq browse-url-browser-function 'eww-browse-url)
       (message "Setting browser to eww")))
   :config
+  (setq browse-url-secondary-browser-function 'eww-browse-url)
   (setq browse-url-firefox-program "firefox-developer-edition")
   (setq browse-url-browser-function 'browse-url-firefox))
 
