@@ -736,7 +736,7 @@
 	url = git@github.com:abo-abo/orca.git
 [submodule "org"]
 	path = lib/org
-	url = git@code.orgmode.org:bzg/org-mode.git
+	url = https://code.orgmode.org/bzg/org-mode.git
 	build-step = make all
 	load-path = lisp
 	load-path = contrib/lisp
