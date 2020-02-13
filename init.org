@@ -3339,7 +3339,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 XXX: Only use =magit-gerrit= until functionality is implemented in =forge=.
 #+BEGIN_SRC emacs-lisp
 (use-package magit-gerrit
-  :after magit)
+  :after magit
+  :config
+  (setq magit-gerrit-signed-push-p t))
 #+END_SRC
 ** Browse-at-remote: Open website (github/gitlab) for current buffer/line/log
 #+BEGIN_SRC emacs-lisp
