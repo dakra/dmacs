@@ -3630,16 +3630,8 @@ glslang
   :after glsl-mode
   :config (add-to-list 'company-backends 'company-glsl))
 #+END_SRC
-** Configs (yaml/toml/ini/.conf/etc)
+** Graphviz
 #+BEGIN_SRC emacs-lisp
-;; Associate more files with conf-mode
-(use-package conf-mode
-  :mode ("mbsyncrc\\'" "msmtprc\\'" "pylintrc\\'" "\\.cnf\\'"
-         "\\.ini\\.\\(tmpl\\|sample\\)\\'" "\\.service\\'"))
-
-(use-package pkgbuild-mode
-  :mode "PKGBUILD\\'")
-
 (use-package graphviz-dot-mode
   :mode ("\\.dot\\'")
   :config
@@ -3647,29 +3639,50 @@ glslang
 
 (use-package company-graphviz-dot
   :after graphviz-dot-mode)
-
+#+END_SRC
+** PlantUML
+#+BEGIN_SRC emacs-lisp
 (use-package plantuml-mode
   :mode ("\\.plantuml\\'")
   :config
   (setq plantuml-jar-path "/usr/share/java/plantuml/plantuml.jar"))
-
-;; Edit GNU gettext PO files
+#+END_SRC
+** Configs (yaml/toml/ini/.conf/etc)
+#+BEGIN_SRC emacs-lisp
+;; Associate more files with conf-mode
+(use-package conf-mode
+  :mode ("mbsyncrc\\'" "msmtprc\\'" "pylintrc\\'" "\\.cnf\\'"
+         "\\.ini\\.\\(tmpl\\|sample\\)\\'" "\\.service\\'"))
+#+END_SRC
+*** Arch PKGBUILD
+#+BEGIN_SRC emacs-lisp
+(use-package pkgbuild-mode
+  :mode "PKGBUILD\\'")
+#+END_SRC
+*** PO: Edit GNU gettext PO files
+#+BEGIN_SRC emacs-lisp
 (use-package po-mode
   :mode ("\\.po\\'" "\\.po\\."))
-
-(use-package csv-mode
-  :mode "\\.csv\\'"
-  :init (setq csv-separators '("," "	" ";" "|")))
-
-(use-package toml-mode
-  :mode ("\\.toml\\'" "Cargo.lock\\'"))
-
+#+END_SRC
+*** YAML
+#+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
-  (add-hook 'yaml-mode-hook
-            (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t))))
+  (setq yaml-indent-offset 4))
 #+END_SRC
+*** TOML
+#+BEGIN_SRC emacs-lisp
+(use-package toml-mode
+  :mode ("\\.toml\\'" "Cargo.lock\\'"))
+#+END_SRC
+*** CSV
+#+BEGIN_SRC emacs-lisp
+(use-package csv-mode
+  :mode "\\.csv\\'"
+  :init (setq csv-separators '("," "	" ";" "|")))
+#+END_SRC
+
 *** CDS Core Data Services
 #+BEGIN_SRC emacs-lisp
 (use-package cds-mode
