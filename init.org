@@ -2385,6 +2385,8 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
   (dired-rainbow-define-chmod executable-unix "Green" "-.*x.*"))
 
 (use-package dired-collapse
+  :bind (:map dired-mode-map
+         (")" . dired-collapse-mode))
   :hook (dired-mode . dired-collapse-mode))
 #+END_SRC
 
