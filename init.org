@@ -1742,6 +1742,14 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   (add-to-list 'projectile-other-file-alist '("py" "sql" "py"))
   (add-to-list 'projectile-other-file-alist '("sql" "py"))
 
+  ;; Register a java project type that uses gradle and has src and test dirs set
+  (projectile-register-project-type 'java '("gradlew")
+                                    :compile "./gradlew build"
+                                    :test "./gradlew test"
+                                    :test-suffix "Test"
+                                    :src-dir "src/main"
+                                    :test-dir "src/test/")
+
   ;; Shorten the mode line to only "P" and do not include the project type
   (defun projectile-short-mode-line ()
     "Short version of the default projectile mode line."
