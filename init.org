@@ -4362,6 +4362,8 @@ Yasnippets for Datomic.
   :mode (("/itsalltext/.*\\(gitlab\\|github\\).*\\.txt$" . gfm-mode)
          ("\\.markdown\\'" . gfm-mode)
          ("\\.md\\'" . gfm-mode))
+  :bind (:map markdown-mode-map
+         ("C-c =" . markdown-insert-header-dwim))
   :config
   ;; Display remote images
   (setq markdown-display-remote-images t)
