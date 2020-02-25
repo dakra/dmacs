@@ -7304,10 +7304,9 @@ unnecessary.
 #+BEGIN_SRC sh :tangle no :var mudir=(expand-file-name "mu4e" borg-drone-directory) :results none
 # Install mu for mu4e
 cd $mudir
-test -e ./configure || autoreconf -i
 # Maybe you have to run distclean first
 # make distclean
-./configure --enable-shared
+./autogen.sh
 make
 sudo make install
 #+END_SRC

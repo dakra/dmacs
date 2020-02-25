@@ -687,8 +687,7 @@
 [submodule "mu4e"]
 	path = lib/mu4e
 	url = git@github.com:djcb/mu.git
-	build-step = test -e ./configure || autoreconf -i
-        build-step = ./configure
+        build-step = ./autogen.sh
         build-step = make -C mu4e > /dev/null
         build-step = "(borg-update-autoloads \"mu4e\")"
         load-path = mu4e
