@@ -1274,7 +1274,7 @@ is already narrowed."
   :defer 1
   :hook ((
           emacs-lisp-mode lisp-mode clojure-mode cider-repl-mode hy-mode prolog-mode
-          go-mode cc-mode python-mode typescript-mode javascript-mode java-mode
+          go-mode cc-mode python-mode typescript-mode json-mode javascript-mode java-mode
           ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
