@@ -1922,7 +1922,9 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   (ivy-mode 1))
 
 (use-package ivy-hydra
-  :after (ivy hydra))
+  :after (ivy hydra)
+  :config
+  (setq ivy-read-action-function #'ivy-hydra-read-action))
 
 (use-package ivy-rich
   ;;:defer 5
