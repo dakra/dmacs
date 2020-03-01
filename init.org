@@ -1000,6 +1000,7 @@ With a prefix argument, copy the link to the online manual instead."
   :config
   ;; Don't dim hydra, transient buffers or minibuffers
   (setq dimmer-buffer-exclusion-regexps '(" \\*\\(LV\\|transient\\)\\*"
+                                          "^ \\*.*posframe.*buffer.*\\*$"
                                           "^\\*Minibuf-[0-9]+\\*"
                                           "^.\\*which-key\\*$"
                                           "^.\\*Echo.*\\*"))
