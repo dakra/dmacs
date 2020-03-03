@@ -593,6 +593,11 @@ Code from `read-envvar-name'."
 ;; Don't quit Emacs on C-x C-c
 (when (daemonp)
   (global-set-key (kbd "C-x C-c") 'kill-buffer-and-window))
+
+;; Increase the amount of data which Emacs reads from the process
+;; (Useful for LSP where the LSP responses are in the 800k - 3M range)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
 ;; Always just use left-to-right text
 ;; This makes Emacs a bit faster for very long lines
 (setq-default bidi-paragraph-direction 'left-to-right)
