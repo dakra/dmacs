@@ -9460,6 +9460,6 @@ elisp packages to use and not for actual direct user usage.
             ;; Restore original file name handlers
             (setq file-name-handler-alist file-name-handler-alist-old)
             ;; Let's lower our GC thresholds back down to a sane level.
-            (setq gc-cons-threshold (* 20 1024 1024)))
+            (setq gc-cons-threshold (* 32 1024 1024)))
           t)
 #+END_SRC
