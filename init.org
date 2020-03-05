@@ -8300,8 +8300,11 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     (start-process-shell-command "keepassxc" nil "keepassxc")
 
     ;; Toggle battery display
-    (auto-display-battery-mode)
+    ;; (auto-display-battery-mode)
     (start-process-shell-command "cbatticon" nil "cbatticon")
+
+    ;; Clipboard manager
+    (start-process-shell-command "gpaste-ui" nil "/usr/lib/gpaste/gpaste-ui")
 
     ;; Set face attribute for new (child-)frames to our current font
     (set-face-attribute 'default nil :font "Operator Mono-7:weight=medium:width=normal"))
