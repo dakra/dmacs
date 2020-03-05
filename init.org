@@ -7453,7 +7453,7 @@ sudo make install
     (add-to-list 'mu4e~mailing-lists mailing-list))
 
   (setq mu4e-bookmarks `((,(concat "maildir:/private/Inbox OR "
-                                   "maildir:/paessler/Inbox OR "
+                                   ; "maildir:/paessler/Inbox OR "
                                    "maildir:/sap/Inbox OR "
                                    "maildir:/gmail/inbox OR "
                                    "maildir:/atomx/inbox OR "
