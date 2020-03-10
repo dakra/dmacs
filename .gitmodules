@@ -740,9 +740,6 @@
 	load-path = lisp
 	load-path = contrib/lisp
 	info-path = doc
-[submodule "org-bullets"]
-	path = lib/org-bullets
-	url = git@github.com:emacsorphanage/org-bullets.git
 [submodule "org-caldav"]
 	path = lib/org-caldav
 	url = git@github.com:dengste/org-caldav.git
@@ -771,6 +768,9 @@
 [submodule "org-super-agenda"]
 	path = lib/org-super-agenda
 	url = git@github.com:alphapapa/org-super-agenda.git
+[submodule "org-superstar"]
+	path = lib/org-superstar
+	url = git@github.com:integral-dw/org-superstar-mode.git
 [submodule "org-web-tools"]
 	path = lib/org-web-tools
 	url = git@github.com:alphapapa/org-web-tools.git

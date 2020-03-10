@@ -598,6 +598,12 @@ Code from `read-envvar-name'."
 ;; (Useful for LSP where the LSP responses are in the 800k - 3M range)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
+;; Don't compact font caches during GC as it doesn't play too nice
+;; with org-superstar-mode and some of my large org files (e.g. this file).
+;; This might enlarge the Emacs memory footprint but I don't mind if Emacs
+;; uses more memory but rather prefer speed.
+(setq inhibit-compacting-font-caches t)
+
 ;; Always just use left-to-right text
 ;; This makes Emacs a bit faster for very long lines
 (setq-default bidi-paragraph-direction 'left-to-right)
@@ -6458,10 +6464,10 @@ NAME may be nil for unnamed sessions."
 (use-package org-indent
   :hook (org-mode . org-indent-mode))
 #+END_SRC
-**** Org-bullets: Use utf-8 characters instead of `*` as bullet points
+**** Org-superstar: Use utf-8 characters instead of `*` as bullet points
 #+BEGIN_SRC emacs-lisp
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode))
+(use-package org-superstar
+  :hook (org-mode . org-superstar-mode))
 #+END_SRC
 **** Org-capture
 #+BEGIN_SRC emacs-lisp
