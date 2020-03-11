@@ -4262,6 +4262,12 @@ $ sbcl
   (put-clojure-indent 'defn-traced :defn))
 #+END_SRC
 **** CIDER
+Install openjdk sources so you can jump to Java symbols in cider.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+openjdk-src
+openjdk11-src
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package cider
   :bind (:map cider-mode-map
@@ -4281,6 +4287,10 @@ $ sbcl
     (if (eq major-mode 'clojure-mode)
         (cider-clojuredocs arg)
       (cider-doc)))
+
+  ;; Location of the jdk sources. In Arch Linux package `openjdk-src'
+  (setq cider-jdk-src-paths "/usr/lib/jvm/java-11-openjdk/lib/src.zip")
+
   ;; When loading the buffer (C-c C-k) save first without asking
   (setq cider-save-file-on-load t)
   ;; Don't show cider help text in repl after jack-in
