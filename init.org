@@ -3707,7 +3707,7 @@ glslang
 (use-package yaml-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
-  (setq yaml-indent-offset 4))
+  (setq yaml-indent-offset 2))
 #+END_SRC
 *** TOML
 #+BEGIN_SRC emacs-lisp
