@@ -3396,6 +3396,18 @@ When called with 2 prefix arguments only open in browser and don't copy."
 ;; Only auto-fill inside comments
 (setq comment-auto-fill-only-comments t)
 #+END_SRC
+*** Apheleia: Auto formatting
+Instead of calling =apheleia-format-buffer= for all projects, rather put this in
+your =.dir-locals.el= where you want the prettier after save hook activated. E.g.:
+#+BEGIN_SRC emacs-lisp :tangle no
+((js-mode . ((eval . (apheleia-mode)))))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package apheleia
+  :defer t)
+#+END_SRC
+
 *** Flycheck
 To activate shellcheck we need the =shellcheck= package.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
@@ -3891,7 +3903,7 @@ Formatting is according to the commit message conventions."
     ;; Set compile command by default to 'go run ....'
     (setq-local compile-command (concat "go run " (shell-quote-argument buffer-file-name)))
     ;; gofmt on save
-    (add-hook 'before-save-hook 'gofmt-before-save nil t)
+    (apheleia-mode)
     ;; stop whitespace being highlighted
     (whitespace-toggle-options '(tabs))))
 
@@ -3940,7 +3952,7 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
 
 #+BEGIN_SRC emacs-lisp
 (use-package prettier-js
-  :defer t
+  :disabled t  ; FIXME: Obsolete since Apheleia
   ;;:hook (js-mode . prettier-js-mode)
   :init
   (put 'prettier-js-args 'safe-local-variable 'listp)
@@ -4794,6 +4806,7 @@ put something like this in your =.dir-locals.el=:
 
 #+BEGIN_SRC emacs-lisp
 (use-package blacken
+  :disabled t  ; FIXME: Obsolete since Apheleia
   :defer t
   :config
   ;; Allow using Python 3.6-only syntax

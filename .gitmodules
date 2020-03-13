@@ -33,6 +33,9 @@
 [submodule "apache-mode"]
 	path = lib/apache-mode
 	url = git@github.com:emacs-php/apache-mode.git
+[submodule "apheleia"]
+	path = lib/apheleia
+	url = git@github.com:raxod502/apheleia.git
 [submodule "apiwrap"]
 	path = lib/apiwrap
 	url = git@github.com:vermiculus/apiwrap.el.git
