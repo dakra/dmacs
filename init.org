@@ -8579,20 +8579,6 @@ It only works for frames with exactly two windows."
   (setq emms-player-list '(emms-player-mpv))
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
 #+END_SRC
-** Spotify: counsel-spotify
-Get spotify client ID an secret from authinfo.
-Put a line with =machine= =spotify.api= in your ~authinfo~ where
-login is the Spotify client ID and password is the secret.
-#+BEGIN_SRC emacs-lisp
-(use-package counsel-spotify
-  :defer t
-  :config
-  (when-let ((plist (car (auth-source-search :host "spotify.api" :max 1)))
-             (id (plist-get plist :user))
-             (secret (funcall (plist-get plist :secret))))
-    (setq counsel-spotify-client-id id)
-    (setq counsel-spotify-client-secret secret)))
-#+END_SRC
 ** YouTube Download
 #+BEGIN_SRC emacs-lisp
 (use-package youtube-dl

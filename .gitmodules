@@ -181,9 +181,6 @@
 [submodule "counsel-projectile"]
 	path = lib/counsel-projectile
 	url = git@github.com:ericdanan/counsel-projectile.git
-[submodule "counsel-spotify"]
-	path = lib/counsel-spotify
-	url = git@github.com:Lautaro-Garcia/counsel-spotify.git
 [submodule "crontab-mode"]
 	path = lib/crontab-mode
 	url = git@github.com:emacs-pe/crontab-mode.git
