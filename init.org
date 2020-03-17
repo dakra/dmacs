@@ -652,7 +652,11 @@ Code from `read-envvar-name'."
 
 ;; Increase the 'Limit on number of Lisp variable bindings and unwind-protects.'
 ;; mu4e seems to need more sometimes and it can be safely increased.
-(setq max-specpdl-size 2048)
+(setq max-specpdl-size 4096)
+
+;; Increase the limit to catch infinite recursions.
+;; Large scala files need sometimes more and this value can safely be increased.
+(setq max-lisp-eval-depth 32768)
 #+END_SRC
 
 Allow some commands as safe by default
