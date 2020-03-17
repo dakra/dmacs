@@ -947,6 +947,12 @@
 	disabled = true
 	path = lib/sauron
 	url = git@github.com:djcb/sauron.git
+[submodule "sbt-mode"]
+	path = lib/sbt-mode
+	url = git@github.com:hvesalai/emacs-sbt-mode.git
+[submodule "scala-mode"]
+	path = lib/scala-mode
+	url = git@github.com:hvesalai/emacs-scala-mode.git
 [submodule "scrot"]
 	path = lib/scrot
 	url = git@github.com:dakra/scrot.el.git

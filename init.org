@@ -3796,6 +3796,33 @@ glslang
                                     company-dabbrev-code
                                     company-yasnippet)))))
 #+END_SRC
+** Scala
+We need scala, sbt and metals installed
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+scala
+sbt
+metals
+#+END_SRC
+
+https://scalameta.org/metals/docs/editors/emacs.html
+#+BEGIN_SRC emacs-lisp
+(use-package scala-mode
+  :mode "\\.s\\(cala\\|bt\\)$"
+  :hook (scala-mode . lsp))
+
+;; Enable sbt mode for executing sbt commands
+(use-package sbt-mode
+  :defer t
+  :config
+  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
+  ;; allows using SPACE when in the minibuffer
+  ;;(substitute-key-definition
+  ;; 'minibuffer-complete-word
+  ;; 'self-insert-command
+  ;; minibuffer-local-completion-map)
+  ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
+  (setq sbt:program-options '("-Dsbt.supershell=false")))
+#+END_SRC
 ** Go
 For better support install:
 arch package `go-tools' for goimports, guru and godoc
