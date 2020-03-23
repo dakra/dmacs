@@ -3548,6 +3548,9 @@ lldb
       (setq dap-hide/show-ui-hidden? t)))
 
   (dap-mode)
+  ;; displays floating panel with debug buttons
+  (dap-ui-controls-mode)
+  ;; Displaying DAP visuals
   (dap-ui-mode))
 
 (use-package ccls
