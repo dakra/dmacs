@@ -6524,7 +6524,9 @@ NAME may be nil for unnamed sessions."
 **** Org-superstar: Use utf-8 characters instead of `*` as bullet points
 #+BEGIN_SRC emacs-lisp
 (use-package org-superstar
-  :hook (org-mode . org-superstar-mode))
+  :hook (org-mode . org-superstar-mode)
+  :config
+  (setq org-superstar-headline-bullets-list '("◉" "🞛" "○" "▷" "✸")))
 #+END_SRC
 **** Org-capture
 #+BEGIN_SRC emacs-lisp
