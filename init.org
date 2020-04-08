@@ -4937,6 +4937,10 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   (setq-default sql-input-ring-file-name
                 (no-littering-expand-var-file-name "sql-input-ring"))
   :config
+  ;; Fix prompt detection for mariadb
+  (sql-set-product-feature 'mysql :prompt-regexp "^.*\\(MariaDB\\|MySQL\\|mysql\\) ?\\[?[_a-zA-Z0-9()]*\\]?> ")
+  (sql-set-product-feature 'mariadb :prompt-regexp "^\\(MariaDB\\|MySQL\\|mysql\\) ?\\[?[_a-zA-Z0-9()]*\\]?> ")
+
   ;; I never use multiline in the comint mode. So auto add ";" at the end
   (defun dakra/add-semicolon-and-comint-send-input ()
     "Adds semicolon at the end of the line and runs comint-send-input."
