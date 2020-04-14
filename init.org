@@ -8715,6 +8715,11 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
 (use-package speed-type
   :defer t)
 #+END_SRC
+** Disk-usage: File system analyzer. Tabulated view of file listings sorted by size
+#+BEGIN_SRC emacs-lisp
+(use-package disk-usage
+  :defer t)
+#+END_SRC
 ** Systemctl
 #+BEGIN_SRC emacs-lisp
 (use-package systemctl

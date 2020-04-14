@@ -244,6 +244,9 @@
 [submodule "discover-my-major"]
 	path = lib/discover-my-major
 	url = https://framagit.org/steckerhalter/discover-my-major.git
+[submodule "disk-usage"]
+	path = lib/disk-usage
+	url = git@gitlab.com:ambrevar/emacs-disk-usage.git
 [submodule "djangonaut"]
 	path = lib/djangonaut
 	url = git@github.com:pythonic-emacs/djangonaut.git
