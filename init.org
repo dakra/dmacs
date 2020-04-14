@@ -4546,6 +4546,17 @@ use-package will load ccls for us simply by calling this function."
   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
                                                        (:kernel . "python")
                                                        (:session . "py-default"))))
+
+(use-package jupyter-repl
+  :after jupyter
+  ;;:hook (jupyter-repl-mode . show-smartparens-mode)
+  :config
+  ;; Always show output from eval in a python buffer also in the repl
+  (setq jupyter-repl-echo-eval-p t)
+  ;; Allow to press RET even when the kernel is busy
+  (setq jupyter-repl-allow-RET-when-busy t)
+  ;; Display more in the repl before it get's truncated
+  (setq jupyter-repl-maximum-size 16384))
 #+END_SRC
 *** Main Python setup
 #+BEGIN_SRC emacs-lisp
