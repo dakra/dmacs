@@ -3357,11 +3357,16 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
   (setq forge-owned-accounts '(("dakra") ("pythonic-emacs") ("atomx") ("restalchemy")))
   ;; Don't pull notifications as it blocks Emacs for a long time
   (setq forge-pull-notifications nil)
-  ;; Add private paessler giblab server
+  ;; Add private GitLab servers
   (add-to-list 'forge-alist
                '("gitlab.paesslergmbh.de"
                  "gitlab.paesslergmbh.de/api/v4"
                  "gitlab.paesslergmbh.de"
+                 forge-gitlab-repository))
+  (add-to-list 'forge-alist
+               '("gitlab.test.bigdata.sovendus.aws"
+                 "gitlab.test.bigdata.sovendus.aws/api/v4"
+                 "gitlab.test.bigdata.sovendus.aws"
                  forge-gitlab-repository)))
 #+END_SRC
 XXX: Only use =magit-gerrit= until functionality is implemented in =forge=.
@@ -3388,10 +3393,15 @@ When called with 2 prefix arguments only open in browser and don't copy."
       (16 (browse-at-remote))
       (t  (browse-at-remote-kill) (browse-at-remote))))
 
-  (add-to-list 'browse-at-remote-remote-type-domains '("gitlab.bis" . "gitlab"))
-  (add-to-list 'browse-at-remote-remote-type-domains '("gitlab.paesslergmbh.de" . "gitlab"))
-  (add-to-list 'browse-at-remote-remote-type-domains '("git.ebenefuenf.com" . "gitlab"))
-  (add-to-list 'browse-at-remote-remote-type-domains '("lab.ebenefuenf.com" . "gitlab"))
+  (setq browse-at-remote-use-http '("gitlab.test.bigdata.sovendus.aws"))
+  (dolist (i '(("git.wdf.sap.corp"                 . "gitiles")
+               ("gitlab.bis"                       . "gitlab")
+               ("gitlab.paesslergmbh.de"           . "gitlab")
+               ("gitlab.test.bigdata.sovendus.aws" . "gitlab")
+               ("git.ebenefuenf.com"               . "gitlab")
+               ("lab.ebenefuenf.com"               . "gitlab")))
+    (add-to-list 'browse-at-remote-remote-type-domains i))
+
   (setq browse-at-remote-prefer-symbolic nil))
 #+END_SRC
 * Programming
