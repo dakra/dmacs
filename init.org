@@ -7409,6 +7409,20 @@ make
 sudo make install
 #+END_SRC
 
+For =mu= to recognize personal email addresses you have to pass them to ~mu init~ before indexing with:
+#+BEGIN_SRC shell
+mu init --my-address daniel@kraus.my                 \
+        --my-address daniel.kraus@gmail.com          \
+        --my-address d@niel-kraus.de                 \
+        --my-address daniel@skor.buzz                \
+        --my-address dakra-cepheus@tr0ll.net         \
+        --my-address extern.daniel.kraus@sovendus.de \
+        --my-address daniel.kraus@paessler.com       \
+        --my-address daniel.kraus@ebenefuenf.de      \
+        --my-address daniel@restalchemy.org          \
+        --my-address daniel@hogaso.com
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package mu4e
   ;; Open mu4e with the 'Mail' key (if your keyboard has one)
@@ -7541,7 +7555,8 @@ sudo make install
     (add-to-list 'mu4e~mailing-lists mailing-list))
 
   (setq mu4e-bookmarks `((,(concat "maildir:/private/Inbox OR "
-                                   ; "maildir:/paessler/Inbox OR "
+                                   ;; "maildir:/paessler/Inbox OR "
+                                   "maildir:/sovendus/Inbox OR "
                                    "maildir:/sap/Inbox OR "
                                    "maildir:/gmail/inbox OR "
                                    "maildir:/atomx/inbox OR "
@@ -7558,6 +7573,7 @@ sudo make install
                                    "NOT maildir:/private/Trash AND "
                                    "NOT maildir:/atomx/spam AND "
                                    "NOT maildir:/atomx/trash AND "
+                                   "NOT maildir:/paessler/Inbox AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
                                    "NOT maildir:/sap/Deleted\\ Items AND "
                                    "NOT maildir:/gmail/spam AND "
@@ -7570,6 +7586,7 @@ sudo make install
                                    "NOT maildir:/private/Trash AND "
                                    "NOT maildir:/atomx/spam AND "
                                    "NOT maildir:/atomx/trash AND "
+                                   "NOT maildir:/paessler/Inbox AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
                                    "NOT maildir:/sap/Deleted\\ Items AND "
                                    "NOT maildir:/gmail/spam AND "
@@ -7591,7 +7608,7 @@ sudo make install
 
   ;; allow for updating mail using 'U' in the main view:
   ;; (only update inboxes)
-  (setq mu4e-get-mail-command "mbsync private:Inbox paessler:Inbox e5:Inbox gmail-inbox atomx-inbox hogaso-inbox")
+  (setq mu4e-get-mail-command "mbsync private:Inbox sovendus:Inbox e5:Inbox gmail-inbox atomx-inbox hogaso-inbox")
   ;; for update all:
   ;;(setq mu4e-get-mail-command "mbsync -a")
 
@@ -7631,17 +7648,7 @@ sudo make install
   (setq mu4e-compose-in-new-frame nil)
 
   ;; Don't reply to self
-  (setq mu4e-user-mail-address-list
-        '("daniel@kraus.my" "daniel.kraus@gmail.com" "dakra@tr0ll.net" "daniel@tr0ll.net" "d@niel-kraus.de"
-          "arlo@kraus.my"
-          "dakra-cepheus@tr0ll.net"
-          "daniel@skor.buzz"
-          "daniel@atomx.com"
-          "daniel@hogaso.com"
-          "daniel@restalchemy.org" "daniel@restalchemy.com"
-          "d.kraus@sap.com"
-          "daniel.kraus@paessler.com"
-          "daniel.kraus@ebenefuenf.de"))
+  ;; personal addresses need to be specified with `mu init' before indexing.
   (setq mu4e-compose-dont-reply-to-self t)
 
   ;; Extract name from email for yasnippet template
@@ -7820,20 +7827,20 @@ sudo make install
                      ( mu4e-trash-folder  . "/e5/Trash" )
                      ( mu4e-refile-folder . "/e5/Archive" )))
            ,(make-mu4e-context
-             :name "SAP"
-             :enter-func (lambda () (mu4e-message "Switch to the SAP context"))
-             :match-func (mu4e-context-match-fun "^/sap")
-             :vars '((gnus-icalendar-org-capture-file "~/org/sap.org")
-                     ( user-mail-address  . "d.kraus@sap.com" )
-                     ( mu4e-maildir-shortcuts . (("/sap/Inbox"         . ?i)
-                                                 ("/sap/Outbox"        . ?s)
-                                                 ("/sap/Deleted Items" . ?t)
-                                                 ("/sap/Drafts"        . ?d)
-                                                 ("/sap/Archive"       . ?a)))
-                     ( mu4e-drafts-folder . "/sap/Drafts" )
-                     ( mu4e-sent-folder   . "/sap/Sent" )
-                     ( mu4e-trash-folder  . "/sap/Deleted Items" )
-                     ( mu4e-refile-folder . "/sap/Archive" )))
+             :name "Sovendus"
+             :enter-func (lambda () (mu4e-message "Switch to the Sovendus context"))
+             :match-func (mu4e-context-match-fun "^/sovendus")
+             :vars '((gnus-icalendar-org-capture-file "~/org/sovendus.org")
+                     ( user-mail-address  . "extern.daniel.kraus@sovendus.de" )
+                     ( mu4e-maildir-shortcuts . (("/sovendus/Inbox"   . ?i)
+                                                 ("/sovendus/Outbox"  . ?s)
+                                                 ("/sovendus/Trash"   . ?t)
+                                                 ("/sovendus/Drafts"  . ?d)
+                                                 ("/sovendus/Archive" . ?a)))
+                     ( mu4e-drafts-folder . "/sovendus/Drafts" )
+                     ( mu4e-sent-folder   . "/sovendus/Sent" )
+                     ( mu4e-trash-folder  . "/sovendus/Trash" )
+                     ( mu4e-refile-folder . "/sovendus/Archive" )))
            ,(make-mu4e-context
              :name "Paessler"
              :enter-func (lambda () (mu4e-message "Switch to the paessler context"))
