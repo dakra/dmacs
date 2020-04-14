@@ -41,6 +41,7 @@
         org-end-of-line
         org-force-self-insert
         org-kill-line
+        org-return
         org-self-insert-command
         org-shiftmetaup
         org-todo
@@ -88,4 +89,6 @@
         org-edit-src-save
         smart-region
         swiper-mc
+        undo-fu-only-redo
+        undo-fu-only-undo
         ))
