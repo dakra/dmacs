@@ -6863,6 +6863,10 @@ See `org-html-format-headline-function' for details."
 (use-package ox-jira
   :after ox)
 
+;; Confluence
+(use-package ox-confluence
+  :after ox)
+
 ;; Github markdown
 (use-package ox-gfm
   :after ox)
