@@ -30,6 +30,9 @@
 [submodule "anaconda-mode"]
 	path = lib/anaconda-mode
 	url = git@github.com:pythonic-emacs/anaconda-mode.git
+[submodule "annotate"]
+	path = lib/annotate
+	url = git@github.com:bastibe/annotate.el.git
 [submodule "apache-mode"]
 	path = lib/apache-mode
 	url = git@github.com:emacs-php/apache-mode.git

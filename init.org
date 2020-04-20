@@ -3376,6 +3376,15 @@ XXX: Only use =magit-gerrit= until functionality is implemented in =forge=.
   :config
   (setq magit-gerrit-signed-push-p t))
 #+END_SRC
+** Annotate: Annotation any file and export as commented unified diff or as code comment
+Activate =annotate-mode= and then you can add, edit, delete
+annotations (use regions) with =C-c C-a=.
+Then export them as diff with =annotate-export-annotations= or
+as inline code comments =annotate-integrate-annotations=.
+#+BEGIN_SRC emacs-lisp
+(use-package annotate
+  :defer t)
+#+END_SRC
 ** Browse-at-remote: Open website (github/gitlab) for current buffer/line/log
 #+BEGIN_SRC emacs-lisp
 ;; open current line/region/dired/commit in github
