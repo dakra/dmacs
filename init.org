@@ -4239,18 +4239,32 @@ Lisp function does not specify a special indentation."
 (use-package elisp-mode
   :bind (:map emacs-lisp-mode-map
          ("C-c C-c" . eval-defun)
-         ("C-c C-b" . eval-buffer))
+         ("C-c C-b" . eval-buffer)
+         ("C-c ;"   . eval-print-as-comment))
   :config
+  (defvar eval-print-as-comment-prefix ";;=> ")
+
+  (defun eval-print-as-comment (&optional arg)
+    (interactive "P")
+    (let ((start (point)))
+      (eval-print-last-sexp arg)
+      (save-excursion
+        (goto-char start)
+        (save-match-data
+          (re-search-forward "[[:space:]\n]*" nil t)
+          (insert eval-print-as-comment-prefix)))))
+
   (add-hook 'emacs-lisp-mode-hook (lambda ()
                                     ;;(eldoc-mode +1)
                                     (setq mode-name "EL"))))
 #+END_SRC
 **** Helper libraries (dash, s, marshal)
 #+BEGIN_SRC emacs-lisp
-(use-package dash  :defer t
+(use-package dash :defer t
   :config (dash-enable-font-lock))
 
-(use-package s  :defer t)
+(use-package s :defer t)
+(use-package f :defer t)
 #+END_SRC
 ***** Request
 #+BEGIN_SRC emacs-lisp
