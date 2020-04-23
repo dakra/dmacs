@@ -7934,7 +7934,8 @@ mu init --my-address daniel@kraus.my                 \
   ;;   "  Daniel\n"))
 
   ;; If there's 'attach' 'file' 'pdf' in the message warn when sending w/o attachment
-  (defun mbork/message-attachment-present-p ()
+  ;; From http://mbork.pl/2016-02-06_An_attachment_reminder_in_mu4e
+  (defun message-attachment-present-p ()
     "Return t if an attachment is found in the current message."
     (save-excursion
       (save-restriction
@@ -7942,40 +7943,34 @@ mu init --my-address daniel@kraus.my                 \
         (goto-char (point-min))
         (when (search-forward "<#part" nil t) t))))
 
-  (defcustom mbork/message-attachment-intent-re
-    (regexp-opt '("attach"
-                  "anhang"
-                  "angehängt"
-                  "angehaengt"
-                  "datei"
-		  "file"
-                  "pdf"))
+  (defcustom message-attachment-intent-re
+    (regexp-opt '("attach" "pdf" "anhang" "angehängt" "angehaengt"))
     "A regex which - if found in the message, and if there is no
 attachment - should launch the no-attachment warning."
     :type '(sexp)
     :group 'mu4e)
 
-  (defcustom mbork/message-attachment-reminder
+  (defcustom message-attachment-reminder
     "Are you sure you want to send this message without any attachment? "
     "The default question asked when trying to send a message
-containing `mbork/message-attachment-intent-re' without an
+containing `message-attachment-intent-re' without an
 actual attachment."
     :type '(string)
     :group 'mu4e)
 
-  (defun mbork/message-warn-if-no-attachments ()
+  (defun message-warn-if-no-attachments ()
     "Ask the user if s?he wants to send the message even though
 there are no attachments."
     (when (and (save-excursion
 	         (save-restriction
 		   (widen)
 		   (goto-char (point-min))
-		   (re-search-forward mbork/message-attachment-intent-re nil t)))
-	       (not (mbork/message-attachment-present-p)))
-      (unless (y-or-n-p mbork/message-attachment-reminder)
+		   (re-search-forward message-attachment-intent-re nil t)))
+	       (not (message-attachment-present-p)))
+      (unless (y-or-n-p message-attachment-reminder)
         (keyboard-quit))))
 
-  (add-hook 'message-send-hook #'mbork/message-warn-if-no-attachments))
+  (add-hook 'message-send-hook #'message-warn-if-no-attachments))
 
 ;; Show overview of unread/all mails for each maildir/bookmarks in mu4e main window
 (use-package mu4e-maildirs-extension
