@@ -8050,18 +8050,27 @@ there are no attachments."
 
   ;; Store link to message if in header view, not to header query
   (setq-default org-mu4e-link-query-in-headers-mode nil))
-
-;; XXX: Play more with org-mime instead of mu4e-compose-org-mode
-;; Look at: http://kitchingroup.cheme.cmu.edu/blog/2016/10/29/Sending-html-emails-from-org-mode-with-org-mime/
-(use-package org-mime
-  :commands (org-mime-htmlize org-mime-org-buffer-htmlize org-mime-org-subtree-htmlize)
-  :bind (:map message-mode-map ("C-c M-o" . org-mime-htmlize)
-         :map org-mode-map ("C-c M-o" . org-mime-org-subtree-htmlize))
-  :config
-  (setq org-mime-export-options '(:section-numbers nil
-                                  :with-author nil
-                                  :with-toc nil)))
 #+END_SRC
+
+Send emails with =org-msg=. Some keybindings:
+- ~C-c C-e~ -- ~org-msg-preview~
+- ~C-c C-s~ -- ~message-goto-subject~ (same as in [[https://www.gnu.org/software/emacs/manual/html_mono/message.html][Message mode]])
+- ~C-c C-b~ -- ~org-msg-goto-body~ (similar to ~message-goto-body~ in [[https://www.gnu.org/software/emacs/manual/html_mono/message.html][Message mode]])
+- ~C-c C-a~ -- ~org-msg-attach~
+- ~C-c C-c~ -- ~org-ctrl-c-ctrl-c~. *OrgMsg* configures ~org-msg-ctrl-c-ctrl-c~ as a final hook of [[https://orgmode.org/][Org mode]].
+             When =C-c C-c= is called in a *OrgMsg* buffer it generates the MIME message and sends it.
+#+BEGIN_SRC emacs-lisp
+(use-package org-msg
+  :after mu4e
+  :config
+  (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil"
+	org-msg-startup "hidestars indent inlineimages"
+	org-msg-greeting-fmt "\nHi *%s*,\n\n"
+	org-msg-greeting-name-limit 3
+	org-msg-text-plain-alternative t)
+  (org-msg-mode))
+#+END_SRC
+
 ** mml-sec: Auto sign mails
 Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 #+BEGIN_SRC emacs-lisp
