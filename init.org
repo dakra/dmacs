@@ -2071,6 +2071,11 @@ go up multiple parent directories."
 
   (counsel-projectile-mode))
 #+END_SRC
+*** Counsel-jq: Counsel interface for the jq command line tool
+#+BEGIN_SRC emacs-lisp
+(use-package counsel-jq
+  :defer t)
+#+END_SRC
 ** ivy-posframe: Display ivy in child frames instead of minibuffer
 #+BEGIN_SRC emacs-lisp
 (use-package ivy-posframe

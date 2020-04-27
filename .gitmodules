@@ -178,6 +178,9 @@
 [submodule "counsel-css"]
 	path = lib/counsel-css
 	url = git@github.com:hlissner/emacs-counsel-css.git
+[submodule "counsel-jq"]
+	path = lib/counsel-jq
+	url = git@github.com:200ok-ch/counsel-jq.git
 [submodule "counsel-org-clock"]
 	path = lib/counsel-org-clock
 	url = git@github.com:akirak/counsel-org-clock.git
