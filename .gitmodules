@@ -545,6 +545,7 @@
 [submodule "ivy"]
 	path = lib/ivy
 	url = git@github.com:abo-abo/swiper.git
+	no-byte-compile = elpa.el
 [submodule "ivy-clojuredocs"]
 	path = lib/ivy-clojuredocs
 	url = git@github.com:wandersoncferreira/ivy-clojuredocs.git
