@@ -771,7 +771,7 @@ E.g. fuer -> für
   ;; Turn off auto revert messages
   (setq auto-revert-verbose nil))
 #+END_SRC
-** Epa
+** Epa: the EasyPG Assistant, transparent file encryption (gpg)
 #+BEGIN_SRC emacs-lisp
 (use-package epa
   :defer t
@@ -1093,6 +1093,29 @@ different face
   (setq highlight-indent-guides-auto-even-face-perc 15)
   (setq highlight-indent-guides-auto-character-face-perc 20))
 #+END_SRC
+** Symbol-overlay
+#+BEGIN_SRC emacs-lisp
+(use-package symbol-overlay
+  :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode)
+  :bind (("C-c s" . symbol-overlay-put)
+         :map symbol-overlay-mode-map
+         ("M-n" . symbol-overlay-jump-next)
+         ("M-p" . symbol-overlay-jump-prev)
+         :map symbol-overlay-map
+         ("M-n" . symbol-overlay-jump-next)
+         ("M-p" . symbol-overlay-jump-prev)
+         ("C-c C-s r" . symbol-overlay-rename)
+         ("C-c C-s k" . symbol-overlay-remove-all)
+         ("C-c C-s q" . symbol-overlay-query-replace)
+         ("C-c C-s t" . symbol-overlay-toggle-in-scope)
+         ("C-c C-s n" . symbol-overlay-jump-next)
+         ("C-c C-s p" . symbol-overlay-jump-prev))
+  :init (setq symbol-overlay-temp-in-scope t)
+  :config
+  ;;(set-face-background 'symbol-overlay-temp-face "gray30")
+  ;; Remove all default bindings
+  (setq symbol-overlay-map (make-sparse-keymap)))
+#+END_SRC
 ** Emoji font
 Package ttf-symbola has to be installed
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
@@ -1171,6 +1194,11 @@ From http://lists.gnu.org/archive/html/help-gnu-emacs/2007-05/msg00975.html
   (set-window-dedicated-p (selected-window) sticky-buffer-mode))
 #+END_SRC
 * Editor
+** Aggressive-indent
+#+BEGIN_SRC emacs-lisp
+(use-package aggressive-indent
+  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js-mode) . aggressive-indent-mode))
+#+END_SRC
 ** Lossage: Live update lossage buffer
 #+BEGIN_SRC emacs-lisp
 (defun update-lossage-buffer ()
@@ -1387,6 +1415,76 @@ editorconfig-core-c
 (use-package whole-line-or-region
   :defer 1
   :config (whole-line-or-region-global-mode t))
+#+END_SRC
+** Smart-region: Smart region selection
+Smart region guesses what you want to select by one command:
+- If you call this command multiple times at the same position, it
+  expands the selected region (with `er/expand-region').
+- Else, if you move from the mark and call this command, it selects
+  the region rectangular (with `rectangle-mark-mode').
+- Else, if you move from the mark and call this command at the same
+  column as mark, it adds a cursor to each line (with `mc/edit-lines').
+
+#+BEGIN_SRC emacs-lisp
+(use-package expand-region
+  :defer t)
+
+(use-package smart-region
+  ;; C-SPC is smart-region
+  :bind (([remap set-mark-command] . smart-region)))
+#+END_SRC
+** Selected: One key keybindings for regions when selection active
+#+BEGIN_SRC emacs-lisp
+(use-package selected
+  ;; Setting the hooks here manually instead of (selected-global-mode)
+  ;; So use-package creates autoloads for us and only loads this package
+  ;; if we really use it (i.e. mark anything)
+  :hook ((activate-mark . selected--on)
+         (deactivate-mark . selected-off))
+  :init (defvar selected-org-mode-map (make-sparse-keymap))
+  :bind (:map selected-keymap
+         ("q" . selected-off)
+         ("u" . upcase-region)
+         ("d" . downcase-region)
+         ("w" . count-words-region)
+         ("m" . apply-macro-to-region-lines)
+         ;; multiple cursors
+         ("v" . mc/vertical-align-with-space)
+         ("a" . mc/mark-all-dwim)
+         ("A" . mc/mark-all-like-this)
+         ("m" . mc/mark-more-like-this-extended)
+         ("p" . mc/mark-previous-like-this)
+         ("P" . mc/unmark-previous-like-this)
+         ("S" . mc/skip-to-previous-like-this)
+         ("n" . mc/mark-next-like-this)
+         ("N" . mc/unmark-next-like-this)
+         ("s" . mc/skip-to-next-like-this)
+         ("r" . mc/edit-lines)
+         :map selected-org-mode-map
+         ("t" . org-table-convert-region)))
+
+#+END_SRC
+** Multiple-cursors
+#+BEGIN_SRC emacs-lisp
+(use-package multiple-cursors
+  :bind (("C-c m" . mc/mark-all-dwim)
+         ("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         :map mc/keymap
+         ("C-x v" . mc/vertical-align-with-space)
+         ("C-x n" . mc-hide-unmatched-lines-mode))
+  :config
+  (global-unset-key (kbd "M-<down-mouse-1>"))
+  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
+
+  (with-eval-after-load 'multiple-cursors-core
+    ;; Immediately load mc list, otherwise it will show as
+    ;; changed as empty in my git repo
+    (mc/load-lists)
+
+    (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
+    (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
+    (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
 #+END_SRC
 ** smartrep: Repeat previous command without prefix key
 #+BEGIN_SRC emacs-lisp
@@ -1669,6 +1767,11 @@ Simple but effective sorting and filtering for Emacs
 
   (setq company-box-enable-icon nil))
 #+END_SRC
+** Discover-my-major: Display a list of keybindings for the current major mode
+#+BEGIN_SRC emacs-lisp
+(use-package discover-my-major
+  :bind (("C-h C-m" . discover-my-major)))
+#+END_SRC
 ** Helpful: A better help buffer
 Helpful is a replacement for ~*help*~ buffers that provides much more contextual information.
 #+BEGIN_SRC emacs-lisp
@@ -1741,6 +1844,180 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   :after helpful
   :config
   (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))
+#+END_SRC
+** Undo
+#+BEGIN_SRC emacs-lisp
+(use-package undo-fu
+  :bind (("C-/"   . undo-fu-only-undo)
+         ("C-z"   . undo-fu-only-undo)
+         ("C-S-z" . undo-fu-only-redo)
+         ("C-?"   . undo-fu-only-redo)))
+
+(use-package undo-tree
+  :disabled t
+  :hook (after-init . global-undo-tree-mode)
+  :bind ("C-z" . undo-tree-undo)  ;; Don't (suspend-frame)
+  :config
+  (setq undo-tree-visualizer-timestamps t)  ; show timestamps in undo-tree
+  ;;(setq undo-tree-visualizer-diff t)
+
+  ;; autosave the undo-tree history
+  ;; (setq undo-tree-history-directory-alist
+  ;;       `((".*" . ,temporary-file-directory)))
+  (setq undo-tree-auto-save-history t)
+
+  ;; Keep region when undoing in region
+  (defadvice undo-tree-undo (around keep-region activate)
+    (if (use-region-p)
+        (let ((m (set-marker (make-marker) (mark)))
+              (p (set-marker (make-marker) (point))))
+          ad-do-it
+          (goto-char p)
+          (set-mark m)
+          (set-marker p nil)
+          (set-marker m nil))
+      ad-do-it)))
+#+END_SRC
+
+* Spell checker
+** Ispell
+#+BEGIN_SRC emacs-lisp
+(use-package ispell
+  :bind (("C-c I c" . ispell-comments-and-strings)
+         ("C-c I d" . ispell-change-dictionary)
+         ("C-c I k" . ispell-kill-ispell)
+         ("C-c I m" . ispell-message)
+         ("C-c I r" . ispell-region))
+  :config
+  ;; Spell check camel case strings
+  (setq ispell-program-name "aspell"
+        ;; force the English dictionary, support Camel Case spelling check (tested with aspell 0.6)
+        ispell-extra-args '("--sug-mode=ultra"
+                            "--run-together"
+                            "--run-together-limit=5"
+                            "--run-together-min=2"))
+
+  ;; Javascript and ReactJS setup
+  (defun js-flyspell-verify ()
+    (let* ((f (get-text-property (- (point) 1) 'face)))
+      ;; *whitelist*
+      ;; only words with following font face will be checked
+      (memq f '(js2-function-call
+                js2-function-param
+                js2-object-property
+                font-lock-variable-name-face
+                font-lock-string-face
+                font-lock-function-name-face))))
+  (put 'js-mode 'flyspell-mode-predicate 'js-flyspell-verify)
+  (put 'rjsx-mode 'flyspell-mode-predicate 'js-flyspell-verify)
+  ;; }}
+
+  ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
+  ;; Don't use Camel Case when correcting a word
+  (defun flyspell-detect-ispell-args (&optional run-together)
+    "if RUN-TOGETHER is true, spell check the CamelCase words."
+    (let (args)
+      (cond
+       ((string-match  "aspell$" ispell-program-name)
+        ;; Force the English dictionary for aspell
+        ;; Support Camel Case spelling check (tested with aspell 0.6)
+        (setq args (list "--sug-mode=ultra"))
+        (if run-together
+            (setq args (append args '("--run-together" "--run-together-limit=5" "--run-together-min=2")))))
+       ((string-match "hunspell$" ispell-program-name)
+        ;; Force the English dictionary for hunspell
+        (setq args "")))
+      args))
+
+  (setq-default ispell-extra-args (flyspell-detect-ispell-args t))
+  ;; (setq ispell-cmd-args (flyspell-detect-ispell-args))
+  (defadvice ispell-word (around my-ispell-word activate)
+    (let ((old-ispell-extra-args ispell-extra-args))
+      (ispell-kill-ispell t)
+      (setq ispell-extra-args (flyspell-detect-ispell-args))
+      ad-do-it
+      (setq ispell-extra-args old-ispell-extra-args)
+      (ispell-kill-ispell t)))
+  ;; flyspell-correct uses this function
+  (defadvice flyspell-correct-word-generic (around my-ispell-word activate)
+    (let ((old-ispell-extra-args ispell-extra-args))
+      (ispell-kill-ispell t)
+      (setq ispell-extra-args (flyspell-detect-ispell-args))
+      ad-do-it
+      (setq ispell-extra-args old-ispell-extra-args)
+      (ispell-kill-ispell t)))
+  ;; flyspell-correct uses this function
+  (defadvice flyspell-correct-at-point (around my-ispell-word activate)
+    (let ((old-ispell-extra-args ispell-extra-args))
+      (ispell-kill-ispell t)
+      (setq ispell-extra-args (flyspell-detect-ispell-args))
+      ad-do-it
+      (setq ispell-extra-args old-ispell-extra-args)
+      (ispell-kill-ispell t)))
+
+  (defadvice flyspell-auto-correct-word (around my-flyspell-auto-correct-word activate)
+    (let ((old-ispell-extra-args ispell-extra-args))
+      (ispell-kill-ispell t)
+      ;; use emacs original arguments
+      (setq ispell-extra-args (flyspell-detect-ispell-args))
+      ad-do-it
+      ;; restore our own ispell arguments
+      (setq ispell-extra-args old-ispell-extra-args)
+      (ispell-kill-ispell t)))
+
+  (defun text-mode-hook-setup ()
+    ;; Turn off RUN-TOGETHER option when spell check text-mode
+    (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
+  (add-hook 'text-mode-hook 'text-mode-hook-setup))
+#+END_SRC
+** Flyspell
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell
+  :hook ((prog-mode . flyspell-prog-mode)
+         ((org-mode mu4e-compose-mode markdown-mode rst-mode) . flyspell-mode))
+  :config
+  ;; remove flyspess 'C-;' keybinding so we can use it for avy jump
+  (unbind-key "C-;" flyspell-mode-map))
+#+END_SRC
+** Flyspell-correct: Show list of correct spelling suggestions
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell-correct
+  :after flyspell
+  :bind (:map flyspell-mode-map
+         ("C-." . flyspell-correct-wrapper))
+  :config
+  (setq flyspell-correct-interface #'flyspell-correct-ivy))
+#+END_SRC
+** Language tool: Grammar, Style and Spell Checker
+See https://languagetool.org/ and http://wiki.languagetool.org/finding-errors-using-n-gram-data
+
+You need to install the external languagetool java app
+and optional grammar files.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+languagetool
+languagetool-ngrams-de
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package langtool
+  :defer t
+  :config
+  ;; Langtool classpath in arch is not set per environment variable
+  ;; Set classpath like in the `/usr/bin/languagetool' script
+  (setq langtool-java-classpath
+        (concat "/usr/share/languagetool:"
+                (s-join ":" (directory-files "/usr/share/java/languagetool/" t ".jar\\'")))))
+#+END_SRC
+** Guess-language: Automatically guess languages and switch ispell
+#+BEGIN_SRC emacs-lisp
+(use-package guess-language
+  ;; Only guess language for emails
+  :hook (mu4e-compose-mode . guess-language-mode)
+  :config
+  (setq guess-language-langcodes '((en . ("en_GB" "English"))
+                                   (de . ("de_DE" "German"))))
+  (setq guess-language-languages '(en de))
+  (setq guess-language-min-paragraph-length 35))
 #+END_SRC
 * Project Management
 ** Projectile
@@ -2104,10 +2381,50 @@ go up multiple parent directories."
   :bind (("C-c \\" . goto-last-change)
          ("C-c |" . goto-last-change-reverse)))
 #+END_SRC
+** Avy: Quickly jump to any character on screen
+#+BEGIN_SRC emacs-lisp
+(use-package avy
+  :bind ("C-;" . avy-goto-char-timer)
+  :config
+  (setq avy-background t)
+  (setq avy-style 'at-full)
+  (setq avy-timeout-seconds 0.2))
+#+END_SRC
+** Ace-link: Quickly jump to any link on screen
+#+BEGIN_SRC emacs-lisp
+(use-package ace-link
+  :bind (:map Info-mode-map ("o" . ace-link-info)
+         :map help-mode-map ("o" . ace-link-help)
+         :map compilation-mode-map ("o" . ace-link-compilation)
+         :map org-mode-map ("M-o" . ace-link-org))
+  :init
+  (eval-after-load "woman"
+    `(define-key woman-mode-map ,"o" 'ace-link-woman))
+  (eval-after-load "eww"
+    `(progn
+       (define-key eww-link-keymap ,"o" 'ace-link-eww)
+       (define-key eww-mode-map ,"o" 'ace-link-eww))))
+#+END_SRC
 ** Ace-window: Select/move/swap windows
 #+BEGIN_SRC emacs-lisp
 (use-package ace-window
   :bind ("s-a" . ace-window))
+#+END_SRC
+** Dumb-jump: Jump to definition with smart regex searches
+Dumb Jump is an Emacs "jump to definition" package with support for 40+ programming languages that favors
+"just working" over speed or accuracy.  This means minimal -- and ideally zero -- configuration with absolutely
+no stored indexes (TAGS) or persistent background processes.  Dumb Jump performs best with The Silver Searcher
+`ag` or ripgrep `rg` installed.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dumb-jump
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+         ("M-g p" . dumb-jump-back)
+         ("M-g q" . dumb-jump-quick-look)
+         ("M-g x" . dumb-jump-go-prefer-external)
+         ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config (setq dumb-jump-selector 'ivy))
 #+END_SRC
 ** ibuffer
 #+BEGIN_SRC emacs-lisp
@@ -5417,9 +5734,6 @@ Helper function for URL encode / decode
 #+END_SRC
 * personal.el
 #+BEGIN_SRC emacs-lisp
-(use-package discover-my-major
-  :bind (("C-h C-m" . discover-my-major)))
-
 ;; auto kill buffer when closing window
 (defun maybe-delete-frame-buffer (frame)
   "When a dedicated FRAME is deleted, also kill its buffer.
@@ -5451,27 +5765,6 @@ displayed anywhere else."
   :after (restclient company)
   :config (add-to-list 'company-backends 'company-restclient))
 
-(use-package symbol-overlay
-  :hook ((prog-mode html-mode css-mode) . symbol-overlay-mode)
-  :bind (("C-c s" . symbol-overlay-put)
-         :map symbol-overlay-mode-map
-         ("M-n" . symbol-overlay-jump-next)
-         ("M-p" . symbol-overlay-jump-prev)
-         :map symbol-overlay-map
-         ("M-n" . symbol-overlay-jump-next)
-         ("M-p" . symbol-overlay-jump-prev)
-         ("C-c C-s r" . symbol-overlay-rename)
-         ("C-c C-s k" . symbol-overlay-remove-all)
-         ("C-c C-s q" . symbol-overlay-query-replace)
-         ("C-c C-s t" . symbol-overlay-toggle-in-scope)
-         ("C-c C-s n" . symbol-overlay-jump-next)
-         ("C-c C-s p" . symbol-overlay-jump-prev))
-  :init (setq symbol-overlay-temp-in-scope t)
-  :config
-  ;;(set-face-background 'symbol-overlay-temp-face "gray30")
-  ;; Remove all default bindings
-  (setq symbol-overlay-map (make-sparse-keymap)))
-
 ;; Useful if you're *not* using exwm:
 ;; More useful frame title, that show either a file or a
 ;; buffer name (if the buffer isn't visiting a file)
@@ -5480,117 +5773,10 @@ displayed anywhere else."
 ;;                                           (abbreviate-file-name (buffer-file-name))
 ;;                                         "%b"))))
 
-(use-package dumb-jump
-  :bind (("M-g o" . dumb-jump-go-other-window)
-         ("M-g j" . dumb-jump-go)
-         ("M-g p" . dumb-jump-back)
-         ("M-g q" . dumb-jump-quick-look)
-         ("M-g x" . dumb-jump-go-prefer-external)
-         ("M-g z" . dumb-jump-go-prefer-external-other-window))
-  :config (setq dumb-jump-selector 'helm))
 
 ;; change `find-file` so all files that belong to root are opened as root
 ;; too often unintentional changes. just use 'M-x crux-sudo-edit' when needed
 ;;(crux-reopen-as-root-mode)
-
-(use-package aggressive-indent
-  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js-mode) . aggressive-indent-mode))
-
-(use-package undo-fu
-  :bind (("C-/"   . undo-fu-only-undo)
-         ("C-z"   . undo-fu-only-undo)
-         ("C-S-z" . undo-fu-only-redo)
-         ("C-?"   . undo-fu-only-redo)))
-
-(use-package undo-tree
-  :disabled t
-  :hook (after-init . global-undo-tree-mode)
-  :bind ("C-z" . undo-tree-undo)  ;; Don't (suspend-frame)
-  :config
-  (setq undo-tree-visualizer-timestamps t)  ; show timestamps in undo-tree
-  ;;(setq undo-tree-visualizer-diff t)
-
-  ;; autosave the undo-tree history
-  ;; (setq undo-tree-history-directory-alist
-  ;;       `((".*" . ,temporary-file-directory)))
-  (setq undo-tree-auto-save-history t)
-
-  ;; Keep region when undoing in region
-  (defadvice undo-tree-undo (around keep-region activate)
-    (if (use-region-p)
-        (let ((m (set-marker (make-marker) (mark)))
-              (p (set-marker (make-marker) (point))))
-          ad-do-it
-          (goto-char p)
-          (set-mark m)
-          (set-marker p nil)
-          (set-marker m nil))
-      ad-do-it)))
-
-
-;; Smart region guesses what you want to select by one command:
-;; - If you call this command multiple times at the same position, it
-;;   expands the selected region (with `er/expand-region').
-;; - Else, if you move from the mark and call this command, it selects
-;;   the region rectangular (with `rectangle-mark-mode').
-;; - Else, if you move from the mark and call this command at the same
-;;   column as mark, it adds a cursor to each line (with `mc/edit-lines').
-(use-package smart-region
-  ;; C-SPC is smart-region
-  :bind (([remap set-mark-command] . smart-region)))
-
-
-;; "C-=" is not valid ascii sequence in terminals
-;;(global-set-key (kbd "C-@") 'er/expand-region)
-
-(use-package selected
-  ;; Setting the hooks here manually instead of (selected-global-mode)
-  ;; So use-package creates autoloads for us and only loads this package
-  ;; if we really use it (i.e. mark anything)
-  :hook ((activate-mark . selected--on)
-         (deactivate-mark . selected-off))
-  :init (defvar selected-org-mode-map (make-sparse-keymap))
-  :bind (:map selected-keymap
-         ("q" . selected-off)
-         ("u" . upcase-region)
-         ("d" . downcase-region)
-         ("w" . count-words-region)
-         ("m" . apply-macro-to-region-lines)
-         ;; multiple cursors
-         ("v" . mc/vertical-align-with-space)
-         ("a" . mc/mark-all-dwim)
-         ("A" . mc/mark-all-like-this)
-         ("m" . mc/mark-more-like-this-extended)
-         ("p" . mc/mark-previous-like-this)
-         ("P" . mc/unmark-previous-like-this)
-         ("S" . mc/skip-to-previous-like-this)
-         ("n" . mc/mark-next-like-this)
-         ("N" . mc/unmark-next-like-this)
-         ("s" . mc/skip-to-next-like-this)
-         ("r" . mc/edit-lines)
-         :map selected-org-mode-map
-         ("t" . org-table-convert-region)))
-
-(use-package multiple-cursors
-  :bind (("C-c m" . mc/mark-all-dwim)
-         ("C->" . mc/mark-next-like-this)
-         ("C-<" . mc/mark-previous-like-this)
-         :map mc/keymap
-         ("C-x v" . mc/vertical-align-with-space)
-         ("C-x n" . mc-hide-unmatched-lines-mode))
-  :config
-  (global-unset-key (kbd "M-<down-mouse-1>"))
-  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click)
-
-  (with-eval-after-load 'multiple-cursors-core
-    ;; Immediately load mc list, otherwise it will show as
-    ;; changed as empty in my git repo
-    (mc/load-lists)
-
-    (define-key mc/keymap (kbd "M-T") 'mc/reverse-regions)
-    (define-key mc/keymap (kbd "C-,") 'mc/unmark-next-like-this)
-    (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
-
 
 (use-package god-mode
   :disabled t
@@ -5619,159 +5805,9 @@ displayed anywhere else."
 ;;(global-set-key "\M-n"  (lambda () (interactive) (scroll-up   1)) )
 ;;(global-set-key "\M-p"  (lambda () (interactive) (scroll-down 1)) )
 
-(use-package avy
-  :bind ("C-;" . avy-goto-char-timer)
-  :config
-  (setq avy-background t)
-  (setq avy-style 'at-full)
-  (setq avy-timeout-seconds 0.2))
-
-(use-package ace-link
-  :bind (:map Info-mode-map ("o" . ace-link-info)
-         :map help-mode-map ("o" . ace-link-help)
-         :map compilation-mode-map ("o" . ace-link-compilation)
-         :map org-mode-map ("M-o" . ace-link-org))
-  :init
-  (eval-after-load "woman"
-    `(define-key woman-mode-map ,"o" 'ace-link-woman))
-  (eval-after-load "eww"
-    `(progn
-       (define-key eww-link-keymap ,"o" 'ace-link-eww)
-       (define-key eww-mode-map ,"o" 'ace-link-eww))))
-
-;; Spellcheck setup
-
-(use-package ispell
-  :bind (("C-c I c" . ispell-comments-and-strings)
-         ("C-c I d" . ispell-change-dictionary)
-         ("C-c I k" . ispell-kill-ispell)
-         ("C-c I m" . ispell-message)
-         ("C-c I r" . ispell-region))
-  :config
-  ;; Spell check camel case strings
-  (setq ispell-program-name "aspell"
-        ;; force the English dictionary, support Camel Case spelling check (tested with aspell 0.6)
-        ispell-extra-args '("--sug-mode=ultra"
-                            "--run-together"
-                            "--run-together-limit=5"
-                            "--run-together-min=2"))
-
-  ;; Javascript and ReactJS setup
-  (defun js-flyspell-verify ()
-    (let* ((f (get-text-property (- (point) 1) 'face)))
-      ;; *whitelist*
-      ;; only words with following font face will be checked
-      (memq f '(js2-function-call
-                js2-function-param
-                js2-object-property
-                font-lock-variable-name-face
-                font-lock-string-face
-                font-lock-function-name-face))))
-  (put 'js-mode 'flyspell-mode-predicate 'js-flyspell-verify)
-  (put 'rjsx-mode 'flyspell-mode-predicate 'js-flyspell-verify)
-  ;; }}
-
-  ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
-  ;; Don't use Camel Case when correcting a word
-  (defun flyspell-detect-ispell-args (&optional run-together)
-    "if RUN-TOGETHER is true, spell check the CamelCase words."
-    (let (args)
-      (cond
-       ((string-match  "aspell$" ispell-program-name)
-        ;; Force the English dictionary for aspell
-        ;; Support Camel Case spelling check (tested with aspell 0.6)
-        (setq args (list "--sug-mode=ultra"))
-        (if run-together
-            (setq args (append args '("--run-together" "--run-together-limit=5" "--run-together-min=2")))))
-       ((string-match "hunspell$" ispell-program-name)
-        ;; Force the English dictionary for hunspell
-        (setq args "")))
-      args))
-
-  (setq-default ispell-extra-args (flyspell-detect-ispell-args t))
-  ;; (setq ispell-cmd-args (flyspell-detect-ispell-args))
-  (defadvice ispell-word (around my-ispell-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-  ;; flyspell-correct uses this function
-  (defadvice flyspell-correct-word-generic (around my-ispell-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-  ;; flyspell-correct uses this function
-  (defadvice flyspell-correct-at-point (around my-ispell-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-
-  (defadvice flyspell-auto-correct-word (around my-flyspell-auto-correct-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      ;; use emacs original arguments
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      ;; restore our own ispell arguments
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-
-  (defun text-mode-hook-setup ()
-    ;; Turn off RUN-TOGETHER option when spell check text-mode
-    (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
-  (add-hook 'text-mode-hook 'text-mode-hook-setup)
-
-  ;; end spell checking
-  )
-
-(use-package flyspell
-  :hook ((prog-mode . flyspell-prog-mode)
-         ((org-mode mu4e-compose-mode markdown-mode rst-mode) . flyspell-mode))
-  :config
-  ;; remove flyspess 'C-;' keybinding so we can use it for avy jump
-  (unbind-key "C-;" flyspell-mode-map))
-
-;; Show ivy-list of correct spelling suggesions
-(use-package flyspell-correct-ivy
-  :after flyspell
-  :bind (:map flyspell-mode-map
-         ("C-." . flyspell-correct-wrapper))
-  :config
-  (setq flyspell-correct-interface #'flyspell-correct-ivy))
-
-;; Need to install `languagetool'
-(use-package langtool
-  :defer t
-  :config
-  ;; Langtool classpath in arch is not set per environment variable
-  ;; Set classpath like in the `/usr/bin/languagetool' script
-  (setq langtool-java-classpath
-        (concat "/usr/share/languagetool:"
-                (s-join ":" (directory-files "/usr/share/java/languagetool/" t ".jar\\'")))))
-
-;; Automatically guess languages and switch ispell
-(use-package guess-language
-  ;; Only guess language for emails
-  :hook (mu4e-compose-mode . guess-language-mode)
-  :config
-  (setq guess-language-langcodes '((en . ("en_GB" "English"))
-                                   (de . ("de_DE" "German"))))
-  (setq guess-language-languages '(en de))
-  (setq guess-language-min-paragraph-length 35))
-
-
 (use-package iedit
   :init (setq iedit-toggle-key-default nil)
   :bind ("C-c ;" . iedit-mode))
-
 
 (use-package yasnippet
   :defer 10
