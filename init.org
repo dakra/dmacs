@@ -402,6 +402,12 @@ scratch buffer by default
 (setq initial-scratch-message nil)
 #+END_SRC
 
+I use the Emacs =native-comp= branch.
+Compile asyncronously all lexically bound .elc files being loaded.
+#+BEGIN_SRC emacs-lisp
+(setq comp-deferred-compilation t)
+#+END_SRC
+
 ** Package Management
 *** Org config tangle
 There is no ~emacs.el~ in this repo. It will automatically created for you
