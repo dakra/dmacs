@@ -6,4 +6,9 @@
   (magit-file-checkout . 4)
   (magit-file-untrack . 4)
   (magit-file-delete . 4)
-  (magit-file-rename . 4)))
+  (magit-file-rename . 4))
+ (magit-log
+  (transient:magit-log:--first-parent . 3)
+  (transient:magit-log:--no-merges . 3)
+  (transient:magit-log:--until= . 2)
+  (transient:magit-log:--since= . 2)))
