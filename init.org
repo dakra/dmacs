@@ -1988,7 +1988,7 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
 ** Flyspell-correct: Show list of correct spelling suggestions
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell-correct
-  :after flyspell
+  :after (flyspell ivy)
   :bind (:map flyspell-mode-map
          ("C-." . flyspell-correct-wrapper))
   :config
