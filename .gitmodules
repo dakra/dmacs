@@ -160,9 +160,6 @@
 [submodule "company-irony"]
 	path = lib/company-irony
 	url = git@github.com:Sarcasm/company-irony.git
-[submodule "company-lsp"]
-	path = lib/company-lsp
-	url = git@github.com:tigersoldier/company-lsp.git
 [submodule "company-lua"]
 	path = lib/company-lua
 	url = git@github.com:ptrv/company-lua.git

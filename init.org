@@ -3855,12 +3855,6 @@ lldb
   (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-symbol nil))
 
-(use-package company-lsp
-  :defer t
-  :config
-  (setq company-lsp-cache-candidates 'auto)
-  (setq company-lsp-enable-snippet t))
-
 (use-package lsp-treemacs
   :after lsp-mode
   :config
@@ -3919,6 +3913,7 @@ use-package will load ccls for us simply by calling this function."
   (setq lsp-java-format-settings-url
         "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
   (setq lsp-java-format-settings-profile "GoogleStyle")
+
   ;; Use 3rd party decompiler
   (setq lsp-java-content-provider-preferred "fernflower")
   (defun java-lsp-init ()
