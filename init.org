@@ -7047,6 +7047,13 @@ See `org-html-format-headline-function' for details."
    :filter (org-at-table-p)
    ("S-SPC" . hydra-org-table-mark-field/body)))
 #+END_SRC
+**** Org-toc: Create table of content in org files
+#+BEGIN_SRC emacs-lisp
+(use-package org-make-toc
+  :defer t
+  :config
+  (setq org-make-toc-filename-prefix t))
+#+END_SRC
 **** Org-pomodoro
 #+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro
