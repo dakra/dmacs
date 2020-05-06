@@ -1812,12 +1812,12 @@ Simple but effective sorting and filtering for Emacs
 Helpful is a replacement for ~*help*~ buffers that provides much more contextual information.
 #+BEGIN_SRC emacs-lisp
 (use-package helpful
-  :bind (("C-h f" . helpful-function)
-         ("C-h v" . helpful-variable)
-         ("C-h s" . helpful-symbol)
+  :bind (("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("C-h s" . counsel-describe-symbol)
          ("C-h k" . helpful-key)
-         ("C-c h f" . helpful-function)
-         ("C-c h v" . helpful-variable)
+         ("C-c h f" . counsel-describe-function)
+         ("C-c h v" . counsel-describe-variable)
          ("C-c h c" . helpful-command)
          ("C-c h m" . helpful-macro)
          ("<C-tab>" . backward-button)
@@ -2257,7 +2257,7 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
 
 (use-package ivy-rich
   ;;:defer 5
-  :after ivy
+  :after counsel
   :config
   ;; Show only basic info for tramp buffers to make it faster
   (setq ivy-rich-parse-remote-buffer nil
@@ -2318,6 +2318,11 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
   (setq counsel-async-filter-update-time 10000)
   (setq ivy-dynamic-exhibit-delay-ms 20)
+
+  ;; Set help function to helpful-
+  (setq counsel-describe-function-function #'helpful-function)
+  (setq counsel-describe-variable-function #'helpful-variable)
+  (setq counsel-describe-symbol-function #'helpful-symbol)
 
   (counsel-mode 1))
 
