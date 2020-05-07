@@ -8836,6 +8836,11 @@ Automatically show battery info when laptop is not connected to line power.
   ;; Add "machine aur.archlinux.org login <user> password <password>" line to .authinfo
   (setq aurel-aur-user-package-info-check t))
 #+END_SRC
+** Debbugs: GNU Bug tracker
+#+BEGIN_SRC emacs-lisp
+(use-package debbugs
+  :defer t)
+#+END_SRC
 ** Gif-Screencasts: One-frame-per-action GIF recording
 You need to install ~scrot~, ImageMagick (~convert~) and optional ~Gifsicle~.
 
