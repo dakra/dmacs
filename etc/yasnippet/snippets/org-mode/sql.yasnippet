@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: sql block
+# key: <sql
+# --
+#+BEGIN_SRC SQL :dbconnection '${1:$$(yas-auto-next (yas-completing-read "DB Connection: " (mapcar 'car sql-connection-alist))) } :database ${2:$$(car (alist-get 'sql-database (alist-get (intern (yas-field-value 1)) sql-connection-alist)))}
+$0
+#+END_SRC
