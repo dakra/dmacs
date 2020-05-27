@@ -744,10 +744,14 @@ Allow some commands as safe by default
 ** Simple: Change some default keybinding (kill-this-buffer, up/downcase-dwim)
 #+BEGIN_SRC emacs-lisp
 (use-package simple
-  :bind (("C-x k" . dakra-kill-this-buffer)
-         ("M-u" . dakra-upcase-dwim)
-         ("M-l" . dakra-downcase-dwim)
-         ("M-c" . dakra-capitalize-dwim))
+  :bind (("C-/"   . undo)
+         ("C-z"   . undo)
+         ("C-S-z" . undo-redo)
+         ("C-?"   . undo-redo)
+         ("C-x k" . dakra-kill-this-buffer)
+         ("M-u"   . dakra-upcase-dwim)
+         ("M-l"   . dakra-downcase-dwim)
+         ("M-c"   . dakra-capitalize-dwim))
   :hook ((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
   :config
   (defun text-mode-autofill-setup ()
@@ -1884,6 +1888,7 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
 ** Undo
 #+BEGIN_SRC emacs-lisp
 (use-package undo-fu
+  :disabled t  ; Emacs 28 comes with `undo-redo`
   :bind (("C-/"   . undo-fu-only-undo)
          ("C-z"   . undo-fu-only-undo)
          ("C-S-z" . undo-fu-only-redo)
