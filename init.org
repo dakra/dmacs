@@ -4741,9 +4741,9 @@ openjdk11-src
                                            (eldoc-mode))))
   :config
   (defun cider-maybe-clojuredocs (&optional arg)
-    "Call `cider-clojuredocs' in `clojure-mode' and `cider-doc' in `clojurescript-mode'."
+    "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
     (interactive "P")
-    (if (eq major-mode 'clojure-mode)
+    (if (and arg (eq major-mode 'clojure-mode))
         (cider-clojuredocs arg)
       (cider-doc)))
 
