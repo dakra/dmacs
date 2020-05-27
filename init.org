@@ -686,6 +686,9 @@ Code from `read-envvar-name'."
 ;; Silence ad-handle-definition about advised functions getting redefined
 (setq ad-redefinition-action 'accept)
 
+;; Use 'fancy' ellipses for truncated strings
+(setq truncate-string-ellipsis "…")
+
 ;; Increase the 'Limit on number of Lisp variable bindings and unwind-protects.'
 ;; mu4e seems to need more sometimes and it can be safely increased.
 (setq max-specpdl-size 4096)
