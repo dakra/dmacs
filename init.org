@@ -2448,6 +2448,7 @@ go up multiple parent directories."
 ** Ace-link: Quickly jump to any link on screen
 #+BEGIN_SRC emacs-lisp
 (use-package ace-link
+  :after org  ;; Otherwise can't bind to org-mode-map
   :bind (:map Info-mode-map ("o" . ace-link-info)
          :map help-mode-map ("o" . ace-link-help)
          :map compilation-mode-map ("o" . ace-link-compilation)
