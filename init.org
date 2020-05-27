@@ -2322,15 +2322,12 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
                    `(("l" find-file-literally "Open literally")))
   ;; Use rg as backend for counsel-git
   (setq counsel-git-cmd "rg -S --files")
-  ;; Only show max 160 characters per line
-  (setq counsel-rg-base-command
-        "rg -S -M 160 --no-heading --line-number --color never %s .")
   ;; Use rg even for single files
   (setq counsel-grep-base-command
-        "rg -S -M 160 --no-heading --line-number --color never %s %s")
+        "rg -S -M 240 --no-heading --line-number --color never %s %s")
   ;; Make ivy faster/more responsive
-  ;; Update filter every 10ms and wait 20ms to refresh dynamic collection
-  (setq counsel-async-filter-update-time 10000)
+  ;; Update filter every 40ms and wait 20ms to refresh dynamic collection
+  (setq counsel-async-filter-update-time 40000)
   (setq ivy-dynamic-exhibit-delay-ms 20)
 
   ;; Set help function to helpful-
