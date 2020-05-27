@@ -2649,6 +2649,8 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
          :map dired-mode-map
          ("j" . swiper)
          ("M-RET" . emms-play-dired)
+         ("C-RET" . dired-open-xdg)
+         ([(control return)] . dired-open-xdg)
          ("e" . dired-ediff-files)
          ("C-c C-e" . dired-toggle-read-only))
   :config
