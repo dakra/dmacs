@@ -8158,21 +8158,21 @@ Send emails with =org-msg=. Some keybindings:
              When =C-c C-c= is called in a *OrgMsg* buffer it generates the MIME message and sends it.
 #+BEGIN_SRC emacs-lisp
 (use-package org-msg
-  :after mu4e
+  :defer t
   :config
-  (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil"
+  (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
 	org-msg-startup "hidestars indent inlineimages"
-	org-msg-greeting-fmt "\nHi *%s*,\n\n"
 	org-msg-greeting-name-limit 3
-	org-msg-text-plain-alternative t)
-  (org-msg-mode))
+	org-msg-text-plain-alternative t))
 #+END_SRC
 
 ** mml-sec: Auto sign mails
 Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 #+BEGIN_SRC emacs-lisp
 (use-package mml-sec
-  :hook (mu4e-compose-mode . mml-secure-message-sign-pgpmime))
+  ;; Use this hook if you *always* want to sign your emails
+  ;; :hook (mu4e-compose-mode . mml-secure-message-sign-pgpmime)
+  :defer t)
 #+END_SRC
 ** Gnus-dired: Attach files from dired (C-c RET C-a)
 #+BEGIN_SRC emacs-lisp
