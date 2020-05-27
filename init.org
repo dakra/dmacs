@@ -2548,6 +2548,8 @@ Select from xref candidates with ivy
   ;; Require vlf-setup which autoloads `vlf'
   ;; to have vlf offered as choice when opening large files
   :config
+  ;; Set batch size for browsing large files to 5MB (default 1)
+  (setq vlf-batch-size 5242880)
   ;; warn when opening files bigger than 30MB
   (setq large-file-warning-threshold 30000000))
 
