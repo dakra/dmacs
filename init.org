@@ -1734,7 +1734,7 @@ Simple but effective sorting and filtering for Emacs
   :after counsel
   :config
   (setq ivy-prescient-sort-commands
-        '(:not swiper ivy-switch-buffer counsel-yank-pop counsel-org-clock-history))
+        '(:not swiper swiper-isearch ivy-switch-buffer counsel-yank-pop counsel-org-clock-history counsel-grep-or-swiper counsel-grep))
   (ivy-prescient-mode))
 (use-package company-prescient
   :after company
