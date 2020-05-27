@@ -6242,7 +6242,7 @@ Show clock history when not in org buffer or when called with prefix argument."
 
   ;; Agenda clock report parameters
   (setq org-agenda-clockreport-parameter-plist
-        (quote (:link t :maxlevel 5 :fileskip0 t :compact nil :narrow 80)))
+        (quote (:link t :maxlevel 5 :fileskip0 t :stepskip0 t :compact nil :narrow 80)))
 
   ;; Agenda log mode items to display (closed and state changes by default)
   (setq org-agenda-log-mode-items (quote (closed state clock)))
@@ -6881,7 +6881,7 @@ as the default task."
   ;; Clocktable (reporting: r) in the agenda
   (setq org-clocktable-defaults
         '(:maxlevel 3 :lang "en" :scope file-with-archives
-          :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 nil :fileskip0 nil
+          :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t
           :tags nil :emphasize nil :link t :narrow 70! :indent t :formula nil :timestamp nil
           :level nil :tcolumns nil :formatter nil))
 
