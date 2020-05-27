@@ -3887,7 +3887,6 @@ lldb
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
 
   (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
-  (setq lsp-prefer-flymake nil)
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
 
 (use-package lsp-ui
