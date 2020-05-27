@@ -984,7 +984,16 @@ With a prefix argument, copy the link to the online manual instead."
 
   (setq display-time-24hr-format t)
   ;; Show time in modeline
-  (display-time-mode))
+  (display-time-mode)
+  ;; Right align time and org clocked-in task
+  (add-to-list
+   'global-mode-string
+   '(:eval (propertize " " 'display `((space :align-to (- right
+                                                          ,(length display-time-string)
+                                                          ,(if (org-clocking-p)
+                                                               (length org-mode-line-string)
+                                                             0)
+                                                          1)))))))
 #+END_SRC
 ** Calendar
 #+BEGIN_SRC emacs-lisp
