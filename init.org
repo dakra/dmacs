@@ -3534,6 +3534,11 @@ Move point to patch and call `M-x gitpatch-mail`
   :defer t)
 #+END_SRC
 ** Magit
+If you want to use =magit-commit-absorb= you need =git-absorb= installed.
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+git-absorb
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package libgit
   :defer t)
