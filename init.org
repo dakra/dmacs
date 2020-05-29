@@ -4980,6 +4980,8 @@ use-package will load ccls for us simply by calling this function."
   :interpreter ("python" . python-mode)
   :bind (:map python-mode-map
          ("C-x C-e" . python-shell-send-whole-line-or-region)
+         ("C-c C-c" . python-shell-send-whole-line-or-region)
+         ("C-c C-k" . python-shell-send-buffer)
          ("C-c C-p" . hydra-python/body)
          ("C-c C-t" . hydra-python/body)
          )
