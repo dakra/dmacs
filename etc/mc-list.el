@@ -31,11 +31,13 @@
         grep-context-more-around-point
         haml-electric-backspace
         indent-for-tab-command
+        kmacro-end-or-call-macro
         ledger-magic-tab
         markdown-exdent-or-delete
         markdown-outdent-or-delete
         mouse-yank-primary
         org-beginning-of-line
+        org-ctrl-c-ctrl-c
         org-cycle
         org-delete-char
         org-end-of-line
