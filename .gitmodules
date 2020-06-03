@@ -656,6 +656,7 @@
 [submodule "magit"]
 	path = lib/magit
 	url = git@github.com:magit/magit.git
+	recursive-byte-compile = true
 	info-path = Documentation
 [submodule "magit-gerrit"]
 	path = lib/magit-gerrit
@@ -746,7 +747,8 @@
 [submodule "org"]
 	path = lib/org
 	url = https://code.orgmode.org/bzg/org-mode.git
-	build-step = make all
+	build-step = make compile
+        build-step = borg-update-autoloads
 	load-path = lisp
 	load-path = contrib/lisp
 	info-path = doc
@@ -1127,6 +1129,7 @@
 [submodule "wgrep"]
 	path = lib/wgrep
 	url = git@github.com:mhayashi1120/Emacs-wgrep.git
+	no-byte-compile = wgrep-subtest.el
 [submodule "which-key"]
 	path = lib/which-key
 	url = git@github.com:justbur/emacs-which-key.git
