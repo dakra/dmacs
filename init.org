@@ -2294,6 +2294,12 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
          ("M-c" . swiper-mc)))
 #+END_SRC
 ** Counsel
+For better search install =ripgrep= (rg) and alternative =silversearcher= (ag).
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+ripgrep
+silversearcher
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package counsel
   :bind (("C-s"     . counsel-grep-or-swiper)
