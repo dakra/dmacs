@@ -2724,12 +2724,6 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
                              "\\'")
                      "mpv")))
 
-;; Needs to be after dired-x as it binds "Y" too
-(use-package dired-rsync
-  :after dired-x
-  :bind (:map dired-mode-map
-         ("Y" . dired-rsync)))
-
 (use-package dired+
   :after dired
   :bind (:map dired-mode-map
@@ -2753,6 +2747,18 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
 (use-package dired-async  ; Part of async
   :after dired
   :config (dired-async-mode 1))
+#+END_SRC
+** dired-rsync
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+rsync
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-rsync
+  ; Needs to be after dired-x as it binds the "Y" key too
+  :after dired-x
+  :bind (:map dired-mode-map
+         ("Y" . dired-rsync)))
 #+END_SRC
 
 ** Dired-hacks
