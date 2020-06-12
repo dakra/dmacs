@@ -8477,7 +8477,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 
   (require 'exwm-systemtray)
   ;; Pick some height for the system tray. Some applet icons don't appear otherwise.
-  (setq exwm-systemtray-height 18)
+  (setq exwm-systemtray-height 32)
   (exwm-systemtray-enable)
 
   (setq exwm-manage-configurations
