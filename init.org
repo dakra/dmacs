@@ -7569,8 +7569,15 @@ make
 sudo make install
 #+END_SRC
 
+Packages to compile the mu binary:
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+gmime3
+xapian-core
+#+END_SRC
+
+
 For =mu= to recognize personal email addresses you have to pass them to ~mu init~ before indexing with:
-#+BEGIN_SRC sh :tangle no
+#+BEGIN_SRC shell
 mu init --my-address daniel@kraus.my                 \
         --my-address daniel.kraus@gmail.com          \
         --my-address d@niel-kraus.de                 \
@@ -7784,19 +7791,19 @@ mu init --my-address daniel@kraus.my                 \
   ;;; Use 'fancy' non-ascii characters in various places in mu4e
   (setq mu4e-use-fancy-chars t)
   ;; And change default threading characters to some "nicer" looking chars
-  (setq mu4e-headers-thread-child-prefix '("├>" . "├▶ "))
-  (setq mu4e-headers-thread-last-child-prefix '("└>" . "└▶ "))
+  (setq mu4e-headers-thread-child-prefix '("├>" . "├→ "))
+  (setq mu4e-headers-thread-last-child-prefix '("└>" . "└→ "))
   (setq mu4e-headers-thread-connection-prefix '("│" . "│ "))
-  (setq mu4e-headers-thread-orphan-prefix '("┬>" . "┬▶ "))
-  (setq mu4e-headers-thread-single-orphan-prefix '("─>" . "─▶ "))
+  (setq mu4e-headers-thread-orphan-prefix '("┬>" . "┬→ "))
+  (setq mu4e-headers-thread-single-orphan-prefix '("─>" . "─→ "))
 
   ;; Also change to some nicer characters for marks
-  (setq mu4e-headers-new-mark    '("N" . "☉"))
+  (setq mu4e-headers-new-mark    '("N" . "📨"))
   (setq mu4e-headers-passed-mark  '("P" . "›"))
   (setq mu4e-headers-replied-mark '("R" . "‹"))
   (setq mu4e-headers-seen-mark   '("S" . ""))
   (setq mu4e-headers-attach-mark '("a" . "📎"))
-  (setq mu4e-headers-unread-mark '("u" . "✉"))
+  (setq mu4e-headers-unread-mark '("u" . "📫"))
 
   ;; I want my format=flowed thank you very much
   ;; mu4e sets up visual-line-mode and also fill (M-q) to do the right thing
