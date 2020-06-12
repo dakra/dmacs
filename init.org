@@ -459,7 +459,7 @@ have the latest Emacs from master installed.
 #+BEGIN_SRC emacs-lisp
 (setq package-enable-at-startup nil)
 ;; (package-initialize)
-;; (setq load-prefer-newer t)
+(setq load-prefer-newer t)
 #+END_SRC
 *** Borg
 #+BEGIN_SRC emacs-lisp
