@@ -682,6 +682,8 @@ Code from `read-envvar-name'."
 
 ;; Put authinfo.gpg first so new secrets will be stored there by default and not in plain text
 (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
+;; Don't ask to store credentials in .authinfo.gpg
+(setq auth-source-save-behavior nil)
 
 ;; Silence ad-handle-definition about advised functions getting redefined
 (setq ad-redefinition-action 'accept)
