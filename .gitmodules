@@ -317,6 +317,8 @@
 [submodule "emms"]
 	path = lib/emms
 	url = https://git.savannah.gnu.org/git/emms.git
+	load-path = .
+	recursive-byte-compile = true
 	info-path = doc
 [submodule "epc"]
 	path = lib/epc
