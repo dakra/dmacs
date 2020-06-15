@@ -8775,6 +8775,10 @@ It only works for frames with exactly two windows."
   (winner-mode 1))
 #+END_SRC
 * Transmission: Bittorent
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+transmission-cli
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package transmission
   :defer t
@@ -8813,6 +8817,13 @@ It only works for frames with exactly two windows."
   (setq emms-player-mpv-parameters '("--no-terminal" "--force-window=no" "--audio-display=no")))
 #+END_SRC
 ** YouTube Download
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+youtube-dl
+python-pycryptodome
+atomicparsley
+mpv
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package youtube-dl
   :defer t
