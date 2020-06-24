@@ -7190,6 +7190,13 @@ See `org-html-format-headline-function' for details."
            (desc (format "%s (%s)" summary repo)))
       (push (list link desc) org-stored-links))))
 #+END_SRC
+
+Forge support for orgit
+#+BEGIN_SRC emacs-lisp
+(use-package orgit-forge
+  :after orgit)
+#+END_SRC
+
 **** Counsel-org-clock
 #+BEGIN_SRC emacs-lisp
 (use-package counsel-org-clock
