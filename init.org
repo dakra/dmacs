@@ -1812,6 +1812,7 @@ Simple but effective sorting and filtering for Emacs
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
 
 (use-package company-box
+  :disabled t
   ;; Doesn't work well with exwm (can't focus/change completion items w/o calling --set-mode first)
   :hook (company-mode . company-box-mode-exwm-kludge)
   :config
@@ -2026,6 +2027,7 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
     (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
   (add-hook 'text-mode-hook 'text-mode-hook-setup))
 #+END_SRC
+
 ** Flyspell
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
