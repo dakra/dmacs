@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: dbsize
+# key: dbsize
+# --
+SELECT
+    table_name AS 'Table', SUM(TABLE_ROWS) AS 'Row estimate',
+    round(((data_length + index_length) / 1024 / 1024), 2) 'Size in MB'
+FROM information_schema.TABLES
+WHERE table_schema = DATABASE()
+    AND table_name = "$0";
