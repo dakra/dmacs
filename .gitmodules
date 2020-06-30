@@ -1078,6 +1078,7 @@
 	load-path = src/extra
 	no-byte-compile = src/extra/treemacs-evil.el
 	no-byte-compile = src/extra/treemacs-persp.el
+	no-byte-compile = src/extra/treemacs-perspective.el
 [submodule "treepy"]
 	path = lib/treepy
 	url = git@github.com:volrath/treepy.el.git
