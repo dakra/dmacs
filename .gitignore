@@ -1,5 +1,6 @@
 *.elc
 *:tangle
+.yas-compiled-snippets.el
 /.cask
 /.hive-maint
 /early-init.el
