@@ -2417,28 +2417,45 @@ With multiple prefix arguments, or a numeric prefix argument
 go up multiple parent directories."
     (interactive (list (thing-at-point 'symbol)
                        current-prefix-arg))
-    (let ((current-prefix-arg)
-          (ignored (mapconcat (lambda (i)
-                                (concat "--glob "
-                                        (shell-quote-argument (concat "!" i))
-                                        " "))
-                              (append (projectile-ignored-files-rel)
-                                      (projectile-ignored-directories-rel))
-                              ""))
-          (dir (cond
-                ((equal use-current-dir nil) ; no prefix: use project root
-                 (condition-case _err
-                     (projectile-project-root)
-                   (error default-directory)))
-                ((equal use-current-dir '(4)) ; C-u: use current dir
-                 (parent-directory default-directory 0))
-                ((equal use-current-dir '(16)) ; C-u C-u: use parent dir
-                 (parent-directory default-directory 1))
-                ((equal use-current-dir '(64)) ; C-u C-u C-u: go 2 up
-                 (parent-directory default-directory 2))
-                (t  ; Numeric prefix: Go specified prefix up
-                 (parent-directory default-directory use-current-dir)))))
-      (counsel-rg initial-input dir ignored (projectile-prepend-project-name "rg"))))
+    (if (and (eq projectile-require-project-root 'prompt)
+             (not (projectile-project-p)))
+        (counsel-projectile-rg-action-switch-project)
+      (let* ((ivy--actions-list (copy-sequence ivy--actions-list))
+             (ignored
+              (mapconcat (lambda (i)
+                           (concat "--glob !" (shell-quote-argument i)))
+                         (append
+                          (projectile--globally-ignored-file-suffixes-glob)
+                          (projectile-ignored-files-rel)
+                          (projectile-ignored-directories-rel))
+                         " "))
+             (dir (cond
+                   ((equal use-current-dir nil) ; no prefix: use project root
+                    (condition-case _err
+                        (projectile-project-root)
+                      (error default-directory)))
+                   ((equal use-current-dir '(4)) ; C-u: use current dir
+                    (parent-directory default-directory 0))
+                   ((equal use-current-dir '(16)) ; C-u C-u: use parent dir
+                    (parent-directory default-directory 1))
+                   ((equal use-current-dir '(64)) ; C-u C-u C-u: go 2 up
+                    (parent-directory default-directory 2))
+                   (t  ; Numeric prefix: Go specified prefix up
+                    (parent-directory default-directory use-current-dir))))
+             (counsel-rg-base-command
+              (let ((counsel-ag-command counsel-rg-base-command))
+                (counsel--format-ag-command ignored "%s"))))
+        (ivy-add-actions
+         'counsel-rg
+         counsel-projectile-rg-extra-actions)
+        (counsel-rg (eval counsel-projectile-rg-initial-input)
+                    dir
+                    nil
+                    (projectile-prepend-project-name
+                     (concat (car (if (listp counsel-rg-base-command)
+                                      counsel-rg-base-command
+                                    (split-string counsel-rg-base-command)))
+                             ": "))))))
 
   (defun dakra/counsel-search-project-empty (&optional use-current-dir)
     "Like dakra/counsel-search-project but with no initial input."
