@@ -4921,6 +4921,9 @@ octave
 #+END_SRC
 ** Python
 *** LSP with the Microsoft language server
+=lsp-python-ms= can now download the language server for you automatically.
+But if you want to use the latest from git follow this instructions:
+
 This needs the =dotnet-sdk= and the microsoft-python-language-server installed.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
 dotnet-sdk
@@ -4940,22 +4943,19 @@ dotnet publish -c Release -r linux-x64
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-python-ms
   :defer t
-  ;;:hook (python-mode . lsp-python-ms-init)
+  ;; :hook (python-mode . lsp-python-ms-init)
   :config
+  ;; Only set those if you compile the ms python language server manually
+  ;; (setq lsp-python-ms-dir
+  ;;       (expand-file-name "~/repos/python-language-server/output/bin/Release/"))
+  ;; (setq lsp-python-ms-executable
+  ;;       (expand-file-name "~/repos/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
+
   (defun lsp-python-ms-init ()
     "We need to require ccls before loading lsp in a C buffer.
 Otherwise lsp would use the default clangd backend.
 use-package will load ccls for us simply by calling this function."
-    (lsp-deferred))
-
-  ;; Set cache dir to nolitering standards
-  (setq lsp-python-ms-cache-dir (no-littering-expand-var-file-name "lsp-python-ms/cache"))
-
-  (setq lsp-python-ms-dir
-        (expand-file-name "~/repos/python-language-server/output/bin/Release/"))
-
-  (setq lsp-python-ms-executable
-        (expand-file-name "~/repos/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")))
+    (lsp-deferred)))
 #+END_SRC
 
 *** Cython
