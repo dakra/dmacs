@@ -816,6 +816,23 @@ E.g. fuer -> für
   ;; Turn off auto revert messages
   (setq auto-revert-verbose nil))
 #+END_SRC
+** Select: Clipboard / primary selection
+#+BEGIN_SRC emacs-lisp
+(use-package select
+  :config
+  ;; Use clipboard and primary selection for copy/paste
+  (setq select-enable-primary t)
+
+  (defun select-add-selection-to-kill-ring ()
+    "Add clipboard and primary selection to the kill ring."
+    (interactive)
+    (when-let* ((primary (gui-get-primary-selection))
+                (not-empty? (not (string-empty-p primary))))
+      (kill-new primary))
+    (when-let* ((clipboard (gui-backend-get-selection 'CLIPBOARD 'STRING))
+                (not-empty? (not (string-empty-p clipboard)))))))
+#+END_SRC
+
 ** Epa: the EasyPG Assistant, transparent file encryption (gpg)
 #+BEGIN_SRC emacs-lisp
 (use-package epa
@@ -2314,13 +2331,38 @@ silversearcher
          ("C-c o g" . counsel-org-agenda-headlines)
          ("C-c o G" . counsel-org-goto)
          ("C-x C-f" . counsel-find-file)
-         ("M-y"     . counsel-yank-pop)
+         ("M-y"     . counsel-yank-pop-selection)
          ("M-i"     . counsel-imenu)
          ("M-x"     . counsel-M-x))
   :init
   (define-key minibuffer-local-map (kbd "M-r")
     'counsel-minibuffer-history)
   :config
+  (defun counsel-yank-pop-selection (&optional arg)
+    "Ivy replacement for `yank-pop'.
+With a plain prefix argument (\\[universal-argument]),
+temporarily toggle the value of `counsel-yank-pop-after-point'.
+Any other value of ARG has the same meaning as in `yank-pop', but
+`counsel-yank-pop-preselect-last' determines its default value.
+See also `counsel-yank-pop-filter' for how to filter candidates.
+
+Note: Duplicate elements of `kill-ring' are always deleted."
+    ;; Do not specify `*' to allow browsing `kill-ring' in read-only buffers
+    (interactive "P")
+    (when arg
+      (select-add-selection-to-kill-ring))
+    (let ((kills (or (counsel--yank-pop-kills)
+                     (error "Kill ring is empty or blank")))
+          (preselect (let (interprogram-paste-function)
+                       (current-kill 0 t))))
+      (unless (eq last-command 'yank)
+        (push-mark))
+      (ivy-read "kill-ring: " kills
+                :require-match t
+                :preselect preselect
+                :action #'counsel-yank-pop-action
+                :caller 'counsel-yank-pop)))
+
   ;; Set ivy initial inputs after loading counsel because counsel adds
   ;; it's own commands here after it's loaded and we don't want
   ;; E.g. counsel-M-x to always start with "^"
