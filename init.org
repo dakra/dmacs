@@ -5440,6 +5440,11 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   (setq-default sql-input-ring-file-name
                 (no-littering-expand-var-file-name "sql-input-ring"))
   :config
+  ;; Don't display the SQLi buffer after `sql-send-*' commands.
+  ;; Often I have the SQL buffer open on a different frame (/monitor) and
+  ;; can check the result there
+  (setq sql-display-sqli-buffer-function nil)
+
   ;; Fix prompt detection for mariadb
   (sql-set-product-feature 'mysql :prompt-regexp "^.*\\(MariaDB\\|MySQL\\|mysql\\) ?\\[?[_a-zA-Z0-9()]*\\]?> ")
   (sql-set-product-feature 'mariadb :prompt-regexp "^\\(MariaDB\\|MySQL\\|mysql\\) ?\\[?[_a-zA-Z0-9()]*\\]?> ")
