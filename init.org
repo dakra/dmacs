@@ -1240,7 +1240,9 @@ ttf-symbola
 (use-package default-text-scale
   :bind (("C-M-=" . default-text-scale-increase)
          ("C-M--" . default-text-scale-decrease)
-         ("C-M-0" . default-text-scale-reset)))
+         ("C-M-0" . default-text-scale-reset))
+  :config
+  (default-text-scale-mode))
 #+END_SRC
 
 ** Zone: Emacs screen saver
