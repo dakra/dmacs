@@ -530,7 +530,20 @@ Emacs.verticalScrollBars: off
 
 If you don't set your Xresources, you can load the font with:
 #+BEGIN_SRC emacs-lisp :tangle no
-(set-frame-font "Operator Mono-7:weight=medium:width=normal" nil t)
+;; (set-frame-font "Operator Mono-7:weight=medium:width=normal" nil t)
+(set-frame-font "Iosevka-9:slant=normal:weight=regular:width=normal" nil t)
+;; (set-frame-font "Iosevka-7:slant=normal:weight=bold:width=normal" nil t)
+;; (set-frame-font "DejaVu Sans Mono-7:weight=medium:width=normal" nil t)
+;; (set-frame-font "Hack-7:weight=medium:width=normal" nil t)
+;; (set-frame-font "Source Code Pro:weight=medium:width=normal" nil t)
+#+END_SRC
+
+Some fonts
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+ttf-iosevka
+ttf-google-fonts-git
+ttf-carlito
+ttf-croscore
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -1197,7 +1210,9 @@ ttf-symbola
 ;; Use "C-x 8 RET <type name>"
 (defun --set-emoji-font (frame)
   "Adjust the font settings of FRAME so Emacs can display emoji properly."
-  (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend))
+  (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") frame)
+  (set-fontset-font t 'symbol (font-spec :family "Segoe UI Emoji") frame 'append)
+  (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'append))
 ;; For when Emacs is started in GUI mode:
 (--set-emoji-font nil)
 ;; Hook for when a frame is created with emacsclient
@@ -6044,7 +6059,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   :config
   ;; Insead of "..." show "…" when there's hidden folded content
   ;; Some characters to choose from: …, ⤵, ▼, ↴, ⬎, ⤷, and ⋱
-  (setq org-ellipsis "⤵")
+  (setq org-ellipsis "…")
 
   (defun org-clock-in-or-list (&optional select start-time)
     "Like org-clock-in but show list of recent clocks when not in org buffer.
@@ -6761,7 +6776,11 @@ NAME may be nil for unnamed sessions."
 (use-package org-superstar
   :hook (org-mode . org-superstar-mode)
   :config
-  (setq org-superstar-headline-bullets-list '("◉" "🞛" "○" "▷" "✸")))
+  ;;(setq org-superstar-headline-bullets-list '("◉" "🞛" "○" "▷" "✸"))
+  (setq org-superstar-headline-bullets-list '("❶" "❷" "❸" "❹" "❺" "❻" "❼"))
+  ;; (setq org-superstar-headline-bullets-list '("①" "②" "③" "④" "⑤" "⑥"))
+  ;; (setq org-superstar-headline-bullets-list '("◍" "●" "⊗" "○" "⊙" "◌" "▷" "✸"))
+  (setq org-superstar-prettify-item-bullets nil))
 #+END_SRC
 **** Org-capture
 #+BEGIN_SRC emacs-lisp
