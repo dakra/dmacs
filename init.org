@@ -1306,8 +1306,7 @@ M-x rename-buffer Lossage RET"
 ** rainbow-delimiters: Different color for each parenthesis level
 #+BEGIN_SRC emacs-lisp
 (use-package rainbow-delimiters
-  :commands rainbow-delimiters-mode
-  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode cider-repl-mode) . rainbow-delimiters-mode))
+  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode cider-repl-mode sql-mode) . rainbow-delimiters-mode))
 #+END_SRC
 ** fancy-narrow: Fancier narrow
 #+BEGIN_SRC emacs-lisp
