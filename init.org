@@ -7035,6 +7035,9 @@ as the default task."
   :commands org-formatted-copy
   ;;:bind ("C-c e" . org-formatted-copy)
   :config
+  ;; By default only export subtree instead of whole buffer
+  (setq org-export-initial-scope 'subtree)
+
   ;; Don't evaluate babel source blocks during export
   (setq org-export-use-babel nil)
 
