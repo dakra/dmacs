@@ -8646,14 +8646,13 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
   ;; Start some apps
   (defun exwm-startup-apps ()
     "Start some applications after exwm init."
-    (start-process-shell-command "pidgin" nil "pidgin")
     ;; Start some always used Emacs apps
-    (org-agenda nil " ")
+    (org-agenda nil "a")
     ;; (pop-to-buffer (eshell))
-    ;; (pop-to-buffer (mu4e))
-    ;; (pop-to-buffer (elfeed))
-    (pop-to-buffer (find-file "~/.emacs.d/init.org"))
+    ;; (pop-to-buffer (find-file "~/.emacs.d/init.org"))
+
     ;; Start some external apps
+    (start-process-shell-command "pidgin" nil "pidgin")
     (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
 
     ;; (start-process-shell-command "syncthing-gtk" nil "syncthing-gtk --minimized")
@@ -8662,13 +8661,12 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 
     ;; Toggle battery display
     ;; (auto-display-battery-mode)
-    (start-process-shell-command "cbatticon" nil "cbatticon")
-
-    ;; Clipboard manager
-    (start-process-shell-command "gpaste-ui" nil "/usr/lib/gpaste/gpaste-ui")
+    ;; (start-process-shell-command "cbatticon" nil "cbatticon")
 
     ;; Set face attribute for new (child-)frames to our current font
-    (set-face-attribute 'default nil :font "Operator Mono-7:weight=medium:width=normal"))
+    (set-face-attribute 'default nil :font "Iosevka-9:slant=normal:weight=regular:width=normal")
+    ;; (set-face-attribute 'default nil :font "Operator Mono-7:weight=medium:width=normal")
+    )
 
   ;; Enable EXWM
   (exwm-enable))
@@ -8690,6 +8688,7 @@ gpaste
 
 #+BEGIN_SRC emacs-lisp
 (use-package gpastel
+  :disabled t
   :hook (exwm-init . gpastel-mode))
 #+END_SRC
 ** PulseAudio
