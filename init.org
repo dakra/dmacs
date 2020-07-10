@@ -5696,7 +5696,7 @@ true.
   (setq typescript-indent-level 2))
 
 (use-package tide
-  :hook ((typescript-mode js-mode) . tide-setup)
+  :hook ((typescript-mode) . tide-setup)
   :config
   ;; Configure javascript-tide checker to run after your default javascript checker
   (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
