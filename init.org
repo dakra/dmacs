@@ -2679,12 +2679,13 @@ gtklp
     ;; (pdf-view-midnight-minor-mode)
     (whole-line-or-region-local-mode -1))
 
-  ;; Use `gtklp' to print as it has better cups support
+  ;; Use `gtklp' or `hp-print' to print as it has better cups support
+  (setq print-pdf-command "hp-print")
   (defun print-pdf (&optional pdf)
-    "Print PDF using external program `gtklp'."
+    "Print PDF using external program defined in `print-pdf-command'."
     (interactive "P")
     (start-process-shell-command
-     "gtklp" nil (format "gtklp %s" (shell-quote-argument (or pdf (buffer-file-name))))))
+     print-pdf-command nil (concat print-pdf-command " " (shell-quote-argument (or pdf (buffer-file-name))))))
 
   ;; more fine-grained zooming; +/- 10% instead of default 25%
   (setq pdf-view-resize-factor 1.1)
