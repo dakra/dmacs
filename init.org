@@ -2720,7 +2720,12 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 (use-package calc
-  :bind ("<XF86Calculator>" . quick-calc))
+  :bind ("<XF86Calculator>" . quick-calc)
+  :config
+  ;; Multiplication should *not* have precedence over division.
+  ;; E.g. default behavior of Emacs Calc is 10/2*5 = 10 / (2* 5) = 1
+  ;; but you would expect (10 / 2) * 5 = 25.
+  (setq calc-multiplication-has-precedence nil))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 ;; Type like a hacker
