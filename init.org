@@ -4837,12 +4837,7 @@ openjdk11-src
          ("M-?" . cider-maybe-clojuredocs)
          :map cider-repl-mode-map
          ("M-?" . cider-doc))
-  :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
-         ((cider-mode cider-repl-mode) . (lambda ()
-                                           ;; Workaround for Emacs 28 eldoc changes
-                                           ;; (See https://github.com/clojure-emacs/cider/issues/2816)
-                                           (add-hook 'eldoc-documentation-functions #'cider-eldoc nil t)
-                                           (eldoc-mode))))
+  :hook ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
   :config
   (defun cider-maybe-clojuredocs (&optional arg)
     "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
