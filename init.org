@@ -8418,10 +8418,10 @@ Only works *before* exwm in initialized."
    '("<s-up>"    . exwm-windmove-up)
    '("<s-right>" . exwm-windmove-right)
    '("s-\\"       . toggle-window-split)
-   '("s-J"       . swap-windows-left)
-   '("s-K"       . swap-windows-below)
-   '("s-I"       . swap-windows-above)
-   '("s-L"       . swap-windows-right)
+   '("s-J"       . windswap-left)
+   '("s-K"       . windswap-down)
+   '("s-I"       . windswap-up)
+   '("s-L"       . windswap-right)
    ;; XXX: switch to winner-mode (C-X 1 and the C-c <left>)
    '("s-f"       . toggle-single-window)
    ;; Workspaces
@@ -8759,54 +8759,6 @@ Control network manager from Emacs
 (setq mouse-autoselect-window t)
 (setq focus-follows-mouse t)
 
-;; swap-window functions from
-;; https://github.com/Ambrevar/dotfiles/blob/master/.emacs.d/lisp/functions.el
-(defun swap-windows (&optional w1 w2)
-  "If 2 windows are up, swap them.
-Else if W1 is a window, swap it with current window.
-If W2 is a window too, swap both."
-  (interactive)
-  (unless (or (= 2 (count-windows))
-              (windowp w1)
-              (windowp w2))
-    (error "Ambiguous window selection"))
-  (let* ((w1 (or w1 (car (window-list))))
-         (w2 (or w2
-                 (if (eq w1 (car (window-list)))
-                     (nth 1 (window-list))
-                   (car (window-list)))))
-         (b1 (window-buffer w1))
-         (b2 (window-buffer w2))
-         (s1 (window-start w1))
-         (s2 (window-start w2)))
-    (with-temp-buffer
-      ;; Some buffers like EXWM buffers can only be in one live buffer at once.
-      ;; Switch to a dummy buffer in w2 so that we don't display any buffer twice.
-      (set-window-buffer w2 (current-buffer))
-      (set-window-buffer w1 b2)
-      (set-window-buffer w2 b1))
-    (set-window-start w1 s2)
-    (set-window-start w2 s1))
-  (select-window w1))
-(global-set-key (kbd "C-x \\") 'swap-windows)
-
-(defun swap-windows-left ()
-  "Swap current window with the window to the left."
-  (interactive)
-  (swap-windows (window-in-direction 'left)))
-(defun swap-windows-below ()
-  "Swap current window with the window below."
-  (interactive)
-  (swap-windows (window-in-direction 'below)))
-(defun swap-windows-above ()
-  "Swap current window with the window above."
-  (interactive)
-  (swap-windows (window-in-direction 'above)))
-(defun swap-windows-right ()
-  "Swap current window with the window to the right."
-  (interactive)
-  (swap-windows (window-in-direction 'right)))
-
 (defvar single-window--last-configuration nil "Last window configuration before calling `delete-other-windows'.")
 (defun toggle-single-window ()
   "Un-maximize current window.
@@ -8848,12 +8800,10 @@ It only works for frames with exactly two windows."
           (if this-win-2nd (other-window 1))))))
 (global-set-key (kbd "C-x C-\\") 'toggle-window-split)
 #+END_SRC
-*** Switch window
+*** windswap: Swap Emacs windows with their neighbours
 #+BEGIN_SRC emacs-lisp
-(use-package switch-window
-  :disabled t
-  :commands switch-window
-  :config (setq switch-window-input-style 'minibuffer))
+(use-package windswap
+  :after windmove)
 #+END_SRC
 *** winner-mode: undo/redo window configurations
 #+BEGIN_SRC emacs-lisp
