@@ -8418,10 +8418,10 @@ Only works *before* exwm in initialized."
    '("<s-up>"    . exwm-windmove-up)
    '("<s-right>" . exwm-windmove-right)
    '("s-\\"       . toggle-window-split)
-   '("s-J"       . windswap-left)
-   '("s-K"       . windswap-down)
-   '("s-I"       . windswap-up)
-   '("s-L"       . windswap-right)
+   '("s-J"       . windmove-swap-states-left)
+   '("s-K"       . windmove-swap-states-down)
+   '("s-I"       . windmove-swap-states-up)
+   '("s-L"       . windmove-swap-states-right)
    ;; XXX: switch to winner-mode (C-X 1 and the C-c <left>)
    '("s-f"       . toggle-single-window)
    ;; Workspaces
@@ -8800,10 +8800,10 @@ It only works for frames with exactly two windows."
           (if this-win-2nd (other-window 1))))))
 (global-set-key (kbd "C-x C-\\") 'toggle-window-split)
 #+END_SRC
-*** windswap: Swap Emacs windows with their neighbours
+*** windmove: Easily focus and swap windows
 #+BEGIN_SRC emacs-lisp
-(use-package windswap
-  :after windmove)
+(use-package windmove
+  :defer t)
 #+END_SRC
 *** winner-mode: undo/redo window configurations
 #+BEGIN_SRC emacs-lisp

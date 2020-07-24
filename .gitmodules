@@ -1142,9 +1142,6 @@
 [submodule "whole-line-or-region"]
 	path = lib/whole-line-or-region
 	url = git@github.com:purcell/whole-line-or-region.git
-[submodule "windswap"]
-	path = lib/windswap
-	url = git@github.com:purcell/windswap.git
 [submodule "with-editor"]
 	path = lib/with-editor
 	url = git@github.com:magit/with-editor.git
