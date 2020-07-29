@@ -4837,7 +4837,8 @@ openjdk11-src
          ("M-?" . cider-maybe-clojuredocs)
          :map cider-repl-mode-map
          ("M-?" . cider-doc))
-  :hook ((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+  :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
+         (cider-mode . eldoc-mode))
   :config
   (defun cider-maybe-clojuredocs (&optional arg)
     "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
