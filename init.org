@@ -3718,7 +3718,7 @@ is not a title but instead is displayed as a comment."
   ;;   ?i "Invert filter" "--invert-grep")
 
   ;; Show gravatars
-  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+  ;; (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
   ;; Don't show fringe indicators (Not really visible with our small exwm fringe)
   ;;(setq magit-section-visibility-indicator nil)
