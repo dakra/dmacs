@@ -4735,7 +4735,6 @@ Lisp function does not specify a special indentation."
           (insert eval-print-as-comment-prefix)))))
 
   (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                    ;;(eldoc-mode +1)
                                     (setq mode-name "EL"))))
 #+END_SRC
 **** Helper libraries (dash, s, marshal)
