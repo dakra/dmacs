@@ -815,6 +815,9 @@
 [submodule "ox-rst"]
 	path = lib/ox-rst
 	url = git@github.com:msnoigrs/ox-rst.git
+[submodule "pacfiles-mode"]
+	path = lib/pacfiles-mode
+	url = git@github.com:UndeadKernel/pacfiles-mode.git
 [submodule "package-build"]
 	path = lib/package-build
 	url = git@github.com:melpa/package-build.git
