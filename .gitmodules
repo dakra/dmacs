@@ -628,6 +628,8 @@
 [submodule "loc-changes"]
 	path = lib/loc-changes
 	url = git@github.com:rocky/emacs-loc-changes.git
+	no-byte-compile = el-get-install.el
+	no-byte-compile = cask-install.el
 [submodule "logito"]
 	path = lib/logito
 	url = git@github.com:sigma/logito.git
