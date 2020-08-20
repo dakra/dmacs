@@ -6072,8 +6072,9 @@ Show clock history when not in org buffer or when called with prefix argument."
         (org-clock-in select start-time)
       (counsel-org-clock-history)))
 
-  ;; Show headings up to level 2 by default when opening an org files
-  (setq org-startup-folded 'content)
+  ;; Fold everything when opening an org file.
+  ;; Set it to 'overview to onnly show headings up to level 2.
+  (setq org-startup-folded t)
 
   ;; Show inline images by default
   (setq org-startup-with-inline-images t)
