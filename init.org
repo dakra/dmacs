@@ -6794,6 +6794,13 @@ NAME may be nil for unnamed sessions."
 (use-package org-capture
   :bind ("C-c c" . org-capture)
   :config
+  ;; I don't want that org-capture rearanges the windows for me.
+  ;; From https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific-window/54251825#54251825
+  (defun org-capture-place-template-dont-delete-windows (oldfun args)
+    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
+      (apply oldfun args)))
+  (advice-add 'org-capture-place-template :around 'org-capture-place-template-dont-delete-windows)
+
   ;; Capture/refile new items to the top of the list
   (setq org-reverse-note-order t)
   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
