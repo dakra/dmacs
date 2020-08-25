@@ -4720,6 +4720,7 @@ Lisp function does not specify a special indentation."
   :bind (:map emacs-lisp-mode-map
          ("C-c C-c" . eval-defun)
          ("C-c C-b" . eval-buffer)
+         ("C-c C-k" . eval-buffer)
          ("C-c ;"   . eval-print-as-comment))
   :config
   (defvar eval-print-as-comment-prefix ";;=> ")
