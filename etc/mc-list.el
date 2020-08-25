@@ -87,6 +87,7 @@
         handle-select-window
         handle-switch-frame
         iedit-switch-to-mc-mode
+        ivy-wgrep-change-to-wgrep-mode
         mc/vertical-align-with-space
         org-edit-src-save
         smart-region
