@@ -7685,7 +7685,7 @@ xapian-core
 
 
 For =mu= to recognize personal email addresses you have to pass them to ~mu init~ before indexing with:
-#+BEGIN_SRC shell
+#+BEGIN_SRC sh :tangle no
 mu init --my-address daniel@kraus.my                 \
         --my-address daniel.kraus@gmail.com          \
         --my-address d@niel-kraus.de                 \
