@@ -458,9 +458,6 @@
 [submodule "goto-chg"]
 	path = lib/goto-chg
 	url = git@github.com:emacs-evil/goto-chg.git
-[submodule "gpastel"]
-	path = lib/gpastel
-	url = https://gitlab.petton.fr/DamienCassou/gpastel.git
 [submodule "graphql"]
 	path = lib/graphql
 	url = git@github.com:vermiculus/graphql.el.git
