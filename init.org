@@ -1194,7 +1194,7 @@ different face
          ("C-c C-s t" . symbol-overlay-toggle-in-scope)
          ("C-c C-s n" . symbol-overlay-jump-next)
          ("C-c C-s p" . symbol-overlay-jump-prev))
-  :init (setq symbol-overlay-temp-in-scope t)
+  :init (setq symbol-overlay-scope t)
   :config
   ;;(set-face-background 'symbol-overlay-temp-face "gray30")
   ;; Remove all default bindings
