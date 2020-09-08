@@ -4858,10 +4858,14 @@ openjdk11-src
   ;; Location of the jdk sources. In Arch Linux package `openjdk-src'
   (setq cider-jdk-src-paths "/usr/lib/jvm/java-11-openjdk/lib/src.zip")
 
+  ;; Store more items in repl history (default 500)
+  (setq cider-repl-history-size 2000)
   ;; When loading the buffer (C-c C-k) save first without asking
   (setq cider-save-file-on-load t)
   ;; Don't show cider help text in repl after jack-in
   (setq cider-repl-display-help-banner nil)
+  ;; Don't focus error buffer when error is thrown
+  (setq cider-auto-select-error-buffer nil)
   ;; Display context dependent info in the eldoc where possible.
   (setq cider-eldoc-display-context-dependent-info t)
   ;; Just use symbol under point and don't prompt for symbol in e.g. cider-doc.
