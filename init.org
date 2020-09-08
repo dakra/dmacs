@@ -4897,6 +4897,13 @@ clj-kondo-bin
 (use-package flycheck-clj-kondo
   :after (flycheck clojure-mode))
 #+END_SRC
+**** ob-clojure
+#+BEGIN_SRC emacs-lisp
+(use-package ob-clojure
+  :after ob
+  :config
+  (setq org-babel-clojure-backend 'cider))
+#+END_SRC
 **** Datomic yasnippets
 Yasnippets for Datomic.
 
