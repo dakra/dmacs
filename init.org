@@ -4179,6 +4179,10 @@ glslang
   :config (add-to-list 'company-backends 'company-glsl))
 #+END_SRC
 ** Graphviz
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+graphviz
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package graphviz-dot-mode
   :mode ("\\.dot\\'")
@@ -4189,6 +4193,10 @@ glslang
   :after graphviz-dot-mode)
 #+END_SRC
 ** PlantUML
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+plantuml
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package plantuml-mode
   :mode ("\\.plantuml\\'")
