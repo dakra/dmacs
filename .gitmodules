@@ -73,6 +73,9 @@
 [submodule "avy"]
 	path = lib/avy
 	url = git@github.com:abo-abo/avy.git
+[submodule "aws"]
+	path = lib/aws
+	url = git@github.com:dakra/aws.el.git
 [submodule "back-button"]
 	path = lib/back-button
 	url = git@github.com:rolandwalker/back-button.git
@@ -853,6 +856,7 @@
 [submodule "php-mode"]
 	path = lib/php-mode
 	url = git@github.com:emacs-php/php-mode.git
+	load-path = .
 [submodule "pip-requirements"]
 	path = lib/pip-requirements
 	url = git@github.com:Wilfred/pip-requirements.el.git
