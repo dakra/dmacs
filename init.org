@@ -2576,13 +2576,13 @@ no stored indexes (TAGS) or persistent background processes.  Dumb Jump performs
 
 #+BEGIN_SRC emacs-lisp
 (use-package dumb-jump
-  :bind (("M-g o" . dumb-jump-go-other-window)
-         ("M-g j" . dumb-jump-go)
-         ("M-g p" . dumb-jump-back)
-         ("M-g q" . dumb-jump-quick-look)
-         ("M-g x" . dumb-jump-go-prefer-external)
-         ("M-g z" . dumb-jump-go-prefer-external-other-window))
-  :config (setq dumb-jump-selector 'ivy))
+  :bind (("M-g o" . xref-find-definitions-other-window)
+         ("M-g j" . xref-find-definitions)
+         ("M-g p" . xref-pop-marker-stack))
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  :config
+  (setq dumb-jump-selector 'ivy))
 #+END_SRC
 ** ibuffer
 #+BEGIN_SRC emacs-lisp
