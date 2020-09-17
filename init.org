@@ -762,8 +762,8 @@ Allow some commands as safe by default
 ** Simple: Change some default keybinding (kill-this-buffer, up/downcase-dwim)
 #+BEGIN_SRC emacs-lisp
 (use-package simple
-  :bind (("C-/"   . undo)
-         ("C-z"   . undo)
+  :bind (("C-/"   . undo-only)
+         ("C-z"   . undo-only)
          ("C-S-z" . undo-redo)
          ("C-?"   . undo-redo)
          ("C-x k" . dakra-kill-this-buffer)
