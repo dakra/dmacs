@@ -3943,7 +3943,7 @@ shellcheck
 ;; activate virtualenv for flycheck
 ;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
 (use-package flycheck
-  :hook ((prog-mode ledger-mode) . flycheck-mode)
+  :hook ((prog-mode ledger-mode systemd-mode) . flycheck-mode)
   :config
   ;; Use the load-path from running Emacs when checking elisp files
   (setq flycheck-emacs-lisp-load-path 'inherit)
@@ -4263,7 +4263,7 @@ plantuml
 *** Systemd
 #+BEGIN_SRC emacs-lisp
 (use-package systemd
-  :mode ("\\.service\\'" "\\.timer\\'"))
+  :mode ("\\.\\(service\\|timer\\)\\'" . systemd-mode))
 #+END_SRC
 *** Nginx
 #+BEGIN_SRC emacs-lisp
