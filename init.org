@@ -1285,7 +1285,20 @@ From http://lists.gnu.org/archive/html/help-gnu-emacs/2007-05/msg00975.html
 ** Aggressive-indent
 #+BEGIN_SRC emacs-lisp
 (use-package aggressive-indent
-  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js-mode) . aggressive-indent-mode))
+  :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode css js-mode) . aggressive-indent-mode)
+  :config
+  ;; Normally this functions from `indent.el' always displays an
+  ;; annoying "reporter" message that it's indenting the current region.
+  ;; This patch disables that message
+  (defun indent-region-line-by-line (start end)
+    (save-excursion
+      (setq end (copy-marker end))
+      (goto-char start)
+      (while (< (point) end)
+        (or (and (bolp) (eolp))
+            (indent-according-to-mode))
+        (forward-line 1))
+      (move-marker end nil))))
 #+END_SRC
 ** Lossage: Live update lossage buffer
 #+BEGIN_SRC emacs-lisp
