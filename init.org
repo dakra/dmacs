@@ -8678,14 +8678,21 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
                             (remove 'exwm--server-stop)
                             (remove 'server-force-stop)))
     (run-hooks 'dakra-kill-hook))
+
   (defun dakra/poweroff ()
     "Clock out, save all Emacs buffers and shut computer down."
     (interactive)
     (when (y-or-n-p "Really want to shut down?")
       (when (org-clock-is-active)
         (org-clock-out))
+      (mapc #'systemctl-stop '("postgresql" "mysqld" "redis" "rethinkdb@default.service"
+                               "docker" "org.cups.cupsd"
+                               "confluent-zookeeper" "confluent-server" "confluent-schema-registry"
+                               "confluent-kafka-connect" "confluent-kafka-rest" "confluent-control-center"))
+      (ovpn-mode-stop-all t)
       (dakra/emacs-teardown)
       (start-process-shell-command "poweroff" nil "poweroff")))
+
   (defun dakra/reboot ()
     "Save all Emacs buffers and reboot."
     (interactive)
@@ -9122,12 +9129,12 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
 
   (defhydra hydra-systemctl (:hint none)
     "
-Presets                    Services
--------                    --------
-_1_: ?1? postgres/redis      ?p? _p_ostgres
-_2_: ?2? mysql/redis         ?r? _r_edis
+Presets                    Services             Kafka
+-------                    --------             -----
+_1_: ?1? postgres/redis      ?p? _p_ostgres         ?z? _z_ookeeper
+_2_: ?2? mysql/redis         ?r? _r_edis            ?k? _k_afka
 _3_: ?3? mysql/rdb/redis     ?m? _m_ysql
-                           ?t? re_t_hinkdb
+_4_: ?4? confluent kafka     ?t? re_t_hinkdb
                            ?d? _d_ocker
 _o_: offline (stop all)      ?c? _c_ups
 _g_: Refresh Hydra  _q_: quit"
@@ -9138,9 +9145,14 @@ _g_: Refresh Hydra  _q_: quit"
      (systemctl-hydra-status '("mysqld" "redis")))
     ("3" (mapc #'systemctl-start '("mysqld" "redis" "rethinkdb@default.service"))
      (systemctl-hydra-status '("mysqld" "redis" "rethinkdb@default.service")))
+
+    ("4" (mapc #'systemctl-start '("confluent-zookeeper" "confluent-server" "confluent-schema-registry"
+                                   "confluent-kafka-connect" "confluent-kafka-rest" "confluent-control-center"))
+     (systemctl-hydra-status '("confluent-zookeeper" "confluent-server" "confluent-schema-registry"
+                               "confluent-kafka-connect" "confluent-kafka-rest" "confluent-control-center")))
     ;; Stop all
-    ("o" (mapc #'systemctl-stop'("postgresql" "mysqld" "redis" "rethinkdb@default.service"
-                                 "docker" "org.cups.cupsd")))
+    ("o" (mapc #'systemctl-stop' ("postgresql" "mysqld" "redis" "rethinkdb@default.service"
+                                  "docker" "org.cups.cupsd" "confluent-zookeeper" "confluent-server")))
     ;; Services
     ("p" (systemctl-toggle "postgresql") (systemctl-hydra-status "postgresql"))
     ("r" (systemctl-toggle "redis") (systemctl-hydra-status "redis"))
@@ -9149,6 +9161,9 @@ _g_: Refresh Hydra  _q_: quit"
     ("d" (systemctl-toggle "docker") (systemctl-hydra-status "docker"))
     ("c" (mapc #'systemctl-toggle '("org.cups.cupsd" "cups-browsed" "avahi-daemon"))
      (systemctl-hydra-status "org.cups.cupsd"))
+
+    ("z" (systemctl-toggle "confluent-zookeeper") (systemctl-hydra-status "confluent-zookeeper"))
+    ("k" (systemctl-toggle "confluent-server") (systemctl-hydra-status "confluent-server"))
 
     ("g" (message "Hydra refreshed"))
     ("q" (message "Abort") :exit t)))
