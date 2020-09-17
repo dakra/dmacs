@@ -205,6 +205,7 @@
 [submodule "dap-mode"]
 	path = lib/dap-mode
 	url = git@github.com:emacs-lsp/dap-mode.git
+	no-byte-compile = dap-pwsh.el
 [submodule "dash"]
 	path = lib/dash
 	url = git@github.com:magnars/dash.el.git
