@@ -2182,7 +2182,7 @@ languagetool-ngrams-de
          ;; a frame to a different project and toggle treemacs again we still get the old project
          ("q" . treemacs-kill-buffer))
   :config
-  (defun treemacs-toggle-or-select ()
+  (defun treemacs-toggle-or-select (&optional arg)
     "Initialize or toggle treemacs.
 - If the treemacs window is visible and selected, hide it.
 - If the treemacs window is visible select it.
@@ -2190,13 +2190,16 @@ languagetool-ngrams-de
 - If no treemacs buffer exists for the current frame create and show it.
 - If the workspace is empty additionally ask for the root path of the first
   project to add."
-    (interactive)
-    (pcase (treemacs-current-visibility)
-      ('visible (if (string-prefix-p treemacs--buffer-name-prefix (buffer-name))
-                    (delete-window (treemacs-get-local-window))
-                  (treemacs--select-visible-window)))
-      ('exists  (treemacs-select-window))
-      ('none    (treemacs--init))))
+    (interactive "p")
+    (cond ((or (not arg) (eq arg 1))
+           (pcase (treemacs-current-visibility)
+             ('visible (if (string-prefix-p treemacs--buffer-name-prefix (buffer-name))
+                           (delete-window (treemacs-get-local-window))
+                         (treemacs--select-visible-window)))
+             ('exists  (treemacs-select-window))
+             ('none    (treemacs--init))))
+          ((eq arg 4) (treemacs-display-current-project-exclusively))
+          ((eq arg 16) (treemacs-add-and-display-current-project))))
 
   (defun treemacs-ignore-python-files (file _)
     (or (s-ends-with-p ".pyc" file)
@@ -2210,7 +2213,7 @@ languagetool-ngrams-de
         treemacs-silent-refresh             nil
         treemacs-is-never-other-window      t)
   (treemacs-filewatch-mode t)
-  ;; (treemacs-follow-mode -1)
+  (treemacs-follow-mode -1)
   (treemacs-git-mode 'simple))
 
 (use-package treemacs-projectile
