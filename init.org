@@ -1431,6 +1431,7 @@ is already narrowed."
          ("C-M-d" . sp-down-sexp)
          ("C-M-p" . sp-backward-down-sexp)
          ("C-M-n" . sp-up-sexp)
+         ("C-w" . whole-line-or-region-sp-kill-region)
          ("M-s" . sp-splice-sexp) ;; depth-changing commands
          ("M-r" . sp-splice-sexp-killing-around)
          ("M-(" . sp-wrap-round)
@@ -1452,6 +1453,11 @@ is already narrowed."
   ;; Always highlight matching parens
   (show-smartparens-global-mode +1)
   (setq blink-matching-paren nil)  ;; Don't blink matching parens
+
+  (defun whole-line-or-region-sp-kill-region (prefix)
+    "Call `sp-kill-region' on region or PREFIX whole lines."
+    (interactive "p")
+    (whole-line-or-region-wrap-region-kill 'sp-kill-region prefix))
 
   ;; Create keybindings to wrap symbol/region in pairs
   (defun prelude-wrap-with (s)
