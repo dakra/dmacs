@@ -6381,6 +6381,19 @@ Show clock history when not in org buffer or when called with prefix argument."
 *** Org Packages
 **** Org-agenda
 #+BEGIN_SRC emacs-lisp
+(use-package appt
+  :config
+  (defun appt-org-notification (min time text)
+    (notifications-notify
+     :title (format "%s in %s minutes." text min)
+     :urgency (if (< (string-to-number min) 5) 'critical 'normal)))
+
+  (setq appt-display-format 'window)
+  (setq appt-disp-window-function 'appt-org-notification)
+  (setq appt-message-warning-time 6))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
 (use-package org-agenda
   :defer t
   :config
@@ -6577,6 +6590,10 @@ Late deadlines first, then scheduled, then non-late deadlines"
 
        ;; deadlines for today next
        ((bh/agenda-sort-test 'bh/is-due-deadline a b))
+  ;; Update appt list on agenda view
+  (add-hook 'org-agenda-finalize-hook 'org-agenda-to-appt)
+  (appt-activate)
+  (org-agenda-to-appt)
 
        ;; late deadlines next
        ((bh/agenda-sort-test-num 'bh/is-late-deadline '> a b))
