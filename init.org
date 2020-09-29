@@ -3934,16 +3934,20 @@ your =.dir-locals.el= where you want the prettier after save hook activated. E.g
 #+END_SRC
 
 *** Flycheck
-To activate shellcheck we need the =shellcheck= package.
+Some external extra checkers like shellcheck,
+markdownlint, proselint (for writing).
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
 shellcheck
+ruby-mdl
+proselint
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
 ;; activate virtualenv for flycheck
 ;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
 (use-package flycheck
-  :hook ((prog-mode ledger-mode systemd-mode) . flycheck-mode)
+  :hook ((prog-mode ledger-mode systemd-mode
+          org-mode mu4e-compose-mode markdown-mode rst-mode) . flycheck-mode)
   :config
   ;; Use the load-path from running Emacs when checking elisp files
   (setq flycheck-emacs-lisp-load-path 'inherit)
