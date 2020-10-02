@@ -520,7 +520,7 @@ white to black background when first starting.
 #+BEGIN_SRC conf :tangle no
 ! Emacs settings so they are set even before Emacs starts
 ! See: https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html#Table-of-Resources
-Emacs.font: Operator Mono-7:weight=medium:width=normal
+Emacs.font: Operator Mono-9:weight=light:width=normal
 ! Emacs.font: Operator Mono:size=7:slant=normal:weight=normal:width=normal
 Emacs.reverseVideo: on
 Emacs.menuBar: 0
@@ -530,8 +530,8 @@ Emacs.verticalScrollBars: off
 
 If you don't set your Xresources, you can load the font with:
 #+BEGIN_SRC emacs-lisp :tangle no
-;; (set-frame-font "Operator Mono-7:weight=medium:width=normal" nil t)
-(set-frame-font "Iosevka-9:slant=normal:weight=regular:width=normal" nil t)
+(set-frame-font "Operator Mono-9:weight=light:width=normal" nil t)
+;; (set-frame-font "Iosevka-9:slant=normal:weight=regular:width=normal" nil t)
 ;; (set-frame-font "Iosevka-7:slant=normal:weight=bold:width=normal" nil t)
 ;; (set-frame-font "DejaVu Sans Mono-7:weight=medium:width=normal" nil t)
 ;; (set-frame-font "Hack-7:weight=medium:width=normal" nil t)
@@ -8748,8 +8748,8 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     ;; (start-process-shell-command "cbatticon" nil "cbatticon")
 
     ;; Set face attribute for new (child-)frames to our current font
-    (set-face-attribute 'default nil :font "Iosevka-9:slant=normal:weight=regular:width=normal")
-    ;; (set-face-attribute 'default nil :font "Operator Mono-7:weight=medium:width=normal")
+    ;; (set-face-attribute 'default nil :font "Iosevka-9:slant=normal:weight=regular:width=normal")
+    (set-face-attribute 'default nil :font "Operator Mono-9:weight=light:width=normal")
     )
 
   ;; Enable EXWM
