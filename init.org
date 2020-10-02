@@ -3872,9 +3872,9 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
                  "gitlab.paesslergmbh.de"
                  forge-gitlab-repository))
   (add-to-list 'forge-alist
-               '("gitlab.test.bigdata.sovendus.aws"
-                 "gitlab.test.bigdata.sovendus.aws/api/v4"
-                 "gitlab.test.bigdata.sovendus.aws"
+               '("gitlab.sovendus.com"
+                 "gitlab.sovendus.com/api/v4"
+                 "gitlab.sovendus.com"
                  forge-gitlab-repository)))
 #+END_SRC
 XXX: Only use =magit-gerrit= until functionality is implemented in =forge=.
@@ -3914,7 +3914,7 @@ When called with 2 prefix arguments only open in browser and don't copy."
   (dolist (i '(("git.wdf.sap.corp"                 . "gitiles")
                ("gitlab.bis"                       . "gitlab")
                ("gitlab.paesslergmbh.de"           . "gitlab")
-               ("gitlab.test.bigdata.sovendus.aws" . "gitlab")
+               ("gitlab.sovendus.com"              . "gitlab")
                ("git.ebenefuenf.com"               . "gitlab")
                ("lab.ebenefuenf.com"               . "gitlab")))
     (add-to-list 'browse-at-remote-remote-type-domains i))
@@ -9049,7 +9049,7 @@ XXX: Use emacs ~keycast~ package to display keys in modeline.
     (let ((default-directory (projectile-project-root)))
       (compilation-start "./gradlew dev" nil (lambda (_mode) "*4me - dev"))
       (sleep-for 2)
-      (compilation-start "./gradlew -x pmdMain -x spotbugsMain -x spotlessJava run" nil (lambda (_mode) "*4me - run"))))
+      (compilation-start "./gradlew -x pmdMain -x spotbugsMain -x spotlessJava run --args='-cwd .'" nil (lambda (_mode) "*4me - run"))))
 
   ;; FIXME: Loot at https://github.com/rejeep/prodigy.el
   (setq services-list
