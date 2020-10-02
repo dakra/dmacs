@@ -49,6 +49,7 @@
         org-shiftmetaup
         org-shiftup
         org-todo
+        org-yank
         outshine-self-insert-command
         selected-off
         shrink-whitespace
