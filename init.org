@@ -5491,8 +5491,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 ** SQL
 #+BEGIN_SRC emacs-lisp
 (use-package sql
-  :mode (("\\.sql\\'" . sql-mode)
-         ("\\.msql\\'" . sql-mode))  ; Mako template sql
+  :mode (("\\.\\(m\\|my\\)?sql\\'" . sql-mode))   ; msql = Mako template sql
   :hook (sql-interactive-mode . toggle-truncate-lines)
   :commands sql-init-passwords
   :bind (:map sql-interactive-mode-map
