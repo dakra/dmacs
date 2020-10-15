@@ -5187,10 +5187,10 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
     ("p" python-test-project "Project")
     ("q" nil "Cancel"))
 
-  (defun py-isort-add-import-whole-line-or-region ()
+  (defun py-isort-add-import-whole-line-or-region (prefix)
     "Import module(s) from region or whole line."
-    (interactive)
-    (whole-line-or-region-call-with-region 'py-isort-add-import-region))
+    (interactive "*p")
+    (whole-line-or-region-wrap-beg-end 'py-isort-add-import-region prefix))
 
   (defun python-run-server ()
     "Start pyramid pserve or django runserver."
