@@ -435,7 +435,12 @@ scratch buffer by default
 I use the Emacs =native-comp= branch.
 Compile asyncronously all lexically bound .elc files being loaded.
 #+BEGIN_SRC emacs-lisp
-(setq comp-deferred-compilation t)
+(use-package comp
+  ;; :disabled t
+  :config
+  (setq comp-deferred-compilation t)
+  ;; Don't try to native compile this init file
+  (add-to-list 'comp-deferred-compilation-black-list "init\\.el"))
 #+END_SRC
 
 ** Package Management
