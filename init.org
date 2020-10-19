@@ -3960,7 +3960,7 @@ proselint
 ;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
 (use-package flycheck
   :hook ((prog-mode ledger-mode systemd-mode
-          org-mode mu4e-compose-mode markdown-mode rst-mode) . flycheck-mode)
+          mu4e-compose-mode markdown-mode rst-mode) . flycheck-mode)
   :config
   ;; Use the load-path from running Emacs when checking elisp files
   (setq flycheck-emacs-lisp-load-path 'inherit)
