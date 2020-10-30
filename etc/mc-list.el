@@ -31,6 +31,7 @@
         grep-context-more-around-point
         haml-electric-backspace
         indent-for-tab-command
+        kill-sexp
         kmacro-end-or-call-macro
         ledger-magic-tab
         markdown-exdent-or-delete
@@ -97,4 +98,6 @@
         swiper-mc
         undo-fu-only-redo
         undo-fu-only-undo
+        undo-only
+        undo-redo
         ))
