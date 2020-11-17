@@ -4104,6 +4104,15 @@ use-package will load ccls for us simply by calling this function."
         "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
   (setq lsp-java-format-settings-profile "GoogleStyle")
 
+  ;; For projects using lombok
+  (setq lsp-java-vmargs
+        '("-noverify"
+          "-Xmx1G"
+          "-XX:+UseG1GC"
+          "-XX:+UseStringDeduplication"
+          "-javaagent:/home/daniel/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar"
+          "-Xbootclasspath/a:/home/daniel/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar"))
+
   ;; Use 3rd party decompiler
   (setq lsp-java-content-provider-preferred "fernflower")
   (defun java-lsp-init ()
