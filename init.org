@@ -9075,6 +9075,14 @@ eimp-fit-image-width-to-window=
 (use-package atomx
   :defer t)
 #+END_SRC
+** AWS
+#+BEGIN_SRC emacs-lisp
+(use-package aws
+  :defer t
+  :config
+  (setq  aws-serial-number "arn:aws:iam::123456:mfa/daniel.kraus"))
+#+END_SRC
+
 ** Auto-display-battery-mode
 Automatically show battery info when laptop is not connected to line power.
 #+BEGIN_SRC emacs-lisp
