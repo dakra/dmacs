@@ -121,6 +121,10 @@
 [submodule "clojure-mode"]
 	path = lib/clojure-mode
 	url = git@github.com:clojure-emacs/clojure-mode.git
+[submodule "clomacs"]
+	path = lib/clomacs
+	url = git@github.com:clojure-emacs/clomacs.git
+	load-path = src/elisp
 [submodule "closql"]
 	path = lib/closql
 	url = git@github.com:emacscollective/closql.git
@@ -251,6 +255,9 @@
 	path = lib/dired-rsync
 	url = git@github.com:stsquad/dired-rsync.git
 	no-byte-compile = dired-rsync-ert.el
+[submodule "direx"]
+	path = lib/direx
+	url = git@github.com:emacsorphanage/direx.git
 [submodule "discover-my-major"]
 	path = lib/discover-my-major
 	url = https://framagit.org/steckerhalter/discover-my-major.git
@@ -290,6 +297,10 @@
 [submodule "eimp"]
 	path = lib/eimp
 	url = git@github.com:nicferrier/eimp.git
+[submodule "ejc-sql"]
+	path = lib/ejc-sql
+	url = git@github.com:kostafey/ejc-sql.git
+	no-byte-compile = ejc-autocomplete.el
 [submodule "ejira"]
 	path = lib/ejira
 	url = git@github.com:nyyManni/ejira.git

@@ -4961,6 +4961,11 @@ Yasnippets for Datomic.
   (setq datomic-systems '("arlo")))
 #+END_SRC
 
+**** Clomacs: Call Clojure code from Emacs lisp and vice versa
+#+BEGIN_SRC emacs-lisp
+(use-package clomacs
+  :defer t)
+#+END_SRC
 *** Hy
 #+BEGIN_SRC emacs-lisp
 ;;; Lisp in python vm
@@ -5671,7 +5676,69 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   ;; Don't capitalize some SQL keywords that I also use as column names
   (setq sqlup-blacklist '("id" "name" "names" "type")))
 #+END_SRC
+*** elc-sql: Use a JDBC connection for a better SQL client
+#+BEGIN_SRC emacs-lisp
+(use-package ejc-sql
+  :defer t
+  :hook ((ejc-sql-minor-mode . ejc-eldoc-setup)
+         (ejc-sql-connected . dakra/ejc-sql-connected-hook))
+  :config
+  ;; AWS Athena config from https://deepumohan.com/tech/query-aws-athena-with-emacs-using-jdbc/
+  ;; Download athena-jdbc jar from AWS site and install locally with
+  ;; mvn install:install-file -Dfile="~/Downloads/AthenaJDBC42.jar" -DgroupId=com.simba.athena -DartifactId=athena-jdbc -Dversion=2.0.15 -Dpackaging=jar -DgeneratePom=true
+  ;; add athena jdbc driver to the `ejc-jdbc-drivers`
+  (plist-put ejc-jdbc-drivers
+             "awsathena"
+             [com.simba.athena/athena-jdbc "2.0.15"])
 
+  (setq ejc-result-table-impl 'ejc-result-mode) ;; 'orgtbl-mode
+
+  (require 'ejc-company)
+  ;; Use company for completion
+  (push 'ejc-company-backend company-backends)
+  ;; Use standard selection instead of ido so we can make use of ivy
+  (setq ejc-completion-system 'standard)
+
+  ;; There's only one dateformat
+  (setq ejc-date-output-format "%Y-%m-%d %H:%M:%S")
+
+  (defun dakra/ejc-sql-connected-hook ()
+    ;; (ejc-set-use-unicode t)
+    ;; Increase max rows
+    (ejc-set-max-rows 200)
+    (ejc-set-fetch-size 200))
+
+  (ejc-create-connection
+   "sov-dbs01-dwh-prod-ro"
+   :dependencies [[mysql/mysql-connector-java "8.0.22"]]
+   ;;:classname "com.mysql.cj.jdbc.Driver"
+   :connection-uri "jdbc:mysql://your-mysql-db:3306/your_schema?serverTimezone=Europe/Berlin&useSSL=False"
+   :user "user"
+   :password "pass")
+
+  (ejc-create-connection "athena-datalake"
+                         :dbtype "awsathena"
+                         :classpath "~/.m2/repository/com/simba/athena/athena-jdbc/2.0.9/athena-jdbc-2.0.9.jar"
+                         :classname "com.simba.athena.jdbc.Driver"
+                         :subprotocol "awsathena"
+                         :connection-uri (concat "jdbc:awsathena://AwsRegion=eu-central-1;"
+                                                 "LogLevel=0;"  ;; turn logging off
+                                                 "Schema=datalake;"
+                                                 "S3OutputLocation=s3://aws-athena-query-results-sovendus/athena/;"
+                                                 "AwsCredentialsProviderClass=com.simba.athena.amazonaws.auth.profile.ProfileCredentialsProvider;"
+                                                 "AwsCredentialsProviderArguments=simba_session;"))
+
+  ;; (ejc-create-connection "athena-datalake-no-mfa"
+  ;;                        :dbtype "awsathena"
+  ;;                        :classpath "~/.m2/repository/com/simba/athena/athena-jdbc/2.0.9/athena-jdbc-2.0.9.jar"
+  ;;                        :classname "com.simba.athena.jdbc.Driver"
+  ;;                        :subprotocol "awsathena"
+  ;;                        :subname (concat "//athena.eu-central-1.amazonaws.com:443/datalake;"
+  ;;                                         "S3OutputLocation=s3://aws-athena-query-results-sovendus/athena/")
+  ;;                        :user (getenv "AWS_ACCESS_KEY_ID")
+  ;;                        :password (getenv "AWS_SECRET_ACCESS_KEY"))
+  )
+#+END_SRC
 ** MongoDB
 For org-babel support
 #+BEGIN_SRC emacs-lisp
