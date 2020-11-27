@@ -6459,10 +6459,19 @@ Show clock history when not in org buffer or when called with prefix argument."
 #+BEGIN_SRC emacs-lisp
 (use-package appt
   :config
-  (defun appt-org-notification (min time text)
+  (defvar appt-org-notification-critical-threshold 5)
+  (defun appt-org-notification-single (min time text)
     (notifications-notify
      :title (format "%s in %s minutes." text min)
-     :urgency (if (< (string-to-number min) 5) 'critical 'normal)))
+     :timeout 10000  ;; Close notification after 10s
+     :urgency (if (< (string-to-number min) appt-org-notification-critical-threshold)
+                  'critical
+                'normal)))
+
+  (defun appt-org-notification (min time text)
+    (if (listp min)
+        (mapc #'appt-org-notification-single (-interleave min time text))
+      (appt-org-notification-single min time text)))
 
   (setq appt-display-format 'window)
   (setq appt-disp-window-function 'appt-org-notification)
