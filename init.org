@@ -3306,7 +3306,7 @@ avfs
                 eshell-hist-ignoredups t
                 eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim" "watch"
                                          "nmtui" "dstat" "mycli" "pgcli" "vue" "ngrok"
-                                         "castnow" "mitmproxy"
+                                         "castnow" "mitmproxy" "rmapi"
                                          "tmux" "screen" "top" "htop" "less" "more" "ncftp")
                 eshell-prefer-lisp-functions nil)
 
