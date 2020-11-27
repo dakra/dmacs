@@ -5703,6 +5703,14 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 
   (setq ejc-result-table-impl 'ejc-result-mode) ;; 'orgtbl-mode
 
+  ;; Store the last 50 query results
+  (setq ejc-ring-length 50)
+  ;; and store them in the Emacs var folder
+  (setq ejc-results-path (no-littering-expand-var-file-name "ejc-results"))
+
+  ;; Give Athena a bit more time to respond (default 10s)
+  (setq nrepl-sync-request-timeout 120)
+
   (require 'ejc-company)
   ;; Use company for completion
   (push 'ejc-company-backend company-backends)
