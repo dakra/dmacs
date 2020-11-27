@@ -1026,6 +1026,7 @@ With a prefix argument, copy the link to the online manual instead."
   ;; Show time in modeline
   (display-time-mode)
   ;; Right align time and org clocked-in task
+  (require 'org-clock)
   (add-to-list
    'global-mode-string
    '(:eval (propertize " " 'display `((space :align-to (- right
