@@ -432,17 +432,6 @@ scratch buffer by default
 (setq initial-scratch-message nil)
 #+END_SRC
 
-I use the Emacs =native-comp= branch.
-Compile asyncronously all lexically bound .elc files being loaded.
-#+BEGIN_SRC emacs-lisp
-(use-package comp
-  ;; :disabled t
-  :config
-  (setq comp-deferred-compilation t)
-  ;; Don't try to native compile this init file
-  (add-to-list 'comp-deferred-compilation-deny-list "init\\.el"))
-#+END_SRC
-
 ** Package Management
 *** Org config tangle
 There is no ~emacs.el~ in this repo. It will automatically created for you
@@ -494,6 +483,18 @@ have the latest Emacs from master installed.
 #+BEGIN_SRC emacs-lisp
 (use-package epkg :defer t)
 #+END_SRC
+** Emacs native-comp
+I use the Emacs =native-comp= branch.
+Compile asyncronously all lexically bound .elc files being loaded.
+#+BEGIN_SRC emacs-lisp
+(use-package comp
+  ;; :disabled t
+  :config
+  (setq comp-deferred-compilation t)
+  ;; Don't try to native compile this init file
+  (add-to-list 'comp-deferred-compilation-deny-list "init\\.el"))
+#+END_SRC
+
 * Don't litter configs
 #+BEGIN_SRC emacs-lisp
 (use-package no-littering
