@@ -3176,6 +3176,17 @@ avfs
     ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
     ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" ))
 
+  (defhydra hydra-diff-hl (:color red)
+    "diff-hl"
+    ("=" diff-hl-diff-goto-hunk "goto hunk")
+    ("<RET>" diff-hl-diff-goto-hunk "goto hunk")
+    ("u" diff-hl-revert-hunk "revert hunk")
+    ("[" diff-hl-previous-hunk "prev hunk")
+    ("p" diff-hl-previous-hunk "prev hunk")
+    ("]" diff-hl-next-hunk "next hunk")
+    ("n" diff-hl-next-hunk "next hunk")
+    ("q" nil "cancel"))
+
   (defun dakra/insert-unicode (unicode-name)
     "Same as C-x 8 enter UNICODE-NAME."
     (insert-char (gethash unicode-name (ucs-names))))
@@ -3635,17 +3646,6 @@ fi
   :hook (((prog-mode conf-mode vc-dir-mode ledger-mode) . turn-on-diff-hl-mode)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
-  (defhydra hydra-diff-hl (:color red)
-    "diff-hl"
-    ("=" diff-hl-diff-goto-hunk "goto hunk")
-    ("<RET>" diff-hl-diff-goto-hunk "goto hunk")
-    ("u" diff-hl-revert-hunk "revert hunk")
-    ("[" diff-hl-previous-hunk "prev hunk")
-    ("p" diff-hl-previous-hunk "prev hunk")
-    ("]" diff-hl-next-hunk "next hunk")
-    ("n" diff-hl-next-hunk "next hunk")
-    ("q" nil "cancel"))
-
   ;; XXX: maybe set draw-borders to nil and set background color like
   ;; `(diff-added ((,class (:foreground ,green-4 :background ,green-00 :bold t))))
   ;; `(diff-changed ((,class (:foreground ,yellow-4 :background ,yellow-00 :bold t))))
