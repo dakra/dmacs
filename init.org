@@ -1125,12 +1125,11 @@ With a prefix argument, copy the link to the online manual instead."
 (use-package display-fill-column-indicator
   :hook ((git-commit-setup) . display-fill-column-indicator-mode))
 #+END_SRC
-** Volatile highlights
-Visual feedback on some operations like yank,kill,undo
+** Goggles: Visual feedback on some operations like yank,kill,undo
 #+BEGIN_SRC emacs-lisp
-(use-package volatile-highlights
+(use-package goggles
   :defer 10
-  :config (volatile-highlights-mode t))
+  :config (goggles-mode))
 #+END_SRC
 ** beacon: Highlight current line/cursor when switching frames
 #+BEGIN_SRC emacs-lisp

@@ -467,6 +467,9 @@
 [submodule "go-projectile"]
 	path = lib/go-projectile
 	url = git@github.com:dougm/go-projectile.git
+[submodule "goggles"]
+	path = lib/goggles
+	url = git@github.com:minad/goggles.git
 [submodule "gotest"]
 	path = lib/gotest
 	url = git@github.com:nlamirault/gotest.el.git
@@ -748,6 +751,9 @@
 [submodule "oauth2"]
 	path = lib/oauth2
 	url = git@github.com:emacsmirror/oauth2.git
+[submodule "ob-async"]
+	path = lib/ob-async
+	url = git@github.com:astahlman/ob-async.git
 [submodule "ob-mongo"]
 	path = lib/ob-mongo
 	url = git@github.com:krisajenkins/ob-mongo.git
@@ -1132,9 +1138,6 @@
 [submodule "vlf"]
 	path = lib/vlf
 	url = git@github.com:m00natic/vlfi.git
-[submodule "volatile-highlights"]
-	path = lib/volatile-highlights
-	url = git@github.com:k-talo/volatile-highlights.el.git
 [submodule "vterm"]
 	path = lib/vterm
 	url = git@github.com:akermu/emacs-libvterm.git
