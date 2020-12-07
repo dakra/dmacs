@@ -320,12 +320,11 @@
 * About
 This config is a mix of looking at many different ~emacs.d~ repositories,
 reading blog posts, mailing lists, wikis etc for years and stealing what I found
-useful ;)
+useful.
 Often I try to put a link with the credit near the source where I got
 the config snippet from, but sometimes I forgot and simply don't know anymore
-how first came up with an idea.
-I used [[https://github.com/bbatsov/prelude][prelude]] for a while, so a lot of
-things are from this setup.
+who first came up with an idea.
+I used [[https://github.com/bbatsov/prelude][prelude]] for a while, so a lot of things are from this setup.
 Other configs I looked at a lot include (but not only):
 - [[https://github.com/purcell/emacs.d.git][Steve Purcell]]
 - [[https://github.com/jwiegley/dot-emacs][John Wiegley]]
