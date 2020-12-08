@@ -1634,6 +1634,7 @@ Smart region guesses what you want to select by one command:
          :prefix "w"
          ("w" . copy-as-format)
          ("g" . copy-as-format-github)
+         ("t" . copy-as-format-markdown-table)
          ("h" . copy-as-format-hipchat-pidgin)
          ("j" . copy-as-format-jira)
          ("m" . copy-as-format-markdown)
@@ -1650,6 +1651,14 @@ Smart region guesses what you want to select by one command:
   (defun copy-as-format-hipchat-pidgin ()
     (interactive)
     (setq copy-as-format-default "hipchat-pidgin")
+    (copy-as-format))
+
+  (defun copy-as-format--markdown-table (text multiline)
+    (s-replace "--+--" "--|--" text))
+  (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table))
+  (defun copy-as-format-hipchat-pidgin ()
+    (interactive)
+    (setq copy-as-format-default "markdown-table")
     (copy-as-format)))
 #+END_SRC
 ** zop-to-char: Remove multiple characters at once
