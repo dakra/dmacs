@@ -1672,12 +1672,15 @@ Smart region guesses what you want to select by one command:
 #+BEGIN_SRC emacs-lisp
 ;; Minor mode to selectively hide/show code and comment blocks
 (use-package hideshow
-  :hook (prog-mode  . hs-minor-mode))
+  :hook (prog-mode  . hs-minor-mode)
+  :bind (:map hs-minor-mode-map
+         ([C-tab] . hs-toggle-hiding)))
 
 (use-package outline
   :hook ((prog-mode message-mode markdown-mode) . outline-minor-mode))
 
 (use-package bicycle
+  :disabled t
   :after outline
   :bind (:map outline-minor-mode-map
          ([C-tab] . bicycle-cycle)
