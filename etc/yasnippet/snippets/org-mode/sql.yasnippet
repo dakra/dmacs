@@ -2,6 +2,6 @@
 # name: sql block
 # key: <sql
 # --
-#+BEGIN_SRC sql :dbconnection '${1:$$(yas-auto-next (yas-completing-read "DB Connection: " (mapcar 'car sql-connection-alist))) } :database ${2:$$(car (alist-get 'sql-database (alist-get (intern (yas-field-value 1)) sql-connection-alist)))}
+#+BEGIN_SRC sql :dbconnection '${1:$$(yas-auto-next (yas-completing-read "DB Connection: " (mapcar 'car sql-connection-alist))) } :database ${2:$$(unless yas-modified-p (car (alist-get 'sql-database (alist-get (intern (yas-field-value 1)) sql-connection-alist))))} :async
 $0
 #+END_SRC
