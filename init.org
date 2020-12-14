@@ -1653,7 +1653,7 @@ Smart region guesses what you want to select by one command:
     (setq copy-as-format-default "hipchat-pidgin")
     (copy-as-format))
 
-  (defun copy-as-format--markdown-table (text multiline)
+  (defun copy-as-format--markdown-table (text _multiline)
     (s-replace "--+--" "--|--" text))
   (add-to-list 'copy-as-format-format-alist '("markdown-table" copy-as-format--markdown-table))
   (defun copy-as-format-hipchat-pidgin ()
@@ -2325,7 +2325,7 @@ languagetool-ngrams-de
 With one prefix arg, show only EXWM buffers. With two, show all buffers."
     (interactive "p")
     (back-button-push-mark-local-and-global)
-    (case p
+    (cl-case p
       (1 (ivy-switch-buffer-non-exwm))
       (4 (ivy-switch-buffer-exwm))
       (16 (ivy-switch-buffer))))
@@ -3166,7 +3166,7 @@ avfs
     ("v" ovpn "VPN")
     ("c" quick-calc "calc - Quick calc" :column "Utils")
     ("C" calendar "calendar")
-    ("T" display-time-world "time - Display world time")
+    ("T" world-clock "time - Display world time")
     ("s" hydra-systemctl/body "Systemctl")
     ("a" ansi-term-bash "Ansi Terminal"  :column "Misc")
     ("b" brain-fm-play "brain.fm - Stream music")
@@ -3924,7 +3924,7 @@ When called with one prefix argument only copy the url in the kill ring
 and don't open in the browser.
 When called with 2 prefix arguments only open in browser and don't copy."
     (interactive "p")
-    (case p
+    (cl-case p
       (4  (browse-at-remote-kill))
       (16 (browse-at-remote))
       (t  (browse-at-remote-kill) (browse-at-remote))))
@@ -5001,7 +5001,7 @@ Yasnippets for Datomic.
   :hook (lua-mode . lua-outline-mode)
   :bind (:map lua-mode-map
          ("M-?" . lua-search-documentation)
-         ("M-." . dumb-jump-go))
+         ("M-." . xref-find-definitions))
   :config
   ;; Use eww to browse Lua documentation
   (setq lua-documentation-function 'eww)
@@ -5597,7 +5597,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
     (call-interactively #'sql-connect))
 
   ;; FIXME: Use advice
-  (defun sql-connect--ensure-passwords (&optional connection buf-name)
+  (defun sql-connect--ensure-passwords (&optional _connection _buf-name)
     "Ensure that sql-connection-alist is populated including passwords."
     (interactive
      (progn
@@ -6469,9 +6469,10 @@ Show clock history when not in org buffer or when called with prefix argument."
 **** Org-agenda
 #+BEGIN_SRC emacs-lisp
 (use-package appt
+  :defer t
   :config
   (defvar appt-org-notification-critical-threshold 5)
-  (defun appt-org-notification-single (min time text)
+  (defun appt-org-notification-single (min _time text)
     (notifications-notify
      :title (format "%s in %s minutes." text min)
      :timeout 10000  ;; Close notification after 10s
@@ -7738,14 +7739,14 @@ mu init --my-address daniel@kraus.my                 \
           ;; Foo, Bar becomes Bar Foo
           (setq name (replace-regexp-in-string "^\\(.*\\), \\([^ ]+\\).*" "\\2 \\1" name))))))
 
-  (defun malb/mu4e-contact-rewrite-function (contact)
+  (defun malb/mu4e-contact-process-function (contact)
     (let* ((name (or (plist-get contact :name) ""))
            ;; (mail (plist-get contact :mail))
            (case-fold-search nil))
       (plist-put contact :name (malb/canonicalise-contact-name name))
       contact))
 
-  (setq mu4e-contact-rewrite-function #'malb/mu4e-contact-rewrite-function)
+  (setq mu4e-contact-process-function #'malb/mu4e-contact-process-function)
 
 
   (defun dakra-mu4e-action-attachment-import-gcalcli (msg attachnum)
