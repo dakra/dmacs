@@ -81,8 +81,12 @@
 
 (setq mc/cmds-to-run-once
       '(
+        beginning-of-buffer
         counsel-M-x
+        counsel-linux-app
+        counsel-projectile-switch-project
         dakra-ivy-switch-buffer
+        dakra/counsel-search-project-empty
         end-of-buffer
         exwm-windmove-down
         exwm-windmove-left
