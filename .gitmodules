@@ -799,6 +799,7 @@
 [submodule "org-ql"]
 	path = lib/org-ql
 	url = git@github.com:alphapapa/org-ql.git
+	no-byte-compile = helm-org-ql.el
 [submodule "org-super-agenda"]
 	path = lib/org-super-agenda
 	url = git@github.com:alphapapa/org-super-agenda.git
