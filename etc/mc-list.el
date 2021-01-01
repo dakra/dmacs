@@ -3,6 +3,10 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        artist-backward-char
+        artist-forward-char
+        artist-next-line
+        artist-previous-line
         beginning-of-defun
         c-electric-brace
         c-electric-colon
@@ -52,6 +56,10 @@
         org-todo
         org-yank
         outshine-self-insert-command
+        picture-backward-clear-column
+        picture-clear-column
+        picture-clear-line
+        picture-end-of-line
         selected-off
         shrink-whitespace
         sp-backward-barf-sexp
