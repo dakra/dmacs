@@ -4049,6 +4049,8 @@ lldb
         (lsp-ui-doc-hide)
       (lsp-ui-doc-show)))
 
+  ;; Deactivate most of the annoying "fancy features"
+  (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-doc-use-childframe t)
   (setq lsp-ui-doc-include-signature t)
