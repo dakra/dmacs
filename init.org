@@ -5180,12 +5180,14 @@ use-package will load ccls for us simply by calling this function."
   :config
   ;; ipython5 uses prompt_toolkit which doesn't play nice with emacs
   ;; when setting interpreter to 'ipython', you need additional '--simple-prompt' arg
-  (setq python-shell-interpreter "python")
-  ;;(setq python-shell-interpreter-args "-i")
+  ;; (setq python-shell-interpreter "python")
+  ;; (setq python-shell-interpreter-args "-i")
   ;; FIXME: run new python interpreter on projectile-switch-project?
   ;; and only run pshell when it's a pyramid project.
   ;;(setq python-shell-interpreter "python"
   ;;      python-shell-interpreter-args "--simple-prompt -i /home/daniel/.virtualenvs/atomx/lib/python3.5/site-packages/pyramid/scripts/pshell.py /home/daniel/atomx/api/development.ini")
+  ;; (setq python-shell-interpreter "ipython")
+  ;; (setq python-shell-interpreter-args "-i --simple-prompt")
 
   (defun python-enable-highlighting-in-comint (f &rest args)
     "Workaround so entered python code in comint mode stays highlighted.
@@ -5207,10 +5209,10 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
   ;; Don't spam message buffer when python-mode can't guess indent-offset
   (setq python-indent-guess-indent-offset-verbose nil)
 
-  (defun python-shell-send-whole-line-or-region ()
+  (defun python-shell-send-whole-line-or-region (prefix)
     "Send whole line or region to inferior Python process."
-    (interactive)
-    (whole-line-or-region-call-with-region 'python-shell-send-region)
+    (interactive "*p")
+    (whole-line-or-region-wrap-beg-end 'python-shell-send-region prefix)
     (deactivate-mark))
 
   (defhydra hydra-python-test (python-mode-map "C-c C-t" :color blue)
