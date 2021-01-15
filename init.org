@@ -8055,6 +8055,7 @@ Send emails with =org-msg=. Some keybindings:
 - ~C-c C-a~ -- ~org-msg-attach~
 - ~C-c C-c~ -- ~org-ctrl-c-ctrl-c~. *OrgMsg* configures ~org-msg-ctrl-c-ctrl-c~ as a final hook of [[https://orgmode.org/][Org mode]].
              When =C-c C-c= is called in a *OrgMsg* buffer it generates the MIME message and sends it.
+
 #+BEGIN_SRC emacs-lisp
 (use-package org-msg
   :defer t
@@ -8062,6 +8063,7 @@ Send emails with =org-msg=. Some keybindings:
   (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
 	org-msg-startup "hidestars indent inlineimages"
 	org-msg-greeting-name-limit 3
+        org-msg-convert-citation t
 	org-msg-text-plain-alternative t))
 #+END_SRC
 
