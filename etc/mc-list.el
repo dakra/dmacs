@@ -17,6 +17,7 @@
         c-electric-star
         c-indent-line-or-region
         cljr-slash
+        comint-delchar-or-maybe-eof
         comment-dwim-2
         counsel-yank-pop
         crux-move-beginning-of-line
@@ -95,6 +96,7 @@
         counsel-projectile-switch-project
         dakra-ivy-switch-buffer
         dakra/counsel-search-project-empty
+        dap-tooltip-mouse-motion
         end-of-buffer
         exwm-windmove-down
         exwm-windmove-left
@@ -106,6 +108,7 @@
         iedit-switch-to-mc-mode
         ivy-wgrep-change-to-wgrep-mode
         mc/vertical-align-with-space
+        org-clock-goto
         org-edit-src-save
         smart-region
         swiper-mc
