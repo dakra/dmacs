@@ -5057,7 +5057,14 @@ Yasnippets for Datomic.
   (setq markdown-display-remote-images t)
   ;; Enable fontification for code blocks
   (setq markdown-fontify-code-blocks-natively t)
-  (add-to-list 'markdown-code-lang-modes '("ini" . conf-mode))
+  ;; Add some more languages
+  (dolist (x '(("ini" . conf-mode)
+               ("clj" . clojure-mode)
+               ("cljs" . clojure-mode)
+               ("cljc" . clojure-mode)))
+    (add-to-list 'markdown-code-lang-modes x))
+
+
   ;; use pandoc with source code syntax highlighting to preview markdown (C-c C-c p)
   (setq markdown-command "pandoc -s --highlight-style pygments -f markdown_github -t html5"))
 #+END_SRC
