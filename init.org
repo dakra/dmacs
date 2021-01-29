@@ -4914,6 +4914,23 @@ openjdk11-src
   ;; Location of the jdk sources. In Arch Linux package `openjdk-src'
   (setq cider-jdk-src-paths "/usr/lib/jvm/java-11-openjdk/lib/src.zip")
 
+  (require 's)
+
+  ;; Inject reveal middleware in cider-jack-in when the `:reveal' alias is set
+  (defun cider-cli-global-options-contains-reveal? (&rest _)
+    (and cider-clojure-cli-global-options
+         (s-contains? ":reveal" cider-clojure-cli-global-options)))
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               '("vlaaad.reveal.nrepl/middleware" :predicate cider-cli-global-options-contains-reveal?))
+
+  ;; Inject shadowcljs nrepl middleware in cider-jack-in when the `:cljs' alias is set
+  (defun cider-cli-global-options-contains-cljs? (&rest _)
+    (and cider-clojure-cli-global-options
+         (s-contains? ":cljs" cider-clojure-cli-global-options)))
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
+
+
   ;; Store more items in repl history (default 500)
   (setq cider-repl-history-size 2000)
   ;; When loading the buffer (C-c C-k) save first without asking
@@ -4924,6 +4941,8 @@ openjdk11-src
   (setq cider-switch-to-repl-on-insert nil)
   ;; Don't focus error buffer when error is thrown
   (setq cider-auto-select-error-buffer nil)
+  ;; Don't focus inspector after evaluating something
+  (setq cider-inspector-auto-select-buffer nil)
   ;; Display context dependent info in the eldoc where possible.
   (setq cider-eldoc-display-context-dependent-info t)
   ;; Just use symbol under point and don't prompt for symbol in e.g. cider-doc.
