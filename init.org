@@ -3845,6 +3845,7 @@ file containing merge conflicts is visited from a Magit diff section.
                                    (when smerge-mode
                                      (hydra-smerge/body))))
   :config
+  (require 'hydra)
   (defhydra hydra-smerge
     (:color pink :hint nil :post (smerge-auto-leave))
     "
@@ -8505,6 +8506,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
   :config
   ;; XXX: Maybe -set-volume (1-9 keys sets 10%, 20% etc)?
   ;;      Maybe show selected sink and volume
+  (require 'hydra)
   (defhydra hydra-pulseaudio-control (:hint nil)
     "Pulseaudio Control"
     ("+" pulseaudio-control-increase-volume "Increase Volume")
