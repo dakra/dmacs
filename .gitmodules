@@ -1062,6 +1062,9 @@
 [submodule "sqlup-mode"]
 	path = lib/sqlup-mode
 	url = git@github.com:Trevoke/sqlup-mode.el.git
+[submodule "ssh-config-mode"]
+	path = lib/ssh-config-mode
+	url = git@github.com:jhgorrell/ssh-config-mode-el.git
 [submodule "statusbar"]
 	path = lib/statusbar
 	url = git@github.com:dakra/statusbar.el.git

@@ -4333,6 +4333,11 @@ plantuml
 (use-package docker-tramp
   :after tramp)
 #+END_SRC
+*** ssh-config
+#+BEGIN_SRC emacs-lisp
+(use-package ssh-config-mode
+  :mode ("\\/\\.ssh/config\\'"))
+#+END_SRC
 ** Debugging
 #+BEGIN_SRC emacs-lisp
 (use-package realgud
