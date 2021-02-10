@@ -1183,6 +1183,9 @@
 [submodule "xelb"]
 	path = lib/xelb
 	url = git@github.com:ch11ng/xelb.git
+[submodule "xterm-color"]
+	path = lib/xterm-color
+	url = git@github.com:atomontage/xterm-color.git
 [submodule "yaml-mode"]
 	path = lib/yaml-mode
 	url = git@github.com:yoshiki/yaml-mode.git

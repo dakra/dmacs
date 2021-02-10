@@ -889,6 +889,7 @@ E.g. fuer -> für
 #+BEGIN_SRC emacs-lisp
 (use-package ansi-color
   :commands ansi-color-display
+  :disabled t  ;; Use xterm-color instead
   :hook (compilation-filter . colorize-compilation-buffer)
   :config
   (defun ansi-color-display (start end)
@@ -916,6 +917,14 @@ E.g. fuer -> für
   :init
   (put 'compilation-environment 'safe-local-variable (create-safe-env-p "SENTRY_DSN"))
   :config
+  ;; xterm-color config
+  (setq compilation-environment '("TERM=xterm-256color"))
+
+  (defun my/advice-compilation-filter (f proc string)
+    (funcall f proc (xterm-color-filter string)))
+
+  (advice-add 'compilation-filter :around #'my/advice-compilation-filter)
+
   (defun compilation-add-separator ()
     "Insert separator in read-only buffer."
     (interactive)
@@ -3259,6 +3268,12 @@ avfs
                            (nil "atomx" "/ssh:%h:")))
     (add-to-list 'tramp-default-proxies-alist tramp-proxies)))
 #+END_SRC
+* xterm-color
+#+BEGIN_SRC emacs-lisp
+(use-package xterm-color
+  :defer t)
+#+END_SRC
+
 * Eshell
 #+BEGIN_SRC emacs-lisp
 ;; Always show file size in human readable format
@@ -3280,6 +3295,11 @@ avfs
          )
   :init (setq eshell-aliases-file (no-littering-expand-etc-file-name "eshell-aliases"))
   :config
+  ;; Config for xterm-color
+  (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
+  (setq eshell-output-filter-functions (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
+  (setenv "TERM" "xterm-256color")
+
   ;; Synchronize eshell buffer name on directory change.
   ;; From https://github.com/manateelazycat/aweshell
   (defun eshell-sync-dir-buffer-name ()
@@ -3288,7 +3308,7 @@ avfs
       (rename-buffer (format "*eshell: %s*" (epe-fish-path default-directory)) t)))
   (add-hook 'eshell-directory-change-hook #'eshell-sync-dir-buffer-name)
   (add-hook 'eshell-mode-hook #'eshell-sync-dir-buffer-name)
-  
+
   (defun dakra-eshell-split (&optional arg)
     "Like eshell but use pop-to-buffer to display."
     (interactive "P")
@@ -3382,6 +3402,8 @@ avfs
                                 ;;(setq-local company-backends '(company-capf company-eshell-autosuggest))
                                 ;; (setq-local company-backends '(company-capf))
                                 ;; (setq-local company-frontends '(company-preview-frontend))
+
+                                (setq xterm-color-preserve-properties t)
                                 ))
   ;; Functions starting with `eshell/' can be called directly from eshell
   ;; with only the last part. E.g. (eshell/foo) will call `$ foo'
