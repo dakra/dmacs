@@ -1008,6 +1008,12 @@ With a prefix argument, copy the link to the online manual instead."
   ;; Files like `Makefile.docker' are also gnu make
   :mode (("Makefile" . makefile-gmake-mode)))
 #+END_SRC
+** generic-x: Basic syntax highlighting for many modes (fstab, sudoers, passwd, etc)
+#+BEGIN_SRC emacs-lisp
+(use-package generic-x
+  :if (daemonp)
+  :defer 30)
+#+END_SRC
 ** Goto-addr: Buttonize URLs and e-mail addresses in the current buffer
 #+BEGIN_SRC emacs-lisp
 (use-package goto-addr
