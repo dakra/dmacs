@@ -516,7 +516,7 @@ Compile asyncronously all lexically bound .elc files being loaded.
   (setf custom-safe-themes t))
 #+END_SRC
 
-* Moe theme:
+* Themes
 Put this in your =~/.Xresources= and load them in your =~/.xprofile=
 with ~xrdb .Xresources~ so Emacs loads the right font
 even before loading this config and don't flicker from
@@ -551,6 +551,7 @@ ttf-carlito
 ttf-croscore
 #+END_SRC
 
+** color-theme-sanityinc-tomorrow
 #+BEGIN_SRC emacs-lisp
 (use-package color-theme-sanityinc-tomorrow
   :disabled t
@@ -563,11 +564,28 @@ ttf-croscore
     (set-face-attribute 'mode-line-inactive nil :underline line)
     (set-face-attribute 'mode-line nil :box nil)
     (set-face-attribute 'mode-line-inactive nil :box nil)))
+    #+END_SRC
 
+** moe-theme
+#+BEGIN_SRC emacs-lisp
 (use-package moe-theme
+  :disabled t
   :unless noninteractive
   :config (load-theme 'moe-dark t))
+#+END_SRC
+** modus-vivendi
+#+BEGIN_SRC emacs-lisp
+(use-package modus-themes
+  :unless noninteractive
+  :config
+  (setq modus-vivendi-theme-slanted-constructs t)
+  (setq modus-vivendi-theme-bold-constructs t)
+  (setq modus-vivendi-theme-mode-line 'moody)
+  (modus-themes-load-themes)
+  (modus-themes-load-vivendi))
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
 (use-package moody
   :unless noninteractive
   :defer 1

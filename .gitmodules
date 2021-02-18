@@ -704,6 +704,9 @@
 [submodule "mocha"]
 	path = lib/mocha
 	url = git@github.com:scottaj/mocha.el.git
+[submodule "modus-themes"]
+	path = lib/modus-themes
+	url = git@gitlab.com:protesilaos/modus-themes.git
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el.git
