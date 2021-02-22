@@ -569,13 +569,13 @@ ttf-croscore
 ** moe-theme
 #+BEGIN_SRC emacs-lisp
 (use-package moe-theme
-  :disabled t
   :unless noninteractive
   :config (load-theme 'moe-dark t))
 #+END_SRC
 ** modus-vivendi
 #+BEGIN_SRC emacs-lisp
 (use-package modus-themes
+  :disabled t
   :unless noninteractive
   :config
   (setq modus-vivendi-theme-slanted-constructs t)
@@ -584,7 +584,7 @@ ttf-croscore
   (modus-themes-load-themes)
   (modus-themes-load-vivendi))
 #+END_SRC
-
+** moody modeline
 #+BEGIN_SRC emacs-lisp
 (use-package moody
   :unless noninteractive
@@ -606,7 +606,9 @@ ttf-croscore
   (setq moody-mode-line-height 20)
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
-
+#+END_SRC
+** minions: put minor modes from modeline in menu
+#+BEGIN_SRC emacs-lisp
 (use-package minions
   :unless noninteractive
   :defer 2
