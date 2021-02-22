@@ -2264,6 +2264,9 @@ languagetool-ngrams-de
         (string= file "__pycache__")))
   (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-python-files)
 
+  ;; Read input from minibuffer instead of childframe (which requires an extra package)
+  (setq treemacs-read-string-input 'from-minibuffer)
+
   (setq treemacs-follow-after-init          t
         treemacs-indentation                1
         treemacs-width                      30
