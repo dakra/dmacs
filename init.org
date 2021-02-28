@@ -5423,7 +5423,8 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
 (use-package anaconda-mode
   :bind (:map anaconda-mode-map
          ("M-." . python-goto-sql-file-or-definition)
-         ("M-," . anaconda-mode-find-assignments))
+         ("M-," . anaconda-mode-find-assignments)
+         ("M-?" . anaconda-mode-show-doc))
   :hook ((python-mode . anaconda-mode)
          (python-mode . anaconda-eldoc-mode))
   :config
@@ -5506,6 +5507,7 @@ You can do `sphinx-compile` (`C-c C-x C-c`) to compile the sphinx docs or
   :hook (python-mode . python-docstring-mode))
 
 (use-package pydoc
+  :disabled t  ; FIXME: Stopped working with newer jedi versions
   :after anaconda-mode
   :bind (:map anaconda-mode-map
          ("M-?" . pydoc-at-point)))
