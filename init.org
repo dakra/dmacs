@@ -5466,7 +5466,9 @@ You can do `sphinx-compile` (`C-c C-x C-c`) to compile the sphinx docs or
 *** Sphinx-doc: Auto-generate docstrings
 #+BEGIN_SRC emacs-lisp
 (use-package sphinx-doc
-  :hook (python-mode . sphinx-doc-mode))
+  :hook (python-mode . sphinx-doc-mode)
+  :config
+  (setq sphinx-doc-include-types t))
 #+END_SRC
 
 *** Python-test: Run python tests with unittest, pytest, django
