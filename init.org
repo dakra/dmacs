@@ -8215,7 +8215,9 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 ** Exwm
 #+BEGIN_SRC emacs-lisp
 (use-package xelb
-  :if (daemonp))
+  :if (daemonp)
+  :config
+  (setq xcb:connection-timeout 5))
 
 (use-package exwm
   :if (daemonp)
