@@ -85,6 +85,7 @@
         wgrep-mark-deletion
         whole-line-or-region-kill-region
         whole-line-or-region-yank
+        yaml-electric-backspace
         yas-expand
         ))
 
