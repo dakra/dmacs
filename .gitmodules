@@ -724,6 +724,7 @@
         build-step = make -C mu4e > /dev/null
         build-step = "(borg-update-autoloads \"mu4e\")"
         load-path = mu4e
+	load-path = mu4e/obsolete
 [submodule "mu4e-maildirs-extension"]
 	path = lib/mu4e-maildirs-extension
 	url = git@github.com:agpchil/mu4e-maildirs-extension.git
