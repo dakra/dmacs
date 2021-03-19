@@ -134,6 +134,9 @@
 [submodule "cmake-mode"]
 	path = lib/cmake-mode
 	url = git@github.com:emacsmirror/cmake-mode.git
+[submodule "code-cells"]
+	path = lib/code-cells
+	url = git@github.com:astoff/code-cells.el.git
 [submodule "color-theme-sanityinc-tomorrow"]
 	path = lib/color-theme-sanityinc-tomorrow
 	url = git@github.com:purcell/color-theme-sanityinc-tomorrow.git
