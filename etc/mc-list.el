@@ -39,6 +39,7 @@
         kill-sexp
         kmacro-end-or-call-macro
         ledger-magic-tab
+        markdown-enter-key
         markdown-exdent-or-delete
         markdown-outdent-or-delete
         mouse-yank-primary
