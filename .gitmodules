@@ -855,6 +855,9 @@
 [submodule "packed"]
 	path = lib/packed
 	url = git@github.com:emacscollective/packed.git
+[submodule "page-break-lines"]
+	path = lib/page-break-lines
+	url = git@github.com:purcell/page-break-lines.git
 [submodule "paredit"]
 	path = lib/paredit
 	url = https://mumble.net/~campbell/git/paredit.git
