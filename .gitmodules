@@ -1142,6 +1142,9 @@
 [submodule "use-package"]
 	path = lib/use-package
 	url = git@github.com:jwiegley/use-package.git
+[submodule "valign"]
+	path = lib/valign
+	url = git@github.com:casouri/valign.git
 [submodule "virtualenvwrapper"]
 	path = lib/virtualenvwrapper
 	url = git@github.com:porterjamesj/virtualenvwrapper.el.git

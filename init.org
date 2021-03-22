@@ -7514,6 +7514,14 @@ Forge support for orgit
 (use-package counsel-org-clock
   :defer t)
 #+END_SRC
+**** valign: Pretty org-tables
+#+BEGIN_SRC emacs-lisp
+(use-package valign
+  :hook (org-mode . valign-mode)
+  :config
+  (setq valign-max-table-size 6000)
+  (setq valign-fancy-bar t))
+#+END_SRC
 * Irc
 #+BEGIN_SRC emacs-lisp
 (use-package erc
