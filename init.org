@@ -5187,7 +5187,7 @@ dotnet publish -c Release -r linux-x64
 
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-python-ms
-  :defer t
+  :disabled t
   ;; :hook (python-mode . lsp-python-ms-init)
   :config
   ;; Only set those if you compile the ms python language server manually
@@ -5197,6 +5197,18 @@ dotnet publish -c Release -r linux-x64
   ;;       (expand-file-name "~/repos/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
 
   (defun lsp-python-ms-init ()
+    "We need to require ccls before loading lsp in a C buffer.
+Otherwise lsp would use the default clangd backend.
+use-package will load ccls for us simply by calling this function."
+    (lsp-deferred)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-pyright
+  :defer t
+  ;; :hook (python-mode . lsp-pyright-init)
+  :config
+  (defun lsp-pyright-init ()
     "We need to require ccls before loading lsp in a C buffer.
 Otherwise lsp would use the default clangd backend.
 use-package will load ccls for us simply by calling this function."
