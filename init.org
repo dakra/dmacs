@@ -5993,6 +5993,16 @@ true.
   (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t
                               :placeOpenBraceOnNewLineForFunctions nil)))
 #+END_SRC
+** Vega-view: Data visualization using vega, vega-lite
+Needs the Vega command line tools installed:
+#+BEGIN_SRC shell
+npm install -g vega vega-lite vega-cli canvas
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package vega-view
+  :defer t)
+#+END_SRC
 ** Web
 Helper function for URL encode / decode
 #+BEGIN_SRC emacs-lisp

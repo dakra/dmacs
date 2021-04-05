@@ -888,7 +888,6 @@
 [submodule "php-mode"]
 	path = lib/php-mode
 	url = git@github.com:emacs-php/php-mode.git
-	load-path = .
 [submodule "pip-requirements"]
 	path = lib/pip-requirements
 	url = git@github.com:Wilfred/pip-requirements.el.git
@@ -1148,6 +1147,9 @@
 [submodule "valign"]
 	path = lib/valign
 	url = git@github.com:casouri/valign.git
+[submodule "vega-view"]
+	path = lib/vega-view
+	url = git@github.com:applied-science/emacs-vega-view.git
 [submodule "virtualenvwrapper"]
 	path = lib/virtualenvwrapper
 	url = git@github.com:porterjamesj/virtualenvwrapper.el.git
