@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        apply-operation-to-number-at-point
         artist-backward-char
         artist-forward-char
         artist-next-line
