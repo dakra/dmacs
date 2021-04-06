@@ -7540,6 +7540,7 @@ Forge support for orgit
 #+BEGIN_SRC emacs-lisp
 (use-package valign
   :hook (org-mode . valign-mode)
+  :disabled t
   :config
   (setq valign-max-table-size 6000)
   (setq valign-fancy-bar t))
