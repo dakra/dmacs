@@ -4171,7 +4171,7 @@ use-package will load ccls for us simply by calling this function."
   (setq lsp-java-format-settings-profile "GoogleStyle")
 
   ;; For projects using lombok
-  (setq lsp-java-vmargs
+  (setq lsp-java-vmargs-for-lombok
         '("-noverify"
           "-Xmx1G"
           "-XX:+UseG1GC"
