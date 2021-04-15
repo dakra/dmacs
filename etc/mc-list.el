@@ -83,6 +83,7 @@
         sql-delete-backward-char
         sql-magic-go
         upcase-region
+        wdired--self-insert
         web-mode-comment-or-uncomment
         wgrep-mark-deletion
         whole-line-or-region-kill-region
@@ -110,6 +111,7 @@
         handle-switch-frame
         iedit-switch-to-mc-mode
         ivy-wgrep-change-to-wgrep-mode
+        magit-section-backward
         mc/vertical-align-with-space
         org-clock-goto
         org-edit-src-save
