@@ -3641,7 +3641,11 @@ fi
   :defer t
   :bind (:map vterm-mode-map
          ("C-y" . vterm-yank)
-         ("M-y" . vterm-yank-pop))
+         ("M-y" . vterm-yank-pop)
+         ;; I'm used to go up/down the shell history with M-n/p from eshell
+         ;; Simulate this behavior in vterm
+         ("M-p" . vterm-send-C-p)
+         ("M-n" . vterm-send-C-n))
   ;; Disable whole-line-or-region otherwise I can't bind "C-y"
   :hook (vterm-mode . (lambda () (whole-line-or-region-local-mode -1)))
   :init
