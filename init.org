@@ -9418,6 +9418,8 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
     ("http://blog.chromium.org/feeds/posts/default" dev web)
     ("http://blog.angularjs.org/feeds/posts/default" dev web js)
 
+    ("https://mungingdata.com/rss" dev spark)
+
     ("http://www.archlinux.org/feeds/news/" dev important)
     ("http://www.heise.de/newsticker/heise-atom.xml" dev)
     ("http://feeds.feedburner.com/codinghorror/" dev)
