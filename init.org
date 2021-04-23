@@ -8784,7 +8784,7 @@ transmission-cli
   :defer t
   :config
   ;; Station 35 is "Focus"
-  (setq brain-fm-station-id 35))
+  (setq brain-fm-default-station-id 35))
 #+END_SRC
 ** Emms
 #+BEGIN_SRC emacs-lisp
