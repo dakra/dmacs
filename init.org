@@ -5837,19 +5837,26 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
   (setq sqlup-blacklist '("id" "name" "names" "type")))
 #+END_SRC
 *** elc-sql: Use a JDBC connection for a better SQL client
+
+To use elc for AWS Athena (idea from [[https://deepumohan.com/tech/query-aws-athena-with-emacs-using-jdbc/][here]]):
+
+Download athena-jdbc jar from [[https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html][AWS site]] and install locally with
+
+#+BEGIN_SRC shell :dir ~/Downloads/
+mvn install:install-file -Dfile="./AthenaJDBC42.jar" -DgroupId=com.simba.athena -DartifactId=athena-jdbc -Dversion=2.0.16 -Dpackaging=jar -DgeneratePom=true
+#+END_SRC
+
+Then add athena jdbc driver to the `ejc-jdbc-drivers` (see config below).
+
+To activate =elc= in =org-mode= use M-x =elc-connect=.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ejc-sql
   :defer t
   :hook ((ejc-sql-minor-mode . ejc-eldoc-setup)
          (ejc-sql-connected . dakra/ejc-sql-connected-hook))
   :config
-  ;; AWS Athena config from https://deepumohan.com/tech/query-aws-athena-with-emacs-using-jdbc/
-  ;; Download athena-jdbc jar from AWS site and install locally with
-  ;; mvn install:install-file -Dfile="~/Downloads/AthenaJDBC42.jar" -DgroupId=com.simba.athena -DartifactId=athena-jdbc -Dversion=2.0.15 -Dpackaging=jar -DgeneratePom=true
-  ;; add athena jdbc driver to the `ejc-jdbc-drivers`
-  (plist-put ejc-jdbc-drivers
-             "awsathena"
-             [com.simba.athena/athena-jdbc "2.0.15"])
+  (plist-put ejc-jdbc-drivers "awsathena" [com.simba.athena/athena-jdbc "2.0.16"])
 
   (setq ejc-result-table-impl 'ejc-result-mode) ;; 'orgtbl-mode
 
@@ -5886,7 +5893,7 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
 
   (ejc-create-connection "athena-datalake"
                          :dbtype "awsathena"
-                         :classpath "~/.m2/repository/com/simba/athena/athena-jdbc/2.0.9/athena-jdbc-2.0.9.jar"
+                         :classpath "~/.m2/repository/com/simba/athena/athena-jdbc/2.0.16/athena-jdbc-2.0.16.jar"
                          :classname "com.simba.athena.jdbc.Driver"
                          :subprotocol "awsathena"
                          :connection-uri (concat "jdbc:awsathena://AwsRegion=eu-central-1;"
