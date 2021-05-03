@@ -660,6 +660,9 @@
 [submodule "lsp-java"]
 	path = lib/lsp-java
 	url = git@github.com:emacs-lsp/lsp-java.git
+[submodule "lsp-metals"]
+	path = lib/lsp-metals
+	url = git@github.com:emacs-lsp/lsp-metals.git
 [submodule "lsp-mode"]
 	path = lib/lsp-mode
 	url = git@github.com:emacs-lsp/lsp-mode.git

@@ -4442,8 +4442,7 @@ metals
 https://scalameta.org/metals/docs/editors/emacs.html
 #+BEGIN_SRC emacs-lisp
 (use-package scala-mode
-  :mode "\\.s\\(cala\\|bt\\)$"
-  :hook (scala-mode . lsp))
+  :mode "\\.s\\(cala\\|bt\\)$")
 
 ;; Enable sbt mode for executing sbt commands
 (use-package sbt-mode
@@ -4457,6 +4456,14 @@ https://scalameta.org/metals/docs/editors/emacs.html
   ;; minibuffer-local-completion-map)
   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
   (setq sbt:program-options '("-Dsbt.supershell=false")))
+
+(use-package lsp-metals
+  :hook (scala-mode . lsp)
+  :config
+  ;; Metals claims to support range formatting by default but it supports range
+  ;; formatting of multiline strings only. You might want to disable it so that
+  ;; emacs can use indentation provided by scala-mode.
+  (setq lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off"))
 #+END_SRC
 ** Go
 For better support install:
