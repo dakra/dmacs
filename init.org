@@ -1943,6 +1943,20 @@ continue as long as the user wishes to cycle through the menu.
 
   (setq company-box-enable-icon nil))
 #+END_SRC
+*** company-shell: Auto completion for shell
+#+BEGIN_SRC emacs-lisp
+(use-package company-shell
+  :hook ((sh-mode shell-mode) . sh-mode-init)
+  :config
+  (defun sh-mode-init ()
+    (setq-local company-backends '((company-shell
+                                    company-shell-env
+                                    company-files
+                                    company-dabbrev-code
+                                    company-capf
+                                    company-yasnippet)))))
+#+END_SRC
+
 ** Discover-my-major: Display a list of keybindings for the current major mode
 #+BEGIN_SRC emacs-lisp
 (use-package discover-my-major
@@ -4430,12 +4444,9 @@ plantuml
 #+END_SRC
 ** Fish
 #+BEGIN_SRC emacs-lisp
-(use-package company-shell
-  :defer t)
-
 (use-package fish-mode
   :mode "\\.fish\\'"
-  :hook ((fish-mode shell-mode) . fish-mode-init)
+  :hook (fish-mode . fish-mode-init)
   :config
   (defun fish-mode-init ()
     (setq-local company-backends '((company-fish-shell
