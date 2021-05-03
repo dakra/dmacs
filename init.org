@@ -1872,20 +1872,6 @@ Simple but effective sorting and filtering for Emacs
          ;; ([backtab] . company-select-previous)
          ("C-j" . company-complete-selection))
   :config
-  ;; company-tng (tab and go) allows you to use TAB to both select a
-  ;; completion candidate from the list and to insert it into the
-  ;; buffer.
-  ;;
-  ;; It cycles the candidates like `yank-pop' or `dabbrev-expand' or
-  ;; Vim: Pressing TAB selects the first item in the completion menu and
-  ;; inserts it in the buffer. Pressing TAB again selects the second
-  ;; item and replaces the inserted item with the second one. This can
-  ;; continue as long as the user wishes to cycle through the menu.
-  ;; (require 'company-tng)
-  ;; (setq company-frontends '(company-tng-frontend
-  ;;                           company-pseudo-tooltip-frontend
-  ;;                           company-echo-metadata-frontend))
-
   (setq company-idle-delay 0.1)
   (setq company-tooltip-limit 10)
   (setq company-minimum-prefix-length 1)
@@ -1916,7 +1902,35 @@ Simple but effective sorting and filtering for Emacs
       (append (if (consp backend) backend (list backend))
               '(:with company-yasnippet))))
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+#+END_SRC
+*** company-tng
+company-tng (tab and go) allows you to use TAB to both select a
+completion candidate from the list and to insert it into the
+buffer.
 
+It cycles the candidates like `yank-pop' or `dabbrev-expand' or
+Vim: Pressing TAB selects the first item in the completion menu and
+inserts it in the buffer. Pressing TAB again selects the second
+item and replaces the inserted item with the second one. This can
+continue as long as the user wishes to cycle through the menu.
+#+BEGIN_SRC emacs-lisp
+(use-package company-tng
+  :disabled t
+  :after company
+  :bind (:map company-active-map
+         ([return] . nil)
+         ("RET" . nil)
+         ("TAB" . company-select-next)
+         ([tab] . company-select-next)
+         ("S-TAB" . company-select-previous)
+         ([backtab] . company-select-previous)
+         ("C-j" . company-complete-selection))
+  :config
+  (company-tng-mode))
+#+END_SRC
+
+*** company-box: Show company popup in childframe
+#+BEGIN_SRC emacs-lisp
 (use-package company-box
   :disabled t
   ;; Doesn't work well with exwm (can't focus/change completion items w/o calling --set-mode first)
