@@ -3461,6 +3461,14 @@ avfs
                                 ;; (setq-local company-frontends '(company-preview-frontend))
 
                                 (setq xterm-color-preserve-properties t)
+
+                                (setq-local company-backends '((company-eshell-history
+                                                                company-shell
+                                                                company-shell-env
+                                                                company-files
+                                                                company-dabbrev-code
+                                                                company-capf
+                                                                company-yasnippet)))
                                 ))
   ;; Functions starting with `eshell/' can be called directly from eshell
   ;; with only the last part. E.g. (eshell/foo) will call `$ foo'
@@ -3624,6 +3632,7 @@ file to edit."
 
 ;; `company-mode' backend to provide eshell history suggestion
 (use-package esh-autosuggest
+  :disabled t
   :hook (eshell-mode . esh-autosuggest-mode))
 
 ;; Autocomplete for git commands in shell and
@@ -3633,6 +3642,27 @@ file to edit."
 
 (use-package pcmpl-pip
   :after pcomplete)
+#+END_SRC
+** company-eshell-history: Company eshell history completion backend
+From https://gist.github.com/gregsexton/dd2d6c304d06fc3e6833
+
+Set as backend in =eshell-mode-hook= in eshell section above.
+#+BEGIN_SRC emacs-lisp
+(defun company-eshell-history (command &optional arg &rest ignored)
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'company-eshell-history))
+    (prefix (and (eq major-mode 'eshell-mode)
+                 (let ((word (company-grab-word)))
+                   (save-excursion
+                     (eshell-bol)
+                     (and (looking-at-p (s-concat word "$")) word)))))
+    (candidates (remove-duplicates
+                 (->> (ring-elements eshell-history-ring)
+                   (remove-if-not (lambda (item) (s-prefix-p arg item)))
+                   (mapcar 's-trim))
+                 :test 'string=))
+    (sorted t)))
 #+END_SRC
 * vterm
 For prompt tracking in the fish shell,
