@@ -1875,6 +1875,8 @@ Simple but effective sorting and filtering for Emacs
   (setq company-idle-delay 0.1)
   (setq company-tooltip-limit 10)
   (setq company-minimum-prefix-length 1)
+  ;; Don't display icons
+  (setq company-format-margin-function nil)
   ;; Aligns annotation to the right hand side
   (setq company-tooltip-align-annotations t)
   ;;(setq company-dabbrev-downcase nil)
