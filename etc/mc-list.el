@@ -87,6 +87,7 @@
         web-mode-comment-or-uncomment
         wgrep-mark-deletion
         whole-line-or-region-kill-region
+        whole-line-or-region-sp-kill-region
         whole-line-or-region-yank
         yaml-electric-backspace
         yas-expand
@@ -110,6 +111,7 @@
         handle-select-window
         handle-switch-frame
         iedit-switch-to-mc-mode
+        ivy-backward-delete-char
         ivy-wgrep-change-to-wgrep-mode
         magit-section-backward
         mc/vertical-align-with-space
