@@ -786,7 +786,6 @@
 	build-step = make compile
         build-step = borg-update-autoloads
 	load-path = lisp
-	load-path = contrib/lisp
 	info-path = doc
 [submodule "org-caldav"]
 	path = lib/org-caldav
