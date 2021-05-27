@@ -8667,7 +8667,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 
     ;; Start some external apps
     (start-process-shell-command "pidgin" nil "pidgin")
-    (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition")
+    (start-process-shell-command "firefox" nil "env GTK_THEME=Arc firefox")
 
     ;; (start-process-shell-command "syncthing-gtk" nil "syncthing-gtk --minimized")
     (start-process-shell-command "indicator-kdeconnect" nil "indicator-kdeconnect")
@@ -9634,7 +9634,7 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
       (message "Setting browser to eww")))
   :config
   (setq browse-url-secondary-browser-function 'eww-browse-url)
-  (setq browse-url-firefox-program "firefox-developer-edition")
+  (setq browse-url-firefox-program "firefox")
   (setq browse-url-browser-function 'browse-url-firefox))
 
 (use-package eww
