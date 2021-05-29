@@ -884,7 +884,7 @@
 	url = git@github.com:kaihaosw/pcmpl-pip.git
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
-	url = git@github.com:politza/pdf-tools.git
+	url = git@github.com:vedang/pdf-tools.git
 [submodule "peg"]
 	path = lib/peg
 	url = git@github.com:ellerh/peg.el.git
