@@ -903,7 +903,7 @@
 	url = git@gitlab.com:howardabrams/emacs-piper.git
 [submodule "pippel"]
 	path = lib/pippel
-	url = git@github.com:brotzeit/pippel.git
+	url = git@github.com:arifer612/pippel.git
 [submodule "pkg-info"]
 	path = lib/pkg-info
 	url = git@github.com:lunaryorn/pkg-info.el.git
