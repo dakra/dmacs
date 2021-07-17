@@ -541,6 +541,10 @@ If you don't set your Xresources, you can load the font with:
 ;; (set-frame-font "DejaVu Sans Mono-7:weight=medium:width=normal" nil t)
 ;; (set-frame-font "Hack-7:weight=medium:width=normal" nil t)
 ;; (set-frame-font "Source Code Pro:weight=medium:width=normal" nil t)
+
+;; (set-frame-font "FiraCode-9:slant=normal:weight=regular:width=normal" nil t)
+;; (set-frame-font "Fira Code:weight=medium:width=normal" nil t)
+;; (set-frame-font "inconsolata:weight=medium:width=normal" nil t)
 #+END_SRC
 
 Some fonts
@@ -1076,6 +1080,7 @@ With a prefix argument, copy the link to the online manual instead."
 (use-package calendar
   :hook (calendar-today-visible . calendar-mark-today)
   :config
+  ;; Set coordinates so you can press `S` in the calendar for sunrise/sunset times
   ;;(setq calendar-latitude 34.103
   ;;      calendar-longitude -118.337
   ;;      calendar-location-name "Los Angeles, USA")
@@ -1088,6 +1093,8 @@ With a prefix argument, copy the link to the online manual instead."
   (setq calendar-latitude 48.97
         calendar-longitude 8.45
         calendar-location-name "Karlsruhe, Germany")
+  ;; Start week on Monday
+  (setq calendar-week-start-day 1)
   ;; Highlight public holidays
   (setq calendar-holiday-marker t))
 #+END_SRC
@@ -1267,13 +1274,14 @@ ttf-symbola
   :hook ((text-mode prog-mode) . ws-butler-mode)
   :config (setq ws-butler-keep-whitespace-before-point nil))
 #+END_SRC
-** Highlight long lines
+** whitespace-mode: Highlight long lines
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace
   :defer t
   ;; :hook (prog-mode . whitespace-mode)
   :config
-  (setq whitespace-style '(face tabs empty trailing lines-tail))
+  ;; Uncomment this to highlight less than the defaults (e.g. NO spaces)
+  ;; (setq whitespace-style '(face tabs empty trailing lines-tail))
   ;; highlight lines with more than `fill-column' characters
   (setq whitespace-line-column nil))
 #+END_SRC
@@ -1762,7 +1770,7 @@ mark the string and call `edit-indirect-region' with it."
   (defvar edit-indirect-guess-mode-history nil)
   (defun edit-indirect-guess-mode-fn (_buffer _beg _end)
     (let* ((lang (completing-read "Mode: "
-                                  '("typescript" "python" "sql" "js2" "web" "scss" "emacs-lisp")
+                                  '("typescript" "clojure" "python" "sql" "js2" "web" "scss" "emacs-lisp")
                                   nil nil nil 'edit-indirect-guess-mode-history))
            (mode-str (concat lang "-mode"))
            (mode (intern mode-str)))
@@ -2818,7 +2826,9 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
           ("github\\.com" . gfm-mode)
           ("gitlab\\.com" . gfm-mode)
           ("gitlab\\.paesslergmbh\\.de" . gfm-mode)
+          ("gitlab\\.sovendus\\.com" . gfm-mode)
           ("lab\\.ebenefuenf\\.com" . gfm-mode)
+          ("jira.sovendus.com" . jira-markup-mode)
           ("jira.paesslergmbh.de" . jira-markup-mode)))
   (atomic-chrome-start-server))
 #+END_SRC
@@ -3233,6 +3243,7 @@ avfs
     ("p" proced "proced")
     ("v" ovpn "VPN")
     ("c" quick-calc "calc - Quick calc" :column "Utils")
+    ("d" docker "docker")
     ("C" calendar "calendar")
     ("T" world-clock "time - Display world time")
     ("s" hydra-systemctl/body "Systemctl")
@@ -3248,7 +3259,8 @@ avfs
   (defhydra hydra-external-launcher (:color blue :hint nil)
     "Start external program"
     ("p" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
-    ("f" (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition") "Firefox Developer Edition")
+    ("f" (start-process-shell-command "firefox" nil "env GTK_THEME=Arc firefox") "Firefox")
+    ("F" (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition") "Firefox Developer Edition")
     ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
     ("l" (start-process-shell-command "i3lockr" nil "i3lockr --blur 25 -- --nofork --ignore-empty-password") "Lock screen")
     ("n" (start-process-shell-command "networkmanager_dmenu" nil "networkmanager_dmenu") "Networkmanager")
@@ -3314,7 +3326,10 @@ avfs
 
   ;; Backup tramp files like local files and don't litter the remote
   ;; file system with my emacs backup files
-  (setq tramp-backup-directory-alist backup-directory-alist)
+  ;;(setq tramp-backup-directory-alist backup-directory-alist)
+  (add-to-list 'backup-directory-alist
+               (cons tramp-file-name-regexp
+                     (no-littering-expand-var-file-name "backup/")))
 
   ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
   ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
@@ -4046,13 +4061,8 @@ When called with 2 prefix arguments only open in browser and don't copy."
       (t  (browse-at-remote-kill) (browse-at-remote))))
 
   (setq browse-at-remote-use-http '("gitlab.test.bigdata.sovendus.aws"))
-  (dolist (i '(("git.wdf.sap.corp"                 . "gitiles")
-               ("gitlab.bis"                       . "gitlab")
-               ("gitlab.paesslergmbh.de"           . "gitlab")
-               ("gitlab.sovendus.com"              . "gitlab")
-               ("git.ebenefuenf.com"               . "gitlab")
-               ("lab.ebenefuenf.com"               . "gitlab")))
-    (add-to-list 'browse-at-remote-remote-type-domains i))
+  (add-to-list 'browse-at-remote-remote-type-regexps '("^git\\.wdf\\.sap\\.corp\\'" . "gitiles"))
+  (add-to-list 'browse-at-remote-remote-type-regexps '(".*gitlab.*" . "gitlab"))
 
   (setq browse-at-remote-prefer-symbolic nil))
 #+END_SRC
@@ -4444,7 +4454,7 @@ plantuml
 (use-package dockerfile-mode
   :defer t)
 (use-package docker-compose-mode
-  :defer t)
+  :mode ("docker-compose[^/]*\\.ya?ml\\'"))
 (use-package docker-tramp
   :after tramp)
 #+END_SRC
@@ -4629,9 +4639,7 @@ Formatting is according to the commit message conventions."
     ;; Set compile command by default to 'go run ....'
     (setq-local compile-command (concat "go run " (shell-quote-argument buffer-file-name)))
     ;; gofmt on save
-    (apheleia-mode)
-    ;; stop whitespace being highlighted
-    (whitespace-toggle-options '(tabs))))
+    (apheleia-mode)))
 
 (use-package helm-go-package
   :disabled t
@@ -4693,7 +4701,7 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
   (setq prettier-js-width-mode 'fill))
 
 (use-package json-mode
-  :mode "\\.json\\'")
+  :mode ("\\.json\\'" "\\.avsc\\'"))
 
 (use-package js
   :defer t
@@ -5887,19 +5895,28 @@ So for Arch you need to install `solidity-git` and `sodium` from AUR.
         '((user :default "daniel")
           (database :default "api")
           (server :default "localhost"))))
-
-;; Smart indentation for SQL files
+#+END_SRC
+*** sql-indent: Smart indentation for SQL files
+#+BEGIN_SRC emacs-lisp
 (use-package sql-indent
   :hook ((sql-mode sql-interactive-mode) . sqlind-minor-mode))
-  ;;:config (setq-default sqlind-basic-offset 4)
+;;:config (setq-default sqlind-basic-offset 4)
+#+END_SRC
 
-;; Capitalize keywords in SQL mode
+*** sqlup-mode: Capitalize keywords in SQL mode
+#+BEGIN_SRC emacs-lisp
 (use-package sqlup-mode
   :hook (sql-mode sql-interactive-mode redis-mode)
   :config
+  ;; Don't capitalize keywords that are quoted
+  ;; https://github.com/Trevoke/sqlup-mode.el/issues/69
+  (modify-syntax-entry ?\" "\"" sql-mode-syntax-table)
+  (modify-syntax-entry ?` "\"" sql-mode-syntax-table)
+
   ;; Don't capitalize some SQL keywords that I also use as column names
   (setq sqlup-blacklist '("id" "name" "names" "type")))
 #+END_SRC
+
 *** elc-sql: Use a JDBC connection for a better SQL client
 
 To use elc for AWS Athena (idea from [[https://deepumohan.com/tech/query-aws-athena-with-emacs-using-jdbc/][here]]):
@@ -6706,7 +6723,7 @@ Show clock history when not in org buffer or when called with prefix argument."
       (appt-org-notification-single min time text)))
 
   (setq appt-display-format 'window)
-  (setq appt-disp-window-function 'appt-org-notification)
+  (setq appt-disp-window-function #'appt-org-notification)
   (setq appt-message-warning-time 6))
 #+END_SRC
 
@@ -7105,6 +7122,9 @@ NAME may be nil for unnamed sessions."
       (apply oldfun args)))
   (advice-add 'org-capture-place-template :around 'org-capture-place-template-dont-delete-windows)
 
+  ;; Do *NOT* bookmark to the last location when capturing
+  (setq org-capture-bookmark nil)
+
   ;; Capture/refile new items to the top of the list
   (setq org-reverse-note-order t)
   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
@@ -7117,9 +7137,11 @@ NAME may be nil for unnamed sessions."
            "* TODO %? Email: %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
            :clock-in t :clock-resume t :immediate-finish nil)
           ("j" "Journal entry" entry (file+olp+datetree ,(concat org-directory "journal.org"))
-           "* %?\n" :clock-in t :clock-resume t)
+           "* %?\n")
+          ("s" "Sovendus journal entry" entry (file+olp+datetree ,(concat org-directory "sovendus.org") "Journal")
+           "* %?\n")
           ("J" "Journal with link" entry (file+olp+datetree ,(concat org-directory "journal.org"))
-           "* %?\n%a\n" :clock-in t :clock-resume t)
+           "* %?\n%a\n")
           ("r" "respond" entry (file ,(concat org-directory "refile.org"))
            "* TODO Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
           ("n" "note" entry (file ,(concat org-directory "refile.org"))
@@ -7545,13 +7567,42 @@ See `org-html-format-headline-function' for details."
   (setq org-github-default-name "api"))
 #+END_SRC
 **** Org-link
+
 #+BEGIN_SRC emacs-lisp
 (use-package ol
   :bind (:map org-mode-map
-         ("C-c )" . hydra-org-link-edit/body))
+         ("C-c )" . hydra-org-link-edit/body)
+         ("C-c C-l" . org-insert-link-dwim))
   :config
   ;; Don't remove links after inserting
   (setq org-link-keep-stored-after-insertion t)
+
+  ;; Download (or use region) as title when url is in kill-ring
+  ;; From: https://xenodium.com/emacs-dwim-do-what-i-mean/
+  (defun org-insert-link-dwim ()
+    "Like `org-insert-link' but with personal dwim preferences."
+    (interactive)
+    (let ((point-in-link (org-in-regexp org-link-any-re 1))
+          (clipboard-url (when (string-match-p "^http" (current-kill 0))
+                           (current-kill 0)))
+          (region-content (when (region-active-p)
+                            (buffer-substring-no-properties (region-beginning)
+                                                            (region-end)))))
+      (cond ((and region-content clipboard-url (not point-in-link))
+             (delete-region (region-beginning) (region-end))
+             (insert (org-make-link-string clipboard-url region-content)))
+            ((and clipboard-url (not point-in-link))
+             (insert (org-make-link-string
+                      clipboard-url
+                      (read-string "Description: "
+                                   (with-current-buffer (url-retrieve-synchronously clipboard-url)
+                                     (dom-text (car
+                                                (dom-by-tag (libxml-parse-html-region
+                                                             (point-min)
+                                                             (point-max))
+                                                            'title))))))))
+            (t
+             (call-interactively 'org-insert-link)))))
 
   ;; (setq org-link-abbrev-alist '(("gh" . "https://www.github.com/%s")))
 
@@ -7873,7 +7924,8 @@ mu init --my-address daniel@kraus.my                 \
 
   ;; allow for updating mail using 'U' in the main view:
   ;; (only update inboxes)
-  (setq mu4e-get-mail-command "mbsync private:Inbox sovendus:Inbox e5:Inbox gmail-inbox atomx-inbox hogaso-inbox")
+  ;; (setq mu4e-get-mail-command "mbsync private:Inbox sovendus:Inbox e5:Inbox gmail-inbox atomx-inbox hogaso-inbox")
+  (setq mu4e-get-mail-command "mbsync private:INBOX sovendus:INBOX gmail-inbox")
   ;; for update all:
   ;;(setq mu4e-get-mail-command "mbsync -a")
 
@@ -7979,7 +8031,7 @@ mu init --my-address daniel@kraus.my                 \
       (plist-put contact :name (malb/canonicalise-contact-name name))
       contact))
 
-  (setq mu4e-contact-process-function #'malb/mu4e-contact-process-function)
+  ;; (setq mu4e-contact-process-function #'malb/mu4e-contact-process-function)
 
 
   (defun dakra-mu4e-action-attachment-import-gcalcli (msg attachnum)
@@ -9113,9 +9165,9 @@ _g_: Refresh Hydra  _q_: quit"
      (systemctl-hydra-status '("mysqld" "redis" "rethinkdb@default.service")))
 
     ("4" (mapc #'systemctl-start '("confluent-zookeeper" "confluent-server" "confluent-schema-registry"
-                                   "confluent-kafka-connect" "confluent-kafka-rest" "confluent-control-center"))
+                                   "confluent-kafka-connect" "confluent-kafka-rest"))  ;  "confluent-control-center"
      (systemctl-hydra-status '("confluent-zookeeper" "confluent-server" "confluent-schema-registry"
-                               "confluent-kafka-connect" "confluent-kafka-rest" "confluent-control-center")))
+                               "confluent-kafka-connect" "confluent-kafka-rest")))
     ;; Stop all
     ("o" (mapc #'systemctl-stop' ("postgresql" "mysqld" "redis" "rethinkdb@default.service"
                                   "docker" "org.cups.cupsd" "confluent-zookeeper" "confluent-server")))
