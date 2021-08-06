@@ -4441,7 +4441,12 @@ plantuml
 (use-package apache-mode
   :mode ("\\.htaccess\\'" "httpd\\.conf\\'" "srm\\.conf\\'" "access\\.conf\\'"))
 #+END_SRC
-*** Docker
+*** ssh-config
+#+BEGIN_SRC emacs-lisp
+(use-package ssh-config-mode
+  :mode ("\\/\\.ssh/config\\'"))
+#+END_SRC
+** Docker
 #+BEGIN_SRC emacs-lisp
 (use-package docker
   :bind-keymap ("C-c d" . docker-command-map)
@@ -4458,10 +4463,10 @@ plantuml
 (use-package docker-tramp
   :after tramp)
 #+END_SRC
-*** ssh-config
+** Kubel (Kubernetes interface)
 #+BEGIN_SRC emacs-lisp
-(use-package ssh-config-mode
-  :mode ("\\/\\.ssh/config\\'"))
+(use-package kubel
+  :defer t)
 #+END_SRC
 ** Debugging
 #+BEGIN_SRC emacs-lisp

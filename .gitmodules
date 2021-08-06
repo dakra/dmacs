@@ -618,6 +618,10 @@
 	path = lib/know-your-http-well
 	url = git@github.com:for-GET/know-your-http-well.git
 	load-path = emacs
+[submodule "kubel"]
+	path = lib/kubel
+	url = git@github.com:abrochard/kubel.git
+	no-byte-compile = kubel-evil.el
 [submodule "kv"]
 	path = lib/kv
 	url = git@github.com:nicferrier/emacs-kv.git
