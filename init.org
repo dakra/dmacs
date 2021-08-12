@@ -6708,6 +6708,14 @@ Show clock history when not in org buffer or when called with prefix argument."
     (org-sort-entries nil ?f #'org-sort-by-todo-and-prio-key)))
 #+END_SRC
 *** Org Packages
+**** Org-appear: Make invisible parts of Org elements appear visible
+#+BEGIN_SRC emacs-lisp
+(use-package org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  ;; Toggle links
+  (setq org-appear-autolinks t))
+#+END_SRC
 **** Org-agenda
 #+BEGIN_SRC emacs-lisp
 (use-package appt

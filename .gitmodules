@@ -792,6 +792,9 @@
         build-step = borg-update-autoloads
 	load-path = lisp
 	info-path = doc
+[submodule "org-appear"]
+	path = lib/org-appear
+	url = git@github.com:awth13/org-appear.git
 [submodule "org-caldav"]
 	path = lib/org-caldav
 	url = git@github.com:dengste/org-caldav.git
