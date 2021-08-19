@@ -5680,8 +5680,12 @@ put something like this in your =.dir-locals.el=:
 #+BEGIN_SRC emacs-lisp
 (use-package virtualenvwrapper
   ;; Automatically switch python venv
-  :hook (projectile-after-switch-project . venv-projectile-auto-workon)
+  :hook ((projectile-after-switch-project . venv-projectile-auto-workon)
+         (venv-postmkvirtualenv . venv-install-dev-deps))
   :config
+  (defun venv-install-dev-deps ()
+    (venv-with-virtualenv venv-current-name
+                          (compile "pip install -U pip readline pylint flake8 mypy black isort")))
   (venv-initialize-interactive-shells) ;; if you want interactive shell support
   (venv-initialize-eshell) ;; if you want eshell support
   (setq venv-location "/home/daniel/.virtualenvs/"))
