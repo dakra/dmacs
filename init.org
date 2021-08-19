@@ -9832,7 +9832,31 @@ elisp packages to use and not for actual direct user usage.
 ** jiralib2: Provide connectivity to JIRA REST services.
 #+BEGIN_SRC emacs-lisp
 (use-package jiralib2
-  :defer t)
+  :commands jira->org
+  :config
+  (setq jiralib-host "jira.sovendus.com"
+        jiralib-url (concat "https://" jiralib-host)
+        jiralib2-auth 'cookie
+        jiralib-user-login-name "extern.dkraus")
+
+  (require 'ejira-parser)
+  (defun jira->org (issue-num)
+    (interactive "sIssue DATENGINE-")
+    ;; Maybe we need to login first
+    (unless jiralib-token
+      (jiralib-login "extern.dkraus" (auth-source-pick-first-password
+                                      :host jiralib-host
+                                      :user jiralib-user-login-name)))
+    (let* ((issue-id (concat "DATENGINE-" issue-num))
+           (issue (jiralib-get-issue issue-id))
+           (fields (alist-get 'fields issue)))
+      (org-insert-todo-heading nil)
+      (insert (org-link-make-string (concat "bi:" issue-num) (concat "BI-" issue-num))
+              " " (alist-get 'summary fields))
+      (org-insert-subheading nil)
+      (insert "Description\n"
+              (ejira-parser-jira-to-org
+               (alist-get 'description fields))))))
 #+END_SRC
 ** ejira-parser: Parsing to and from JIRA markup.
 #+BEGIN_SRC emacs-lisp
