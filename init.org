@@ -5079,6 +5079,8 @@ openjdk11-src
   (setq cider-repl-display-help-banner nil)
   ;; Don't focus repl after sending somehint to there from another buffer
   (setq cider-switch-to-repl-on-insert nil)
+  ;; Eval automatically when insreting in the repl (e..g. C-c C-j d/e) (unless called with prefix)
+  (setq cider-invert-insert-eval-p t)
   ;; Don't focus error buffer when error is thrown
   (setq cider-auto-select-error-buffer nil)
   ;; Don't focus inspector after evaluating something
