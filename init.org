@@ -6721,8 +6721,7 @@ Show clock history when not in org buffer or when called with prefix argument."
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
   :config
-  ;; Toggle links
-  (setq org-appear-autolinks t))
+  (setq org-appear-autolinks nil))
 #+END_SRC
 **** Org-agenda
 #+BEGIN_SRC emacs-lisp
