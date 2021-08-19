@@ -892,7 +892,9 @@ E.g. fuer -> für
 #+BEGIN_SRC emacs-lisp
 (use-package saveplace
   :unless noninteractive
-  :config (save-place-mode))
+  :config
+  (setq save-place-limit 1000)
+  (save-place-mode))
 #+END_SRC
 ** Savehist: Keep track of minibuffer history
 #+BEGIN_SRC emacs-lisp
