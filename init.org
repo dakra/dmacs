@@ -8698,11 +8698,16 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
         '(((string= exwm-instance-name "emacs")
            ;; Emacs is better off being started in char-mode.
            char-mode t)
-          ((equal exwm-class-name "keepassxc")
-           floating t
-           floating-mode-line nil
-           width 0.6
-           height 0.8)
+          ;; ((equal exwm-class-name "KeePassXC")
+          ;;  floating t
+          ;;  floating-mode-line nil
+          ;;  width 0.6
+          ;;  height 0.8)
+          ;; ((equal exwm-class-name "zoom")
+          ;;  floating t
+          ;;  floating-mode-line nil
+          ;;  width 0.6
+          ;;  height 0.8)
           ((equal exwm-class-name "rdesktop")
            floating nil)
           ((equal exwm-class-name "firefoxdeveloperedition")
