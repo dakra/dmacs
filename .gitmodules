@@ -808,6 +808,9 @@
 [submodule "org-jira"]
 	path = lib/org-jira
 	url = git@github.com:ahungry/org-jira.git
+[submodule "org-link-edit"]
+	path = lib/org-link-edit
+	url = https://git.kyleam.com/org-link-edit
 [submodule "org-make-toc"]
 	path = lib/org-make-toc
 	url = git@github.com:alphapapa/org-make-toc.git
