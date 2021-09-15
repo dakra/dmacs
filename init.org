@@ -1330,7 +1330,7 @@ From http://lists.gnu.org/archive/html/help-gnu-emacs/2007-05/msg00975.html
 #+BEGIN_SRC emacs-lisp
 (define-minor-mode sticky-buffer-mode
   "Make the current window always display this buffer."
-  nil " sticky" nil
+  :lighter " sticky"
   (set-window-dedicated-p (selected-window) sticky-buffer-mode))
 #+END_SRC
 * Editor
@@ -3676,9 +3676,9 @@ Set as backend in =eshell-mode-hook= in eshell section above.
                    (save-excursion
                      (eshell-bol)
                      (and (looking-at-p (s-concat word "$")) word)))))
-    (candidates (remove-duplicates
+    (candidates (cl-remove-duplicates
                  (->> (ring-elements eshell-history-ring)
-                   (remove-if-not (lambda (item) (s-prefix-p arg item)))
+                   (cl-remove-if-not (lambda (item) (s-prefix-p arg item)))
                    (mapcar 's-trim))
                  :test 'string=))
     (sorted t)))
@@ -3832,7 +3832,6 @@ git-absorb
 Like the official markdown gfm-mode but `#' at the beginning of a line
 is not a title but instead is displayed as a comment."
     (setq markdown-link-space-sub-char "-")
-    (setq markdown-wiki-link-search-subdirectories t)
     (setq-local markdown-regex-comment-start "^#")
     (setq-local markdown-regex-comment-end "$")
     (setq-local markdown-table-at-point-p-function 'gfm--table-at-point-p)
@@ -4961,8 +4960,9 @@ Lisp function does not specify a special indentation."
 #+END_SRC
 **** Helper libraries (dash, s, marshal)
 #+BEGIN_SRC emacs-lisp
-(use-package dash :defer t
-  :config (dash-enable-font-lock))
+(use-package dash
+  :defer t
+  :config (global-dash-fontify-mode))
 
 (use-package s :defer t)
 (use-package f :defer t)
@@ -7627,9 +7627,9 @@ See `org-html-format-headline-function' for details."
                                                             (region-end)))))
       (cond ((and region-content clipboard-url (not point-in-link))
              (delete-region (region-beginning) (region-end))
-             (insert (org-make-link-string clipboard-url region-content)))
+             (insert (org-link-make-string clipboard-url region-content)))
             ((and clipboard-url (not point-in-link))
-             (insert (org-make-link-string
+             (insert (org-link-make-string
                       clipboard-url
                       (read-string "Description: "
                                    (with-current-buffer (url-retrieve-synchronously clipboard-url)
@@ -7798,9 +7798,7 @@ mu init --my-address daniel@kraus.my                 \
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash))
   :init
-  ;; Use gnus view-mode by default
-  (setq mu4e-view-use-gnus t)
-  ;; and prefer text over html/ritchtext
+  ;; Prefer text over html/ritchtext
   (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
   ;; Use completing-read (which is ivy) instead of ido
@@ -7834,9 +7832,6 @@ mu init --my-address daniel@kraus.my                 \
   ;; When saving multiple attachments (C-u prefix) save all in same directory
   ;; without asking for the location of every attachment
   (setq-default mu4e-save-multiple-attachments-without-asking t)
-
-  ;; Always display plain text messages.
-  (setq mu4e-view-html-plaintext-ratio-heuristic most-positive-fixnum)
 
   (setq mu4e-msg2pdf "/usr/bin/msg2pdf")  ; to display html messages as pdf
 
@@ -7905,7 +7900,7 @@ mu init --my-address daniel@kraus.my                 \
                           ("pylons-discuss.googlegroups.com" . "PyrUsr")
                           ("pylons-devel.googlegroups.com" . "PyrDev")
                           ("sqlalchemy.googlegroups.com" . "SQLA")))
-    (add-to-list 'mu4e~mailing-lists mailing-list))
+    (add-to-list 'mu4e-mailing-lists mailing-list))
 
   (setq mu4e-bookmarks `((,(concat "maildir:/private/Inbox OR "
                                    ;; "maildir:/paessler/Inbox OR "
@@ -8075,7 +8070,8 @@ mu init --my-address daniel@kraus.my                 \
     "Import ical attachments with gcalcli"
     (mu4e-view-open-attachment-with msg attachnum "~/bin/icalimport.sh"))
 
-  (add-to-list 'mu4e-view-attachment-actions '("iImport ical" . dakra-mu4e-action-attachment-import-gcalcli) t)
+  ;; FIXME: use mu4e-view-mime-part-actions
+  ;; (add-to-list 'mu4e-view-attachment-actions '("iImport ical" . dakra-mu4e-action-attachment-import-gcalcli) t)
 
   (defun mu4e-action-view-in-firefox (msg)
     "View the body of the message in a new Firefox window."
@@ -8090,8 +8086,7 @@ mu init --my-address daniel@kraus.my                 \
                '("fViewInFirefox" . mu4e-action-view-in-firefox) t)
   (add-to-list 'mu4e-view-actions
                '("xViewXWidget" . mu4e-action-view-with-xwidget) t)
-  ;; enable inline images
-  (setq mu4e-view-show-images t)
+
   ;; use imagemagick, if available
   (when (fboundp 'imagemagick-register-types)
     (imagemagick-register-types))
@@ -9851,21 +9846,23 @@ elisp packages to use and not for actual direct user usage.
 (use-package jiralib2
   :commands jira->org
   :config
-  (setq jiralib-host "jira.sovendus.com"
-        jiralib-url (concat "https://" jiralib-host)
+  (setq jiralib2-host "jira.sovendus.com"
+        jiralib2-url (concat "https://" jiralib2-host)
         jiralib2-auth 'cookie
-        jiralib-user-login-name "extern.dkraus")
+        jiralib2-user-login-name "extern.dkraus")
 
   (require 'ejira-parser)
   (defun jira->org (issue-num)
-    (interactive "sIssue DATENGINE-")
+    (interactive "sIssue ID:")
     ;; Maybe we need to login first
-    (unless jiralib-token
-      (jiralib-login "extern.dkraus" (auth-source-pick-first-password
-                                      :host jiralib-host
-                                      :user jiralib-user-login-name)))
-    (let* ((issue-id (concat "DATENGINE-" issue-num))
-           (issue (jiralib-get-issue issue-id))
+    (unless (bound-and-true-p jiralib2--session)
+      (jiralib2-session-login "extern.dkraus" (auth-source-pick-first-password
+                                               :host jiralib2-host
+                                               :user jiralib2-user-login-name)))
+    (let* ((issue-id (if (string-match "\\`[0-9]+\\'" issue-num)
+                         (concat "DATENGINE-" issue-num)
+                       (upcase issue-num)))
+           (issue (jiralib2-get-issue issue-id))
            (fields (alist-get 'fields issue)))
       (org-insert-todo-heading nil)
       (insert (org-link-make-string (concat "bi:" issue-num) (concat "BI-" issue-num))
