@@ -3267,7 +3267,7 @@ avfs
     ("l" (start-process-shell-command "i3lockr" nil "i3lockr --blur 25 -- --nofork --ignore-empty-password") "Lock screen")
     ("n" (start-process-shell-command "networkmanager_dmenu" nil "networkmanager_dmenu") "Networkmanager")
     ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
-    ("t" (start-process-shell-command "termite" nil "termite") "termite - Terminal" ))
+    ("t" (start-process-shell-command "alacritty" nil "alacritty") "alacritty - Terminal" ))
 
   (defhydra hydra-diff-hl (:color red)
     "diff-hl"
@@ -8701,6 +8701,15 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
                             ([?\M-v] . [prior])
                             ([?\C-v] . [next])
                             ([?\C-d] . [delete])))
+          ((equal exwm-class-name "Alacritty")
+           simulation-keys (([?\C-c ?\C-c] . [?\C-c])  ;; Send C-c with C-c C-c
+                            ([?\C-f] . [right])
+                            ([?\C-p] . [up])
+                            ([?\C-n] . [down])
+                            ([?\C-a] . [home])
+                            ([?\C-e] . [end])
+                            ([?\M-v] . [prior])
+                            ([?\C-v] . [next])))
           ((equal exwm-class-name "Termite")
            simulation-keys (([?\C-c ?\C-c] . [?\C-c])  ;; Send C-c with C-c C-c
                             ([?\C-f] . [right])
