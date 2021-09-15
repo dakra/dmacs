@@ -179,6 +179,9 @@
 [submodule "company-shell"]
 	path = lib/company-shell
 	url = git@github.com:Alexander-Miller/company-shell.git
+[submodule "company-terraform"]
+	path = lib/company-terraform
+	url = git@github.com:rafalcieslak/emacs-company-terraform.git
 [submodule "copy-as-format"]
 	path = lib/copy-as-format
 	url = git@github.com:sshaw/copy-as-format.git
@@ -503,6 +506,9 @@
 [submodule "haskell-mode"]
 	path = lib/haskell-mode
 	url = git@github.com:haskell/haskell-mode.git
+[submodule "hcl-mode"]
+	path = lib/hcl-mode
+	url = git@github.com:purcell/emacs-hcl-mode.git
 [submodule "helpful"]
 	path = lib/helpful
 	url = git@github.com:Wilfred/helpful.git
@@ -1115,6 +1121,9 @@
 [submodule "tea-timer"]
 	path = lib/tea-timer
 	url = git@github.com:dakra/tea-timer.el.git
+[submodule "terraform-mode"]
+	path = lib/terraform-mode
+	url = git@github.com:emacsorphanage/terraform-mode.git
 [submodule "tide"]
 	path = lib/tide
 	url = git@github.com:ananthakumaran/tide.git

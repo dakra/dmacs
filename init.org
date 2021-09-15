@@ -4448,6 +4448,23 @@ plantuml
 (use-package ssh-config-mode
   :mode ("\\/\\.ssh/config\\'"))
 #+END_SRC
+*** HCL (Hashicorp Configuration Language)
+#+BEGIN_SRC emacs-lisp
+(use-package hcl-mode
+  :defer t)
+#+END_SRC
+*** Terraform
+#+BEGIN_SRC emacs-lisp
+(use-package terraform-mode
+  :defer t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-terraform
+  :after company
+  :config (company-terraform-init))
+#+END_SRC
+
 ** Docker
 #+BEGIN_SRC emacs-lisp
 (use-package docker
