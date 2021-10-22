@@ -5052,6 +5052,7 @@ $ sbcl
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
   :defer t
+  :interpreter ("bb" . clojure-mode)
   :config
   ;; Eval top level forms inside comment forms instead of the comment form itself
   (setq clojure-toplevel-inside-comment-form t)
