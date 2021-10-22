@@ -5103,6 +5103,18 @@ openjdk11-src
   (add-to-list 'cider-jack-in-nrepl-middlewares
                '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
 
+  ;; jack-in for babashka
+  (defun cider-jack-in-babashka ()
+    (interactive)
+    (let* ((default-directory (project-root (project-current t)))
+           (port (+ 1024 (random 5000)))
+           (params `(:host "localhost"
+                     :port ,port
+                     :project-dir ,default-directory)))
+      (start-process-shell-command "babashka-nrepl" "*babashka-nrepl*"
+                                   (concat "bb nrepl-server " (number-to-string port)))
+      (sleep-for 0.5)
+      (cider-connect-clj params)))
 
   ;; Store more items in repl history (default 500)
   (setq cider-repl-history-size 2000)
