@@ -5143,10 +5143,12 @@ openjdk11-src
 (use-package clj-refactor
   :hook (clojure-mode . clj-refactor-mode)
   :config
-  (add-to-list 'cljr-magic-require-namespaces '("edn" . "clojure.edn"))
-  (add-to-list 'cljr-magic-require-namespaces '("http" . "clj-http.client"))
-  (add-to-list 'cljr-magic-require-namespaces '("reagent" . "reagent.core"))
-  (add-to-list 'cljr-magic-require-namespaces '("re-frame" . "re-frame.core")))
+  (dolist (magit-require '(("csv" . "clojure.data.csv")
+                           ("edn" . "clojure.edn")
+                           ;; ("http" . "clj-http.client")
+                           ("reagent" . "reagent.core")
+                           ("re-frame" . "re-frame.core")))
+    (add-to-list 'cljr-magic-require-namespaces magit-require)))
 #+END_SRC
 **** ivy-clojuredocs
 #+BEGIN_SRC emacs-lisp
