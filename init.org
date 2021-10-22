@@ -5121,7 +5121,8 @@ openjdk11-src
   ;; Display context dependent info in the eldoc where possible.
   (setq cider-eldoc-display-context-dependent-info t)
   ;; Don't pop to the REPL buffer on connect
-  (setq cider-repl-pop-to-buffer-on-connect nil)
+  ;; Create and display the buffer, but don't focus it.
+  (setq cider-repl-pop-to-buffer-on-connect 'display-only)
   ;; Just use symbol under point and don't prompt for symbol in e.g. cider-doc.
   (setq cider-prompt-for-symbol nil))
 #+END_SRC
