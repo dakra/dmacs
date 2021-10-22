@@ -793,7 +793,7 @@
 	url = git@github.com:abo-abo/orca.git
 [submodule "org"]
 	path = lib/org
-	url = https://code.orgmode.org/bzg/org-mode.git
+	url = git://git.savannah.gnu.org/emacs/org-mode.git
 	build-step = make compile
         build-step = borg-update-autoloads
 	load-path = lisp
