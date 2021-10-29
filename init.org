@@ -8379,6 +8379,7 @@ there are no attachments."
 #+BEGIN_SRC emacs-lisp
 ;; for org capture
 (use-package org-mu4e
+  :disabled t  ;; obsolete
   :after (:any org mu4e)
   :config
   ;; when mail is sent, automatically convert org body to HTML
