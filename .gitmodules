@@ -743,9 +743,8 @@
 	url = git@github.com:djcb/mu.git
         build-step = ./autogen.sh
         build-step = make -C mu4e > /dev/null
-        build-step = "(borg-update-autoloads \"mu4e\")"
-        load-path = mu4e
-	load-path = mu4e/obsolete
+	build-step = "(borg-update-autoloads \"mu4e\")"
+	load-path = build/mu4e
 [submodule "mu4e-maildirs-extension"]
 	path = lib/mu4e-maildirs-extension
 	url = git@github.com:agpchil/mu4e-maildirs-extension.git
