@@ -3529,12 +3529,10 @@ When on a remote directory with tramp don't jump 'out' of the server.
 So if we're connected with sudo to 'remotehost'
 '$ lcd /etc' would go to '/sudo:remotehost:/etc' instead of just
 '/etc' on localhost."
-    (if (file-remote-p default-directory)
-        (with-parsed-tramp-file-name default-directory nil
-          (eshell/cd
-           (tramp-make-tramp-file-name
-            method user nil host nil (or directory "") hop)))
-      (eshell/cd directory)))
+    (setq directory (or directory "~/"))
+    (unless (file-remote-p directory)
+      (setq directory (concat (file-remote-p default-directory) directory)))
+    (eshell/cd directory))
 
   (defun eshell/gst (&rest args)
     (magit-status-setup-buffer (or (pop args) default-directory))
