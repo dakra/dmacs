@@ -3793,8 +3793,8 @@ fi
 (use-package bug-reference
   :hook (prog-mode . bug-reference-prog-mode)
   :config
-  ;; (setq bug-reference-bug-regexp "\\([Bb]ug\\|[Pp]ull request\\|[Ii]ssue\\|[PpMm][Rr]\\|[Ff]ix\\) #\\([0-9]+\\(?:#[0-9]+\\)?\\)")
-  (setq bug-reference-bug-regexp "#\\(?2:[0-9]+\\)"))
+  ;; (setq bug-reference-bug-regexp "#\\(?2:[0-9]+\\)")
+  (setq bug-reference-bug-regexp "\\(\\b\\(?:[Bb]ug ?#?\\|[Ii]ssue ?#\\|[Pp]atch ?#\\|RFE ?#\\|PR [a-z+-]+/\\)\\([0-9]+\\(?:#[0-9]+\\)?\\)\\)"))
 #+END_SRC
 ** Diff-hl: Show git status in fringe
 #+BEGIN_SRC emacs-lisp
