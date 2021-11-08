@@ -5622,9 +5622,7 @@ See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
 #+BEGIN_SRC emacs-lisp
 ;; Syntax highlighting for requirements.txt files
 (use-package pip-requirements
-  :mode (("\\.pip\\'" . pip-requirements-mode)
-         ("requirements.*\\.txt\\'" . pip-requirements-mode)
-         ("requirements\\.in" . pip-requirements-mode)))
+  :defer t)
 #+END_SRC
 *** Sphinx
 This adds a few sphinx features and fontification for rst buffers.
