@@ -618,7 +618,7 @@ ttf-croscore
   :defer 2
   :config
   (setq minions-mode-line-lighter "+")
-  (setq minions-direct '(projectile-mode flycheck-mode multiple-cursors-mode sticky-buffer-mode))
+  (setq minions-prominent-modes '(projectile-mode flycheck-mode multiple-cursors-mode sticky-buffer-mode))
   (minions-mode))
 #+END_SRC
 
