@@ -1785,7 +1785,7 @@ mark the string and call `edit-indirect-region' with it."
 #+BEGIN_SRC emacs-lisp
 (use-package with-editor
   ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
-  :hook ((shell-mode eshell-mode term-exec) . with-editor-export-editor))
+  :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
 #+END_SRC
 ** Move text
 Move current line or region with M-up or M-down.
