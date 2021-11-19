@@ -7517,6 +7517,11 @@ See `org-html-format-headline-function' for details."
   :after org)
 #+END_SRC
 **** Org-man: Make org-links work with man pages
+Install Linux man pages
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+man-pages
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package ol-man
   :after org
