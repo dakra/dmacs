@@ -9915,14 +9915,23 @@ elisp packages to use and not for actual direct user usage.
                          (concat "DATENGINE-" issue-num)
                        (upcase issue-num)))
            (issue (jiralib2-get-issue issue-id))
-           (fields (alist-get 'fields issue)))
-      (org-insert-todo-heading nil)
+           (fields (alist-get 'fields issue))
+           (summary (alist-get 'summary fields))
+           (description (alist-get 'description fields))
+           (acceptance-criteria (alist-get 'customfield_10600 fields))
+           (acceptance-criteria-p (and acceptance-criteria
+                                       (not (string-empty-p acceptance-criteria)))))
+      (org-insert-todo-heading-respect-content)
       (insert (org-link-make-string (concat "bi:" issue-num) (concat "BI-" issue-num))
-              " " (alist-get 'summary fields))
+              " " summary)
       (org-insert-subheading nil)
+      (when acceptance-criteria-p
+        (insert "Acceptance criteria\n"
+                (ejira-parser-jira-to-org acceptance-criteria))
+        (org-insert-heading '(4)))
       (insert "Description\n"
               (ejira-parser-jira-to-org
-               (alist-get 'description fields))))))
+               description)))))
 #+END_SRC
 ** ejira-parser: Parsing to and from JIRA markup.
 #+BEGIN_SRC emacs-lisp
