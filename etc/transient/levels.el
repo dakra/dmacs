@@ -10,5 +10,7 @@
  (magit-log
   (transient:magit-log:--first-parent . 3)
   (transient:magit-log:--no-merges . 3)
-  (transient:magit-log:--until= . 2)
-  (transient:magit-log:--since= . 2)))
+  (magit-log:--first-parent . 3)
+  (magit-log:--no-merges . 3)
+  (magit-log:--until . 2)
+  (magit-log:--since . 2)))
