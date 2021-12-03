@@ -37,6 +37,8 @@
         grep-context-more-around-point
         haml-electric-backspace
         indent-for-tab-command
+        indent-rigidly
+        indent-rigidly-right
         kill-sexp
         kmacro-end-or-call-macro
         ledger-magic-tab
