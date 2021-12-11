@@ -3760,6 +3760,13 @@ fi
           (compilation-minor-mode))
         (pop-to-buffer buffer))))
 
+  ;; Like normal `C-k'. Send `C-k' to libvterm but also put content in kill-ring
+  (defun vterm-send-C-k ()
+    "Send `C-k' to libvterm."
+    (interactive)
+    (kill-ring-save (point) (vterm-end-of-line))
+    (vterm-send-key "k" nil nil t))
+
   ;; Allow vterm to invoke some elisp functions
   (setq vterm-eval-cmds '(("magit-status-setup-buffer" magit-status-setup-buffer)
                           ("find-file" find-file)
