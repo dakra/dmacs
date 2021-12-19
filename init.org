@@ -9006,7 +9006,7 @@ transmission-cli
 #+END_SRC
 ** YouTube Download
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
-youtube-dl
+yt-dlp
 python-pycryptodome
 atomicparsley
 mpv
@@ -9018,6 +9018,7 @@ mpv
   :init
   (setq youtube-dl-directory "~/videos/youtube")
   :config
+  (setq youtube-dl-program "yt-dlp")
   (setq youtube-dl-arguments
         '("--no-mtime" "--restrict-filenames" "--format" "best" "--mark-watched")))
 #+END_SRC
