@@ -297,9 +297,6 @@
 [submodule "editorconfig"]
 	path = lib/editorconfig
 	url = git@github.com:editorconfig/editorconfig-emacs.git
-[submodule "edn"]
-	path = lib/edn
-	url = git@github.com:expez/edn.el.git
 [submodule "eimp"]
 	path = lib/eimp
 	url = git@github.com:nicferrier/eimp.git
@@ -405,9 +402,6 @@
 [submodule "fancy-narrow"]
 	path = lib/fancy-narrow
 	url = git@github.com:Malabarba/fancy-narrow.git
-[submodule "findr"]
-	path = lib/findr
-	url = git@github.com:emacsorphanage/findr.git
 [submodule "fish-completion"]
 	path = lib/fish-completion
 	url = git@gitlab.com:Ambrevar/emacs-fish-completion.git
@@ -572,9 +566,6 @@
 	path = lib/ivy
 	url = git@github.com:abo-abo/swiper.git
 	no-byte-compile = elpa.el
-[submodule "ivy-clojuredocs"]
-	path = lib/ivy-clojuredocs
-	url = git@github.com:wandersoncferreira/ivy-clojuredocs.git
 [submodule "ivy-rich"]
 	path = lib/ivy-rich
 	url = git@github.com:Yevgnen/ivy-rich.git
@@ -901,9 +892,6 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = git@github.com:vedang/pdf-tools.git
-[submodule "peg"]
-	path = lib/peg
-	url = git@github.com:ellerh/peg.el.git
 [submodule "pfuture"]
 	path = lib/pfuture
 	url = git@github.com:Alexander-Miller/pfuture.git
