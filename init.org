@@ -1252,8 +1252,10 @@ different face
   (setq symbol-overlay-map (make-sparse-keymap)))
 #+END_SRC
 ** Emoji font
-Package ttf-symbola has to be installed
+A font with emoji symbals (like noto-fonts-emoji and/or ttf-symbola) has to be installed.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
+noto-fonts-emoji
+ttf-windows
 ttf-symbola
 #+END_SRC
 
