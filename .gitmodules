@@ -599,6 +599,8 @@
 [submodule "jump"]
 	path = lib/jump
 	url = git@github.com:eschulte/jump.el.git
+	# We only install jump for the inflection package
+	no-byte-compile = jump.el
 [submodule "jupyter"]
 	path = lib/jupyter
 	url = git@github.com:dzop/emacs-jupyter.git
