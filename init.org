@@ -1504,6 +1504,9 @@ is already narrowed."
   (setq sp-base-key-bindings 'paredit)
   (setq sp-autoskip-closing-pair 'always)
 
+  ;; Don't insert annoying colon after Python def
+  (setq sp-python-insert-colon-in-function-definitions nil)
+
   ;; Always highlight matching parens
   (show-smartparens-global-mode +1)
   (setq blink-matching-paren nil)  ;; Don't blink matching parens
