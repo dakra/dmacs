@@ -118,6 +118,7 @@
         ivy-backward-delete-char
         ivy-wgrep-change-to-wgrep-mode
         magit-section-backward
+        magit-section-forward
         mc/vertical-align-with-space
         org-clock-goto
         org-edit-src-save
