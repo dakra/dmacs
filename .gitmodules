@@ -640,14 +640,6 @@
 [submodule "litable"]
 	path = lib/litable
 	url = git@github.com:Fuco1/litable.git
-[submodule "load-relative"]
-	path = lib/load-relative
-	url = git@github.com:rocky/emacs-load-relative.git
-[submodule "loc-changes"]
-	path = lib/loc-changes
-	url = git@github.com:rocky/emacs-loc-changes.git
-	no-byte-compile = el-get-install.el
-	no-byte-compile = cask-install.el
 [submodule "logito"]
 	path = lib/logito
 	url = git@github.com:sigma/logito.git
@@ -891,6 +883,9 @@
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = git@github.com:vedang/pdf-tools.git
+[submodule "peg"]
+	path = lib/peg
+	url = git@github.com:emacsmirror/peg.git
 [submodule "pfuture"]
 	path = lib/pfuture
 	url = git@github.com:Alexander-Miller/pfuture.git
@@ -980,10 +975,6 @@
 [submodule "rainbow-mode"]
 	path = lib/rainbow-mode
 	url = git@github.com:emacsmirror/rainbow-mode.git
-[submodule "realgud"]
-	path = lib/realgud
-	url = git@github.com:realgud/realgud.git
-	build-step = git checkout realgud-recursive-autoloads.el
 [submodule "redis"]
 	path = lib/redis
 	url = git@github.com:emacs-pe/redis.el.git

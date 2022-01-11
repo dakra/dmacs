@@ -4511,11 +4511,6 @@ plantuml
 (use-package kubel
   :defer t)
 #+END_SRC
-** Debugging
-#+BEGIN_SRC emacs-lisp
-(use-package realgud
-  :defer t)
-#+END_SRC
 ** Elixir
 #+BEGIN_SRC emacs-lisp
 (use-package elixir-mode
