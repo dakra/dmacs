@@ -3461,7 +3461,7 @@ avfs
       (delete-char arg)))
 
   (defun eshell-delete-backward-char (n)
-    "Only call (delete-backward-char N) when not at beginning of prompt."
+    "Only call `(delete-backward-char N)' when not at beginning of prompt."
     (interactive "p")
     (if (looking-back eshell-prompt-regexp nil)
         (message "Beginning of prompt")
@@ -3729,6 +3729,7 @@ fi
   :bind (:map vterm-mode-map
          ("C-y" . vterm-yank)
          ("M-y" . vterm-yank-pop)
+         ("C-k" . vterm-send-C-k-and-kill)
          ;; I'm used to go up/down the shell history with M-n/p from eshell
          ;; Simulate this behavior in vterm
          ("M-p" . vterm-send-C-p)
@@ -3758,7 +3759,7 @@ fi
         (pop-to-buffer buffer))))
 
   ;; Like normal `C-k'. Send `C-k' to libvterm but also put content in kill-ring
-  (defun vterm-send-C-k ()
+  (defun vterm-send-C-k-and-kill ()
     "Send `C-k' to libvterm."
     (interactive)
     (kill-ring-save (point) (vterm-end-of-line))
