@@ -5159,11 +5159,6 @@ openjdk11-src
                            ("re-frame" . "re-frame.core")))
     (add-to-list 'cljr-magic-require-namespaces magit-require)))
 #+END_SRC
-**** ivy-clojuredocs
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-clojuredocs
-  :defer t)
-#+END_SRC
 **** clj-kondo Flycheck integration with the clj-kondo linter
 You need the =clj-kondo= tool installed.
 
