@@ -4100,7 +4100,13 @@ your =.dir-locals.el= where you want the prettier after save hook activated. E.g
 
 #+BEGIN_SRC emacs-lisp
 (use-package apheleia
-  :defer t)
+  :defer t
+  :config
+  ;; For Python we want to format with isort and black
+  (setf (alist-get 'isort apheleia-formatters)
+        '("isort" "--stdout" "-"))
+  (setf (alist-get 'python-mode apheleia-mode-alist)
+        '(isort black)))
 #+END_SRC
 
 *** Flycheck
@@ -4653,7 +4659,7 @@ Formatting is according to the commit message conventions."
                                 (`(,_ 0 0) "Install")
                                 (`(0 ,_ 0) "Update")
                                 (`(0 0 ,_) "Remove")
-                                (_         "CHANGE"))
+                                (_         "Change"))
                               (length alist)))))
           (pcase-dolist (`(,drone ,state ,version) alist)
             (insert
