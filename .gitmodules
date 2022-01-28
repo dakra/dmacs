@@ -524,6 +524,12 @@
 [submodule "hyperspec"]
 	path = lib/hyperspec
 	url = git@github.com:emacsorphanage/hyperspec.git
+[submodule "i3"]
+	path = lib/i3
+	url = git@github.com:vava/i3-emacs.git
+[submodule "i3wm-config-mode"]
+	path = lib/i3wm-config-mode
+	url = git@github.com:Alexander-Miller/i3wm-Config-Mode.git
 [submodule "ibuffer-projectile"]
 	path = lib/ibuffer-projectile
 	url = git@github.com:purcell/ibuffer-projectile.git

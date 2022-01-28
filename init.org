@@ -1051,7 +1051,7 @@ With a prefix argument, copy the link to the online manual instead."
 ** Time
 #+BEGIN_SRC emacs-lisp
 (use-package time
-  :defer 10
+  :defer t
   :config
   ;; Only show loads of above 0.9 in the modeline
   (setq display-time-load-average-threshold 0.9)
@@ -1064,8 +1064,8 @@ With a prefix argument, copy the link to the online manual instead."
           ("Australia/Sydney" "Sydney")))
 
   (setq display-time-24hr-format t)
-  ;; Show time in modeline
-  (display-time-mode)
+  ;; Enable to show time in modeline
+  ;; (display-time-mode)
   ;; Right align time and org clocked-in task
   (require 'org-clock)
   (add-to-list
@@ -2476,7 +2476,8 @@ silversearcher
          ("C-x C-f" . counsel-find-file)
          ("M-y"     . counsel-yank-pop-selection)
          ("M-i"     . counsel-imenu)
-         ("M-x"     . counsel-M-x))
+         ("M-x"     . counsel-M-x)
+         ("s-d"     . counsel-linux-app))
   :init
   (define-key minibuffer-local-map (kbd "M-r")
     'counsel-minibuffer-history)
@@ -7255,7 +7256,14 @@ NAME may be nil for unnamed sessions."
   :disabled t  ; Useful but never used since bookmarklet not configured yet
   :after org-capture)
 #+END_SRC
-**** Org-clock:
+**** Org-clock
+Install =xprintidle= to get idle time over all X11.
+Otherwise it's only Emacs idle time.
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+xprintidle
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 ;;; Clock Setup
 (use-package org-clock
@@ -7392,6 +7400,9 @@ as the default task."
 
   ;; Only show the current clocked time in mode line (not all)
   (setq org-clock-mode-line-total 'current)
+
+  ;; Don't show modeline - display in i3status bar instead
+  (setq org-clock-clocked-in-display nil)
 
   ;; Clocktable (C-c C-x C-r) defaults
   ;; Use fixed month instead of (current-month) because I want to keep a table for each month
@@ -8471,14 +8482,49 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
   :hook (mu4e-view-mode . mu4e-patch-highlight))
 #+END_SRC
 * Window Manager
+** i3
+#+BEGIN_SRC emacs-lisp
+(use-package i3
+  :bind (("s-j" . i3-windmove-left)
+         ("s-l" . i3-windmove-right))
+  :config
+  (require 'windmove)
+  (defun i3-windmove-left (&optional arg)
+    "Like windmove-left but call i3 command `focus left'
+if there is no window on the left."
+    (interactive "P")
+    (if (windmove-find-other-window 'left arg)
+        (windmove-do-window-select 'left arg)
+      ;; No window to the left
+      (i3-command 0 "focus left")))
+
+  (defun i3-windmove-right (&optional arg)
+    "Like windmove-right but call i3 command `focus right'
+if there is no window on the right."
+    (interactive "P")
+    (if (windmove-find-other-window 'right arg)
+        (windmove-do-window-select 'right arg)
+      ;; No window to the right
+      (i3-command 0 "focus right"))))
+#+END_SRC
+
+Better syntax highlighting for =.config/i3/config=
+#+BEGIN_SRC emacs-lisp
+(use-package i3wm-config-mode
+  :defer t)
+#+END_SRC
+
+
 ** Exwm
 #+BEGIN_SRC emacs-lisp
 (use-package xelb
+  :disabled t
   :if (daemonp)
   :config
   (setq xcb:connection-timeout 5))
 
 (use-package exwm
+  :disabled t
   :if (daemonp)
   :demand t
   :hook ((exwm-init . exwm-startup-apps)
@@ -8615,7 +8661,8 @@ no window on the right."
       ;; Switch to next workspace and select leftmost window
       (exwm-workspace-switch-next 1)
       (while (windmove-find-other-window 'left arg)
-        (windmove-do-window-select 'left arg))))
+        (windmove-do-window-select 'left arg))
+      (windmove-do-window-select 'left arg)))
 
   (setq exwm-windmove-workspace-1-below-p t)
   ;; FIXME: Automatically get displayed workspace on top monitor
@@ -8943,12 +8990,18 @@ It only works for frames with exactly two windows."
 *** windmove: Easily focus and swap windows
 #+BEGIN_SRC emacs-lisp
 (use-package windmove
-  :defer t)
+  :bind (("s-i" . windmove-up)
+         ("s-k" . windmove-down)
+         ("s-J" . windmove-swap-states-left)
+         ("s-K" . windmove-swap-states-down)
+         ("s-I" . windmove-swap-states-up)
+         ("s-L" . windmove-swap-states-right)))
 #+END_SRC
 *** winner-mode: undo/redo window configurations
 #+BEGIN_SRC emacs-lisp
 (use-package winner
   :defer 3
+  :bind (("s-h" . winner-wrong-window))
   :config
   (defun winner-wrong-window ()
     "Open the last opened buffer in the other window."
