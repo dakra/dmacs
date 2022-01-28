@@ -9303,9 +9303,9 @@ _g_: Refresh Hydra  _q_: quit"
      (systemctl-hydra-status '("mysqld" "redis" "rethinkdb@default.service")))
 
     ("4" (mapc #'systemctl-start '("confluent-zookeeper" "confluent-server" "confluent-schema-registry"
-                                   "confluent-kafka-connect" "confluent-kafka-rest"))  ;  "confluent-control-center"
+                                   "confluent-kafka-rest"))  ; "confluent-kafka-connect" "confluent-control-center"
      (systemctl-hydra-status '("confluent-zookeeper" "confluent-server" "confluent-schema-registry"
-                               "confluent-kafka-connect" "confluent-kafka-rest")))
+                               "confluent-kafka-rest")))
     ;; Stop all
     ("o" (mapc #'systemctl-stop' ("postgresql" "mysqld" "redis" "rethinkdb@default.service"
                                   "docker" "org.cups.cupsd" "confluent-zookeeper" "confluent-server")))
