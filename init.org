@@ -2875,10 +2875,12 @@ dragon-drag-and-drop
   :bind (("C-x d" . dired)
          :map dired-mode-map
          ("j" . swiper)
+         ("M-u" . dired-up-directory)
          ("M-RET" . emms-play-dired)
          ("C-RET" . dired-open-xdg)
          ([(control return)] . dired-open-xdg)
          ("e" . dired-ediff-files)
+         ("C-c C-d" . dired-dragon-popup)
          ("C-c C-e" . dired-toggle-read-only))
   :config
   ;; Tell dired-x to not bind "I" key to `dired-info' or "N" to `dired-man'
@@ -2890,6 +2892,9 @@ dragon-drag-and-drop
 
   ;; dired - reuse current buffer by pressing 'a'
   (put 'dired-find-alternate-file 'disabled nil)
+
+  ;; Open directories in same buffer
+  (setq dired-kill-when-opening-new-dired-buffer t)
 
   ;; always delete and copy recursively
   (setq dired-recursive-deletes 'always)
@@ -2904,7 +2909,7 @@ dragon-drag-and-drop
     "Media files.")
 
   ;; dired list size in human-readable format and list directories first
-  (setq dired-listing-switches "-hal --group-directories-first")
+  (setq dired-listing-switches "-AGhlv --group-directories-first --time-style=long-iso")
 
   (defun dired-dragon-popup ()
     "Open dragon (drag and drop) with the marked files or the file at point."
@@ -2955,18 +2960,6 @@ dragon-drag-and-drop
                              (regexp-opt my-dired-media-files-extensions)
                              "\\'")
                      "mpv")))
-
-(use-package dired+
-  :after dired
-  :bind (:map dired-mode-map
-         ("M-u" . diredp-up-directory-reuse-dir-buffer))
-  :init
-  ;; Show details by default  (diredp hides it)
-  (setq diredp-hide-details-initially-flag nil)
-  :config
-  ;; Reuse dired buffers
-  ;; We use dired-open and also overwrite the dired-find-file there
-  (diredp-toggle-find-file-reuse-dir 1))
 
 ;; Display the recursive size of directories in Dired
 (use-package dired-du
@@ -3051,8 +3044,6 @@ avfs
          ([return] . dired-open-file)
          ("f" . dired-open-file))
   :config
-  ;; Reuse existing dired buffer
-  (setq dired-open-find-file-function 'diredp-find-file-reuse-dir-buffer)
   (setq dired-open-functions '(dired-open-by-extension dired-open-guess-shell-alist dired-open-subdir)))
 
 (use-package dired-ranger
