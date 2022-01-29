@@ -527,6 +527,7 @@
 [submodule "i3"]
 	path = lib/i3
 	url = git@github.com:vava/i3-emacs.git
+	no-byte-compile = i3-integration.el
 [submodule "i3wm-config-mode"]
 	path = lib/i3wm-config-mode
 	url = git@github.com:Alexander-Miller/i3wm-Config-Mode.git
