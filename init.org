@@ -1946,20 +1946,6 @@ continue as long as the user wishes to cycle through the menu.
   (company-tng-mode))
 #+END_SRC
 
-*** company-box: Show company popup in childframe
-#+BEGIN_SRC emacs-lisp
-(use-package company-box
-  :disabled t
-  ;; Doesn't work well with exwm (can't focus/change completion items w/o calling --set-mode first)
-  :hook (company-mode . company-box-mode-exwm-kludge)
-  :config
-  (defun company-box-mode-exwm-kludge ()
-    "Call company-box-mode and then company-box--set-mode."
-    (company-box-mode)
-    (company-box--set-mode))
-
-  (setq company-box-enable-icon nil))
-#+END_SRC
 *** company-shell: Auto completion for shell
 #+BEGIN_SRC emacs-lisp
 (use-package company-shell
