@@ -5436,6 +5436,10 @@ pandoc-bin
   (put 'python-shell-process-environment
        'safe-local-variable (create-safe-env-p "DJANGO_SETTINGS_MODULE" "ENV_INI_PATH"))
   :config
+  (defun run-pyspark ()
+    (interactive)
+    (run-python "pyspark --packages io.delta:delta-core_2.12:1.0.0 --conf \"spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension\" --conf \"spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog\"" nil t))
+
   ;; ipython5 uses prompt_toolkit which doesn't play nice with emacs
   ;; when setting interpreter to 'ipython', you need additional '--simple-prompt' arg
   ;; (setq python-shell-interpreter "python")
@@ -5444,8 +5448,8 @@ pandoc-bin
   ;; and only run pshell when it's a pyramid project.
   ;;(setq python-shell-interpreter "python"
   ;;      python-shell-interpreter-args "--simple-prompt -i /home/daniel/.virtualenvs/atomx/lib/python3.5/site-packages/pyramid/scripts/pshell.py /home/daniel/atomx/api/development.ini")
-  ;; (setq python-shell-interpreter "ipython")
-  ;; (setq python-shell-interpreter-args "-i --simple-prompt")
+  (setq python-shell-interpreter "ipython")
+  (setq python-shell-interpreter-args "-i --simple-prompt")
 
   (defun python-enable-highlighting-in-comint (f &rest args)
     "Workaround so entered python code in comint mode stays highlighted.
@@ -5735,9 +5739,10 @@ put something like this in your =.dir-locals.el=:
   :config
   (defun venv-install-dev-deps ()
     (venv-with-virtualenv venv-current-name
-                          (compile "pip install -U pip readline pylint flake8 mypy black isort")))
+                          (compile "pip install -U pip readline pylint flake8 mypy black isort requests types-requests")))
   (venv-initialize-interactive-shells) ;; if you want interactive shell support
   (venv-initialize-eshell) ;; if you want eshell support
+  (setq venv-virtualenv-command "python -m venv")
   (setq venv-location "/home/daniel/.virtualenvs/"))
 #+END_SRC
 ** Prolog
