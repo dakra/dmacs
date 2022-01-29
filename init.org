@@ -2040,6 +2040,12 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
 #+END_SRC
 ** Undo
 #+BEGIN_SRC emacs-lisp
+(use-package undo-fu-session
+  :config
+  (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
+  (global-undo-fu-session-mode))
+
+
 (use-package undo-fu
   :disabled t  ; Emacs 28 comes with `undo-redo`
   :bind (("C-/"   . undo-fu-only-undo)

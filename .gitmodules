@@ -1143,6 +1143,9 @@
 [submodule "undo-fu"]
 	path = lib/undo-fu
 	url = git@gitlab.com:ideasman42/emacs-undo-fu.git
+[submodule "undo-fu-session"]
+	path = lib/undo-fu-session
+	url = git@gitlab.com:ideasman42/emacs-undo-fu-session.git
 [submodule "undo-tree"]
 	path = lib/undo-tree
 	url = git@github.com:emacsorphanage/undo-tree.git
