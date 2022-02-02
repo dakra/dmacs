@@ -177,6 +177,9 @@
 [submodule "company-terraform"]
 	path = lib/company-terraform
 	url = git@github.com:rafalcieslak/emacs-company-terraform.git
+[submodule "consult"]
+	path = lib/consult
+	url = git@github.com:minad/consult.git
 [submodule "copy-as-format"]
 	path = lib/copy-as-format
 	url = git@github.com:sshaw/copy-as-format.git
@@ -321,6 +324,9 @@
 	path = lib/emacsql
 	url = git@github.com:skeeto/emacsql.git
 	no-byte-compile = emacsql-pg.el
+[submodule "embark"]
+	path = lib/embark
+	url = git@github.com:oantolin/embark.git
 [submodule "emmet-mode"]
 	path = lib/emmet-mode
 	url = git@github.com:smihica/emmet-mode.git
@@ -697,6 +703,9 @@
 [submodule "makey"]
 	path = lib/makey
 	url = git@github.com:mickeynp/makey.git
+[submodule "marginalia"]
+	path = lib/marginalia
+	url = git@github.com:minad/marginalia.git
 [submodule "markdown-mode"]
 	path = lib/markdown-mode
 	url = git@github.com:jrblevin/markdown-mode.git
@@ -774,6 +783,9 @@
 [submodule "orca"]
 	path = lib/orca
 	url = git@github.com:abo-abo/orca.git
+[submodule "orderless"]
+	path = lib/orderless
+	url = git@github.com:oantolin/orderless.git
 [submodule "org"]
 	path = lib/org
 	url = git://git.savannah.gnu.org/emacs/org-mode.git
@@ -1158,6 +1170,11 @@
 [submodule "vega-view"]
 	path = lib/vega-view
 	url = git@github.com:applied-science/emacs-vega-view.git
+[submodule "vertico"]
+	path = lib/vertico
+	url = git@github.com:minad/vertico.git
+	load-path = .
+	load-path = extensions
 [submodule "virtualenvwrapper"]
 	path = lib/virtualenvwrapper
 	url = git@github.com:porterjamesj/virtualenvwrapper.el.git
