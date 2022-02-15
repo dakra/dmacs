@@ -642,6 +642,9 @@
 	path = lib/libgit
 	url = git@github.com:magit/libegit2.git
 	build-step = make
+[submodule "ligature"]
+	path = lib/ligature
+	url = git@github.com:mickeynp/ligature.el.git
 [submodule "list-utils"]
 	path = lib/list-utils
 	url = git@github.com:rolandwalker/list-utils.git

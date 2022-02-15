@@ -1273,6 +1273,20 @@ ttf-symbola
 ;; see https://www.gnu.org/software/emacs/manual/html_node/elisp/Creating-Frames.html
 (add-hook 'after-make-frame-functions '--set-emoji-font)
 #+END_SRC
+** Ligatures
+#+BEGIN_SRC emacs-lisp
+(use-package ligature
+  :hook (prog-mode . ligature-mode)
+  :config
+  ;; Some ligatures supported by most fonts. E.g. Fira Code, Victor Mono
+  (ligature-set-ligatures 'prog-mode '("~~>" "##" "|-" "-|" "|->" "|=" ">-" "<-" "<--" "->"
+                                       "-->" "-<" ">->" ">>-" "<<-" "<->" "->>" "-<<" "<-<"
+                                       "==>" "=>" "=/=" "!==" "!=" "<==" ">>=" "=>>" ">=>"
+                                       "<=>" "<=<" "=<=" "=>=" "<<=" "=<<"
+                                       "=:=" "=!=" "==" "===" "::" ":=" ":>" ":<" ">:"
+                                       ";;" "/=" "__" "&&" "++")))
+#+END_SRC
+
 ** Automatically remove trailing whitespace (only if I put them there)
 #+BEGIN_SRC emacs-lisp
 (use-package ws-butler
