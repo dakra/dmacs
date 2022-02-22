@@ -1470,7 +1470,7 @@ is already narrowed."
 ** crux: Various small useful utility functions
 #+BEGIN_SRC emacs-lisp
 (use-package crux
-  :bind (("C-c u" . crux-view-url)
+  :bind (("C-c U" . crux-view-url)
          ("C-c f c" . write-file)
          ("C-c f r" . crux-rename-buffer-and-file)
          ("C-c f d" . crux-delete-file-and-buffer)
@@ -2173,8 +2173,9 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   :hook ((prog-mode . flyspell-prog-mode)
          ((org-mode mu4e-compose-mode markdown-mode rst-mode) . flyspell-mode))
   :config
-  ;; remove flyspess 'C-;' keybinding so we can use it for avy jump
-  (unbind-key "C-;" flyspell-mode-map))
+  ;; remove flyspess 'C-,' and `C-;' keybinding so we can use it for embark
+  (unbind-key "C-;" flyspell-mode-map)
+  (unbind-key "C-," flyspell-mode-map))
 #+END_SRC
 ** Flyspell-correct: Show list of correct spelling suggestions
 #+BEGIN_SRC emacs-lisp
@@ -2224,6 +2225,9 @@ languagetool-ngrams-de
   :defer t
   :bind-keymap (("s-p"   . projectile-command-map)
                 ("C-c p" . projectile-command-map))
+  :bind (:map projectile-command-map
+         ("SPC"  . consult-buffer-project)
+         ("s s" . consult-ripgrep))
   :init
   ;; Allow all file-local values for project root
   (put 'projectile-project-root 'safe-local-variable 'stringp)
@@ -2262,7 +2266,8 @@ languagetool-ngrams-de
   ;; cache projectile project files
   ;; projectile-find-files will be much faster for large projects.
   ;; C-u C-c p f to clear cache before search.
-  (setq projectile-enable-caching nil))
+  (setq projectile-enable-caching nil)
+  (projectile-mode))
 #+END_SRC
 ** Treemacs: A tree layout file explorer
 #+BEGIN_SRC emacs-lisp
@@ -2709,7 +2714,9 @@ Simple but effective sorting and filtering for Emacs
   :config
   (setq vertico-multiform-commands
         '((consult-line buffer)
-          (consult-imenu reverse buffer)))
+          (consult-buffer buffer)
+          (consult-org-heading buffer)
+          (consult-imenu buffer)))
 
   (vertico-multiform-mode))
 #+END_SRC
@@ -2750,6 +2757,7 @@ Simple but effective sorting and filtering for Emacs
          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
+         ("M-i"   . consult-imenu)
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-imenu-multi)
          ;; M-s bindings (search-map)
@@ -2776,7 +2784,7 @@ Simple but effective sorting and filtering for Emacs
   ;; relevant when you use the default completion UI. You may want to also
   ;; enable `consult-preview-at-point-mode` in Embark Collect buffers.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-
+  :commands (consult-buffer-project)
   ;; The :init configuration is always executed (Not lazy)
   :init
 
@@ -2839,6 +2847,12 @@ Simple but effective sorting and filtering for Emacs
   ;;;; 4. locate-dominating-file
   ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
 
+  (defun consult-buffer-project ()
+    "Like consult-bufffer but narrowed to only project buffers."
+    (interactive)
+    (let ((unread-command-events (append unread-command-events (list ?p 32))))
+      (consult-buffer)))
+
   (defun mode-buffer-exists-p (mode)
     (seq-some (lambda (buf)
                 (provided-mode-derived-p
@@ -2885,17 +2899,14 @@ Enable richer annotations using the Marginalia package.
 ** Embark: Emacs Mini-Buffer Actions Rooted in Keymaps
 #+BEGIN_SRC emacs-lisp
 (use-package embark
-  :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
+  :bind (("C-." . embark-act)         ;; pick some comfortable binding
+         ("C-," . embark-dwim)        ;; good alternative: M-.
+         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
 
   :config
-
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
