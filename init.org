@@ -525,8 +525,9 @@ white to black background when first starting.
 #+BEGIN_SRC conf :tangle no
 ! Emacs settings so they are set even before Emacs starts
 ! See: https://www.gnu.org/software/emacs/manual/html_node/emacs/Table-of-Resources.html#Table-of-Resources
-Emacs.font: Operator Mono-9:weight=light:width=normal
+! Emacs.font: Operator Mono-9:weight=light:width=normal
 ! Emacs.font: Operator Mono:size=7:slant=normal:weight=normal:width=normal
+Emacs.font: Fira Code-9:weight=regular:width=normal
 Emacs.reverseVideo: on
 Emacs.menuBar: 0
 Emacs.toolBar: 0
@@ -534,16 +535,24 @@ Emacs.verticalScrollBars: off
 #+END_SRC
 
 If you don't set your Xresources, you can load the font with:
-#+BEGIN_SRC emacs-lisp :tangle no
-(set-frame-font "Operator Mono-9:weight=light:width=normal" nil t)
+#+BEGIN_SRC emacs-lisp
+;; (add-to-list 'default-frame-alist '(font . "Operator Mono-9:weight=light:width=normal"))
+;; (set-frame-font "Operator Mono-9:weight=light:width=normal" nil t)
+(add-to-list 'default-frame-alist '(font . "Fira Code-9:weight=regular:width=normal"))
+(set-frame-font "Fira Code-9:weight=regular:width=normal" nil t)
+;; (set-frame-font "Victor Mono-9:weight=medium" nil t)
+;; (set-frame-font "iA Writer Mono S-9:weight=regular" nil t)
+;; (set-frame-font "B612 Mono-9:weight=regular" nil t)
+;; (set-frame-font "Victor Mono-9" nil t)
 ;; (set-frame-font "Iosevka-9:slant=normal:weight=regular:width=normal" nil t)
+;; (set-frame-font "Iosevka-9:weight=regular" nil t)
 ;; (set-frame-font "Iosevka-7:slant=normal:weight=bold:width=normal" nil t)
 ;; (set-frame-font "DejaVu Sans Mono-7:weight=medium:width=normal" nil t)
 ;; (set-frame-font "Hack-7:weight=medium:width=normal" nil t)
 ;; (set-frame-font "Source Code Pro:weight=medium:width=normal" nil t)
 
 ;; (set-frame-font "FiraCode-9:slant=normal:weight=regular:width=normal" nil t)
-;; (set-frame-font "Fira Code:weight=medium:width=normal" nil t)
+;; (set-frame-font "Fira Code-8:weight=regular:width=normal" nil t)
 ;; (set-frame-font "inconsolata:weight=medium:width=normal" nil t)
 #+END_SRC
 
