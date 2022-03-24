@@ -62,6 +62,7 @@
         org-todo
         org-yank
         outshine-self-insert-command
+        overwrite-mode
         picture-backward-clear-column
         picture-clear-column
         picture-clear-line
@@ -106,6 +107,7 @@
         dakra-ivy-switch-buffer
         dakra/counsel-search-project-empty
         dap-tooltip-mouse-motion
+        delete-window
         end-of-buffer
         exwm-windmove-down
         exwm-windmove-left
@@ -114,6 +116,8 @@
         god-local-mode
         handle-select-window
         handle-switch-frame
+        helpful-key
+        i3-windmove-left
         iedit-switch-to-mc-mode
         ivy-backward-delete-char
         ivy-wgrep-change-to-wgrep-mode
@@ -124,8 +128,11 @@
         org-edit-src-save
         smart-region
         swiper-mc
+        undefined
         undo-fu-only-redo
         undo-fu-only-undo
         undo-only
         undo-redo
+        windmove-swap-states-left
+        windmove-swap-states-right
         ))
