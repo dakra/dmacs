@@ -863,7 +863,8 @@ E.g. fuer -> für
   ;; and we use magits `magit-auto-revert-mode' for that
   ;;; revert buffers automatically when underlying files are changed externally
   (global-auto-revert-mode nil)
-
+  ;; auto revert dired buffers
+  (setq global-auto-revert-non-file-buffers t)
   ;; Turn off auto revert messages
   (setq auto-revert-verbose nil))
 #+END_SRC
@@ -1974,14 +1975,14 @@ continue as long as the user wishes to cycle through the menu.
 Helpful is a replacement for ~*help*~ buffers that provides much more contextual information.
 #+BEGIN_SRC emacs-lisp
 (use-package helpful
-  :bind (("C-h f" . describe-function)
-         ("C-h v" . describe-variable)
+  :bind (("C-h f" . helpful-callable)
+         ("C-h v" . helpful-variable)
          ("C-h s" . describe-symbol)
          ("C-h k" . helpful-key)
-         ("C-c h f" . describe-function)
-         ("C-c h v" . describe-variable)
-         ("C-c h c" . helpful-command)
-         ("C-c h m" . helpful-macro)
+         ;; ("C-c h f" . helpful-callable)
+         ;; ("C-c h v" . helpful-variable)
+         ;; ("C-c h c" . helpful-command)
+         ;; ("C-c h m" . helpful-macro)
          ("<C-tab>" . backward-button)
          :map helpful-mode-map
          ("M-?" . helpful-at-point)
@@ -2239,7 +2240,7 @@ languagetool-ngrams-de
   :bind-keymap (("s-p"   . projectile-command-map)
                 ("C-c p" . projectile-command-map))
   :bind (:map projectile-command-map
-         ("SPC"  . consult-buffer-project)
+         ("SPC"  . consult-project-buffer)
          ("s s" . consult-ripgrep))
   :init
   ;; Allow all file-local values for project root
@@ -2764,7 +2765,7 @@ Simple but effective sorting and filtering for Emacs
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ;; ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
          ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
@@ -2797,7 +2798,6 @@ Simple but effective sorting and filtering for Emacs
   ;; relevant when you use the default completion UI. You may want to also
   ;; enable `consult-preview-at-point-mode` in Embark Collect buffers.
   :hook (completion-list-mode . consult-preview-at-point-mode)
-  :commands (consult-buffer-project)
   ;; The :init configuration is always executed (Not lazy)
   :init
 
@@ -2848,10 +2848,10 @@ Simple but effective sorting and filtering for Emacs
   ;; Optionally configure a function which returns the project root directory.
   ;; There are multiple reasonable alternatives to chose from.
   ;;;; 1. project.el (project-roots)
-  (setq consult-project-root-function
-        (lambda ()
-          (when-let (project (project-current))
-            (car (project-roots project)))))
+  ;; (setq consult-project-root-function
+  ;;       (lambda ()
+  ;;         (when-let (project (project-current))
+  ;;           (car (project-roots project)))))
   ;;;; 2. projectile.el (projectile-project-root)
   ;; (autoload 'projectile-project-root "projectile")
   ;; (setq consult-project-root-function #'projectile-project-root)
@@ -2860,11 +2860,11 @@ Simple but effective sorting and filtering for Emacs
   ;;;; 4. locate-dominating-file
   ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
 
-  (defun consult-buffer-project ()
-    "Like consult-bufffer but narrowed to only project buffers."
-    (interactive)
-    (let ((unread-command-events (append unread-command-events (list ?p 32))))
-      (consult-buffer)))
+  ;; (defun consult-buffer-project ()
+  ;;   "Like consult-bufffer but narrowed to only project buffers."
+  ;;   (interactive)
+  ;;   (let ((unread-command-events (append unread-command-events (list ?p 32))))
+  ;;     (consult-buffer)))
 
   (defun mode-buffer-exists-p (mode)
     (seq-some (lambda (buf)
@@ -3187,6 +3187,9 @@ dragon-drag-and-drop
   ;; Tell dired-x to not bind "I" key to `dired-info' or "N" to `dired-man'
   (setq dired-bind-info nil)
   (setq dired-bind-man nil)
+
+  ;; Allow drag and drop out of dired into other apps (e.g. browser)
+  (setq dired-mouse-drag-files t)
 
   ;; When point is on a file name only search file names
   (setq dired-isearch-filenames 'dwim)
