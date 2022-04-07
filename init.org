@@ -5721,6 +5721,7 @@ pandoc-bin
          ("C-x C-e" . python-shell-send-whole-line-or-region)
          ("C-c C-c" . python-shell-send-whole-line-or-region)
          ("C-c C-k" . python-shell-send-buffer)
+         ("C-c C-d" . python-shell-send-defun)
          ("C-c C-p" . hydra-python/body)
          ("C-c C-t" . hydra-python/body)
          )
@@ -5755,23 +5756,6 @@ pandoc-bin
   (setq python-shell-interpreter "ipython")
   (setq python-shell-interpreter-args "-i --simple-prompt")
 
-  (defun python-enable-highlighting-in-comint (f &rest args)
-    "Workaround so entered python code in comint mode stays highlighted.
-See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=32344"
-    (if (eq major-mode 'inferior-python-mode)
-        (cl-letf (((symbol-function 'g)
-                   (symbol-function 'add-text-properties))
-                  ((symbol-function 'add-text-properties)
-                   (lambda (start end properties
-                                  &optional object)
-                     (unless (eq (nth 3 properties)
-                                 'comint-highlight-input)
-                       (funcall g start end
-                                properties object)))))
-          (apply f args))
-      (apply f args)))
-  ;; (advice-add 'comint-send-input :around #'python-enable-highlighting-in-comint)
-  ;; (advice-remove 'comint-send-input 'python-enable-highlighting-in-comint)
   ;; Don't spam message buffer when python-mode can't guess indent-offset
   (setq python-indent-guess-indent-offset-verbose nil)
 
@@ -6043,7 +6027,7 @@ put something like this in your =.dir-locals.el=:
   :config
   (defun venv-install-dev-deps ()
     (venv-with-virtualenv venv-current-name
-                          (compile "pip install -U pip readline pylint flake8 mypy black isort requests types-requests")))
+                          (compile "pip install -U pip readline pylint flake8 mypy black isort requests types-requests ipython")))
   (venv-initialize-interactive-shells) ;; if you want interactive shell support
   (venv-initialize-eshell) ;; if you want eshell support
   (setq venv-virtualenv-command "python -m venv")
