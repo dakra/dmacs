@@ -1197,6 +1197,9 @@
 	build-step = cd build && cmake .. && make
 	build-step = borg-byte-compile
         build-step = borg-update-autoloads
+[submodule "vundo"]
+	path = lib/vundo
+	url = git@github.com:casouri/vundo.git
 [submodule "web-mode"]
 	path = lib/web-mode
 	url = git@github.com:fxbois/web-mode.git

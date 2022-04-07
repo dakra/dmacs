@@ -2050,6 +2050,10 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
   (global-undo-fu-session-mode))
 
+(use-package vundo
+  :config
+  (setq vundo-compact-display t)
+  (setq vundo-glyph-alist vundo-unicode-symbols))
 
 (use-package undo-fu
   :disabled t  ; Emacs 28 comes with `undo-redo`
