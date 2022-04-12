@@ -5281,6 +5281,31 @@ Lisp function does not specify a special indentation."
   (add-hook 'emacs-lisp-mode-hook (lambda ()
                                     (setq mode-name "EL"))))
 #+END_SRC
+**** Shortdoc: Quick documentation
+#+BEGIN_SRC emacs-lisp
+(use-package shortdoc
+  :defer t
+  :config
+  (define-short-documentation-group datetime
+    "Querying current time"
+    (current-time
+     :eval (current-time))
+    (float-time
+     :eval (float-time))
+
+    "Time formats"
+    (time-convert
+     :eval (time-convert (current-time))
+     :eval (time-convert (current-time) 'list)
+     :eval (time-convert (current-time) 100000)
+     :eval (time-convert (current-time) 200000)
+     :eval (time-convert (current-time) t)
+     :eval (time-convert (current-time) 'integer))
+
+    (float-time
+     :eval (float-time (current-time)))))
+#+END_SRC
+
 **** Helper libraries (dash, s, marshal)
 #+BEGIN_SRC emacs-lisp
 (use-package dash
