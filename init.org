@@ -616,7 +616,7 @@ ttf-croscore
   ;;  (set-face-attribute 'mode-line-inactive nil :box nil))
   :config
   (setq x-underline-at-descent-line t)
-  (setq moody-mode-line-height 28)
+  (setq moody-mode-line-height nil)
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode))
 #+END_SRC
@@ -1294,7 +1294,7 @@ ttf-symbola
                                        "==>" "=>" "=/=" "!==" "!=" "<==" ">>=" "=>>" ">=>"
                                        "<=>" "<=<" "=<=" "=>=" "<<=" "=<<"
                                        "=:=" "=!=" "==" "===" "::" ":=" ":>" ":<" ">:"
-                                       ";;" "/=" "__" "&&" "++")))
+                                       ";;" "__" "&&" "++")))
 #+END_SRC
 
 ** Automatically remove trailing whitespace (only if I put them there)
@@ -6285,7 +6285,7 @@ mvn install:install-file -Dfile="./AthenaJDBC42.jar" -DgroupId=com.simba.athena 
 
 Then add athena jdbc driver to the `ejc-jdbc-drivers` (see config below).
 
-To activate =elc= in =org-mode= use M-x =elc-connect=.
+To activate =ejc= in =org-mode= use M-x =ejc-connect=.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ejc-sql
@@ -6317,8 +6317,8 @@ To activate =elc= in =org-mode= use M-x =elc-connect=.
   (defun dakra/ejc-sql-connected-hook ()
     ;; (ejc-set-use-unicode t)
     ;; Increase max rows
-    (ejc-set-max-rows 200)
-    (ejc-set-fetch-size 200))
+    (ejc-set-max-rows 800)
+    (ejc-set-fetch-size 800))
 
   (ejc-create-connection
    "sov-dbs01-dwh-prod-ro"
@@ -6829,6 +6829,11 @@ Show clock history when not in org buffer or when called with prefix argument."
   ;; Enter key follows links (= C-c C-o)
   (setq org-return-follows-link t)
 
+  ;; When enabling the cache I get errors on latest Emacs 29.1
+  ;; (wrong-type-argument avl-tree- nil)
+  ;; So disable it (temporarily)
+  ;; (setq org-element-use-cache nil)
+
   ;; Never show 'days' in clocksum (e.g. in report clocktable)
   ;; format string used when creating CLOCKSUM lines and when generating a
   ;; time duration (avoid showing days)
@@ -7148,6 +7153,14 @@ Show clock history when not in org buffer or when called with prefix argument."
   ;; Start the weekly agenda on Monday
   (setq org-agenda-start-on-weekday 1)
 
+  ;; Agenda styling
+  (setq org-agenda-block-separator ?─
+        org-agenda-time-grid
+        '((daily today require-timed)
+          (800 1000 1200 1400 1600 1800 2000)
+          " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+        org-agenda-current-time-string
+        "⭠ now ─────────────────────────────────────────────────")
   ;; Use sticky agenda's so they persist
   ;;(setq org-agenda-sticky t)
 
@@ -7673,12 +7686,12 @@ as the default task."
 
   :config
   ;; Install `xprintidle' to get idle time over all X11. Otherwise it's only Emacs idle time.
-  (setq org-clock-idle-time 15)  ; idle after 15 minutes
+  (setq org-clock-idle-time 35)  ; idle after 35 minutes
 
   ;;(setq org-clock-continuously t)  ; Start clocking from the last clock-out time, if any.
 
   ;; Show lot of clocking history so it's easy to pick items off the C-F11 list
-  (setq org-clock-history-length 23)
+  (setq org-clock-history-length 30)
 
   ;; Save the running clock and all clock history when exiting Emacs, load it on startup
   (setq org-clock-persist t)
@@ -8106,8 +8119,8 @@ gmime3
 xapian-core
 #+END_SRC
 
-
-For =mu= to recognize personal email addresses you have to pass them to ~mu init~ before indexing with:
+For =mu= to recognize personal email addresses you have to pass them to ~mu init~
+before indexing with:
 #+BEGIN_SRC sh :tangle no
 mu init --my-address daniel@kraus.my                 \
         --my-address daniel.kraus@gmail.com          \
@@ -8213,6 +8226,9 @@ mu init --my-address daniel@kraus.my                 \
      ;; refile all messages from Uber to the 'uber' folder
      ((mu4e-message-contact-field-matches msg :from "@uber\\.com")
       "/private/uber")
+     ;; and from Kindergarden to 'loewen'
+     ((mu4e-message-contact-field-matches msg :to "loewenkindergarten@googlegroups.com")
+      "/private/loewen/")
      ;; important to have a catch-all at the end!
      (t  "/private/Archive")))
 
@@ -8244,6 +8260,7 @@ mu init --my-address daniel@kraus.my                 \
                           ("intern.lists.ccc.de" . "CCC")
                           ("pylons-discuss.googlegroups.com" . "PyrUsr")
                           ("pylons-devel.googlegroups.com" . "PyrDev")
+                          ("loewenkindergarten.googlegroups.com" . "Loewen")
                           ("sqlalchemy.googlegroups.com" . "SQLA")))
     (add-to-list 'mu4e-mailing-lists mailing-list))
 
@@ -8291,6 +8308,7 @@ mu init --my-address daniel@kraus.my                 \
                          ("list:pylons-discuss.googlegroups.com OR list:pylons-devel.googlegroups.com OR list:sqlalchemy.googlegroups.com" "Python" ?p)
                          ("list:intern.lists.ccc.de" "CCC Intern" ?c)
                          ("list:intern.lists.entropia.de" "Entropia Intern" ?k)
+                         ("list:loewenkindergarten.googlegroups.com" "Löwen" ?l)
                          ("list:uwsgi.lists.unbit.it" "uwsgi" ?u)))
 
   ;; (add-hook 'mu4e-mark-execute-pre-hook
@@ -8302,13 +8320,13 @@ mu init --my-address daniel@kraus.my                 \
   ;; allow for updating mail using 'U' in the main view:
   ;; (only update inboxes)
   ;; (setq mu4e-get-mail-command "mbsync private:Inbox sovendus:Inbox e5:Inbox gmail-inbox atomx-inbox hogaso-inbox")
-  (setq mu4e-get-mail-command "mbsync private:INBOX sovendus:INBOX gmail-inbox")
+  (setq mu4e-get-mail-command "mbsync private:INBOX gmail-inbox")  ;; sovendus:INBOX
   ;; for update all:
   ;;(setq mu4e-get-mail-command "mbsync -a")
 
   ;; update database every ten minutes
-  ;; (setq  mu4e-update-interval (* 60 10))
-  (setq  mu4e-update-interval nil)
+  (setq  mu4e-update-interval (* 60 10))
+  ;; (setq  mu4e-update-interval nil)
 
   ;; We do a full index (that verify integrity) with a systemd job
   ;; Go fast inside emacs
