@@ -21,6 +21,9 @@
 [submodule "aggressive-indent"]
 	path = lib/aggressive-indent
 	url = git@github.com:Malabarba/aggressive-indent-mode.git
+[submodule "aio"]
+	path = lib/aio
+	url = git@github.com:skeeto/emacs-aio.git
 [submodule "alchemist"]
 	path = lib/alchemist
 	url = git@github.com:tonini/alchemist.el.git
