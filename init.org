@@ -7828,6 +7828,19 @@ See `org-html-format-headline-function' for details."
   ;; Don't export ^ or _ as super/subscripts
   (setq org-export-with-sub-superscripts nil))
 
+;; Import Excel as org table
+(use-package ox-odt
+  :after ox
+  :commands org-odt-import-xlsx
+  :config
+  (defun org-odt-import-xlsx (xlsx-file)
+    "Import XLSX-FILE as org table."
+    (interactive "fImport file:")
+    (let ((csv-file (concat (file-name-sans-extension xlsx-file) ".csv")))
+      (org-odt-convert xlsx-file "csv")
+      (org-table-import csv-file nil)
+      (delete-file csv-file))))
+
 ;; Export tasks to ical (used for org-vcal)
 (use-package ox-icalendar
   :after ox
