@@ -5436,9 +5436,22 @@ openjdk11-src
   (add-to-list 'cider-jack-in-nrepl-middlewares
                '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
 
+  ;; Shortcut for clerk/show
+  (defun clerk-show ()
+    (interactive)
+    (save-buffer)
+    (when-let ((filename (buffer-file-name)))
+      (cider-interactive-eval
+       (concat "(nextjournal.clerk/show! \"" filename "\")"))))
+
+  (define-minor-mode clerk-mode
+    "A mode that just binds `<M-return>' to `clerk-show'."
+    nil
+    :lighter " clerk"
+    :keymap `((,(kbd "<M-return>") . clerk-show)))
 
   ;; jack-in for babashka
-  (defun cider-jack-in-babashka ()
+  (defun cider-jack-in-babashka-old ()
     "Start an babashka nREPL server for the current project and connect to it."
     (interactive)
     (let* ((default-directory (project-root (project-current t)))
@@ -5453,6 +5466,28 @@ openjdk11-src
       (set-process-filter
        (start-file-process "babashka" "*babashka*" "bb" "--nrepl-server" "0")
        process-filter)))
+
+  ;; jack-in for babashka from corgi
+  ;; https://github.com/lambdaisland/corgi-packages/blob/main/corgi-clojure/corgi-clojure.el#L192-L211
+  (defun cider-jack-in-babashka (&optional project-dir)
+    "Start a utility CIDER REPL backed by Babashka, not related to a specific project."
+    (interactive)
+    (let ((project-dir (or project-dir (project-root (project-current t)))))
+      (nrepl-start-server-process
+       project-dir
+       "bb --nrepl-server 0"
+       (lambda (server-buffer)
+         (cider-nrepl-connect
+          (list :repl-buffer server-buffer
+                :repl-type 'clj
+                :host (plist-get nrepl-endpoint :host)
+                :port (plist-get nrepl-endpoint :port)
+                :project-dir project-dir
+                :session-name "babashka"
+                :repl-init-function (lambda ()
+                                      (setq-local cljr-suppress-no-project-warning t
+                                                  cljr-suppress-middleware-warnings t)
+                                      (rename-buffer "*babashka-repl*"))))))))
 
   ;; Store more items in repl history (default 500)
   (setq cider-repl-history-size 2000)
@@ -5504,7 +5539,7 @@ clj-kondo-bin
 (use-package ob-clojure
   :after ob
   :config
-  (setq org-babel-clojure-backend 'cider))
+  (setq org-babel-clojure-backend 'babashka))
 #+END_SRC
 **** Datomic yasnippets
 Yasnippets for Datomic.
