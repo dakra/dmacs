@@ -5567,12 +5567,13 @@ openjdk11-src
 (use-package clj-refactor
   :hook (clojure-mode . clj-refactor-mode)
   :config
-  (dolist (magit-require '(("csv" . "clojure.data.csv")
-                           ("edn" . "clojure.edn")
-                           ;; ("http" . "clj-http.client")
-                           ("reagent" . "reagent.core")
+  (dolist (magic-require '(("csv"      . "clojure.data.csv")
+                           ("edn"      . "clojure.edn")
+                           ("pprint"   . "clojure.pprint")
+                           ;; ("http"  . "clj-http.client")
+                           ("reagent"  . "reagent.core")
                            ("re-frame" . "re-frame.core")))
-    (add-to-list 'cljr-magic-require-namespaces magit-require)))
+    (add-to-list 'cljr-magic-require-namespaces magic-require)))
 #+END_SRC
 **** clj-kondo Flycheck integration with the clj-kondo linter
 You need the =clj-kondo= tool installed.
