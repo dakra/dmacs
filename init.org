@@ -5264,6 +5264,11 @@ Lisp function does not specify a special indentation."
          ("C-c C-c" . eval-defun)
          ("C-c C-b" . eval-buffer)
          ("C-c C-k" . eval-buffer)
+         ("C-c ;"   . eval-print-as-comment)
+         :map lisp-interaction-mode-map  ; Scratch buffer
+         ("C-c C-c" . eval-defun)
+         ("C-c C-b" . eval-buffer)
+         ("C-c C-k" . eval-buffer)
          ("C-c ;"   . eval-print-as-comment))
   :config
   (defvar eval-print-as-comment-prefix ";;=> ")
@@ -5278,6 +5283,52 @@ Lisp function does not specify a special indentation."
           (re-search-forward "[[:space:]\n]*" nil t)
           (insert eval-print-as-comment-prefix)))))
 
+  (define-minor-mode elisp-indent-docstrings-mode
+    "If non-nil, docstrings are displayed with extra indentation."
+    :global t
+    (funcall (if elisp-indent-docstrings-mode
+                 #'add-hook #'remove-hook)
+             'emacs-lisp-mode-hook
+             #'elisp--add-indent-docstring-font-lock-rule)
+    (when elisp-indent-docstrings-mode
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (when (derived-mode-p 'emacs-lisp-mode)
+            (elisp--add-indent-docstring-font-lock-rule))))))
+
+  (defun elisp--add-indent-docstring-font-lock-rule ()
+    (font-lock-add-keywords nil '((elisp--indent-docstrings)) 'append)
+    (font-lock-flush)
+    (push 'line-prefix font-lock-extra-managed-props))
+
+  (defun elisp--indent-docstrings (limit)
+    (when elisp-indent-docstrings-mode
+      (let ((pos nil))
+        (while (and (< (point) limit)
+                    (setq pos (text-property-any (point) limit
+                                                 'face 'font-lock-doc-face)))
+          (goto-char pos)
+          (let* ((ppss (syntax-ppss))
+                 (start (or (nth 8 ppss) pos))
+                 (indent (save-excursion
+                           (goto-char start)
+                           (when (and (eq (char-after) ?\")
+                                      (not (eq (char-after (1+ (point))) ?\\)))
+                             (1+ (current-column)))))
+                 (display (when indent (concat ;; "\n"
+                                        (make-string indent ?\s))))
+                 (end (or (text-property-not-all (point) limit
+                                                 'face 'font-lock-doc-face)
+                          limit)))
+            (if (not display)
+                (goto-char end)
+              (while (re-search-forward "^." end 'move)
+                (put-text-property (match-beginning 0) (1+ (match-beginning 0))
+                                   'line-prefix display)))))))
+    nil)
+
+  ;; Virtually indent multiline Elisp docstrings without changing the buffer
+  (elisp-indent-docstrings-mode)
   (add-hook 'emacs-lisp-mode-hook (lambda ()
                                     (setq mode-name "EL"))))
 #+END_SRC
