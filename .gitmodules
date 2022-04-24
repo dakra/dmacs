@@ -180,6 +180,9 @@
 [submodule "company-terraform"]
 	path = lib/company-terraform
 	url = git@github.com:rafalcieslak/emacs-company-terraform.git
+[submodule "compat"]
+	path = lib/compat
+	url = https://git.sr.ht/~pkal/compat
 [submodule "consult"]
 	path = lib/consult
 	url = git@github.com:minad/consult.git
