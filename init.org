@@ -1194,8 +1194,8 @@ With a prefix argument, copy the link to the online manual instead."
 ** Goggles: Visual feedback on some operations like yank,kill,undo
 #+BEGIN_SRC emacs-lisp
 (use-package goggles
-  :defer 10
-  :config (goggles-mode))
+  :disabled t
+  :hook ((text-mode prog-mode) . googles-mode))
 #+END_SRC
 ** beacon: Highlight current line/cursor when switching frames
 #+BEGIN_SRC emacs-lisp
