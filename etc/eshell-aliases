@@ -1,5 +1,8 @@
 alias .. cd ..
 alias ... cd ../..
+alias aws-prod aws --profile prod $*
+alias aws-sandbox aws --profile sandbox $*
+alias aws-test aws --profile test $*
 alias e find-file-other-window $1
 alias ee find-file $1
 alias emacs find-file $1
