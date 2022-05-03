@@ -1114,6 +1114,19 @@ With a prefix argument, copy the link to the online manual instead."
 #+BEGIN_SRC emacs-lisp
 (use-package net-utils
   :defer t
+  :bind (:map mode-specific-map
+         :prefix-map net-utils-prefix-map
+         :prefix "n"
+         ("p" . ping)
+         ("i" . ifconfig)
+         ("w" . iwconfig)
+         ("n" . netstat)
+         ("a" . arp)
+         ("r" . route)
+         ("h" . nslookup-host)
+         ("d" . dig)
+         ("s" . smbclient)
+         ("t" . traceroute))
   :config
   ;; Set default netstat options
   ;; so when I call it, it will list all open ports with processes
