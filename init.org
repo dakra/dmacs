@@ -4821,12 +4821,18 @@ plantuml
   ;; Mark all docker-compose-arguments as safe for dir local usage
   (put 'docker-compose-arguments 'safe-local-variable 'listp)
   :config
+  ;; Use normal shell-mode instead of vterm for docker buffers
+  (setq docker-run-async-with-buffer-function 'docker-run-async-with-buffer-shell)
+
   (setq docker-images-default-sort-key '("Created" . t))
   (setq docker-containers-default-sort-key '("Status" . t)))
+
 (use-package dockerfile-mode
   :defer t)
+
 (use-package docker-compose-mode
   :mode ("docker-compose[^/]*\\.ya?ml\\'"))
+
 (use-package docker-tramp
   :after tramp)
 #+END_SRC
