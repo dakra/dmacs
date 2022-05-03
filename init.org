@@ -5433,31 +5433,28 @@ Lisp function does not specify a special indentation."
   :defer t)
 #+END_SRC
 *** Common Lisp
-From the slime manual for faster slime startup:
+From the sly/slime manual for faster sly/slime startup:
 
 For SBCL, we recommend that you create a custom core file with socket support
 and POSIX bindings included because those modules take the most time to load. To
 create such a core, execute the following steps:
-#+BEGIN_SRC sh  :tangle no
+#+BEGIN_SRC sh :dir ~/.emacs.d/var :tangle no
 $ cd ~/.emacs.d/var/
 $ sbcl
  (mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))
- (save-lisp-and-die "sbcl.core-for-slime")
+ (save-lisp-and-die "sbcl.core-for-sly")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(use-package slime
-  :hook (lisp-mode slime-lisp-mode-hook)
-  :bind (:map slime-mode-indirect-map
-         ("M-?" . slime-describe-symbol))
+(use-package sly
+  :defer t
   :config
-  (setq slime-contribs '(slime-fancy))
   (setq inferior-lisp-program "sbcl")
-  (setq slime-lisp-implementations
-        `((sbcl ("sbcl" "--core" ,(no-littering-expand-var-file-name "sbcl.core-for-slime"))))))
-(use-package slime-company
-  :after (slime company)
-  :config (slime-setup '(slime-fancy slime-company)))
+  (setq sly-lisp-implementations
+        `((sbcl ("sbcl" "--core" ,(no-littering-expand-var-file-name "sbcl.core-for-sly"))
+                :init (lambda (port-file _)
+                        (format "(slynk:start-server %S)\n" port-file))))))
+
 #+END_SRC
 *** Clojure
 #+BEGIN_SRC emacs-lisp
