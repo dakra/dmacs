@@ -2240,7 +2240,7 @@ languagetool-ngrams-de
   :bind-keymap (("s-p"   . projectile-command-map)
                 ("C-c p" . projectile-command-map))
   :bind (:map projectile-command-map
-         ("SPC"  . consult-project-buffer)
+         ("SPC"  . consult-project-extra-find)
          ("s s" . consult-ripgrep))
   :init
   ;; Allow all file-local values for project root
@@ -2896,6 +2896,11 @@ Simple but effective sorting and filtering for Emacs
   (add-to-list 'consult-buffer-sources 'eshell-source 'append)
   (add-to-list 'consult-buffer-sources 'term-source 'append)
   )
+
+;; `consult-project-extra-find' command used in projectile-command-map
+(use-package consult-project-extra
+  :defer t)
+
 #+END_SRC
 ** Marginalia in the minibuffer
 Enable richer annotations using the Marginalia package.

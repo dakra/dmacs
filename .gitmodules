@@ -186,6 +186,9 @@
 [submodule "consult"]
 	path = lib/consult
 	url = git@github.com:minad/consult.git
+[submodule "consult-project-extra"]
+	path = lib/consult-project-extra
+	url = git@github.com:Qkessler/consult-project-extra.git
 [submodule "copy-as-format"]
 	path = lib/copy-as-format
 	url = git@github.com:sshaw/copy-as-format.git
@@ -1051,18 +1054,13 @@
 [submodule "simple-httpd"]
 	path = lib/simple-httpd
 	url = git@github.com:skeeto/emacs-web-server.git
-[submodule "slime"]
-	path = lib/slime
-	url = git@github.com:slime/slime.git
+[submodule "sly"]
+	path = lib/sly
+	url = git@github.com:joaotavora/sly.git
 	load-path = .
+	load-path = lib
 	load-path = contrib
 	info-path = doc
-	build-step = borg-update-autoloads
-	build-step = make compile contrib-compile
-	build-step = borg-makeinfo
-[submodule "slime-company"]
-	path = lib/slime-company
-	url = git@github.com:anwyn/slime-company.git
 [submodule "smart-region"]
 	path = lib/smart-region
 	url = git@github.com:uk-ar/smart-region.git
