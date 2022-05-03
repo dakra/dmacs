@@ -10295,7 +10295,9 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 
 (use-package eww
   :defer t
-  :config (setq eww-search-prefix "https://google.com/search?q="))
+  :config
+  ;; (setq eww-search-prefix "https://google.com/search?q=")
+  )
 #+END_SRC
 ** Wolfram alpha
 #+BEGIN_SRC emacs-lisp
