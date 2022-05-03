@@ -1246,11 +1246,14 @@ different face
   (setq highlight-indent-guides-highlighter-function 'my-highlighter)
   (setq highlight-indent-guides-method 'character)
   (setq highlight-indent-guides-character ?\|)
-  (setq highlight-indent-guides-auto-odd-face-perc 15)
-  (setq highlight-indent-guides-auto-even-face-perc 15)
-  (setq highlight-indent-guides-auto-character-face-perc 20)
 
-  (highlight-indent-guides-auto-set-faces))
+  ;; (setq highlight-indent-guides-auto-odd-face-perc 15)
+  ;; (setq highlight-indent-guides-auto-even-face-perc 15)
+  ;; (setq highlight-indent-guides-auto-character-face-perc 20)
+  ;; (highlight-indent-guides-auto-set-faces)
+
+  (setq highlight-indent-guides-auto-enabled nil)
+  (set-face-foreground 'highlight-indent-guides-character-face "#3a3a3a"))
 #+END_SRC
 ** Symbol-overlay
 #+BEGIN_SRC emacs-lisp
