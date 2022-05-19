@@ -1465,8 +1465,8 @@ is already narrowed."
            (LaTeX-narrow-to-environment))
           (t (fancy-narrow-to-defun))))
 
-  ;; Make swiper work with fancy-narow
-  (fancy-narrow--advise-function 'swiper)
+  ;; Make consult-line work with fancy-narow
+  (fancy-narrow--advise-function 'consult-line)
 
   (defun narrow-or-widen-dwim (p)
     "Widen if buffer is narrowed, narrow-dwim otherwise.
