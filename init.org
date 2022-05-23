@@ -4042,6 +4042,12 @@ if [[ "$INSIDE_EMACS" = 'vterm' ]]; then
     function ee(){
         printf "\e]51;Efind-file \"$@\"\e\\"
     }
+    function e(){
+        printf "\e]51;Efind-file-other-window \"$@\"\e\\"
+    }
+    function dow(){
+        printf "\e]51;Edired-other-window \"$@\"\e\\"
+    }
     function gst(){
         printf "\e]51;Emagit-status-setup-buffer $(pwd)\e\\"
     }
@@ -4091,8 +4097,10 @@ fi
     (vterm-send-key "k" nil nil t))
 
   ;; Allow vterm to invoke some elisp functions
-  (setq vterm-eval-cmds '(("magit-status-setup-buffer" magit-status-setup-buffer)
+  (setq vterm-eval-cmds '(("dired-other-window" dired-other-window)
                           ("find-file" find-file)
+                          ("find-file-other-window" find-file-other-window)
+                          ("magit-status-setup-buffer" magit-status-setup-buffer)
                           ("message" message)
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 #+END_SRC
