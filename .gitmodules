@@ -17,7 +17,7 @@
 	url = git@github.com:codesuki/add-node-modules-path.git
 [submodule "adoc-mode"]
 	path = lib/adoc-mode
-	url = git@github.com:sensorflo/adoc-mode.git
+	url = git@github.com:emacsorphanage/adoc-mode.git
 [submodule "aggressive-indent"]
 	path = lib/aggressive-indent
 	url = git@github.com:Malabarba/aggressive-indent-mode.git
@@ -41,7 +41,7 @@
 	url = git@github.com:emacs-php/apache-mode.git
 [submodule "apheleia"]
 	path = lib/apheleia
-	url = git@github.com:raxod502/apheleia.git
+	url = git@github.com:radian-software/apheleia.git
 [submodule "apiwrap"]
 	path = lib/apiwrap
 	url = git@github.com:vermiculus/apiwrap.el.git
@@ -111,7 +111,7 @@
 	url = git@github.com:kwrooijen/cargo.el.git
 [submodule "ccls"]
 	path = lib/ccls
-	url = git@github.com:MaskRay/emacs-ccls.git
+	url = git@github.com:emacs-lsp/emacs-ccls.git
 [submodule "cds-mode"]
 	path = lib/cds-mode
 	url = git@github.com:dakra/cds-mode.git
@@ -163,7 +163,7 @@
 	url = git@github.com:guidoschmidt/company-glsl.git
 [submodule "company-go"]
 	path = lib/company-go
-	url = git@github.com:mdempsky/gocode.git
+	url = git@github.com:nsf/gocode.git
 	load-path = emacs-company
 [submodule "company-irony"]
 	path = lib/company-irony
@@ -368,7 +368,7 @@
 	url = git@github.com:ryuslash/eshell-fringe-status.git
 [submodule "eshell-prompt-extras"]
 	path = lib/eshell-prompt-extras
-	url = git@github.com:kaihaosw/eshell-prompt-extras.git
+	url = git@github.com:zwild/eshell-prompt-extras.git
 [submodule "eshell-up"]
 	path = lib/eshell-up
 	url = git@github.com:peterwvj/eshell-up.git
@@ -467,7 +467,7 @@
 	url = git@github.com:jimhourihan/glsl-mode.git
 [submodule "go-eldoc"]
 	path = lib/go-eldoc
-	url = git@github.com:syohex/emacs-go-eldoc.git
+	url = git@github.com:emacsorphanage/go-eldoc.git
 [submodule "go-mode"]
 	path = lib/go-mode
 	url = git@github.com:dominikh/go-mode.el.git
@@ -565,7 +565,7 @@
 	url = git@github.com:dakra/info-beamer.el.git
 [submodule "intero"]
 	path = lib/intero
-	url = git@github.com:commercialhaskell/intero.git
+	url = git@github.com:chrisdone/intero.git
 	load-path = elisp
 [submodule "ipinfo"]
 	path = lib/ipinfo
@@ -597,7 +597,7 @@
 	url = git@github.com:mooz/js2-mode.git
 [submodule "js2-refactor"]
 	path = lib/js2-refactor
-	url = git@github.com:magnars/js2-refactor.el.git
+	url = git@github.com:js-emacs/js2-refactor.el.git
 [submodule "json-mode"]
 	path = lib/json-mode
 	url = git@github.com:joshwnj/json-mode.git
@@ -617,7 +617,7 @@
 	no-byte-compile = jump.el
 [submodule "jupyter"]
 	path = lib/jupyter
-	url = git@github.com:dzop/emacs-jupyter.git
+	url = git@github.com:nnicandro/emacs-jupyter.git
 	build-step = make -C widgets > /dev/null
 	build-step = borg-byte-compile
         build-step = borg-update-autoloads
@@ -732,7 +732,7 @@
 	url = git@github.com:scottaj/mocha.el.git
 [submodule "modus-themes"]
 	path = lib/modus-themes
-	url = git@gitlab.com:protesilaos/modus-themes.git
+	url = https://git.sr.ht/~protesilaos/modus-themes
 [submodule "moe-theme"]
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el.git
@@ -776,7 +776,7 @@
 	url = git@github.com:nicferrier/emacs-noflet.git
 [submodule "nov"]
 	path = lib/nov
-	url = git@github.com:wasamasa/nov.el.git
+	url = https://depp.brause.cc/nov.el.git
 [submodule "oauth2"]
 	path = lib/oauth2
 	url = git@github.com:emacsmirror/oauth2.git
@@ -814,7 +814,7 @@
 	remote = dakra git@github.com:dakra/org-caldav.git
 [submodule "org-contrib"]
 	path = lib/org-contrib
-	url = git@github.com:emacsmirror/org-contrib.git
+	url = https://git.sr.ht/~bzg/org-contrib
 [submodule "org-github"]
 	path = lib/org-github
 	url = git@github.com:dakra/org-github.git
@@ -835,7 +835,7 @@
 	url = git@github.com:alphapapa/org-pocket.git
 [submodule "org-pomodoro"]
 	path = lib/org-pomodoro
-	url = git@github.com:lolownia/org-pomodoro.git
+	url = git@github.com:marcinkoziej/org-pomodoro.git
 [submodule "org-ql"]
 	path = lib/org-ql
 	url = git@github.com:alphapapa/org-ql.git
@@ -860,7 +860,7 @@
 	url = git@github.com:emacsmirror/osc.git
 [submodule "ov"]
 	path = lib/ov
-	url = git@github.com:ShingoFukuyama/ov.el.git
+	url = git@github.com:emacsorphanage/ov.git
 [submodule "ovpn"]
 	path = lib/ovpn
 	url = git@github.com:anticomputer/ovpn-mode.git
@@ -905,7 +905,7 @@
 	url = git@github.com:leoliu/pcmpl-git-el.git
 [submodule "pcmpl-pip"]
 	path = lib/pcmpl-pip
-	url = git@github.com:kaihaosw/pcmpl-pip.git
+	url = git@github.com:zwild/pcmpl-pip.git
 [submodule "pdf-tools"]
 	path = lib/pdf-tools
 	url = git@github.com:vedang/pdf-tools.git
@@ -929,7 +929,7 @@
 	url = git@github.com:arifer612/pippel.git
 [submodule "pkg-info"]
 	path = lib/pkg-info
-	url = git@github.com:lunaryorn/pkg-info.el.git
+	url = git@github.com:emacsorphanage/pkg-info.git
 [submodule "pkgbuild-mode"]
 	path = lib/pkgbuild-mode
 	url = git@github.com:juergenhoetzel/pkgbuild-mode.git
@@ -956,7 +956,7 @@
 	url = git@github.com:tumashu/posframe.git
 [submodule "prescient"]
 	path = lib/prescient
-	url = git@github.com:raxod502/prescient.el.git
+	url = git@github.com:radian-software/prescient.el.git
 	no-byte-compile = selectrum-prescient.el
 [submodule "prettier-js"]
 	path = lib/prettier-js
@@ -1161,13 +1161,13 @@
 	url = git@github.com:dakra/umlaut.el.git
 [submodule "undo-fu"]
 	path = lib/undo-fu
-	url = git@gitlab.com:ideasman42/emacs-undo-fu.git
+	url = https://codeberg.org/ideasman42/emacs-undo-fu.git
 [submodule "undo-fu-session"]
 	path = lib/undo-fu-session
-	url = git@gitlab.com:ideasman42/emacs-undo-fu-session.git
+	url = https://codeberg.org/ideasman42/emacs-undo-fu-session.git
 [submodule "undo-tree"]
 	path = lib/undo-tree
-	url = git@github.com:emacsorphanage/undo-tree.git
+	url = git@gitlab.com:tsc25/undo-tree.git
 [submodule "use-package"]
 	path = lib/use-package
 	url = git@github.com:jwiegley/use-package.git
@@ -1256,7 +1256,7 @@
 	url = git@github.com:skeeto/youtube-dl-emacs.git
 [submodule "zmq"]
 	path = lib/zmq
-	url = git@github.com:dzop/emacs-zmq.git
+	url = git@github.com:nnicandro/emacs-zmq.git
 	build-step = make
 	build-step = borg-update-autoloads
 [submodule "zop-to-char"]
