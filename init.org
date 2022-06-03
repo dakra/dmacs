@@ -2673,30 +2673,6 @@ Enable recursive minibuffers
 (setq enable-recursive-minibuffers t)
 #+END_SRC
 
-** Prescient
-Simple but effective sorting and filtering for Emacs
-
-#+BEGIN_SRC emacs-lisp
-(use-package prescient
-  :disabled t
-  :defer t
-  :config (prescient-persist-mode))
-(use-package ivy-prescient
-  :disabled t
-  ;; Use counsel instead of ivy because when loading counsel
-  ;; it'll change some ivy vars like initial-input
-  :after counsel
-  :config
-  (setq ivy-prescient-enable-filtering nil) ; FIXME: Doesn't work in Emacs 28 with swiper?
-  (setq ivy-prescient-sort-commands
-        '(:not swiper swiper-isearch ivy-switch-buffer counsel-yank-pop counsel-org-clock-history counsel-grep-or-swiper counsel-grep))
-  (ivy-prescient-mode))
-(use-package company-prescient
-  :disabled t
-  :after company
-  :config (company-prescient-mode))
-#+END_SRC
-
 ** Orderless
 #+BEGIN_SRC emacs-lisp
 (use-package orderless

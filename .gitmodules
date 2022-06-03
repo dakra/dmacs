@@ -954,10 +954,6 @@
 [submodule "posframe"]
 	path = lib/posframe
 	url = git@github.com:tumashu/posframe.git
-[submodule "prescient"]
-	path = lib/prescient
-	url = git@github.com:radian-software/prescient.el.git
-	no-byte-compile = selectrum-prescient.el
 [submodule "prettier-js"]
 	path = lib/prettier-js
 	url = git@github.com:prettier/prettier-emacs.git
