@@ -618,7 +618,7 @@
 [submodule "jupyter"]
 	path = lib/jupyter
 	url = git@github.com:nnicandro/emacs-jupyter.git
-	build-step = make -C widgets > /dev/null
+	build-step = make widgets > /dev/null
 	build-step = borg-byte-compile
         build-step = borg-update-autoloads
 [submodule "kdeconnect"]
