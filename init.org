@@ -5496,18 +5496,30 @@ openjdk11-src
                '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
 
   ;; Shortcut for clerk/show
+  (defun clerk-serve ()
+    (interactive)
+    (cider-interactive-eval "(nextjournal.clerk/serve! {:browse? true})"))
+
   (defun clerk-show ()
     (interactive)
-    (save-buffer)
+    (message "clerk-show")
     (when-let ((filename (buffer-file-name)))
       (cider-interactive-eval
        (concat "(nextjournal.clerk/show! \"" filename "\")"))))
+
+  (defun clerk-save-and-show ()
+    (interactive)
+    (save-buffer)
+    (clerk-show))
 
   (define-minor-mode clerk-mode
     "A mode that just binds `<M-return>' to `clerk-show'."
     nil
     :lighter " clerk"
-    :keymap `((,(kbd "<M-return>") . clerk-show)))
+    :keymap `((,(kbd "<M-return>") . clerk-save-and-show))
+    (if clerk-mode
+        (add-hook 'after-save-hook #'clerk-show 100 t)
+      (remove-hook 'after-save-hook #'clerk-show t)))
 
   ;; jack-in for babashka
   (defun cider-jack-in-babashka-old ()
