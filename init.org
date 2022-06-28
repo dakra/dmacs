@@ -10506,6 +10506,8 @@ Run ~M-x esup~ to see where the time is spend during emacs startup.
 #+END_SRC
 ** Unsortet stuff in no packages
 Probably create a `dakra` package (again) to lazy load all those commands.
+
+From https://github.com/emacscollective/borg/wiki/Utilities#borg-sync-drone-urls
 #+BEGIN_SRC emacs-lisp
 (defun borg-sync-drone-urls ()
   "Offer to update outdated upstream urls of all drones."
@@ -10514,7 +10516,8 @@ Probably create a `dakra` package (again) to lazy load all those commands.
     (dolist (drone (borg-clones))
       (let ((a (borg-get drone "url"))
             (b (ignore-errors (oref (epkg drone) url))))
-        (when (and a b (not (forge--url-equal a b)))
+        (when (and a b (not (forge--url-equal a b))
+                   (yes-or-no-p (format "Move %s: %s => %s" drone a b)))
           (push (list drone a b) moved))))
     (when (and moved
                (yes-or-no-p
