@@ -7186,15 +7186,15 @@ Show clock history when not in org buffer or when called with prefix argument."
     (interactive)
     (org-sort-entries nil ?f #'org-sort-by-todo-and-prio-key)))
 #+END_SRC
-*** Org Packages
-**** Org-appear: Make invisible parts of Org elements appear visible
+** Org Packages
+*** Org-appear: Make invisible parts of Org elements appear visible
 #+BEGIN_SRC emacs-lisp
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autolinks nil))
 #+END_SRC
-**** Org-agenda
+*** Org-agenda
 #+BEGIN_SRC emacs-lisp
 (use-package appt
   :defer t
@@ -7223,6 +7223,36 @@ Show clock history when not in org buffer or when called with prefix argument."
   :defer t
   :config
   (setq org-agenda-files '("~/org"))
+
+  (defun org-agenda-custom-command-for (file)
+    "Return list usable in org-agenda-custom-commands with agenda and all TODOs for FILE and inbox."
+    (list '((agenda "") (alltodo "")) `((org-agenda-files '(,(expand-file-name "inbox.org" org-directory)
+                                                            ,(expand-file-name "caldav-inbox.org" org-directory)
+                                                            ,(expand-file-name (concat file ".org") org-directory))))))
+
+  (setq org-clocked-in-project "sovendus")
+
+  (setq org-agenda-custom-commands
+        `(("A" "Agenda and all TODOs" ((agenda "") (alltodo "")))
+          (" " "Current Project Agenda and TODOs" ,@(org-agenda-custom-command-for org-clocked-in-project))
+          ;;("s" "Sovendus Agenda and TODOs" ,@(org-agenda-custom-command-for "sovendus"))
+          ("s" "Sovendus Agenda and TODOs"
+           ((agenda "") (alltodo "") (org-agenda-files '(,(expand-file-name "inbox.org" org-directory)
+                                                         ,(expand-file-name "caldav-inbox.org" org-directory)
+                                                         ,(expand-file-name "sovendus.org" org-directory)))))
+          ("e" "E5 Agenda and TODOs" ,@(org-agenda-custom-command-for "e5"))
+          ("p" "Personal Agenda and TODOs" ,@(org-agenda-custom-command-for "personal"))
+          ("t" "PTapp Agenda and TODOs" ,@(org-agenda-custom-command-for "ptapp"))
+          ("S" "Skor Agenda and TODOs" ,@(org-agenda-custom-command-for "skor"))
+          ("W" "Weekly Review"
+           ((agenda "" ((org-agenda-span 7))); review upcoming deadlines and appointments
+                                        ; type "l" in the agenda to review logged items
+            (stuck "") ; review stuck projects as designated by org-stuck-projects
+            (todo "PROJECT") ; review all projects (assuming you use todo keywords to designate projects)
+            (todo "MAYBE") ; review someday/maybe items
+            (todo "WAITING"))) ; review waiting items
+          ;; ...other commands here
+          ))
 
   ;; Overwrite the current window with the agenda
   (setq org-agenda-window-setup 'current-window)
@@ -7273,6 +7303,9 @@ Show clock history when not in org buffer or when called with prefix argument."
   ;; Start the weekly agenda on Monday
   (setq org-agenda-start-on-weekday 1)
 
+  ;; For 0 to 4am show yesterday in the agenda view "toady"
+  (setq org-extend-today-until 4)
+
   ;; Agenda styling
   (setq org-agenda-block-separator ?─
         org-agenda-time-grid
@@ -7304,10 +7337,14 @@ Show clock history when not in org buffer or when called with prefix argument."
   (appt-activate)
   (org-agenda-to-appt)
 
+  (setq org-catch-invisible-edits 'show-and-error)
+  (setq org-auto-align-tags t)
   ;; Display tags farther right
-  (setq org-agenda-tags-column -102))
+  ;; (setq org-agenda-tags-column 0)
+  (setq org-agenda-tags-column -102)
+  )
 #+END_SRC
-**** Org-super-agenda
+*** Org-super-agenda
 #+BEGIN_SRC emacs-lisp
 (use-package org-super-agenda
   :after org-agenda
@@ -7360,7 +7397,7 @@ Show clock history when not in org buffer or when called with prefix argument."
   )
 #+END_SRC
 
-**** Org-caldav: Sync your calendars with your agenda / org tasks
+*** Org-caldav: Sync your calendars with your agenda / org tasks
 FIXME: automatically call =(org-caldav-sync)= before showing agenda.
 
 #+BEGIN_SRC emacs-lisp
@@ -7397,7 +7434,7 @@ FIXME: automatically call =(org-caldav-sync)= before showing agenda.
            :files ,(delete (expand-file-name "caldav-inbox-family.org" org-directory)
                            (delete (expand-file-name "personal.org" org-directory) (org-agenda-files)))))))
 #+END_SRC
-**** Org-babel
+*** Org-babel
 #+BEGIN_SRC emacs-lisp
 (use-package ob
   :defer t
@@ -7491,7 +7528,7 @@ session as the current block. ARG has same meaning as in
      (java)
      (js . t)
      (latex)
-     (ledger . t)
+     ;; (ledger . t)
      (lilypond)
      (lisp)
      (lua . t)
@@ -7532,7 +7569,7 @@ session as the current block. ARG has same meaning as in
   :config
   (setq ob-async-inject-variables "\\(\\borg-babel.+\\|sql-connection-alist\\)"))
 #+END_SRC
-**** Org-src
+*** Org-src
 #+BEGIN_SRC emacs-lisp
 (use-package org-src
   :defer t
@@ -7590,14 +7627,16 @@ NAME may be nil for unnamed sessions."
     (web-mode)
     (web-mode-set-engine "django")))
 #+END_SRC
-**** Org-indent: Indent text according to outline structure.
+*** Org-indent: Indent text according to outline structure.
 #+BEGIN_SRC emacs-lisp
 (use-package org-indent
+  :disabled t  ;; conflicts with some org-modern features (e.g. left src block borders)
   :hook (org-mode . org-indent-mode))
 #+END_SRC
-**** Org-superstar: Use utf-8 characters instead of `*` as bullet points
+*** Org-superstar: Use utf-8 characters instead of `*` as bullet points
 #+BEGIN_SRC emacs-lisp
 (use-package org-superstar
+  :disabled t
   :hook (org-mode . org-superstar-mode)
   :config
   ;;(setq org-superstar-headline-bullets-list '("◉" "🞛" "○" "▷" "✸"))
@@ -7606,7 +7645,20 @@ NAME may be nil for unnamed sessions."
   ;; (setq org-superstar-headline-bullets-list '("◍" "●" "⊗" "○" "⊙" "◌" "▷" "✸"))
   (setq org-superstar-prettify-item-bullets nil))
 #+END_SRC
-**** Org-capture
+*** org-modern
+#+BEGIN_SRC emacs-lisp
+(use-package org-modern
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
+  :config
+  (modify-all-frames-parameters
+   '((right-divider-width . 2)
+     (internal-border-width . 0)))
+
+  (setq org-modern-star ["❶" "❷" "❸" "❹" "❺" "❻" "❼"]))
+#+END_SRC
+
+*** Org-capture
 #+BEGIN_SRC emacs-lisp
 (use-package org-protocol :after org)
 ;; org-capture chrome plugin: https://chrome.google.com/webstore/detail/org-capture/kkkjlfejijcjgjllecmnejhogpbcigdc?hl=en
@@ -7678,7 +7730,7 @@ NAME may be nil for unnamed sessions."
   :disabled t  ; Useful but never used since bookmarklet not configured yet
   :after org-capture)
 #+END_SRC
-**** Org-clock
+*** Org-clock
 Install =xprintidle= to get idle time over all X11.
 Otherwise it's only Emacs idle time.
 
@@ -7862,7 +7914,7 @@ as the default task."
   ;; Include current clocking task in clock reports
   (setq org-clock-report-include-clocking-task t))
 #+END_SRC
-**** Org-crypt: Encrypt parts in org file tagged with ~CRYPT~
+*** Org-crypt: Encrypt parts in org file tagged with ~CRYPT~
 #+BEGIN_SRC emacs-lisp
 (use-package org-crypt
   :defer t
@@ -7875,7 +7927,7 @@ as the default task."
   ;; don't ask to disable auto-save
   (setq org-crypt-disable-auto-save nil))
 #+END_SRC
-**** Org-export
+*** Org-export
 #+BEGIN_SRC emacs-lisp
 (use-package ox
   :commands org-formatted-copy
@@ -7964,12 +8016,12 @@ See `org-html-format-headline-function' for details."
 (use-package ox-rst
   :after ox)
 #+END_SRC
-**** Org-habit: Track habits
+*** Org-habit: Track habits
 #+BEGIN_SRC emacs-lisp
 (use-package org-habit
   :after org)
 #+END_SRC
-**** Org-man: Make org-links work with man pages
+*** Org-man: Make org-links work with man pages
 Install Linux man pages
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
 man-pages
@@ -7981,7 +8033,7 @@ man-pages
   :config
   (setq org-man-command 'woman))  ; open org-link man pages with woman
 #+END_SRC
-**** Org-expiry: Automatically add a CREATED property when inserting a new headline
+*** Org-expiry: Automatically add a CREATED property when inserting a new headline
 #+BEGIN_SRC emacs-lisp
 (use-package org-expiry
   :after org
@@ -7989,13 +8041,13 @@ man-pages
   (setq org-expiry-inactive-timestamps t)
   (org-expiry-insinuate))
 #+END_SRC
-**** Org-id: Create ID property with new task
+*** Org-id: Create ID property with new task
 #+BEGIN_SRC emacs-lisp
 (use-package org-id
   :after org
   :config (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 #+END_SRC
-**** Org-table
+*** Org-table
 #+BEGIN_SRC emacs-lisp
 (use-package org-table
   :after org
@@ -8046,14 +8098,14 @@ man-pages
    :filter (org-at-table-p)
    ("S-SPC" . hydra-org-table-mark-field/body)))
 #+END_SRC
-**** Org-toc: Create table of content in org files
+*** Org-toc: Create table of content in org files
 #+BEGIN_SRC emacs-lisp
 (use-package org-make-toc
   :defer t
   :config
   (setq org-make-toc-filename-prefix t))
 #+END_SRC
-**** Org-pomodoro
+*** Org-pomodoro
 #+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro
   :defer t
@@ -8074,7 +8126,7 @@ man-pages
   ;; Never clock-out automatically
   (setq org-pomodoro-clock-always t))
 #+END_SRC
-**** Org-jira: Sync issues with Jira
+*** Org-jira: Sync issues with Jira
 #+BEGIN_SRC emacs-lisp
 (use-package org-jira
   :defer t
@@ -8085,7 +8137,7 @@ man-pages
   (setq org-jira-deadline-duedate-sync-p nil)
   (setq org-jira-worklog-sync-p nil))
 #+END_SRC
-**** Org-github: Sync issues with GitHub
+*** Org-github: Sync issues with GitHub
 #+BEGIN_SRC emacs-lisp
 (use-package org-github
   :defer t
@@ -8093,7 +8145,7 @@ man-pages
   (setq org-github-default-owner "atomx")
   (setq org-github-default-name "api"))
 #+END_SRC
-**** Org-link
+*** Org-link
 
 #+BEGIN_SRC emacs-lisp
 (use-package ol
@@ -8162,7 +8214,7 @@ man-pages
     ("r" org-link-unlinkify "Remove link")
     ("q" nil "Cancel" :color blue)))
 #+END_SRC
-**** Orgit: org-link support for magit buffers
+*** Orgit: org-link support for magit buffers
 #+BEGIN_SRC emacs-lisp
 (use-package orgit
   ;; Automatically copy orgit link to last commit after commit
@@ -8184,13 +8236,13 @@ Forge support for orgit
   :after orgit)
 #+END_SRC
 
-**** Counsel-org-clock
+*** Counsel-org-clock
 #+BEGIN_SRC emacs-lisp
 (use-package counsel-org-clock
   :disabled t
   :defer t)
 #+END_SRC
-**** valign: Pretty org-tables
+*** valign: Pretty org-tables
 #+BEGIN_SRC emacs-lisp
 (use-package valign
   :hook (org-mode . valign-mode)
