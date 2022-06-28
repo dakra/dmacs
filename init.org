@@ -3178,8 +3178,9 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
 * Dired
 For =dired-dragon-popup= (drag-and-drop support) install
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
-dragon-drag-and-drop
+dragon-drop
 #+END_SRC
+(This is not really needed anymore as Emacs 29+ has native drag and drop support in dired)
 
 #+BEGIN_SRC emacs-lisp
 ;; dired config mostly from https://github.com/Fuco1/.emacs.d/blob/master/files/dired-defs.org
@@ -3226,12 +3227,13 @@ dragon-drag-and-drop
   ;; dired list size in human-readable format and list directories first
   (setq dired-listing-switches "-AGhlv --group-directories-first --time-style=long-iso")
 
+  ;; Not needed anymore since Emacs 29+ has native drag and drop support out of dired
   (defun dired-dragon-popup ()
     "Open dragon (drag and drop) with the marked files or the file at point."
     (interactive)
     (make-process
      :name "dragon"
-     :command (append '("dragon-drag-and-drop") (dired-get-marked-files))))
+     :command (append '("dragon-drop") (dired-get-marked-files))))
 
   ;; Easily diff 2 marked files in dired
   ;; https://oremacs.com/2017/03/18/dired-ediff/
