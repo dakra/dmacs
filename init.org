@@ -8327,6 +8327,7 @@ mu init --my-address daniel@kraus.my                 \
          ("U" . mu4e-update-mail-and-index-background)
          :map mu4e-headers-mode-map
          ("TAB" . mu4e-headers-next-unread)
+         ("j" . mu4e-move-to-junk)
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash)
          ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
@@ -8338,8 +8339,10 @@ mu init --my-address daniel@kraus.my                 \
          ("p" . mu4e-scroll-down)
          ("N" . mu4e-view-headers-next)
          ("P" . mu4e-view-headers-prev)
+         ("j" . mu4e-move-to-junk)
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash))
+  :hook (message-send . message-warn-if-no-attachments)
   :init
   ;; Prefer text over html/ritchtext
   (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
@@ -8365,6 +8368,9 @@ mu init --my-address daniel@kraus.my                 \
 
   ;; gmail delete == move mail to trash folder
   (fset 'my-move-to-trash "mt")
+
+  ;; Move mails to spam/junk folder
+  (fset 'mu4e-move-to-junk "mj")
 
   ;; Fix mu4e highlighting in moe-dark theme
   (set-face-attribute 'mu4e-header-highlight-face nil :background "#626262" :foreground "#eeeeee")
@@ -8398,11 +8404,12 @@ mu init --my-address daniel@kraus.my                 \
   ;; the 'All Mail' folder by pressing ``ma''.
 
   (setq mu4e-maildir-shortcuts
-        '(("/private/Inbox"      . ?i)
-          ("/private/Sent"       . ?s)
-          ("/private/Trash"      . ?t)
-          ("/private/Drafts"     . ?d)
-          ("/private/Archive"   . ?a)))
+        '(("/private/Inbox"   . ?i)
+          ("/private/Sent"    . ?s)
+          ("/private/Trash"   . ?t)
+          ("/private/Drafts"  . ?d)
+          ("/private/Junk"    . ?j)
+          ("/private/Archive" . ?a)))
 
   ;; Dynamically refile
   ;; See: https://www.djcbsoftware.nl/code/mu/mu4e/Smart-refiling.html#Smart-refiling
@@ -8510,8 +8517,8 @@ mu init --my-address daniel@kraus.my                 \
   ;;(setq mu4e-get-mail-command "mbsync -a")
 
   ;; update database every ten minutes
-  (setq  mu4e-update-interval (* 60 10))
-  ;; (setq  mu4e-update-interval nil)
+  ;; (setq  mu4e-update-interval (* 60 10))
+  (setq  mu4e-update-interval nil)
 
   ;; We do a full index (that verify integrity) with a systemd job
   ;; Go fast inside emacs
@@ -8666,11 +8673,12 @@ mu init --my-address daniel@kraus.my                 \
              :match-func (mu4e-context-match-fun "^/private")
              :vars '((gnus-icalendar-org-capture-file "~/org/personal.org")
                      ( user-mail-address  . "daniel@kraus.my" )
-                     ( mu4e-maildir-shortcuts . (("/private/Inbox"      . ?i)
-                                                 ("/private/Sent"       . ?s)
-                                                 ("/private/Trash"      . ?t)
-                                                 ("/private/Drafts"     . ?d)
-                                                 ("/private/Archive"   . ?a)))
+                     ( mu4e-maildir-shortcuts . (("/private/Inbox"   . ?i)
+                                                 ("/private/Archive" . ?a)
+                                                 ("/private/Sent"    . ?s)
+                                                 ("/private/Trash"   . ?t)
+                                                 ("/private/Drafts"  . ?d)
+                                                 ("/private/Junk"    . ?j)))
                      ( mu4e-drafts-folder . "/private/Drafts" )
                      ( mu4e-sent-folder   . "/private/Sent" )
                      ( mu4e-trash-folder  . "/private/Trash" )
@@ -8682,10 +8690,12 @@ mu init --my-address daniel@kraus.my                 \
              :vars '((gnus-icalendar-org-capture-file "~/org/personal.org")
                      ( user-mail-address  . "daniel.kraus@gmail.com"  )
                      ( mu4e-maildir-shortcuts . (("/gmail/inbox"      . ?i)
+                                                 ("/gmail/all_mail"   . ?a)
                                                  ("/gmail/sent_mail"  . ?s)
                                                  ("/gmail/trash"      . ?t)
                                                  ("/gmail/drafts"     . ?d)
-                                                 ("/gmail/all_mail"   . ?a)))
+                                                 ("/gmail/spam"       . ?j)
+                                                 ))
                      ( mu4e-drafts-folder . "/gmail/drafts" )
                      ( mu4e-sent-folder   . "/gmail/sent_mail" )
                      ( mu4e-trash-folder  . "/gmail/trash" )
@@ -8730,10 +8740,12 @@ mu init --my-address daniel@kraus.my                 \
              :vars '((gnus-icalendar-org-capture-file "~/org/sovendus.org")
                      ( user-mail-address  . "extern.daniel.kraus@sovendus.de" )
                      ( mu4e-maildir-shortcuts . (("/sovendus/Inbox"   . ?i)
+                                                 ("/sovendus/Archive" . ?a)
                                                  ("/sovendus/Outbox"  . ?s)
                                                  ("/sovendus/Trash"   . ?t)
+                                                 ("/sovendus/Spam"    . ?j)
                                                  ("/sovendus/Drafts"  . ?d)
-                                                 ("/sovendus/Archive" . ?a)))
+                                                 ))
                      ( mu4e-drafts-folder . "/sovendus/Drafts" )
                      ( mu4e-sent-folder   . "/sovendus/Sent" )
                      ( mu4e-trash-folder  . "/sovendus/Trash" )
@@ -8759,10 +8771,11 @@ mu init --my-address daniel@kraus.my                 \
              :match-func (mu4e-context-match-fun "^/hogaso")
              :vars '(( user-mail-address  . "daniel@hogaso.com" )
                      ( mu4e-maildir-shortcuts . (("/hogaso/inbox"      . ?i)
+                                                 ("/hogaso/all_mail"   . ?a)
                                                  ("/hogaso/sent_mail"  . ?s)
                                                  ("/hogaso/trash"      . ?t)
                                                  ("/hogaso/drafts"     . ?d)
-                                                 ("/hogaso/all_mail"   . ?a)))
+                                                 ("/hogaso/spam"       . ?j)))
                      ( mu4e-drafts-folder . "/hogaso/drafts" )
                      ( mu4e-sent-folder   . "/hogaso/sent_mail" )
                      ( mu4e-trash-folder  . "/hogaso/trash" )
@@ -8819,8 +8832,9 @@ actual attachment."
     :group 'mu4e)
 
   (defun message-warn-if-no-attachments ()
-    "Ask the user if s?he wants to send the message even though
-there are no attachments."
+    "Ask the user if he wants to send the message even though
+there are no attachments.
+Should be added to `message-send-hook'."
     (when (and (save-excursion
 	         (save-restriction
 		   (widen)
@@ -8828,9 +8842,7 @@ there are no attachments."
 		   (re-search-forward message-attachment-intent-re nil t)))
 	       (not (message-attachment-present-p)))
       (unless (y-or-n-p message-attachment-reminder)
-        (keyboard-quit))))
-
-  (add-hook 'message-send-hook #'message-warn-if-no-attachments))
+        (keyboard-quit)))))
 
 ;; Show overview of unread/all mails for each maildir/bookmarks in mu4e main window
 (use-package mu4e-maildirs-extension
@@ -8974,6 +8986,20 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 (use-package mu4e-patch
   :hook (mu4e-view-mode . mu4e-patch-highlight))
 #+END_SRC
+** mm-*: View MIME objects
+#+BEGIN_SRC emacs-lisp
+(use-package mm-decode
+  :defer t
+  :config
+  ;; View JSON file attachements inline in mu4e/gnus
+  (defun mm-display-json-inline (handle)
+    "Show a JSON file from HANDLE inline."
+    (mm-display-inline-fontify handle 'json-mode))
+
+  (add-to-list 'mm-inline-media-tests '("application/json" mm-display-json-inline identity))
+  (add-to-list 'mm-inlined-types "application/json"))
+#+END_SRC
+
 * Window Manager
 ** i3
 #+BEGIN_SRC emacs-lisp
