@@ -6442,7 +6442,7 @@ To activate =ejc= in =org-mode= use M-x =ejc-connect=.
 (use-package ejc-sql
   :defer t
   :hook ((ejc-sql-minor-mode . ejc-eldoc-setup)
-         (ejc-sql-connected . dakra/ejc-sql-connected-hook))
+         (ejc-sql-connected . dakra/ejc-sql-connected))
   :config
   (plist-put ejc-jdbc-drivers "awsathena" [com.simba.athena/athena-jdbc "2.0.16"])
 
@@ -6465,21 +6465,45 @@ To activate =ejc= in =org-mode= use M-x =ejc-connect=.
   ;; There's only one dateformat
   (setq ejc-date-output-format "%Y-%m-%d %H:%M:%S")
 
-  (defun dakra/ejc-sql-connected-hook ()
+  (defun dakra/ejc-sql-connected ()
     ;; (ejc-set-use-unicode t)
     ;; Increase max rows
-    (ejc-set-max-rows 800)
-    (ejc-set-fetch-size 800))
+    (ejc-set-max-rows 500)
+    (ejc-set-fetch-size 500))
 
   (ejc-create-connection
    "sov-dbs01-dwh-prod-ro"
    :dependencies [[mysql/mysql-connector-java "8.0.22"]]
    ;;:classname "com.mysql.cj.jdbc.Driver"
-   :connection-uri "jdbc:mysql://your-mysql-db:3306/your_schema?serverTimezone=Europe/Berlin&useSSL=False"
-   :user "user"
-   :password "pass")
+   :connection-uri "jdbc:mysql://dbs01-dwh-prod.sdc.adacor.host:3306/gc_datawarehouse?serverTimezone=Europe/Berlin&useSSL=False"
+   :user "dkraus_ro"
+   :password "lJsxxgiBAo742wgob9fM")
 
-  (ejc-create-connection "athena-datalake"
+  (ejc-create-connection "athena-datalake-prod"
+                         :dbtype "awsathena"
+                         :classpath "~/.m2/repository/com/simba/athena/athena-jdbc/2.0.16/athena-jdbc-2.0.16.jar"
+                         :classname "com.simba.athena.jdbc.Driver"
+                         :subprotocol "awsathena"
+                         :connection-uri (concat "jdbc:awsathena://AwsRegion=eu-central-1;"
+                                                 "LogLevel=0;"  ;; turn logging off
+                                                 "Schema=datalake;"
+                                                 "S3OutputLocation=s3://sov-data-prod-athena-results/;"
+                                                 "AwsCredentialsProviderClass=com.simba.athena.amazonaws.auth.profile.ProfileCredentialsProvider;"
+                                                 "AwsCredentialsProviderArguments=technical_prod;"))
+
+  (ejc-create-connection "athena-datalake-test"
+                         :dbtype "awsathena"
+                         :classpath "~/.m2/repository/com/simba/athena/athena-jdbc/2.0.16/athena-jdbc-2.0.16.jar"
+                         :classname "com.simba.athena.jdbc.Driver"
+                         :subprotocol "awsathena"
+                         :connection-uri (concat "jdbc:awsathena://AwsRegion=eu-central-1;"
+                                                 "LogLevel=0;"  ;; turn logging off
+                                                 "Schema=datalake;"
+                                                 "S3OutputLocation=s3://sov-data-test-athena-results/;"
+                                                 "AwsCredentialsProviderClass=com.simba.athena.amazonaws.auth.profile.ProfileCredentialsProvider;"
+                                                 "AwsCredentialsProviderArguments=technical_test;"))
+
+  (ejc-create-connection "athena-datalake-old"
                          :dbtype "awsathena"
                          :classpath "~/.m2/repository/com/simba/athena/athena-jdbc/2.0.16/athena-jdbc-2.0.16.jar"
                          :classname "com.simba.athena.jdbc.Driver"
