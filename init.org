@@ -418,7 +418,12 @@ Disable the scroll-bar
 Set fringe to a small value so we don't have big borders in exwm
 but can still see our diff-hl colors in the fringe
 #+BEGIN_SRC emacs-lisp
-(fringe-mode '(7 . 1))
+(fringe-mode '(20 . 2))
+#+END_SRC
+
+Set the fringe color to the same color as the background
+#+BEGIN_SRC emacs-lisp
+;; (set-face-background 'fringe (face-attribute 'default :background))
 #+END_SRC
 
 Disable startup screen and startup echo area message and select the
@@ -582,26 +587,37 @@ ttf-croscore
 ** moe-theme
 #+BEGIN_SRC emacs-lisp
 (use-package moe-theme
+  ;; :disabled t
   :unless noninteractive
   :config (load-theme 'moe-dark t))
 #+END_SRC
-** modus-vivendi
+** modus-themes
 #+BEGIN_SRC emacs-lisp
 (use-package modus-themes
-  :disabled t
   :unless noninteractive
-  :config
-  (setq modus-vivendi-theme-slanted-constructs t)
-  (setq modus-vivendi-theme-bold-constructs t)
-  (setq modus-vivendi-theme-mode-line 'moody)
+  :init
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-fringes nil ;; {nil,'subtle,'intense}
+        modus-themes-mode-line '(moody accented borderless)  ;; (padding . 4) (height . 0.9)
+        modus-themes-region '(accented bg-only)
+        modus-themes-syntax '(alt-syntax green-strings yellow-comments)  ;; faint
+        modus-themes-paren-match '(intense))
   (modus-themes-load-themes)
-  (modus-themes-load-vivendi))
+  :config
+  ;; For the dark theme I want a lightly lighter background than completely black
+  (setq modus-themes-vivendi-color-overrides '((bg-main . "#101010")))
+
+  ;; (modus-themes-load-operandi)  ;; light theme
+  ;; (modus-themes-load-vivendi)  ;; dark theme
+  )
 #+END_SRC
 ** moody modeline
 #+BEGIN_SRC emacs-lisp
 (use-package moody
+  ;; :disabled t
   :unless noninteractive
-  :defer 1
+  ;; :defer 1
   ;;:init
   ;;(set-background-color "black")
   ;;(set-foreground-color "white")
@@ -618,7 +634,8 @@ ttf-croscore
   (setq x-underline-at-descent-line t)
   (setq moody-mode-line-height nil)
   (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
 #+END_SRC
 ** minions: put minor modes from modeline in menu
 #+BEGIN_SRC emacs-lisp
