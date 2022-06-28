@@ -4130,13 +4130,16 @@ fi
 #+BEGIN_SRC emacs-lisp
 (use-package diff-hl
   :hook (((prog-mode conf-mode vc-dir-mode ledger-mode) . turn-on-diff-hl-mode)
+         (magit-pre-refresh  . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
+  ;; Disable diff-hl in Tramp
+  (setq diff-hl-disable-on-remote t)
   ;; XXX: maybe set draw-borders to nil and set background color like
   ;; `(diff-added ((,class (:foreground ,green-4 :background ,green-00 :bold t))))
   ;; `(diff-changed ((,class (:foreground ,yellow-4 :background ,yellow-00 :bold t))))
   ;; `(diff-removed ((,class (:foreground ,red-3 :background ,red-00 :bold t))))
-  (setq diff-hl-draw-borders t))
+  (setq diff-hl-draw-borders nil))
 
 (use-package diff-hl-dired  ;; in diff-hl package
   :after dired
