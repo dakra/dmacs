@@ -1658,11 +1658,7 @@ Smart region guesses what you want to select by one command:
 ** Selected: One key keybindings for regions when selection active
 #+BEGIN_SRC emacs-lisp
 (use-package selected
-  ;; Setting the hooks here manually instead of (selected-global-mode)
-  ;; So use-package creates autoloads for us and only loads this package
-  ;; if we really use it (i.e. mark anything)
-  :hook ((activate-mark . selected--on)
-         (deactivate-mark . selected-off))
+  :hook ((text-mode prog-mode) . selected-minor-mode)
   :init (defvar selected-org-mode-map (make-sparse-keymap))
   :bind (:map selected-keymap
          ("q" . selected-off)
