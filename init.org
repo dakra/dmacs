@@ -1831,7 +1831,7 @@ mark the string and call `edit-indirect-region' with it."
   (defvar edit-indirect-guess-mode-history nil)
   (defun edit-indirect-guess-mode-fn (_buffer _beg _end)
     (let* ((lang (completing-read "Mode: "
-                                  '("typescript" "clojure" "python" "sql" "js2" "web" "scss" "emacs-lisp")
+                                  '("gfm" "typescript" "clojure" "python" "sql" "js2" "web" "scss" "emacs-lisp")
                                   nil nil nil 'edit-indirect-guess-mode-history))
            (mode-str (concat lang "-mode"))
            (mode (intern mode-str)))
@@ -8467,8 +8467,8 @@ mu init --my-address daniel@kraus.my                 \
      ((mu4e-message-contact-field-matches msg :from "@uber\\.com")
       "/private/uber")
      ;; and from Kindergarden to 'loewen'
-     ((mu4e-message-contact-field-matches msg :to "loewenkindergarten@googlegroups.com")
-      "/private/loewen/")
+     ((mu4e-message-contact-field-matches msg '(:to :cc :bcc) "loewenkindergarten@googlegroups\\.com")
+      "/private/loewen")
      ;; important to have a catch-all at the end!
      (t  "/private/Archive")))
 
@@ -8539,6 +8539,7 @@ mu init --my-address daniel@kraus.my                 \
                                    "NOT maildir:/paessler/Inbox AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
                                    "NOT maildir:/sap/Deleted\\ Items AND "
+                                   "NOT maildir:/e5/Spam AND "
                                    "NOT maildir:/gmail/spam AND "
                                    "NOT maildir:/gmail/trash")
                           "All Unread messages" ?A)
@@ -10547,7 +10548,7 @@ elisp packages to use and not for actual direct user usage.
                                                :host jiralib2-host
                                                :user jiralib2-user-login-name)))
     (let* ((issue-id (if (string-match "\\`[0-9]+\\'" issue-num)
-                         (concat "DATENGINE-" issue-num)
+                         (concat "SDP-" issue-num)
                        (upcase issue-num)))
            (issue (jiralib2-get-issue issue-id))
            (fields (alist-get 'fields issue))
@@ -10557,7 +10558,7 @@ elisp packages to use and not for actual direct user usage.
            (acceptance-criteria-p (and acceptance-criteria
                                        (not (string-empty-p acceptance-criteria)))))
       (org-insert-todo-heading-respect-content)
-      (insert (org-link-make-string (concat "bi:" issue-num) (concat "BI-" issue-num))
+      (insert (org-link-make-string (concat "sdp:" issue-num) (concat "SDP-" issue-num))
               " " summary)
       (org-insert-subheading nil)
       (when acceptance-criteria-p
