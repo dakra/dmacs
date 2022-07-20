@@ -2477,16 +2477,6 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   :after (ivy hydra)
   :config
   (setq ivy-read-action-function #'ivy-hydra-read-action))
-
-(use-package ivy-rich
-  :disabled t
-  ;;:defer 5
-  :after counsel
-  :config
-  ;; Show only basic info for tramp buffers to make it faster
-  (setq ivy-rich-parse-remote-buffer nil
-        ivy-rich-path-style 'abbrev)
-  (ivy-rich-set-display-transformer 'backup))
 #+END_SRC
 ** Swiper: Search with ivy
 #+BEGIN_SRC emacs-lisp
@@ -2661,23 +2651,6 @@ go up multiple parent directories."
   (ivy-set-occur 'counsel-projectile 'counsel-projectile-find-file-occur)
 
   (counsel-projectile-mode))
-#+END_SRC
-*** Counsel-jq: Counsel interface for the jq command line tool
-#+BEGIN_SRC emacs-lisp
-(use-package counsel-jq
-  :disabled t
-  :defer t)
-#+END_SRC
-** ivy-posframe: Display ivy in child frames instead of minibuffer
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-posframe
-  :disabled t  ;; Doesn't really work nice with multiple monitors yet
-  :after ivy
-  :config
-  ;; Child frames are always under X windows so we have to not make it a child frame
-  (setq ivy-posframe-parameters '((parent-frame nil)))
-  ;; Always display on the bottom left of the current window and not frame
-  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left))))
 #+END_SRC
 
 * Minibuffer interaction
@@ -3037,16 +3010,20 @@ no stored indexes (TAGS) or persistent background processes.  Dumb Jump performs
   :bind (("M-I" . ivy-imenu-anywhere)
          ("C-c i" . ivy-imenu-anywhere)))
 #+END_SRC
-
 ** Xref
-Select from xref candidates with ivy
-#+BEGIN_SRC emacs-lisp
-(use-package ivy-xref
-  :after (ivy xref)
+BROKEN #+BEGIN_SRC emacs-lisp
+(use-package xref
+  :bind (("M-." . xref-find-definitions-maybe-other-window))
   :config
-  (setq xref-show-xrefs-function #'ivy-xref-show-xrefs)
-  (setq xref-show-definitions-function #'ivy-xref-show-defs))
-#+END_SRC
+  (defun xref-find-definitions-maybe-other-window (identifier)
+    (interactive (list (xref--read-identifier "Find definitions of: ")))
+    (if current-prefix-arg
+        (xref-find-definitions-other-frame identifier)
+      (xref-find-definitions identifier))
+    (message "xxxx"))
+  )
+BROKEN #+END_SRC
+
 * TODO Sort packages
 ** Recentf
 #+BEGIN_SRC emacs-lisp
@@ -6668,11 +6645,6 @@ Helper function for URL encode / decode
   ;;(setq css-indent-offset 2)
   ;; turn off annoying auto-compile on save
   (setq scss-compile-at-save nil))
-
-;; Imenu support for css/scss/less
-(use-package counsel-css
-  :disabled t
-  :hook (css-mode . counsel-css-imenu-setup))
 
 (use-package sass-mode
   :mode ("\\.sass\\'"))

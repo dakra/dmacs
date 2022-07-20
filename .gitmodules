@@ -192,12 +192,6 @@
 [submodule "copy-as-format"]
 	path = lib/copy-as-format
 	url = git@github.com:sshaw/copy-as-format.git
-[submodule "counsel-css"]
-	path = lib/counsel-css
-	url = git@github.com:hlissner/emacs-counsel-css.git
-[submodule "counsel-jq"]
-	path = lib/counsel-jq
-	url = git@github.com:200ok-ch/counsel-jq.git
 [submodule "counsel-org-clock"]
 	path = lib/counsel-org-clock
 	url = git@github.com:akirak/counsel-org-clock.git
@@ -580,12 +574,6 @@
 	path = lib/ivy
 	url = git@github.com:abo-abo/swiper.git
 	no-byte-compile = elpa.el
-[submodule "ivy-rich"]
-	path = lib/ivy-rich
-	url = git@github.com:Yevgnen/ivy-rich.git
-[submodule "ivy-xref"]
-	path = lib/ivy-xref
-	url = git@github.com:alexmurray/ivy-xref.git
 [submodule "jira-markup-mode"]
 	path = lib/jira-markup-mode
 	url = git@github.com:mnuessler/jira-markup-mode.git
@@ -669,6 +657,9 @@
 [submodule "loop"]
 	path = lib/loop
 	url = git@github.com:Wilfred/loop.el.git
+[submodule "lsp-docker"]
+	path = lib/lsp-docker
+	url = git@github.com:emacs-lsp/lsp-docker.git
 [submodule "lsp-java"]
 	path = lib/lsp-java
 	url = git@github.com:emacs-lsp/lsp-java.git
