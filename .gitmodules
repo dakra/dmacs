@@ -1072,7 +1072,7 @@
 	url = git@github.com:ethereum/emacs-solidity.git
 [submodule "speed-type"]
 	path = lib/speed-type
-	url = git@github.com:parkouss/speed-type.git
+	url = git@github.com:dakra/speed-type.git
 [submodule "sphinx-doc"]
 	path = lib/sphinx-doc
 	url = git@github.com:naiquevin/sphinx-doc.el.git
