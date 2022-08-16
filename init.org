@@ -3763,13 +3763,15 @@ avfs
                                 (local-set-key (kbd "M-P") 'eshell-previous-prompt)
                                 (local-set-key (kbd "M-N") 'eshell-next-prompt)
                                 (local-set-key (kbd "M-R") 'eshell-list-history)
-                                (local-set-key (kbd "C-r") 'counsel-esh-history)
+                                (local-set-key (kbd "C-r") 'consult-history)
                                 (local-set-key (kbd "C-d") 'dakra-eshell-quit-or-delete-char)
                                 (local-set-key (kbd "DEL") 'eshell-delete-backward-char)
                                 ;; Use helm as completion menu
                                 ;;(local-set-key [remap eshell-pcomplete] 'helm-esh-pcomplete)
                                 ;; or ivy
                                 (local-set-key [remap eshell-pcomplete] 'completion-at-point)
+
+                                (setq-local imenu-generic-expression '(("Prompt" " λ \\(.*\\)" 1)))
 
                                 ;;(eshell-smart-initialize)
                                 ;; Emacs bug where * gets removed
