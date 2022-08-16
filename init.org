@@ -9031,7 +9031,9 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 #+BEGIN_SRC emacs-lisp
 (use-package i3
   :bind (("s-j" . i3-windmove-left)
-         ("s-l" . i3-windmove-right))
+         ("s-l" . i3-windmove-right)
+         ("s-J" . i3-windmove-swap-states-left)
+         ("s-L" . i3-windmove-swap-states-right))
   :config
   (require 'windmove)
   (defun i3-windmove-left (&optional arg)
@@ -9050,7 +9052,27 @@ if there is no window on the right."
     (if (windmove-find-other-window 'right arg)
         (windmove-do-window-select 'right arg)
       ;; No window to the right
-      (i3-command 0 "focus right"))))
+      (i3-command 0 "focus right")
+      ;; (i3-command 0 "mode 'default'")
+      ))
+
+  (defun i3-windmove-swap-states-left (&optional arg)
+    "Like windmove-swap-states-left but call i3 command `move left'
+if there is no window on the left."
+    (interactive "P")
+    (if (windmove-find-other-window 'left arg)
+        (windmove-swap-states-in-direction 'left)
+      ;; No window to the left
+      (i3-command 0 "move left")))
+
+  (defun i3-windmove-swap-states-right (&optional arg)
+    "Like windmove-swap-states-right but call i3 command `move right'
+if there is no window on the right."
+    (interactive "P")
+    (if (windmove-find-other-window 'right arg)
+        (windmove-swap-states-in-direction 'right)
+      ;; No window to the right
+      (i3-command 0 "move right"))))
 #+END_SRC
 
 Better syntax highlighting for =.config/i3/config=
