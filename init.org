@@ -6845,6 +6845,7 @@ displayed anywhere else."
 (use-package proced
   :bind ("C-x p" . proced)
   :config
+  (setq-default proced-filter 'all)
   (setq proced-format 'medium)
   (setq proced-auto-update-flag t)
   (setq proced-auto-update-interval 1))
