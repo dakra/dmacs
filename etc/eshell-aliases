@@ -18,3 +18,4 @@ alias man woman $1
 alias pk eshell-up-peek $1
 alias up eshell-up $1
 alias vim find-file $1
+alias sov-kcat kcat -C -b mq03-kafka-prod.sdc.adacor.host:9092 -o -10 -c 10 -s value=avro -r http://consumer02-kafka-prod:8081/ -t $*
