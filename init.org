@@ -3526,6 +3526,8 @@ avfs
                                       (if (eq browse-url-browser-function 'browse-url-firefox) "Firefox" "eww")))
     ("d" toggle-debug-on-error (hydra-help-toggle "debug-on-error" debug-on-error))
     ("s" sticky-buffer-mode (hydra-help-toggle "Sticky buffer mode" sticky-buffer-mode))
+    ("t" alpha-background-frame-toggle (format "[%s] toggle transparency"
+                                               (if (alpha-background-frame-opaque-p) " " "x")))
     ("c" column-number-mode (hydra-help-toggle "column-number-mode" column-number-mode) :column "Text")
     ("f" auto-fill-mode (hydra-help-toggle "fill-mode" auto-fill-function))
     ("F" web-server-file-server-toggle (hydra-help-toggle "Toggle file file-server" web-server-file-server))
@@ -9027,6 +9029,30 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
 #+END_SRC
 
 * Window Manager
+** Emacs transparent frames / alpha-background
+For transparency to work you need a composite manager like =picom= running.
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+picom
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(setq alpha-background-default 75)
+
+(defun alpha-background-frame-opaque-p ()
+  "Return if current frame is opaque."
+  (let ((current-alpha (frame-parameter nil 'alpha-background)))
+    (or (not current-alpha) (= current-alpha 100))))
+
+(defun alpha-background-frame-toggle (&optional alpha-background)
+  "Toggle transparency for the current frame.
+Toggle alpha-background to `alpha-background' or `alpha-background-default' when not specified."
+  (interactive "P")
+  (let ((alpha-bkg (when (alpha-background-frame-opaque-p)
+                     (or alpha-background alpha-background-default))))
+    (set-frame-parameter nil 'alpha-background alpha-bkg)))
+#+END_SRC
+
 ** i3
 #+BEGIN_SRC emacs-lisp
 (use-package i3
@@ -9080,7 +9106,6 @@ Better syntax highlighting for =.config/i3/config=
 (use-package i3wm-config-mode
   :defer t)
 #+END_SRC
-
 
 ** Exwm
 #+BEGIN_SRC emacs-lisp
