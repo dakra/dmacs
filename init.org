@@ -5515,6 +5515,20 @@ openjdk11-src
   (add-to-list 'cider-jack-in-nrepl-middlewares
                '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
 
+  ;; Update classpath without restarting the repl
+  ;; Requires lambdaisland.classpath which is under :licp alias in my global deps.edn
+  (defun cider-update-deps-classpath ()
+    "Update classpath from deps.edn with lambdaisland.classpath."
+    (interactive)
+    ;; FIXME: Catch cider error and just display `user-error' when licp not found
+    (cider-interactive-eval "(require 'lambdaisland.classpath)")
+    (let* ((deps-path (concat (project-root (project-current t)) "deps.edn"))
+           (deps-str (with-temp-buffer
+                       (insert-file-contents deps-path)
+                       (buffer-string))))
+      (cider-interactive-eval
+       (concat "(lambdaisland.classpath/update-classpath! '{:extra " deps-str "})"))))
+
   ;; Shortcut for clerk/show
   (defun clerk-serve ()
     (interactive)
