@@ -3738,6 +3738,18 @@ avfs
                                          "tmux" "screen" "top" "htop" "less" "more" "ncftp")
                 eshell-prefer-lisp-functions nil)
 
+  ;; Fix eshell overwriting history.
+  ;; From https://emacs.stackexchange.com/a/18569/15023.
+  (setq eshell-save-history-on-exit nil)
+  (defun eshell-append-history ()
+    "Call `eshell-write-history' with the `append' parameter set to `t'."
+    (when eshell-history-ring
+      (let ((newest-cmd-ring (make-ring 1)))
+        (ring-insert newest-cmd-ring (car (ring-elements eshell-history-ring)))
+        (let ((eshell-history-ring newest-cmd-ring))
+          (eshell-write-history eshell-history-file-name t)))))
+  (add-hook 'eshell-pre-command-hook #'eshell-append-history)
+
   ;; Increase eshell history size from default of only 128
   (setq eshell-history-size 8192)
 
@@ -3790,6 +3802,10 @@ avfs
                                 ;;(setq-local company-backends '(company-capf company-eshell-autosuggest))
                                 ;; (setq-local company-backends '(company-capf))
                                 ;; (setq-local company-frontends '(company-preview-frontend))
+
+                                ;; Disable overwriting the history on eshell exit
+                                ;; See eshell-append-history above
+                                (remove-hook 'eshell-exit-hook #'eshell-write-history t)
 
                                 (setq xterm-color-preserve-properties t)
 
