@@ -2714,7 +2714,9 @@ Enable recursive minibuffers
         '((consult-line buffer)
           (consult-buffer buffer)
           (consult-org-heading buffer)
-          (consult-imenu buffer)))
+          (consult-imenu buffer)
+          (consult-project-buffer buffer)
+          (consult-project-extra-find buffer)))
 
   (vertico-multiform-mode))
 #+END_SRC
@@ -2812,11 +2814,11 @@ Enable recursive minibuffers
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
    consult-theme
-   :preview-key '(:debounce 0.2 any)
+   :preview-key (kbd "M-.")
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
    consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
-   :preview-key (kbd "M-."))
+   :preview-key '(:debounce 0.2 any))
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
