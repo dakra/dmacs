@@ -1935,8 +1935,12 @@ Move current line or region with M-up or M-down.
   ;; invert the navigation direction if the the completion popup-isearch-match
   ;; is displayed on top (happens near the bottom of windows)
   ;;(setq company-tooltip-flip-when-above t)
-  ;; start autocompletion only after typing
-  (setq company-begin-commands '(self-insert-command))
+
+  ;; Better sorting of candidates?
+  (setq company-transformers
+        '(company-sort-prefer-same-case-prefix
+          company-sort-by-occurrence))
+
   (global-company-mode 1)
 
   (use-package company-emoji
