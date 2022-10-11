@@ -4207,7 +4207,9 @@ is not a title but instead is displayed as a comment."
          ("s-m l" . magit-log)
          ("s-m L" . magit-log-buffer-file)
          ("s-m b" . magit-blame-addition)
-         ("s-m B" . magit-blame))
+         ("s-m B" . magit-blame)
+         :map magit-process-mode-map
+         ("k" . magit-process-kill))
   :hook (after-save . magit-after-save-refresh-status)
   :defines (magit-ediff-dwim-show-on-hunks)
   :init
