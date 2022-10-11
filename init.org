@@ -4063,6 +4063,16 @@ fi
   :init
   (setq vterm-shell "/usr/bin/bash")
   :config
+  (defun vterm-send-C-p ()
+    "Sends C-p to the libvterm."
+    (interactive)
+    (vterm-send-key "p" nil nil t))
+
+  (defun vterm-send-C-n ()
+    "Sends C-n to the libvterm."
+    (interactive)
+    (vterm-send-key "n" nil nil t))
+
   ;; Kill dead vterm buffers
   (setq vterm-kill-buffer-on-exit t)
 
