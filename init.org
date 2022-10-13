@@ -8566,7 +8566,11 @@ mu init --my-address daniel@kraus.my                 \
                                    "NOT maildir:/atomx/trash AND "
                                    "NOT maildir:/paessler/Inbox AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
+                                   "NOT maildir:/sovendus/Trash AND "
+                                   "NOT maildir:/sovendus/Junk AND "
+                                   "NOT maildir:/sovendus/Alerts AND "
                                    "NOT maildir:/sap/Deleted\\ Items AND "
+                                   "NOT maildir:/e5/Spam AND "
                                    "NOT maildir:/gmail/spam AND "
                                    "NOT maildir:/gmail/trash")
                           "Unread messages" ?a)
@@ -8579,6 +8583,9 @@ mu init --my-address daniel@kraus.my                 \
                                    "NOT maildir:/atomx/trash AND "
                                    "NOT maildir:/paessler/Inbox AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
+                                   "NOT maildir:/sovendus/Trash AND "
+                                   "NOT maildir:/sovendus/Junk AND "
+                                   "NOT maildir:/sovendus/Alerts AND "
                                    "NOT maildir:/sap/Deleted\\ Items AND "
                                    "NOT maildir:/e5/Spam AND "
                                    "NOT maildir:/gmail/spam AND "
@@ -8612,8 +8619,8 @@ mu init --my-address daniel@kraus.my                 \
 
   ;; We do a full index (that verify integrity) with a systemd job
   ;; Go fast inside emacs
-  (setq mu4e-index-cleanup nil      ;; don't do a full cleanup check
-        mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
+  ;; (setq mu4e-index-cleanup nil)      ;; don't do a full cleanup check
+  ;; (setq mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
 
   ;;; Use 'fancy' non-ascii characters in various places in mu4e
   (setq mu4e-use-fancy-chars t)
@@ -9043,6 +9050,8 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
   :after mu4e
   :hook (dired-mode . turn-on-gnus-dired-mode)
   :config
+  ;; From the mu4e manual https://www.djcbsoftware.nl/code/mu/mu4e/Attaching-files-with-dired.html
+
   ;; make the `gnus-dired-mail-buffers' function also work on
   ;; message-mode derived modes, such as mu4e-compose-mode
   (defun gnus-dired-mail-buffers ()
