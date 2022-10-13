@@ -2669,12 +2669,26 @@ Enable recursive minibuffers
 #+BEGIN_SRC emacs-lisp
 (use-package orderless
   :init
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
-  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
-  (setq completion-styles '(orderless)
+  ;; Configure a custom style dispatcher (see the Consult wiki, orderless readme)
+
+  ;; Add style dispatcher that removes entries if pattern starts or ends with !
+  (defun orderless-without-if-bang (pattern _index _total)
+    (cond
+     ((equal "!" pattern)
+      '(orderless-literal . ""))
+     ((string-suffix-p "!" pattern)
+      `(orderless-without-literal . ,(substring pattern 0 -1)))
+     ((string-prefix-p "!" pattern)
+      `(orderless-without-literal . ,(substring pattern 1)))))
+
+  (setq orderless-style-dispatchers '(orderless-without-if-bang))
+
+  ;; Make space separator escapable with backslash
+  ;; (setq orderless-component-separator #'orderless-escapable-split-on-space)
+
+  (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles basic partial-completion)))))
 #+END_SRC
 
 ** Vertico
