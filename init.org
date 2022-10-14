@@ -1149,6 +1149,21 @@ With a prefix argument, copy the link to the online manual instead."
   ;; so when I call it, it will list all open ports with processes
   (setq netstat-program-options '("-tulpn")))
 #+END_SRC
+** Xwidget - Show a webkit view in a buffer
+#+BEGIN_SRC emacs-lisp
+(use-package xwidget
+  :bind (:map xwidget-webkit-mode-map
+         ("n" . xwidget-webkit-scroll-up-line)
+         ("p" . xwidget-webkit-scroll-down-line)
+         ("q" . dakra-kill-this-buffer)
+         ("Q" . quit-window))
+  :config
+  ;; Don't ask if I want to kill a xwidget buffer
+  (remove-hook 'kill-buffer-query-functions #'xwidget-kill-buffer-query-function)
+  ;; Slightly short buffer name
+  (setq xwidget-webkit-buffer-name-format "*xwidget: %T*"))
+#+END_SRC
+
 * UI
 ** Alert: Growl-style notification system
 #+BEGIN_SRC emacs-lisp
