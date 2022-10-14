@@ -2291,8 +2291,16 @@ languagetool-ngrams-de
   :bind (:map project-prefix-map
          ("SPC"  . consult-project-extra-find)
          ("s" . consult-ripgrep)
+         ("P" . project-run-python)
          ("t" . project-vterm))
   :config
+  (defun project-run-python ()
+    "Run a dedicated inferior Python process for the current project.
+Like `run-python' started with a prefix-arg and then choosing to
+created a dedicated process for the project."
+    (interactive)
+    (run-python (python-shell-calculate-command) 'project t))
+
   (defun project-vterm ()
     (interactive)
     (let* ((default-directory (project-root (project-current t)))
