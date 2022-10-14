@@ -8757,19 +8757,11 @@ mu init --my-address daniel@kraus.my                 \
 
   ;; (setq mu4e-contact-process-function #'malb/mu4e-contact-process-function)
 
-
-  (defun dakra-mu4e-action-attachment-import-gcalcli (msg attachnum)
-    "Import ical attachments with gcalcli"
-    (mu4e-view-open-attachment-with msg attachnum "~/bin/icalimport.sh"))
-
-  ;; FIXME: use mu4e-view-mime-part-actions
-  ;; (add-to-list 'mu4e-view-attachment-actions '("iImport ical" . dakra-mu4e-action-attachment-import-gcalcli) t)
-
   (defun mu4e-action-view-in-firefox (msg)
     "View the body of the message in a new Firefox window."
     (let ((browse-url-browser-function 'browse-url-firefox)
           (browse-url-new-window-flag t))
-      (browse-url (concat "file://" (mu4e~write-body-to-html msg)))))
+      (mu4e-action-view-in-browser msg)))
 
   ;; View mail in browser with "a V"
   (add-to-list 'mu4e-view-actions
