@@ -7358,6 +7358,7 @@ Show clock history when not in org buffer or when called with prefix argument."
 #+BEGIN_SRC emacs-lisp
 (use-package org-agenda
   :defer t
+  :after org
   :config
   (setq org-agenda-files '("~/org"))
 
