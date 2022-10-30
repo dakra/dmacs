@@ -6535,7 +6535,7 @@ To use elc for AWS Athena (idea from [[https://deepumohan.com/tech/query-aws-ath
 
 Download athena-jdbc jar from [[https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html][AWS site]] and install locally with
 
-#+BEGIN_SRC shell :dir ~/Downloads/
+#+BEGIN_SRC shell :dir ~/Downloads/ :tangle no
 mvn install:install-file -Dfile="./AthenaJDBC42.jar" -DgroupId=com.simba.athena -DartifactId=athena-jdbc -Dversion=2.0.16 -Dpackaging=jar -DgeneratePom=true
 #+END_SRC
 
@@ -6723,7 +6723,7 @@ true.
 #+END_SRC
 ** Vega-view: Data visualization using vega, vega-lite
 Needs the Vega command line tools installed:
-#+BEGIN_SRC shell
+#+BEGIN_SRC shell :tangle no
 npm install -g vega vega-lite vega-cli canvas
 #+END_SRC
 
@@ -7076,7 +7076,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
 
               (setq completion-at-point-functions
                     '(org-completion-symbols
-                      ora-cap-filesystem))))
+                      org-cap-filesystem))))
   :config
   ;; Insead of "..." show "…" when there's hidden folded content
   ;; Some characters to choose from: …, ⤵, ▼, ↴, ⬎, ⤷, and ⋱
@@ -7309,14 +7309,21 @@ Show clock history when not in org buffer or when called with prefix argument."
             cands))
         (when cands
           (list (match-beginning 0) (match-end 0) cands)))))
-  (defun ora-cap-filesystem ()
-    (let (path)
-      (when (setq path (ffap-string-at-point))
-        (let ((compl
-               (all-completions path #'read-file-name-internal)))
-          (when compl
-            (let ((offset (ivy-completion-common-length (car compl))))
-              (list (- (point) offset) (point) compl)))))))
+  (defun org-cap-filesystem ()
+    (when-let ((path (ffap-string-at-point)))
+      (when (string-match "\\`file:\\(.*\\)\\'" path)
+        (setq path (match-string 1 path)))
+      (when-let ((compl (all-completions path #'read-file-name-internal)))
+        (let* ((str (car compl))
+               (offset
+                (let ((i 0)
+                      (len (length str)))
+                  (while (and (< i len)
+                              (equal (get-text-property i 'face str)
+                                     'completions-common-part))
+                    (cl-incf i))
+                  i)))
+          (list (- (point) offset) (point) compl)))))
 
   ;; Custom org-sort to sort by TODO and then by priority
   ;; See: https://emacs.stackexchange.com/a/9588/12559
@@ -8115,12 +8122,12 @@ as the default task."
     "Default format function for a headline.
 See `org-html-format-headline-function' for details."
     (let ((todo (org-html--todo todo info))
-	  (priority (org-html--priority priority info))
-	  (tags (org-html--tags tags info)))
+          (priority (org-html--priority priority info))
+          (tags (org-html--tags tags info)))
       (concat todo (and todo " ")
-	      priority (and priority " ")
-	      text
-	      (and tags "&#xa0;&#xa0;&#xa0;</h3><p>") tags (and tags "</p><h3>"))))
+              priority (and priority " ")
+              text
+              (and tags "&#xa0;&#xa0;&#xa0;</h3><p>") tags (and tags "</p><h3>"))))
   (setq org-html-format-headline-function #'my-hack-org-html-format-headline-function)
 
   ;; Use html5 as org export and use new tags (I don't care about browsers <=IE8)
@@ -8992,11 +8999,11 @@ actual attachment."
 there are no attachments.
 Should be added to `message-send-hook'."
     (when (and (save-excursion
-	         (save-restriction
-		   (widen)
-		   (goto-char (point-min))
-		   (re-search-forward message-attachment-intent-re nil t)))
-	       (not (message-attachment-present-p)))
+                 (save-restriction
+                   (widen)
+                   (goto-char (point-min))
+                   (re-search-forward message-attachment-intent-re nil t)))
+               (not (message-attachment-present-p)))
       (unless (y-or-n-p message-attachment-reminder)
         (keyboard-quit)))))
 
@@ -9089,10 +9096,10 @@ Send emails with =org-msg=. Some keybindings:
   :defer t
   :config
   (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-	org-msg-startup "hidestars indent inlineimages"
-	org-msg-greeting-name-limit 3
+        org-msg-startup "hidestars indent inlineimages"
+        org-msg-greeting-name-limit 3
         org-msg-convert-citation t
-	org-msg-text-plain-alternative t))
+        org-msg-text-plain-alternative t))
 #+END_SRC
 
 ** mml-sec: Auto sign mails
