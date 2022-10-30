@@ -5729,6 +5729,17 @@ clj-kondo-bin
   :config
   (setq org-babel-clojure-backend 'babashka))
 #+END_SRC
+**** Neil
+#+BEGIN_SRC emacs-lisp
+(use-package neil
+  :defer t
+  :config
+  (setq neil-prompt-for-version-p nil)  ; Always use latest version
+  (setq neil-inject-dep-to-project-p nil)
+  (setq neil-executable-path
+        (-> "neil" locate-library file-name-directory (concat "neil"))))
+#+END_SRC
+
 **** Datomic yasnippets
 Yasnippets for Datomic.
 

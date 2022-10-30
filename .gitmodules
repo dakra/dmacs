@@ -750,6 +750,9 @@
 [submodule "multiple-cursors"]
 	path = lib/multiple-cursors
 	url = git@github.com:magnars/multiple-cursors.el.git
+[submodule "neil"]
+	path = lib/neil
+	url = git@github.com:babashka/neil.git
 [submodule "ng2-mode"]
 	path = lib/ng2-mode
 	url = git@github.com:AdamNiederer/ng2-mode.git
