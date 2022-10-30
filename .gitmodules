@@ -791,7 +791,10 @@
 	url = git@github.com:oantolin/orderless.git
 [submodule "org"]
 	path = lib/org
-	url = git://git.savannah.gnu.org/emacs/org-mode.git
+	# This is the org-mode git URL for my registered savannah account
+	# For no account use:
+	# url = git://git.savannah.gnu.org/emacs/org-mode.git
+	url = dakra@git.sv.gnu.org:/srv/git/emacs/org-mode
 	build-step = make compile
         build-step = borg-update-autoloads
 	load-path = lisp
