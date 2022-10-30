@@ -4144,8 +4144,8 @@ fi
      (list
       (let ((command (eval compile-command)))
         (if (or compilation-read-command current-prefix-arg)
-	    (compilation-read-command command)
-	  command))
+            (compilation-read-command command)
+          command))
       (consp current-prefix-arg)))
     (let ((buffer (generate-new-buffer (or name "*vterm*"))))
       (with-current-buffer buffer
@@ -4172,8 +4172,12 @@ fi
 * Version Control
 ** Emacs vc settings
 #+BEGIN_SRC emacs-lisp
-;; Nicer diff (should be taken from global .config/git/config)
-(setq vc-git-diff-switches '("--indent-heuristic"))
+(use-package vc-git
+  :config
+  ;; Follow renames of a single file
+  (setq vc-git-print-log-follow t)
+  ;; Nicer diff (should be taken from global .config/git/config)
+  (setq vc-git-diff-switches '("--indent-heuristic")))
 
 (use-package diff-mode
   :config
