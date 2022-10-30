@@ -5539,9 +5539,17 @@ $ sbcl
 (use-package clojure-mode
   :defer t
   :interpreter ("bb" . clojure-mode)
+  :hook ((clojure-mode . clojure-mode-add-edn-imenu-regexp))
   :config
+  ;; For large edn files I want to navigate with imenu to root level keywords.
+  ;; For a similar hack with outline you can: `(setq-local outline-regexp "^.?.?:[^ ]+")'
+  (defun clojure-mode-add-edn-imenu-regexp ()
+    "Hacky way to get imenu for root-level keywords. Useful in edn files."
+    (add-to-list 'imenu-generic-expression '(nil "^.?.?\\(:[^ ]+\\).*$" 1) t))
+
   ;; Eval top level forms inside comment forms instead of the comment form itself
   (setq clojure-toplevel-inside-comment-form t)
+
   ;; Indent fn-traced and defn-traced the same as a regular defn.
   ;; The macros are for re-frame-10x tracing.
   (put-clojure-indent 'fn-traced :defn)
