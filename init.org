@@ -3230,7 +3230,7 @@ dragon-drop
 (use-package dired
   :bind (("C-x d" . dired)
          :map dired-mode-map
-         ("j" . swiper)
+         ("j" . consult-line)
          ("M-u" . dired-up-directory)
          ("M-RET" . emms-play-dired)
          ("C-RET" . dired-open-xdg)
