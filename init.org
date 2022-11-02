@@ -3151,15 +3151,24 @@ gtklp
   ;; (pdf-tools-install t t t)
   :magic ("%PDF" . pdf-view-mode)
   :mode (("\\.pdf\\'" . pdf-view-mode))
-  :hook (pdf-view-mode . pdf-view-init)
+  :hook ((pdf-view-mode . pdf-view-init))
   :bind (:map pdf-view-mode-map
          ("C-s" . isearch-forward)
          ("M-w" . pdf-view-kill-ring-save)
          ("M-p" . print-pdf))
   :config
   (defun pdf-view-init ()
-    "Enable dark theme and disable while-line-or-region to free keybindings."
-    ;; (pdf-view-midnight-minor-mode)
+    "Initialize pdf-tools view like enabline TOC functions or use dark theme at night."
+
+    ;; Use dark theme when opening PDFs at night time
+    (let ((hour (string-to-number (format-time-string "%H"))))
+      (when (or (< hour 5) (< 20 hour))
+        (pdf-view-midnight-minor-mode)))
+
+    ;; Enable pdf-tools minor mode to have features like TOC extraction by pressing `o'.
+    (pdf-tools-enable-minor-modes)
+
+    ;; Disable while-line-or-region to free keybindings.
     (whole-line-or-region-local-mode -1))
 
   ;; Use `gtklp' or `hp-print' to print as it has better cups support
