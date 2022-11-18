@@ -7241,6 +7241,9 @@ Show clock history when not in org buffer or when called with prefix argument."
   (setq org-special-ctrl-k t)
   (setq org-yank-adjusted-subtrees t)
 
+  ;; Export latex with vertical space between paragraphs
+  ;; instead of the default which is just a slight horizontal indent.
+  (add-to-list 'org-latex-default-packages-alist '("" "parskip" nil))
 
   (require 'smartparens-org)  ;; Additional org sp-local-pairs
 
