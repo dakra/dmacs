@@ -9255,6 +9255,13 @@ picom
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
+(defun system-process-running? (process-name)
+  "Checks if process with PROCESS-NAME is running on the system."
+  (->> (list-system-processes)
+       (mapcar
+        (lambda (pid) (string-match-p process-name (alist-get 'args (process-attributes pid)))))
+       (-any? #'identity)))
+
 (setq alpha-background-default 75)
 
 (defun alpha-background-frame-opaque-p ()
@@ -9266,6 +9273,9 @@ picom
   "Toggle transparency for the current frame.
 Toggle alpha-background to `alpha-background' or `alpha-background-default' when not specified."
   (interactive "P")
+  ;; Start picom if it's not running already
+  (unless (system-process-running? "picom")
+    (start-process-shell-command "picom" nil "picom"))
   (let ((alpha-bkg (when (alpha-background-frame-opaque-p)
                      (or alpha-background alpha-background-default))))
     (set-frame-parameter nil 'alpha-background alpha-bkg)))
