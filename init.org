@@ -7890,6 +7890,8 @@ NAME may be nil for unnamed sessions."
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda))
   :config
+  (setq org-modern-hide-stars nil)
+
   (modify-all-frames-parameters
    '((right-divider-width . 2)
      (internal-border-width . 0)))
