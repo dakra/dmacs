@@ -3068,6 +3068,10 @@ no stored indexes (TAGS) or persistent background processes.  Dumb Jump performs
   :defer t
   ;;:hook (emacs-lisp-mode . imenu-use-package)
   :config
+  ;; Sometimes I want to customize imenu per project.
+  ;; Mark imenu-generic-expression as safe for dir local usage
+  (put 'imenu-generic-expression 'safe-local-variable 'listp)
+
   ;; Recenter window after imenu jump so cursor doesn't end up on the last line
   (add-hook 'imenu-after-jump-hook 'recenter)  ; or 'reposition-window
   (set-default 'imenu-auto-rescan t))
@@ -3864,7 +3868,10 @@ avfs
                                 ;; or ivy
                                 (local-set-key [remap eshell-pcomplete] 'completion-at-point)
 
-                                (setq-local imenu-generic-expression '(("Prompt" " λ \\(.*\\)" 1)))
+                                ;; Support imenu
+                                (setq-local imenu-generic-expression `(("Prompt" ,eshell-prompt-regexp 1)))
+                                ;; Support outline (e.g. consult-outline)
+                                (setq-local outline-regexp eshell-prompt-regexp)
 
                                 ;;(eshell-smart-initialize)
                                 ;; Emacs bug where * gets removed
