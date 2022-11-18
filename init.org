@@ -4843,6 +4843,15 @@ plantuml
 (use-package po-mode
   :mode ("\\.po\\'" "\\.po\\."))
 #+END_SRC
+*** JSON
+#+BEGIN_SRC emacs-lisp
+(use-package json-mode
+  :disabled t  ;; jsonian is a better and way faster alternative
+  :mode ("\\.json\\'" "\\.avsc\\'"))
+
+(use-package jsonian
+  :mode ("\\.avsc\\'"))
+#+END_SRC
 *** YAML
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
@@ -5163,9 +5172,6 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
                            ))
   ;; prettier "--print-width" argument is read from 'fill-column' variable
   (setq prettier-js-width-mode 'fill))
-
-(use-package json-mode
-  :mode ("\\.json\\'" "\\.avsc\\'"))
 
 (use-package js
   :defer t

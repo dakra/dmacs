@@ -598,6 +598,9 @@
 [submodule "json-snatcher"]
 	path = lib/json-snatcher
 	url = git@github.com:Sterlingg/json-snatcher.git
+[submodule "jsonian"]
+	path = lib/jsonian
+	url = https://github.com/iwahbe/jsonian
 [submodule "jump"]
 	path = lib/jump
 	url = git@github.com:eschulte/jump.el.git
