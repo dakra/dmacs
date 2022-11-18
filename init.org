@@ -4868,6 +4868,45 @@ plantuml
 (use-package jsonian
   :mode ("\\.avsc\\'"))
 #+END_SRC
+*** Parquet
+
+Maybe create package for this?
+Needs ~parquet-cli~ AUR package.
+
+#+BEGIN_SRC emacs-lisp
+;; Code adapted from https://nullprogram.com/blog/2012/08/01/
+
+(defun parquet-handler-real (operation args)
+  "Run the real handler without the parquet handler installed."
+  (let ((inhibit-file-name-handlers
+         (cons 'parquet-handler
+               (and (eq inhibit-file-name-operation operation)
+                    inhibit-file-name-handlers)))
+        (inhibit-file-name-operation operation))
+    (apply operation args)))
+
+(defun parquet-handler (op &rest args)
+  "Handle .parquet files by calling `parquet-cli' tool."
+  (cond
+   ((eq op 'get-file-buffer)
+    (let ((file (car args)))
+      (message "file: %S" file)
+      (with-current-buffer (create-file-buffer file)
+        (call-process "parquet-cli" nil t nil "cat" file)
+        (setq buffer-file-name file)
+        ;; Remove reflection warnings from parquet-cli tool
+        (goto-char (point-min))
+        (delete-region (point) (1- (search-forward "{" nil t 1)))
+        (setq buffer-read-only t)
+        (set-buffer-modified-p nil)
+        (goto-char (point-min))
+        (jsonian-mode)
+        (current-buffer))))
+   ((parquet-handler-real op args))))
+
+(add-to-list 'file-name-handler-alist '("\\.parquet$" . parquet-handler))
+#+END_SRC
+
 *** YAML
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
