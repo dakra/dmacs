@@ -6119,11 +6119,11 @@ pandoc-bin
   (defhydra hydra-python (python-mode-map "C-c C-p" :color blue :hint nil)
     "
            ^Tests^           ^Import^                ^Other^
-    ----------------------------------------------------------------
-    [_f_]   Function    [_a_] From ... import     [_P_] Run Python
+    -------------------------------------------------------------------
+    [_f_]   Function    [_a_] From ... import     [_P_] Run Python in project
     [_m_]   Method      [_i_] Import              [_I_] Pippel
     [_c_]   Class       [_l_] Import line/region  [_R_] Runserver
-    [_F_]   File        [_r_] Remove imports      [_!_] Start Python
+    [_F_]   File        [_r_] Remove imports      [_!_] Run Python in cwd
     [_p_]   Project     [_s_] Sort imports        [_q_] Cancel
     "
     ("a" py-isort-add-from-import)
@@ -6138,7 +6138,7 @@ pandoc-bin
     ("F" python-test-file)
     ("p" python-test-project)
 
-    ("P" run-python)
+    ("P" project-run-python)
     ("I" pippel-list-packages)
     ("R" python-run-server)
     ("!" run-python)
