@@ -2291,9 +2291,18 @@ languagetool-ngrams-de
   :bind (:map project-prefix-map
          ("SPC"  . consult-project-extra-find)
          ("s" . consult-ripgrep)
+         ("E" . project-edit-dir-locals)
          ("P" . project-run-python)
          ("t" . project-vterm))
   :config
+  (defun project-edit-dir-locals ()
+    "Open buffer with .dir-locals.el for current project."
+    (interactive)
+    (->> (project-current)
+         (project-root)
+         (expand-file-name ".dir-locals.el")
+         (find-file)))
+
   (defun project-run-python ()
     "Run a dedicated inferior Python process for the current project.
 Like `run-python' started with a prefix-arg and then choosing to
