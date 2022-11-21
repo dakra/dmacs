@@ -712,8 +712,11 @@ Code from `read-envvar-name'."
 ;; This makes Emacs a bit faster for very long lines
 (setq-default bidi-paragraph-direction 'left-to-right)
 
-(setq-default indent-tabs-mode nil)   ; don't use tabs to indent
-(setq-default tab-width 8)            ; but maintain correct appearance
+;; Don't use tabs to indent
+(setq-default indent-tabs-mode nil)
+;; Leave default appearence of tab width 8
+;; (setq-default tab-width 8)
+
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
 
@@ -4977,7 +4980,7 @@ Needs ~parquet-cli~ AUR package.
   (put 'docker-compose-arguments 'safe-local-variable 'listp)
   :config
   ;; Use normal shell-mode instead of vterm for docker buffers
-  (setq docker-run-async-with-buffer-function 'docker-run-async-with-buffer-shell)
+  ;; (setq docker-run-async-with-buffer-function 'docker-run-async-with-buffer-shell)
 
   (setq docker-images-default-sort-key '("Created" . t))
   (setq docker-containers-default-sort-key '("Status" . t)))
@@ -7143,6 +7146,11 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          :map org-src-mode-map
          ("C-x n" . org-edit-src-exit))
   :init
+  ;; Disable org-fold (text-properties style) feature
+  ;; Doesn't play nice with consult-line yet and new Emacs 29
+  ;; is also fast with overlays now. (See lib/org/etc/ORG_NEWS)
+  (setq org-fold-core-style 'overlays)
+
   (add-hook 'org-mode-hook
             (lambda ()
               ;; Automatic line-wrapping in org-mode
@@ -7152,6 +7160,10 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
                     '(org-completion-symbols
                       org-cap-filesystem))))
   :config
+
+  ;; Put a real space in front of the content for each level
+  ;; (setq org-adapt-indentation t)
+
   ;; Insead of "..." show "…" when there's hidden folded content
   ;; Some characters to choose from: …, ⤵, ▼, ↴, ⬎, ⤷, and ⋱
   (setq org-ellipsis "…")
@@ -8102,7 +8114,7 @@ as the default task."
 
   :config
   ;; Install `xprintidle' to get idle time over all X11. Otherwise it's only Emacs idle time.
-  (setq org-clock-idle-time 35)  ; idle after 35 minutes
+  ;; (setq org-clock-idle-time 35)  ; idle after 35 minutes
 
   ;;(setq org-clock-continuously t)  ; Start clocking from the last clock-out time, if any.
 
@@ -8182,6 +8194,9 @@ as the default task."
 
   ;; Don't evaluate babel source blocks during export
   (setq org-export-use-babel nil)
+
+  ;; Preserve linebreaks. Otherwise every paragraph is exported as one line.
+  ;; (setq org-export-preserve-breaks t)
 
   ;; copy org text as rich text
   (defun org-formatted-copy ()
