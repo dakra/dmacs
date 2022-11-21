@@ -10786,19 +10786,23 @@ elisp packages to use and not for actual direct user usage.
 (use-package jiralib2
   :commands jira->org
   :config
-  (setq jiralib2-host "jira.sovendus.com"
+  (setq jiralib2-host "sovendus.atlassian.net"
         jiralib2-url (concat "https://" jiralib2-host)
-        jiralib2-auth 'cookie
-        jiralib2-user-login-name "extern.dkraus")
+        jiralib2-auth 'token
+        jiralib2-user-login-name "extern.daniel.kraus@sovendus.de")
+  ;; Get jira API token from auth-source
+  (setq jiralib2-token (auth-source-pick-first-password
+                        :host jiralib2-host
+                        :user "jira-token@sovendus.de"))
 
   (require 'ejira-parser)
   (defun jira->org (issue-num)
     (interactive "sIssue ID:")
-    ;; Maybe we need to login first
-    (unless (bound-and-true-p jiralib2--session)
-      (jiralib2-session-login "extern.dkraus" (auth-source-pick-first-password
-                                               :host jiralib2-host
-                                               :user jiralib2-user-login-name)))
+    ;; If auth method is cookie, maybe we need to login first
+    (unless (and (eq jiralib2-auth 'cookie) (bound-and-true-p jiralib2--session))
+      (jiralib2-session-login "extern.daniel.kraus@sovendus.de" (auth-source-pick-first-password
+                                                                 :host jiralib2-host
+                                                                 :user "extern.daniel.kraus@sovendus.de")))
     (let* ((issue-id (if (string-match "\\`[0-9]+\\'" issue-num)
                          (concat "SDP-" issue-num)
                        (upcase issue-num)))
