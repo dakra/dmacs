@@ -10121,6 +10121,7 @@ _2_: ?2? mysql/redis         ?r? _r_edis            ?k? _k_afka
 _3_: ?3? mysql/rdb/redis     ?m? _m_ysql
 _4_: ?4? confluent kafka     ?t? re_t_hinkdb
                            ?d? _d_ocker
+                           ?a? _a_ws-vpn
 _o_: offline (stop all)      ?c? _c_ups
 _g_: Refresh Hydra  _q_: quit"
     ;; Environments
@@ -10137,16 +10138,19 @@ _g_: Refresh Hydra  _q_: quit"
                                "confluent-kafka-rest")))
     ;; Stop all
     ("o" (mapc #'systemctl-stop' ("postgresql" "mysqld" "redis" "rethinkdb@default.service"
-                                  "docker" "org.cups.cupsd" "confluent-zookeeper" "confluent-server")))
+                                  "docker" "systemd-resolved" "awsvpnclient" "org.cups.cupsd"
+                                  "confluent-zookeeper" "confluent-server"
+                                  "confluent-schema-registry" "confluent-kafka-rest")))
     ;; Services
     ("p" (systemctl-toggle "postgresql") (systemctl-hydra-status "postgresql"))
     ("r" (systemctl-toggle "redis") (systemctl-hydra-status "redis"))
     ("m" (systemctl-toggle "mysqld") (systemctl-hydra-status "mysqld"))
     ("t" (systemctl-toggle "rethinkdb@default.service") (systemctl-hydra-status "rethinkdb@default.service"))
     ("d" (systemctl-toggle "docker") (systemctl-hydra-status "docker"))
+    ("a" (mapc #'systemctl-toggle '("systemd-resolved" "awsvpnclient"))
+     (systemctl-hydra-status "awsvpnclient"))
     ("c" (mapc #'systemctl-toggle '("org.cups.cupsd" "cups-browsed" "avahi-daemon"))
      (systemctl-hydra-status "org.cups.cupsd"))
-
     ("z" (systemctl-toggle "confluent-zookeeper") (systemctl-hydra-status "confluent-zookeeper"))
     ("k" (systemctl-toggle "confluent-server") (systemctl-hydra-status "confluent-server"))
 
