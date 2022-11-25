@@ -9723,10 +9723,11 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
          ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
          ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute)
          ("C-c v" . hydra-pulseaudio-control/body)
-         :map exwm-mode-map
-         ("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
-         ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
-         ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute))
+         ;; :map exwm-mode-map
+         ;; ("<XF86AudioRaiseVolume>" . pulseaudio-control-increase-volume)
+         ;; ("<XF86AudioLowerVolume>" . pulseaudio-control-decrease-volume)
+         ;; ("<XF86AudioMute>" . pulseaudio-control-toggle-current-sink-mute)
+         )
   ;;:bind-keymap ("C-c v" . pulseaudio-control-map)
   :config
   ;; XXX: Maybe -set-volume (1-9 keys sets 10%, 20% etc)?
@@ -9740,6 +9741,7 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
     ("d" pulseaudio-control-decrease-volume "Decrease Volume")
     ("m" pulseaudio-control-toggle-current-sink-mute "Toggle Mute")
     ("s" pulseaudio-control-select-sink-by-name "Select Sink")
+    ("S" pulseaudio-control-select-source-by-name "Select Source")
     ("q" nil "quit"))
   (setq pulseaudio-control-volume-step "5%"))
 #+END_SRC
@@ -9748,9 +9750,10 @@ no window below and `exwm-windmove-workspace-1-below-p' is non-NIL."
 (use-package xbacklight
   :bind (("<XF86MonBrightnessUp>" . xbacklight-increase)
          ("<XF86MonBrightnessDown>" . xbacklight-decrease)
-         :map exwm-mode-map
-         ("<XF86MonBrightnessUp>" . xbacklight-increase)
-         ("<XF86MonBrightnessDown>" . xbacklight-decrease)))
+         ;; :map exwm-mode-map
+         ;; ("<XF86MonBrightnessUp>" . xbacklight-increase)
+         ;; ("<XF86MonBrightnessDown>" . xbacklight-decrease)
+         ))
 #+END_SRC
 ** Network
 Control network manager from Emacs
