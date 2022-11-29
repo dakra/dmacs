@@ -2749,7 +2749,7 @@ Enable recursive minibuffers
   ;; (setq orderless-component-separator #'orderless-escapable-split-on-space)
 
   (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
+        completion-category-defaults '((cider (styles basic)))  ;; https://github.com/clojure-emacs/cider/pull/3226
         completion-category-overrides '((file (styles basic partial-completion)))))
 #+END_SRC
 
@@ -5236,7 +5236,7 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
 (use-package js
   :defer t
   :config
-  (setq js-indent-level 4))
+  (setq js-indent-level 2))
 
 (use-package js2-mode
   :hook (js-mode . js2-minor-mode)
@@ -7461,6 +7461,7 @@ Show clock history when not in org buffer or when called with prefix argument."
 (use-package appt
   :defer t
   :config
+  (require 'notifications)
   (defvar appt-org-notification-critical-threshold 5)
   (defun appt-org-notification-single (min _time text)
     (notifications-notify
