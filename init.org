@@ -2294,9 +2294,10 @@ languagetool-ngrams-de
   :bind (:map project-prefix-map
          ("SPC"  . consult-project-extra-find)
          ("s" . consult-ripgrep)
+         ("t" . project-toggle-test)
          ("E" . project-edit-dir-locals)
          ("P" . project-run-python)
-         ("t" . project-vterm))
+         ("T" . project-vterm))
   :config
   (defun project-edit-dir-locals ()
     "Open buffer with .dir-locals.el for current project."
@@ -2305,6 +2306,29 @@ languagetool-ngrams-de
          (project-root)
          (expand-file-name ".dir-locals.el")
          (find-file)))
+
+  (defun project-toggle-test ()
+    "Toggle between source and test buffers."
+    (interactive)
+    (let* ((root (project-root (project-current t)))
+           (fn (file-relative-name (buffer-file-name) root))
+           (test-p (s-starts-with-p "test" fn))
+           (dir (file-name-directory fn))
+           (base (file-name-base fn))
+           (ext (file-name-extension fn))
+           (toggle-dir (if test-p
+                           (replace-regexp-in-string "^test" "src" dir)
+                         (replace-regexp-in-string "^src" "test" dir)))
+           (toggle-base (if test-p
+                            (replace-regexp-in-string "_test$" "" base)
+                          (concat base "_test")))
+           (toggle-fn (concat root toggle-dir toggle-base "." ext))
+           (buf (find-buffer-visiting toggle-fn)))
+      (if buf
+          (pop-to-buffer buf)
+        (if (file-exists-p toggle-fn)
+            (find-file toggle-fn)
+          (message "Test file not found")))))
 
   (defun project-run-python ()
     "Run a dedicated inferior Python process for the current project.
