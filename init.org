@@ -1024,7 +1024,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 #+BEGIN_SRC emacs-lisp
 (use-package subword
   :hook ((python-mode yaml-mode conf-mode go-mode clojure-mode cider-repl-mode
-                      java-mode cds-mode js-mode) . subword-mode))
+                      java-mode java-ts-mode cds-mode js-mode js-ts-mode) . subword-mode))
 #+END_SRC
 ** Shr: Simple html renderer
 #+BEGIN_SRC emacs-lisp
@@ -1550,6 +1550,7 @@ is already narrowed."
           emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode hy-mode
           prolog-mode go-mode cc-mode python-mode
           typescript-mode json-mode javascript-mode java-mode
+          java-ts-mode typescript-ts-mode python-ts-mode js-ts-mode json-ts-mode
           ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
   :bind (:map smartparens-mode-map
@@ -1618,6 +1619,7 @@ is already narrowed."
 
   ;; Don't include semicolon ; when slurping
   (add-to-list 'sp-sexp-suffix '(java-mode regexp ""))
+  (add-to-list 'sp-sexp-suffix '(java-ts-mode regexp ""))
 
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
@@ -4697,7 +4699,7 @@ use-package will load ccls for us simply by calling this function."
 ** Java
 #+BEGIN_SRC emacs-lisp
 (use-package lsp-java
-  :hook (java-mode . java-lsp-init)
+  :hook ((java-mode java-ts-mode) . java-lsp-init)
   :config
   ;; Use Google style formatting by default
   (setq lsp-java-format-settings-url
@@ -4753,7 +4755,7 @@ use-package will load java-lsp for us simply by calling this function."
         (setq buffer-read-only t)
         (set-buffer-modified-p nil)
         (goto-char (point-min))
-        (java-mode)
+        (java-ts-mode)
         (current-buffer))))
    ((javap-handler-real op args))))
 
@@ -6047,17 +6049,23 @@ pandoc-bin
 *** Main Python setup
 #+BEGIN_SRC emacs-lisp
 (use-package python
-  :mode (("\\.py\\'" . python-mode)
-         ("\\.xsh\\'" . python-mode))  ; Xonsh script files
-  :interpreter ("python" . python-mode)
-  :bind (:map python-mode-map
+  :mode (("\\.py\\'" . python-ts-mode)
+         ("\\.xsh\\'" . python-ts-mode))  ; Xonsh script files
+  :interpreter ("python" . python-ts-mode)
+  :bind (:map python-ts-mode-map
          ("C-x C-e" . python-shell-send-whole-line-or-region)
          ("C-c C-c" . python-shell-send-whole-line-or-region)
          ("C-c C-k" . python-shell-send-buffer)
          ("C-c C-d" . python-shell-send-defun)
          ("C-c C-p" . hydra-python/body)
          ("C-c C-t" . hydra-python/body)
-         )
+         :map python-mode-map
+         ("C-x C-e" . python-shell-send-whole-line-or-region)
+         ("C-c C-c" . python-shell-send-whole-line-or-region)
+         ("C-c C-k" . python-shell-send-buffer)
+         ("C-c C-d" . python-shell-send-defun)
+         ("C-c C-p" . hydra-python/body)
+         ("C-c C-t" . hydra-python/body))
   :hook (python-mode . python-flat-imenu-index)
   :init
   ;; Allow setting some python variables via dir-locals.
@@ -6223,8 +6231,8 @@ pandoc-bin
          ("M-." . python-goto-sql-file-or-definition)
          ("M-," . anaconda-mode-find-assignments)
          ("M-?" . anaconda-mode-show-doc))
-  :hook ((python-mode . anaconda-mode)
-         (python-mode . anaconda-eldoc-mode))
+  :hook (((python-mode python-ts-mode) . anaconda-mode)
+         ((python-mode python-ts-mode) . anaconda-eldoc-mode))
   :config
   (defun python-goto-sql-file-or-definition (&optional arg)
     "Call anaconda find-definitions or with prefix ARG find sql file."
@@ -6262,7 +6270,7 @@ You can do `sphinx-compile` (`C-c C-x C-c`) to compile the sphinx docs or
 *** Sphinx-doc: Auto-generate docstrings
 #+BEGIN_SRC emacs-lisp
 (use-package sphinx-doc
-  :hook (python-mode . sphinx-doc-mode)
+  :hook (((python-mode python-ts-mode) . sphinx-doc-mode))
   :config
   (setq sphinx-doc-include-types t))
 #+END_SRC
@@ -6302,7 +6310,7 @@ You can do `sphinx-compile` (`C-c C-x C-c`) to compile the sphinx docs or
 #+BEGIN_SRC emacs-lisp
 ;; Enable (restructured) syntax highlighting for python docstrings
 (use-package python-docstring
-  :hook (python-mode . python-docstring-mode))
+  :hook (((python-mode python-ts-mode) . python-docstring-mode)))
 
 (use-package pydoc
   :disabled t  ; FIXME: Stopped working with newer jedi versions
