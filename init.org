@@ -1933,7 +1933,7 @@ Move current line or region with M-up or M-down.
 ** Company: Auto completion
 #+BEGIN_SRC emacs-lisp
 (use-package company
-  :defer 1
+  :hook (((prog-mode markdown-mode rst-mode) . company-mode))
   :bind (:map company-active-map
          ([return] . nil)
          ("RET" . nil)
@@ -1960,8 +1960,6 @@ Move current line or region with M-up or M-down.
   (setq company-transformers
         '(company-sort-prefer-same-case-prefix
           company-sort-by-occurrence))
-
-  (global-company-mode 1)
 
   (use-package company-emoji
     :disabled t
