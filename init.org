@@ -5714,29 +5714,96 @@ openjdk11-src
 
   ;; Shortcut for clerk/show
   (defun clerk-serve ()
+    "Serve clerk notebooks."
     (interactive)
     (cider-interactive-eval "(nextjournal.clerk/serve! {:browse? true})"))
 
-  (defun clerk-show ()
+  (defun clerk-tap-inspector ()
+    "Open tap inspector notebook to let Clerk show a tap> stream."
     (interactive)
-    (message "clerk-show")
+    (message "Show tap> stream in clerk.")
+    (cider-interactive-eval "(nextjournal.clerk/show! 'nextjournal.clerk.tap)"))
+
+  (defun clerk-tap-table (&optional full-p)
+    "Evaluate and tap the expression preceding point as a clerk table."
+    (interactive "P")
+    (let ((tapped-form (concat "(clojure.core/doto "
+                               (cider-last-sexp)
+                               " (->> "
+                               "(nextjournal.clerk/table "
+                               (if full-p "{:nextjournal.clerk/width :full}" "")
+                               ") clojure.core/tap>))")))
+      (cider-interactive-eval tapped-form
+                              nil
+                              nil
+                              (cider--nrepl-pr-request-map))))
+
+  (defun clerk-tap-vega-lite (&optional wide-p)
+    "Evaluate and tap the expression preceding point as a vega lite chart.
+If invoked with WIDE-P, make the chart ::clerk/width :wide"
+    (interactive "P")
+    (let ((tapped-form (concat "(clojure.core/doto "
+                               (cider-last-sexp)
+                               " (->> "
+                               "(nextjournal.clerk/vl "
+                               (if wide-p "{:nextjournal.clerk/width :wide}" "")
+                               ") clojure.core/tap>))")))
+      (cider-interactive-eval tapped-form
+                              nil
+                              nil
+                              (cider--nrepl-pr-request-map))))
+  (defun clerk-build ()
+    "Build static html for the current clerk notebook."
+    (interactive)
+    (message "Building static page")
+    (when-let ((filename (buffer-file-name)))
+      (let ((root (project-root (project-current t))))
+        (cider-interactive-eval
+         (concat "(nextjournal.clerk/build! {:paths [\""
+                 (file-relative-name filename root) "\"]})")))))
+
+  (defun clerk-show ()
+    "Show buffer in clerk."
+    (interactive)
+    (message "Show buffer in clerk.")
     (when-let ((filename (buffer-file-name)))
       (cider-interactive-eval
        (concat "(nextjournal.clerk/show! \"" filename "\")"))))
 
   (defun clerk-save-and-show ()
+    "Save buffer and show in clerk."
     (interactive)
     (save-buffer)
     (clerk-show))
 
   (define-minor-mode clerk-mode
     "A mode that just binds `<M-return>' to `clerk-show'."
-    nil
     :lighter " clerk"
-    :keymap `((,(kbd "<M-return>") . clerk-save-and-show))
+    :keymap `((,(kbd "<M-return>") . clerk-save-and-show)
+              (,(kbd "<C-c t>") . clerk-tap-table))
     (if clerk-mode
         (add-hook 'after-save-hook #'clerk-show 100 t)
       (remove-hook 'after-save-hook #'clerk-show t)))
+
+  (defun portal-open ()
+    "Open portal, define dev/portal and add tap."
+    (interactive)
+    (cider-nrepl-sync-request:eval
+     "(do (ns dev)
+        (def portal ((requiring-resolve 'portal.api/open)
+                      {:launcher :emacs :theme :portal.colors/material-ui}))
+        (add-tap (requiring-resolve 'portal.api/submit)))"))
+
+  (defun portal-clear ()
+    "Clear portal"
+    (interactive)
+    (cider-nrepl-sync-request:eval "(portal.api/clear)"))
+
+  (defun portal-close ()
+    "Close portal"
+    (interactive)
+    (cider-nrepl-sync-request:eval "(portal.api/close)"))
+
 
   ;; jack-in for babashka
   (defun cider-jack-in-babashka-old ()
