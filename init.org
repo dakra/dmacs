@@ -2293,6 +2293,8 @@ languagetool-ngrams-de
                 ("C-c p" . project-prefix-map))
   :bind (:map project-prefix-map
          ("SPC"  . consult-project-extra-find)
+         ("d" . project-dired)
+         ("D" . project-edit-deps-edn)
          ("s" . consult-ripgrep)
          ("t" . project-toggle-test)
          ("E" . project-edit-dir-locals)
@@ -2305,6 +2307,14 @@ languagetool-ngrams-de
     (->> (project-current)
          (project-root)
          (expand-file-name ".dir-locals.el")
+         (find-file)))
+
+  (defun project-edit-deps-edn ()
+    "Open buffer with deps.edn for current project."
+    (interactive)
+    (->> (project-current)
+         (project-root)
+         (expand-file-name "deps.edn")
          (find-file)))
 
   (defun project-toggle-test ()
