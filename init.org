@@ -1270,7 +1270,8 @@ different face
 #+BEGIN_SRC emacs-lisp
 ;; highlight indentations in python
 (use-package highlight-indent-guides
-  :hook ((python-mode sass-mode yaml-mode nim-mode) . highlight-indent-guides-mode)
+  :disabled t  ; Somehow misaligns often
+  :hook ((python-mode python-ts-mode sass-mode yaml-mode nim-mode) . highlight-indent-guides-mode)
   :config
   ;; Don't highlight first level (that would be a line at column 1)
   (defun my-highlighter (level responsive display)
