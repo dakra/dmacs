@@ -817,14 +817,14 @@ Allow some commands as safe by default
 (global-hl-line-mode +1)
 #+END_SRC
 * Configure Emacs builtin packages
-** Simple: Change some default keybinding (kill-this-buffer, up/downcase-dwim)
+** Simple: Change some default keybinding (kill-buffer, up/downcase-dwim)
 #+BEGIN_SRC emacs-lisp
 (use-package simple
   :bind (("C-/"   . undo-only)
          ("C-z"   . undo-only)
          ("C-S-z" . undo-redo)
          ("C-?"   . undo-redo)
-         ("C-x k" . dakra-kill-this-buffer)
+         ("C-x k" . kill-current-buffer)
          ("M-u"   . dakra-upcase-dwim)
          ("M-l"   . dakra-downcase-dwim)
          ("M-c"   . dakra-capitalize-dwim))
@@ -837,11 +837,6 @@ Allow some commands as safe by default
 
   ;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
   (setq-default fill-column 80)
-
-  (defun dakra-kill-this-buffer ()
-    "Like (kill-this-buffer) but independent of the menu bar."
-    (interactive)
-    (kill-buffer (current-buffer)))
 
   (defmacro dakra-define-up/downcase-dwim (case)
     (let ((func (intern (concat "dakra-" case "-dwim")))
@@ -1158,7 +1153,7 @@ With a prefix argument, copy the link to the online manual instead."
   :bind (:map xwidget-webkit-mode-map
          ("n" . xwidget-webkit-scroll-up-line)
          ("p" . xwidget-webkit-scroll-down-line)
-         ("q" . dakra-kill-this-buffer)
+         ("q" . kill-current-buffer)
          ("Q" . quit-window))
   :config
   ;; Don't ask if I want to kill a xwidget buffer
