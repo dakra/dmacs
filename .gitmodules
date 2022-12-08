@@ -965,7 +965,7 @@
 	url = git@github.com:bbatsov/projectile.git
 [submodule "pulseaudio-control"]
 	path = lib/pulseaudio-control
-	url = git@github.com:flexibeast/pulseaudio-control.git
+	url = https://git.sr.ht/~flexibeast/pulseaudio-control
 [submodule "py-isort"]
 	path = lib/py-isort
 	url = git@github.com:paetzke/py-isort.el.git
