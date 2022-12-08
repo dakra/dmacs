@@ -5919,6 +5919,14 @@ clj-kondo-bin
         (-> "neil" locate-library file-name-directory (concat "neil"))))
 #+END_SRC
 
+**** Convert HTML to Hiccup syntax
+#+BEGIN_SRC emacs-lisp
+(use-package html-to-hiccup
+  :defer t
+  :config
+  (setq html-to-hiccup-use-shorthand-p nil))
+#+END_SRC
+
 **** Datomic yasnippets
 Yasnippets for Datomic.
 

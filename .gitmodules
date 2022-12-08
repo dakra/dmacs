@@ -516,6 +516,9 @@
 [submodule "ht"]
 	path = lib/ht
 	url = git@github.com:Wilfred/ht.el.git
+[submodule "html-to-hiccup"]
+	path = lib/html-to-hiccup
+	url = https://github.com/plexus/html-to-hiccup
 [submodule "htmlize"]
 	path = lib/htmlize
 	url = git@github.com:hniksic/emacs-htmlize.git
