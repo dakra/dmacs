@@ -1310,8 +1310,9 @@ different face
   (setq symbol-overlay-map (make-sparse-keymap)))
 #+END_SRC
 ** Emoji font
-A font with emoji symbals (like noto-fonts-emoji and/or ttf-symbola) has to be installed.
+A font with emoji symbols (like twemoji, noto-fonts-emoji and/or ttf-symbola) has to be installed.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
+ttf-twemoji
 noto-fonts-emoji
 ttf-windows
 ttf-symbola
@@ -1321,9 +1322,10 @@ ttf-symbola
 ;; Use "C-x 8 RET <type name>"
 (defun --set-emoji-font (frame)
   "Adjust the font settings of FRAME so Emacs can display emoji properly."
-  (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji") frame)
-  (set-fontset-font t 'symbol (font-spec :family "Segoe UI Emoji") frame 'append)
-  (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'append))
+  (set-fontset-font t 'emoji (font-spec :family "Twemoji") frame)
+  (set-fontset-font t 'emoji (font-spec :family "Noto Color Emoji") frame 'append)
+  (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") frame 'append)
+  (set-fontset-font t 'emoji (font-spec :family "Symbola") frame 'append))
 ;; For when Emacs is started in GUI mode:
 (--set-emoji-font nil)
 ;; Hook for when a frame is created with emacsclient
