@@ -5657,6 +5657,9 @@ $ sbcl
   ;; Eval top level forms inside comment forms instead of the comment form itself
   (setq clojure-toplevel-inside-comment-form t)
 
+  ;; Don't align the body of clojure.core/match with the first argument
+  (put-clojure-indent 'match 1)
+
   ;; Indent fn-traced and defn-traced the same as a regular defn.
   ;; The macros are for re-frame-10x tracing.
   (put-clojure-indent 'fn-traced :defn)
@@ -5879,6 +5882,8 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :config
   (dolist (magic-require '(("csv"      . "clojure.data.csv")
                            ("edn"      . "clojure.edn")
+                           ;; ("match"    . "clojure.core.match")
+                           ("walk"     . "clojure.walk")
                            ("pprint"   . "clojure.pprint")
                            ;; ("http"  . "clj-http.client")
                            ("reagent"  . "reagent.core")
