@@ -5937,8 +5937,14 @@ clj-kondo-bin
 **** Convert HTML to Hiccup syntax
 #+BEGIN_SRC emacs-lisp
 (use-package html-to-hiccup
-  :defer t
+  :commands (html-to-hiccup-yank-formatted)
   :config
+  (defun html-to-hiccup-yank-formatted ()
+    (interactive)
+    (let ((beg (point)))
+      (html-to-hiccup-yank)
+      (cider-format-edn-region beg (point))))
+
   (setq html-to-hiccup-use-shorthand-p nil))
 #+END_SRC
 
