@@ -3398,10 +3398,20 @@ rsync
 
 #+BEGIN_SRC emacs-lisp
 (use-package dired-rsync
-  ; Needs to be after dired-x as it binds the "Y" key too
+  :defer t  ;; No keybinding anymore as we use dired-transient-rsync
+  ;; Needs to be after dired-x as it binds the "Y" key too
+  ;; ;; :after dired-x
+  ;; :bind (:map dired-mode-map
+  ;;        ("Y" . dired-rsync))
+  )
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package dired-transient-rsync
+  ;; Needs to be after dired-x as it binds the "Y" key too
   :after dired-x
   :bind (:map dired-mode-map
-         ("Y" . dired-rsync)))
+         ("Y" . dired-rsync-transient)))
 #+END_SRC
 
 ** Dired-hacks
