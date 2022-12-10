@@ -494,7 +494,7 @@ Compile asyncronously all lexically bound .elc files being loaded.
 (use-package comp
   ;; :disabled t
   :config
-  (setq native-comp-deferred-compilation t)
+  (setq inhibit-automatic-native-compilation nil)
   ;; Don't try to native compile this init file
   (add-to-list 'native-comp-deferred-compilation-deny-list "init\\.el"))
 #+END_SRC
