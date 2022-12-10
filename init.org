@@ -4507,6 +4507,8 @@ _p_rev       _u_pper              _=_: upper/lower       _r_esolve
 (use-package forge
   :after magit
   ;; :hook ((prog-mode log-view-mode git-commit-setup) . forge-bug-reference-setup)
+  :init
+  (setq forge-database-connector 'sqlite-builtin)
   :config
   ;; My GitHub accounts / organizations
   (setq forge-owned-accounts '(("dakra") ("pythonic-emacs") ("atomx") ("restalchemy")))
