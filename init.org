@@ -6857,6 +6857,41 @@ Start inferior mongodb shell
 (use-package inf-mongo
   :defer t)
 #+END_SRC
+** Tailwind
+#+BEGIN_SRC emacs-lisp
+(defun tailwind-sort (beg end)
+  "Sort a tailwind class string with rustywind.
+Sort either the marked region or if no region is
+active and point is inside a string, sort the string."
+  (interactive
+   (if (or (use-region-p) (not transient-mark-mode))
+       (prog1 (list (region-beginning) (region-end))
+         (deactivate-mark))
+
+     (if (nth 3 (syntax-ppss))
+         (list (beginning-of-thing 'edit-indirect-string)
+               (end-of-thing 'edit-indirect-string))
+       (user-error "No region marked and not inside a string."))))
+  (let* ((buf (generate-new-buffer "*rustywind*"))
+         (orig-buf (current-buffer))
+         (orig-str (buffer-substring-no-properties beg end))
+         (class-str (concat "class=\"" orig-str "\""))
+         (proc (start-process "rustywind" buf "rustywind" "--stdin")))
+    (sleep-for 0.1)
+    (process-send-string proc class-str)
+    (process-send-eof proc)
+    (process-send-eof proc)
+    (sleep-for 0.1)
+    (delete-region beg end)
+    (goto-char beg)
+    (insert (with-current-buffer buf
+              (goto-char (point-min))
+              (delete-char 7)
+              (end-of-line)
+              (buffer-substring-no-properties (point-min) (1- (point)))))
+    (kill-buffer buf)))
+#+END_SRC
+
 ** Tex
 Some useful packages and necessary for `org-timesheet`.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
