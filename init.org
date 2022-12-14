@@ -8653,10 +8653,11 @@ Forge support for orgit
 (use-package erc
   :config
   (setq erc-hide-list '("PART" "QUIT" "JOIN"))
-  (setq erc-autojoin-channels-alist '(("freenode.net"
+  (setq erc-autojoin-channels-alist '(("Libera.Chat"
                                        "#emacs"
-                                       "#pyramid")))
-  (setq erc-server "irc.freenode.net")
+                                       "#clojure")))
+  (setq erc-server "chat.sr.ht")
+  (setq erc-email-userid "dakra/irc.libera.chat")
   (setq erc-nick "dakra")
   (setq erc-user-full-name user-full-name)
   (setq erc-prompt-for-password nil)
@@ -8677,7 +8678,7 @@ Forge support for orgit
   :config
   (setq erc-prompt-for-nickserv-password nil)
   (setq erc-nickserv-passwords
-        `((freenode(("dakra" . ,(auth-source-pick-first-password :host erc-server :login erc-nick)))))))
+        `((irc.libera.chat (("dakra" . ,(auth-source-pick-first-password :host "irc.libera.chat" :login erc-nick)))))))
 #+END_SRC
 
 * Email
