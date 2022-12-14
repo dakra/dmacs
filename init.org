@@ -9286,16 +9286,27 @@ Should be added to `message-send-hook'."
 ;; (define-key mu4e-headers-mode-map (kbd "M") 'mu4e-headers-mark-all-unread-read)
 
 #+END_SRC
+** Gnus
+I don't use gnus but ~debbugs~, ~mu4e~ (the viewer) and ~mu4e-icalendar~ use it.
+#+BEGIN_SRC emacs-lisp
+(use-package gnus
+  :after mu4e
+  :config
+  ;; Don't go fullscreen startin gnus (e.g. from debbugs)
+  (setq gnus-use-full-window nil)
+
+  ;; Setup Email ical to org sync
+  (setq gnus-icalendar-org-capture-file "~/org/inbox.org")
+  (setq gnus-icalendar-org-capture-headline '("Calendar"))
+  (gnus-icalendar-org-setup))
+#+END_SRC
+
 ** Mail (mu4e/gnus) icalendar / org integration
 #+BEGIN_SRC emacs-lisp
 (use-package mu4e-icalendar
   :after mu4e
   :config
-  ;; Setup Email ical to org sync
-  (setq gnus-icalendar-org-capture-file "~/org/inbox.org")
-  (setq gnus-icalendar-org-capture-headline '("Calendar"))
-  (gnus-icalendar-org-setup)
-
+  ;; Setup Email ical to org sync - need gnus-icalendar setup from above
   (setq mu4e-icalendar-trash-after-reply nil)
   (mu4e-icalendar-setup))
 #+END_SRC
