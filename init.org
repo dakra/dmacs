@@ -1792,15 +1792,21 @@ Smart region guesses what you want to select by one command:
          ("M-Z" . zop-to-char)))
 #+END_SRC
 ** Cycle outline and code visibility
+Minor modes to selectively hide/show code and comment blocks.
+
+~hideshow~ is more for ~prog-modes~ and ~outline~ for ~text-modes~.
+
 #+BEGIN_SRC emacs-lisp
-;; Minor mode to selectively hide/show code and comment blocks
 (use-package hideshow
-  :hook (prog-mode  . hs-minor-mode)
+  :hook (prog-mode . hs-minor-mode)
   :bind (:map hs-minor-mode-map
          ([C-tab] . hs-toggle-hiding)))
 
 (use-package outline
-  :hook ((prog-mode message-mode markdown-mode) . outline-minor-mode))
+  :hook ((yaml-mode message-mode markdown-mode) . outline-minor-mode)
+  :bind (:map outline-minor-mode-map
+         ([C-tab] . outline-cycle)
+         ([backtab] . outline-cycle-buffer)))
 
 (use-package bicycle
   :disabled t
@@ -4960,6 +4966,9 @@ Needs ~parquet-cli~ AUR package.
 (use-package yaml-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
+  ;; Not the perfect outline regexp but better than no folding support
+  (setq outline-regexp "\\([[:space:]]\\{0,2\\}[a-zA-Z_-]+\\):$")
+
   (setq yaml-indent-offset 2))
 #+END_SRC
 *** TOML
