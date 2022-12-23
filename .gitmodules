@@ -1106,6 +1106,9 @@
 [submodule "statusbar"]
 	path = lib/statusbar
 	url = git@github.com:dakra/statusbar.el.git
+[submodule "string-inflection"]
+	path = lib/string-inflection
+	url = https://github.com/akicho8/string-inflection
 [submodule "symbol-overlay"]
 	path = lib/symbol-overlay
 	url = git@github.com:wolray/symbol-overlay.git

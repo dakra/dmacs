@@ -1624,6 +1624,12 @@ is already narrowed."
   ;; use smartparens-mode everywhere
   (smartparens-global-mode))
 #+END_SRC
+** string-inflection: Convert camelCase - kebab-case - snake_case
+#+BEGIN_SRC emacs-lisp
+(use-package string-inflection
+  :defer t)
+#+END_SRC
+
 ** Editorconfig
 Installing =editorconfig-core-c= is not a hard requirement but recommended.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
