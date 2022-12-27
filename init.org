@@ -8850,8 +8850,8 @@ mu init --my-address daniel@kraus.my                 \
   ;; (setq mu4e-index-cleanup nil)      ;; don't do a full cleanup check
   ;; (setq mu4e-index-lazy-check t)    ;; don't consider up-to-date dirs
 
-  ;;; Use 'fancy' non-ascii characters in various places in mu4e
-  (setq mu4e-use-fancy-chars t)
+  ;; Set to 't to use 'fancy' non-ascii characters in various places in mu4e
+  (setq mu4e-use-fancy-chars nil)
   ;; And change default threading characters to some "nicer" looking chars
   (setq mu4e-headers-thread-child-prefix '("├>" . "├→ "))
   (setq mu4e-headers-thread-last-child-prefix '("└>" . "└→ "))
@@ -9212,8 +9212,11 @@ I don't use gnus but ~debbugs~, ~mu4e~ (the viewer) and ~mu4e-icalendar~ use it.
   :after mu4e
   :config
   ;; Don't go fullscreen startin gnus (e.g. from debbugs)
-  (setq gnus-use-full-window nil)
+  (setq gnus-use-full-window nil))
 
+(use-package gnus-icalendar
+  :after gnus
+  :config
   ;; Setup Email ical to org sync
   (setq gnus-icalendar-org-capture-file "~/org/inbox.org")
   (setq gnus-icalendar-org-capture-headline '("Calendar"))
