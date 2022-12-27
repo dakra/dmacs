@@ -3630,138 +3630,6 @@ avfs
   :bind ("\C-s" . swiper-helm)
   )
 #+END_SRC
-* Hydras
-#+BEGIN_SRC emacs-lisp
-(use-package hydra
-  :bind (("C-c S" . hydra-scratchpad/body)
-         ("C-x t" . hydra-toggle-stuff/body)
-         ("C-x 9" . hydra-unicode/body)
-         ("C-x l" . hydra-emacs-launcher/body)
-         ("C-x C-l" . hydra-emacs-launcher/body)
-         ("C-x L" . hydra-external-launcher/body))
-  :config
-  (hydra-add-font-lock)
-
-  (defhydra hydra-scratchpad (:hint nil)
-    "
-     _p_ython    _e_lisp        _s_ql
-     _g_o        _j_avascript   _t_ypescript
-     _r_ust      _R_est-client  _h_tml
-     _o_rg-mode  _T_ext         _m_arkdown
-     "
-    ("p" (switch-to-buffer "*python*scratchpad.py"))
-    ("e" (switch-to-buffer "*elisp*scratchpad.el"))
-    ("s" (switch-to-buffer "*sql*scratchpad.sql"))
-    ("g" (switch-to-buffer "*go*scratchpad.go"))
-    ("j" (switch-to-buffer "*js*scratchpad.js"))
-    ("t" (switch-to-buffer "*ts*scratchpad.ts"))
-    ("r" (switch-to-buffer "*rust*scratchpad.rs"))
-    ("R" (switch-to-buffer "*rest*scratchpad.rest"))
-    ("h" (switch-to-buffer "*html*scratchpad.html"))
-    ("o" (switch-to-buffer "*org*scratchpad.org"))
-    ("T" (switch-to-buffer "*text*scratchpad.txt"))
-    ("m" (switch-to-buffer "*markdown*scratchpad.md")))
-
-  (eval-and-compile
-    (defmacro hydra-help-toggle (text toggle)
-      `(if (bound-and-true-p ,toggle)
-           (format "[x] %s" ,text)
-         (format "[ ] %s" ,text))))
-
-  (defhydra hydra-toggle-stuff (:color blue :hint nil)
-    "Toggle"
-    ("a" abbrev-mode (hydra-help-toggle "abbrev" abbrev-mode) :column "Misc")
-    ("b" dakra-toggle-browser (format "[%s] toggle eww/firefox"
-                                      (if (eq browse-url-browser-function 'browse-url-firefox) "Firefox" "eww")))
-    ("d" toggle-debug-on-error (hydra-help-toggle "debug-on-error" debug-on-error))
-    ("s" sticky-buffer-mode (hydra-help-toggle "Sticky buffer mode" sticky-buffer-mode))
-    ("t" alpha-background-frame-toggle (format "[%s] toggle transparency"
-                                               (if (alpha-background-frame-opaque-p) " " "x")))
-    ("c" column-number-mode (hydra-help-toggle "column-number-mode" column-number-mode) :column "Text")
-    ("f" auto-fill-mode (hydra-help-toggle "fill-mode" auto-fill-function))
-    ("F" web-server-file-server-toggle (hydra-help-toggle "Toggle file file-server" web-server-file-server))
-    ("w" whitespace-mode (hydra-help-toggle "whitespace-mode" whitespace-mode))
-    ("l" toggle-truncate-lines (hydra-help-toggle "truncate-lines" truncate-lines))
-    ("ol" org-toggle-link-display (hydra-help-toggle "org link-display" org-descriptive-links) :column "Org")
-    ("op" org-toggle-pretty-entities (hydra-help-toggle "org pretty-entities" org-pretty-entities))
-    ("oi" org-toggle-inline-images (hydra-help-toggle "org inline-images" org-inline-image-overlays)))
-
-  (defun ansi-term-bash ()
-    "Start ansi-term with bash."
-    (interactive)
-    (ansi-term "/bin/bash"))
-
-  ;; Start different emacs packages (like elfeed or mu4e)
-  (defhydra hydra-emacs-launcher (:color blue :hint nil)
-    "Launch emacs package"
-    ("e" elfeed "Elfeed - RSS/Atom Newsreader" :column "Apps")
-    ("t" transmission "Transmission - Torrent")
-    ("m" mu4e "mu4e - Mail")
-    ("p" proced "proced")
-    ("v" ovpn "VPN")
-    ("c" quick-calc "calc - Quick calc" :column "Utils")
-    ("d" docker "docker")
-    ("C" calendar "calendar")
-    ("T" world-clock "time - Display world time")
-    ("s" hydra-systemctl/body "Systemctl")
-    ("a" ansi-term-bash "Ansi Terminal"  :column "Misc")
-    ("b" brain-fm-play "brain.fm - Stream music")
-    ("E" elisp-index-search "elisp-index-search")
-    ("S" scrot "Screenshot with scrot")
-    ("w" woman "woman - Man page viewer")
-    ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
-    ("z" zone "Zone - Screensaver"))
-
-  ;; Start different external programs (like Termite or Firefox).
-  (defhydra hydra-external-launcher (:color blue :hint nil)
-    "Start external program"
-    ("p" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
-    ("f" (start-process-shell-command "firefox" nil "env GTK_THEME=Arc firefox") "Firefox")
-    ("F" (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition") "Firefox Developer Edition")
-    ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
-    ("l" (start-process-shell-command "i3lockr" nil "i3lockr --blur 25 -- --nofork --ignore-empty-password") "Lock screen")
-    ("n" (start-process-shell-command "networkmanager_dmenu" nil "networkmanager_dmenu") "Networkmanager")
-    ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
-    ("t" (start-process-shell-command "alacritty" nil "alacritty") "alacritty - Terminal" ))
-
-  (defhydra hydra-diff-hl (:color red)
-    "diff-hl"
-    ("=" diff-hl-diff-goto-hunk "goto hunk")
-    ("<RET>" diff-hl-diff-goto-hunk "goto hunk")
-    ("u" diff-hl-revert-hunk "revert hunk")
-    ("[" diff-hl-previous-hunk "prev hunk")
-    ("p" diff-hl-previous-hunk "prev hunk")
-    ("]" diff-hl-next-hunk "next hunk")
-    ("n" diff-hl-next-hunk "next hunk")
-    ("q" nil "cancel"))
-
-  (defun dakra/insert-unicode (unicode-name)
-    "Same as C-x 8 enter UNICODE-NAME."
-    (insert-char (gethash unicode-name (ucs-names))))
-
-  (defhydra hydra-unicode (:color blue :hint nil)
-    "
-     Unicode  _c_ €   _a_ ä   _A_ Ä
-              _d_ °   _o_ ö   _O_ Ö
-              _e_ €   _u_ Ü   _U_ Ü
-              _p_ £   _s_ ß
-              _m_ µ
-              _r_ →
-     "
-    ("a" (dakra/insert-unicode "LATIN SMALL LETTER A WITH DIAERESIS"))
-    ("A" (dakra/insert-unicode "LATIN CAPITAL LETTER A WITH DIAERESIS"))
-    ("o" (dakra/insert-unicode "LATIN SMALL LETTER O WITH DIAERESIS")) ;;
-    ("O" (dakra/insert-unicode "LATIN CAPITAL LETTER O WITH DIAERESIS"))
-    ("u" (dakra/insert-unicode "LATIN SMALL LETTER U WITH DIAERESIS")) ;;
-    ("U" (dakra/insert-unicode "LATIN CAPITAL LETTER U WITH DIAERESIS"))
-    ("s" (dakra/insert-unicode "LATIN SMALL LETTER SHARP S"))
-    ("c" (dakra/insert-unicode "COPYRIGHT SIGN"))
-    ("d" (dakra/insert-unicode "DEGREE SIGN"))
-    ("e" (dakra/insert-unicode "EURO SIGN"))
-    ("p" (dakra/insert-unicode "POUND SIGN"))
-    ("r" (dakra/insert-unicode "RIGHTWARDS ARROW"))
-    ("m" (dakra/insert-unicode "MICRO SIGN"))))
-#+END_SRC
 * Tramp
 #+BEGIN_SRC emacs-lisp
 (use-package tramp
@@ -11070,6 +10938,138 @@ elisp packages to use and not for actual direct user usage.
   :config
   ;; Don't reset the mouse cursor when showing a posframe
   (setq posframe-mouse-banish nil))
+#+END_SRC
+* Hydras
+#+BEGIN_SRC emacs-lisp
+(use-package hydra
+  :bind (("C-c S" . hydra-scratchpad/body)
+         ("C-x t" . hydra-toggle-stuff/body)
+         ("C-x 9" . hydra-unicode/body)
+         ("C-x l" . hydra-emacs-launcher/body)
+         ("C-x C-l" . hydra-emacs-launcher/body)
+         ("C-x L" . hydra-external-launcher/body))
+  :config
+  (hydra-add-font-lock)
+
+  (defhydra hydra-scratchpad (:hint nil)
+    "
+     _p_ython    _e_lisp        _s_ql
+     _g_o        _j_avascript   _t_ypescript
+     _r_ust      _R_est-client  _h_tml
+     _o_rg-mode  _T_ext         _m_arkdown
+     "
+    ("p" (switch-to-buffer "*python*scratchpad.py"))
+    ("e" (switch-to-buffer "*elisp*scratchpad.el"))
+    ("s" (switch-to-buffer "*sql*scratchpad.sql"))
+    ("g" (switch-to-buffer "*go*scratchpad.go"))
+    ("j" (switch-to-buffer "*js*scratchpad.js"))
+    ("t" (switch-to-buffer "*ts*scratchpad.ts"))
+    ("r" (switch-to-buffer "*rust*scratchpad.rs"))
+    ("R" (switch-to-buffer "*rest*scratchpad.rest"))
+    ("h" (switch-to-buffer "*html*scratchpad.html"))
+    ("o" (switch-to-buffer "*org*scratchpad.org"))
+    ("T" (switch-to-buffer "*text*scratchpad.txt"))
+    ("m" (switch-to-buffer "*markdown*scratchpad.md")))
+
+  (eval-and-compile
+    (defmacro hydra-help-toggle (text toggle)
+      `(if (bound-and-true-p ,toggle)
+           (format "[x] %s" ,text)
+         (format "[ ] %s" ,text))))
+
+  (defhydra hydra-toggle-stuff (:color blue :hint nil)
+    "Toggle"
+    ("a" abbrev-mode (hydra-help-toggle "abbrev" abbrev-mode) :column "Misc")
+    ("b" dakra-toggle-browser (format "[%s] toggle eww/firefox"
+                                      (if (eq browse-url-browser-function 'browse-url-firefox) "Firefox" "eww")))
+    ("d" toggle-debug-on-error (hydra-help-toggle "debug-on-error" debug-on-error))
+    ("s" sticky-buffer-mode (hydra-help-toggle "Sticky buffer mode" sticky-buffer-mode))
+    ("t" alpha-background-frame-toggle (format "[%s] toggle transparency"
+                                               (if (alpha-background-frame-opaque-p) " " "x")))
+    ("c" column-number-mode (hydra-help-toggle "column-number-mode" column-number-mode) :column "Text")
+    ("f" auto-fill-mode (hydra-help-toggle "fill-mode" auto-fill-function))
+    ("F" web-server-file-server-toggle (hydra-help-toggle "Toggle file file-server" web-server-file-server))
+    ("w" whitespace-mode (hydra-help-toggle "whitespace-mode" whitespace-mode))
+    ("l" toggle-truncate-lines (hydra-help-toggle "truncate-lines" truncate-lines))
+    ("ol" org-toggle-link-display (hydra-help-toggle "org link-display" org-descriptive-links) :column "Org")
+    ("op" org-toggle-pretty-entities (hydra-help-toggle "org pretty-entities" org-pretty-entities))
+    ("oi" org-toggle-inline-images (hydra-help-toggle "org inline-images" org-inline-image-overlays)))
+
+  (defun ansi-term-bash ()
+    "Start ansi-term with bash."
+    (interactive)
+    (ansi-term "/bin/bash"))
+
+  ;; Start different emacs packages (like elfeed or mu4e)
+  (defhydra hydra-emacs-launcher (:color blue :hint nil)
+    "Launch emacs package"
+    ("e" elfeed "Elfeed - RSS/Atom Newsreader" :column "Apps")
+    ("t" transmission "Transmission - Torrent")
+    ("m" mu4e "mu4e - Mail")
+    ("p" proced "proced")
+    ("v" ovpn "VPN")
+    ("c" quick-calc "calc - Quick calc" :column "Utils")
+    ("d" docker "docker")
+    ("C" calendar "calendar")
+    ("T" world-clock "time - Display world time")
+    ("s" hydra-systemctl/body "Systemctl")
+    ("a" ansi-term-bash "Ansi Terminal"  :column "Misc")
+    ("b" brain-fm-play "brain.fm - Stream music")
+    ("E" elisp-index-search "elisp-index-search")
+    ("S" scrot "Screenshot with scrot")
+    ("w" woman "woman - Man page viewer")
+    ("y" (dired youtube-dl-directory) "YouTube - Open dired buffer with youtube downloads")
+    ("z" zone "Zone - Screensaver"))
+
+  ;; Start different external programs (like Termite or Firefox).
+  (defhydra hydra-external-launcher (:color blue :hint nil)
+    "Start external program"
+    ("p" (start-process-shell-command "pavucontrol" nil "pavucontrol") "pavucontrol - sound settings")
+    ("f" (start-process-shell-command "firefox" nil "env GTK_THEME=Arc firefox") "Firefox")
+    ("F" (start-process-shell-command "firefox-developer-edition" nil "env GTK_THEME=Arc firefox-developer-edition") "Firefox Developer Edition")
+    ("k" (start-process-shell-command "keepassxc" nil "keepassxc") "keepassxc - Password Manager")
+    ("l" (start-process-shell-command "i3lockr" nil "i3lockr --blur 25 -- --nofork --ignore-empty-password") "Lock screen")
+    ("n" (start-process-shell-command "networkmanager_dmenu" nil "networkmanager_dmenu") "Networkmanager")
+    ("s" (start-process-shell-command "shutter" nil "shutter") "shutter - Screenshot")
+    ("t" (start-process-shell-command "alacritty" nil "alacritty") "alacritty - Terminal" ))
+
+  (defhydra hydra-diff-hl (:color red)
+    "diff-hl"
+    ("=" diff-hl-diff-goto-hunk "goto hunk")
+    ("<RET>" diff-hl-diff-goto-hunk "goto hunk")
+    ("u" diff-hl-revert-hunk "revert hunk")
+    ("[" diff-hl-previous-hunk "prev hunk")
+    ("p" diff-hl-previous-hunk "prev hunk")
+    ("]" diff-hl-next-hunk "next hunk")
+    ("n" diff-hl-next-hunk "next hunk")
+    ("q" nil "cancel"))
+
+  (defun dakra/insert-unicode (unicode-name)
+    "Same as C-x 8 enter UNICODE-NAME."
+    (insert-char (gethash unicode-name (ucs-names))))
+
+  (defhydra hydra-unicode (:color blue :hint nil)
+    "
+     Unicode  _c_ €   _a_ ä   _A_ Ä
+              _d_ °   _o_ ö   _O_ Ö
+              _e_ €   _u_ Ü   _U_ Ü
+              _p_ £   _s_ ß
+              _m_ µ
+              _r_ →
+     "
+    ("a" (dakra/insert-unicode "LATIN SMALL LETTER A WITH DIAERESIS"))
+    ("A" (dakra/insert-unicode "LATIN CAPITAL LETTER A WITH DIAERESIS"))
+    ("o" (dakra/insert-unicode "LATIN SMALL LETTER O WITH DIAERESIS")) ;;
+    ("O" (dakra/insert-unicode "LATIN CAPITAL LETTER O WITH DIAERESIS"))
+    ("u" (dakra/insert-unicode "LATIN SMALL LETTER U WITH DIAERESIS")) ;;
+    ("U" (dakra/insert-unicode "LATIN CAPITAL LETTER U WITH DIAERESIS"))
+    ("s" (dakra/insert-unicode "LATIN SMALL LETTER SHARP S"))
+    ("c" (dakra/insert-unicode "COPYRIGHT SIGN"))
+    ("d" (dakra/insert-unicode "DEGREE SIGN"))
+    ("e" (dakra/insert-unicode "EURO SIGN"))
+    ("p" (dakra/insert-unicode "POUND SIGN"))
+    ("r" (dakra/insert-unicode "RIGHTWARDS ARROW"))
+    ("m" (dakra/insert-unicode "MICRO SIGN"))))
 #+END_SRC
 * Post Initialization
 #+BEGIN_SRC emacs-lisp
