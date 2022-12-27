@@ -20,6 +20,7 @@
         cljr-slash
         comint-delchar-or-maybe-eof
         comment-dwim-2
+        consult-yank-pop
         counsel-yank-pop
         crux-move-beginning-of-line
         crux-smart-open-line
