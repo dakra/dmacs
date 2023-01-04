@@ -8683,6 +8683,11 @@ mu init --my-address daniel@kraus.my                 \
         mail-envelope-from 'header
         message-sendmail-envelope-from 'header)
   :config
+  ;; Display the main window in the current window instead of making it full screen
+  (add-to-list
+   'display-buffer-alist
+   '("*mu4e-main*" (display-buffer-same-window)))
+
   (defun mu4e-update-mail-and-index-background ()
     "Call `mu4e-update-mail-and-index' to run in background."
     (interactive)
