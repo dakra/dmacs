@@ -441,6 +441,9 @@
 	path = lib/forge
 	url = git@github.com:magit/forge.git
 	info-path = docs
+[submodule "form-feed"]
+	path = lib/form-feed
+	url = https://depp.brause.cc/form-feed.git
 [submodule "ghub"]
 	path = lib/ghub
 	url = git@github.com:magit/ghub.git

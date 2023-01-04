@@ -1348,6 +1348,11 @@ ttf-symbola
 
 #+END_SRC
 
+** form-feed: Show line-breaks (~^L~ ) characters as lines
+#+BEGIN_SRC emacs-lisp
+(use-package form-feed
+  :hook (((clojure-mode emacs-lisp-mode) . form-feed-mode)))
+#+END_SRC
 ** Automatically remove trailing whitespace (only if I put them there)
 #+BEGIN_SRC emacs-lisp
 (use-package ws-butler
