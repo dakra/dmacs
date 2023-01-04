@@ -9379,6 +9379,20 @@ Toggle alpha-background to `alpha-background' or `alpha-background-default' when
 #+END_SRC
 
 ** i3
+
+#+BEGIN_SRC txt :tangle arch-pkglist.txt
+i3status-rust
+#+END_SRC
+To get the current clocked-in org task displayed in the mode line, I use ~i3status-rust~
+and have the following block in it's ~config.yml~:
+
+#+BEGIN_SRC yaml :tangle no
+[[block]]
+block = "custom"
+interval = 20
+command = "emacsclient --eval '(if (org-clock-is-active) (org-no-properties (org-clock-get-clock-string)) \"No active task\")' | cut -d '\"' -f 2 || echo 'Emacs daemon not started'"
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package i3
   :bind (("s-j" . i3-windmove-left)
