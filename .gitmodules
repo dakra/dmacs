@@ -79,6 +79,9 @@
 [submodule "aws"]
 	path = lib/aws
 	url = git@github.com:dakra/aws.el.git
+[submodule "babashka"]
+	path = lib/babashka
+	url = git@github.com:dakra/babashka.el.git
 [submodule "back-button"]
 	path = lib/back-button
 	url = git@github.com:rolandwalker/back-button.git
