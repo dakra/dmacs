@@ -1736,6 +1736,10 @@ Smart region guesses what you want to select by one command:
     (define-key mc/keymap (kbd "C-.") 'mc/skip-to-next-like-this)))
 #+END_SRC
 ** smartrep: Repeat previous command without prefix key
+FIXME: replace with repeat-mode (Emacs 28.)
+[[file:/usr/local/share/emacs/29.0.50/etc/NEWS.28::New mode 'repeat-mode' to allow shorter key sequences.]]
+https://karthinks.com/software/it-bears-repeating/
+https://www.reddit.com/r/emacs/comments/vs4jqm/it_bears_repeating_emacs_28_repeat_mode/
 #+BEGIN_SRC emacs-lisp
 (use-package operate-on-number
   :defer t)
@@ -3425,7 +3429,7 @@ rsync
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(use-package dired-transient-rsync
+(use-package dired-rsync-transient
   ;; Needs to be after dired-x as it binds the "Y" key too
   :after dired-x
   :bind (:map dired-mode-map
@@ -3776,7 +3780,11 @@ avfs
   (require 'em-prompt)
   (defun dakra-eshell-quit-or-delete-char (arg)
     (interactive "p")
-    (if (and (eolp) (looking-back eshell-prompt-regexp nil))
+    ;; Somehow eshell-finge-status-mode adds an additional (not visible?)
+    ;; character to eol since Emacs 30.
+    ;; Just quit eshell if point is at the last or last but one position.
+    (if (and (>= (point) (1- (point-max)))
+             (looking-back eshell-prompt-regexp nil))
         (progn
           (eshell-life-is-too-much) ; Why not? (eshell/exit)
           (ignore-errors
@@ -3880,7 +3888,7 @@ current directory. Just a typical wrapper around the standard
 Since any wildcards in FILENAME need to be escaped, this wraps the shell command.
 
 If not results were found, it calls the `find' executable up to
-two more times, wrapping the FILENAME pattern in wildcat
+two more times, wrapping the FILENAME pattern in wildcard
 matches. This seems to be more helpful to me."
     (let* ((cmd (concat
                  (executable-find "find")
