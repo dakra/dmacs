@@ -6779,7 +6779,6 @@ active and point is inside a string, sort the string."
                (end-of-thing 'edit-indirect-string))
        (user-error "No region marked and not inside a string."))))
   (let* ((buf (current-buffer))
-         (start-point (point))
          (orig-str (buffer-substring-no-properties beg end))
          (class-str (concat "class=\"" orig-str "\""))
          (proc (make-process
@@ -6792,9 +6791,10 @@ active and point is inside a string, sort the string."
     (process-send-eof proc)
     (accept-process-output proc)
     (with-current-buffer buf
-      (delete-region beg end)
-      (goto-char beg)
-      (insert (substring (process-get proc :output) 7 -1)))))
+      (save-excursion
+        (delete-region beg end)
+        (goto-char beg)
+        (insert (substring (process-get proc :output) 7 -1))))))
 #+END_SRC
 
 ** Tex
