@@ -8472,38 +8472,10 @@ man-pages
 #+BEGIN_SRC emacs-lisp
 (use-package ol
   :bind (:map org-mode-map
-         ("C-c )" . hydra-org-link-edit/body)
-         ("C-c C-l" . org-insert-link-dwim))
+         ("C-c )" . hydra-org-link-edit/body))
   :config
   ;; Don't remove links after inserting
   (setq org-link-keep-stored-after-insertion t)
-
-  ;; Download (or use region) as title when url is in kill-ring
-  ;; From: https://xenodium.com/emacs-dwim-do-what-i-mean/
-  (defun org-insert-link-dwim ()
-    "Like `org-insert-link' but with personal dwim preferences."
-    (interactive)
-    (let ((point-in-link (org-in-regexp org-link-any-re 1))
-          (clipboard-url (when (string-match-p "^http" (current-kill 0))
-                           (current-kill 0)))
-          (region-content (when (region-active-p)
-                            (buffer-substring-no-properties (region-beginning)
-                                                            (region-end)))))
-      (cond ((and region-content clipboard-url (not point-in-link))
-             (delete-region (region-beginning) (region-end))
-             (insert (org-link-make-string clipboard-url region-content)))
-            ((and clipboard-url (not point-in-link))
-             (insert (org-link-make-string
-                      clipboard-url
-                      (read-string "Description: "
-                                   (with-current-buffer (url-retrieve-synchronously clipboard-url)
-                                     (dom-text (car
-                                                (dom-by-tag (libxml-parse-html-region
-                                                             (point-min)
-                                                             (point-max))
-                                                            'title))))))))
-            (t
-             (call-interactively 'org-insert-link)))))
 
   ;; (setq org-link-abbrev-alist '(("gh" . "https://www.github.com/%s")))
 
