@@ -1018,7 +1018,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 ** Subword: CamelCase aware editing operations
 #+BEGIN_SRC emacs-lisp
 (use-package subword
-  :hook ((python-mode yaml-mode conf-mode go-mode clojure-mode cider-repl-mode
+  :hook ((python-mode yaml-ts-mode conf-mode go-mode clojure-mode cider-repl-mode
                       java-mode java-ts-mode cds-mode js-mode js-ts-mode) . subword-mode))
 #+END_SRC
 ** Shr: Simple html renderer
@@ -1266,8 +1266,8 @@ different face
 ;; highlight indentations in python
 (use-package highlight-indent-guides
   ;; :disabled t  ; Somehow misaligns often in my Python buffers
-  ;; :hook ((python-mode python-ts-mode sass-mode yaml-mode nim-mode) . highlight-indent-guides-mode)
-  :hook ((yaml-mode) . highlight-indent-guides-mode)
+  ;; :hook ((python-mode python-ts-mode sass-mode yaml-ts-mode nim-mode) . highlight-indent-guides-mode)
+  :hook ((yaml-ts-mode) . highlight-indent-guides-mode)
   :config
   ;; Don't highlight first level (that would be a line at column 1)
   (defun my-highlighter (level responsive display)
@@ -1554,7 +1554,7 @@ is already narrowed."
   :hook ((
           emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode hy-mode
           prolog-mode go-mode cc-mode python-mode
-          typescript-mode json-mode javascript-mode java-mode
+          typescript-mode json-mode json-ts-mode javascript-mode java-mode
           java-ts-mode typescript-ts-mode python-ts-mode js-ts-mode json-ts-mode
           ) . smartparens-strict-mode)
   ;; :hook (prog-mode . smartparens-strict-mode)
@@ -1815,7 +1815,7 @@ Minor modes to selectively hide/show code and comment blocks.
          ([C-tab] . hs-toggle-hiding)))
 
 (use-package outline
-  :hook ((yaml-mode message-mode markdown-mode) . outline-minor-mode)
+  :hook ((yaml-ts-mode message-mode markdown-mode) . outline-minor-mode)
   :bind (:map outline-minor-mode-map
          ([C-tab] . outline-cycle)
          ([backtab] . outline-cycle-buffer)))
@@ -4795,11 +4795,15 @@ plantuml
 #+END_SRC
 *** JSON
 #+BEGIN_SRC emacs-lisp
+(use-package json-ts-mode
+  :mode ("\\.json\\'" "\\.avsc\\'"))
+
 (use-package json-mode
   :disabled t  ;; jsonian is a better and way faster alternative
   :mode ("\\.json\\'" "\\.avsc\\'"))
 
 (use-package jsonian
+  :disabled t  ;; Try json-ts-mode
   :mode ("\\.avsc\\'"))
 #+END_SRC
 *** Parquet
@@ -4843,13 +4847,11 @@ Needs ~parquet-cli~ AUR package.
 
 *** YAML
 #+BEGIN_SRC emacs-lisp
-(use-package yaml-mode
+(use-package yaml-ts-mode
   :mode ("\\.yaml\\'" "\\.yml\\'")
   :config
   ;; Not the perfect outline regexp but better than no folding support
-  (setq outline-regexp "\\([[:space:]]\\{0,2\\}[a-zA-Z_-]+\\):$")
-
-  (setq yaml-indent-offset 2))
+  (setq outline-regexp "\\([[:space:]]\\{0,2\\}[a-zA-Z_-]+\\):$"))
 #+END_SRC
 *** TOML
 #+BEGIN_SRC emacs-lisp
@@ -9337,7 +9339,7 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
   ;; View JSON file attachements inline in mu4e/gnus
   (defun mm-display-json-inline (handle)
     "Show a JSON file from HANDLE inline."
-    (mm-display-inline-fontify handle 'json-mode))
+    (mm-display-inline-fontify handle 'json-ts-mode))
 
   (add-to-list 'mm-inline-media-tests '("application/json" mm-display-json-inline identity))
   (add-to-list 'mm-inlined-types "application/json"))
