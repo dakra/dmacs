@@ -328,8 +328,9 @@
 	url = git@github.com:elixir-editors/emacs-elixir.git
 [submodule "emacsql"]
 	path = lib/emacsql
-	url = git@github.com:skeeto/emacsql.git
+	url = git@github.com:magit/emacsql.git
 	no-byte-compile = emacsql-pg.el
+	no-byte-compile = emacsql-sqlite-module.el
 [submodule "embark"]
 	path = lib/embark
 	url = git@github.com:oantolin/embark.git
