@@ -1014,7 +1014,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 ** Subword: CamelCase aware editing operations
 #+BEGIN_SRC emacs-lisp
 (use-package subword
-  :hook ((python-mode yaml-ts-mode conf-mode go-mode clojure-mode cider-repl-mode
+  :hook ((python-mode yaml-ts-mode conf-mode go-mode go-ts-mode clojure-mode cider-repl-mode
                       java-mode java-ts-mode cds-mode js-mode js-ts-mode) . subword-mode))
 #+END_SRC
 ** Shr: Simple html renderer
@@ -1549,7 +1549,7 @@ is already narrowed."
   :defer 1
   :hook ((
           emacs-lisp-mode lisp-mode lisp-data-mode clojure-mode cider-repl-mode hy-mode
-          prolog-mode go-mode cc-mode python-mode
+          prolog-mode go-mode go-ts-mode cc-mode python-mode
           typescript-mode json-mode json-ts-mode javascript-mode java-mode
           java-ts-mode typescript-ts-mode python-ts-mode js-ts-mode json-ts-mode
           ) . smartparens-strict-mode)
@@ -5016,6 +5016,16 @@ go-lint-git
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
+(use-package go-ts-mode
+  :hook (go-ts-mode . apheleia-mode)
+  :bind (:map go-ts-mode-map
+         ("M-?" . godoc-at-point)
+         ("M-." . godef-jump)
+         ("M-*" . pop-tag-mark)  ;; Jump back after godef-jump
+         ("C-c m r" . go-run))
+  :config
+  (setq go-ts-mode-indent-offset 4))
+
 (use-package go-mode
   :mode "\\.go\\'"
   :hook (go-mode . go-setup)
@@ -5108,19 +5118,6 @@ Formatting is according to the commit message conventions."
     (setq-local compile-command (concat "go run " (shell-quote-argument buffer-file-name)))
     ;; gofmt on save
     (apheleia-mode)))
-
-(use-package helm-go-package
-  :disabled t
-  :after (helm go-mode)
-  :config
-  ;; Re-order helm actions (so ENTER is 'Display GoDoc')
-  (setq helm-go-package-actions (helm-make-actions
-                                 "Display GoDoc" 'helm-go-package--godoc-browse-url
-                                 "Show documentation" 'godoc
-                                 "Visit package's directory" 'helm-go-package--visit-package-directory
-                                 "Add a new import"  (lambda (candidate) (go-import-add nil candidate))
-                                 "Add a new import as"  (lambda (candidate) (go-import-add t candidate))))
-  (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
 
 (use-package company-go
   :after (company go-mode)
