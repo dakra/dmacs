@@ -4930,9 +4930,6 @@ Needs ~parquet-cli~ AUR package.
 
 (use-package docker-compose-mode
   :mode ("docker-compose[^/]*\\.ya?ml\\'"))
-
-(use-package docker-tramp
-  :after tramp)
 #+END_SRC
 ** Kubel (Kubernetes interface)
 #+BEGIN_SRC emacs-lisp

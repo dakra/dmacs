@@ -280,9 +280,6 @@
 [submodule "docker-compose-mode"]
 	path = lib/docker-compose-mode
 	url = git@github.com:meqif/docker-compose-mode.git
-[submodule "docker-tramp"]
-	path = lib/docker-tramp
-	url = git@github.com:emacs-pe/docker-tramp.el.git
 [submodule "dockerfile-mode"]
 	path = lib/dockerfile-mode
 	url = git@github.com:spotify/dockerfile-mode.git
@@ -952,6 +949,7 @@
 [submodule "po-mode"]
 	path = lib/po-mode
 	url = git@github.com:emacsmirror/po-mode.git
+	no-byte-compile = po-compat.el
 [submodule "pocket-lib"]
 	path = lib/pocket-lib
 	url = git@github.com:alphapapa/pocket-lib.el.git
