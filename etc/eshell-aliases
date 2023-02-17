@@ -15,6 +15,7 @@ alias l ls -l $*
 alias la ls -al $*
 alias ll ls -al $*
 alias man woman $1
+alias mpv-no-osd mpv --no-osd-bar --osd-on-seek=no $*
 alias pk eshell-up-peek $1
 alias up eshell-up $1
 alias vim find-file $1

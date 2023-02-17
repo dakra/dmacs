@@ -17,7 +17,7 @@
 	url = git@github.com:codesuki/add-node-modules-path.git
 [submodule "adoc-mode"]
 	path = lib/adoc-mode
-	url = git@github.com:emacsorphanage/adoc-mode.git
+	url = https://github.com/bbatsov/adoc-mode
 [submodule "aggressive-indent"]
 	path = lib/aggressive-indent
 	url = git@github.com:Malabarba/aggressive-indent-mode.git
@@ -133,7 +133,7 @@
 	load-path = src/elisp
 [submodule "closql"]
 	path = lib/closql
-	url = git@github.com:emacscollective/closql.git
+	url = https://github.com/magit/closql
 [submodule "cmake-font-lock"]
 	path = lib/cmake-font-lock
 	url = git@github.com:Lindydancer/cmake-font-lock.git
@@ -215,7 +215,7 @@
 	url = git@github.com:kiwanami/emacs-ctable.git
 [submodule "cython-mode"]
 	path = lib/cython-mode
-	url = git@github.com:emacsmirror/cython-mode.git
+	url = https://github.com/cython/emacs-cython-mode
 [submodule "dap-mode"]
 	path = lib/dap-mode
 	url = git@github.com:emacs-lsp/dap-mode.git
@@ -897,7 +897,7 @@
 	url = git@github.com:purcell/package-lint.git
 [submodule "packed"]
 	path = lib/packed
-	url = git@github.com:emacscollective/packed.git
+	url = https://github.com/emacsorphanage/packed
 [submodule "page-break-lines"]
 	path = lib/page-break-lines
 	url = git@github.com:purcell/page-break-lines.git

@@ -55,6 +55,8 @@
         org-fill-paragraph
         org-force-self-insert
         org-kill-line
+        org-metaleft
+        org-metaright
         org-return
         org-self-insert-command
         org-shiftdown
