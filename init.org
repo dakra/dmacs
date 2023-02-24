@@ -4866,9 +4866,10 @@ Needs ~parquet-cli~ AUR package.
 #+BEGIN_SRC emacs-lisp
 (use-package csv-mode
   :mode "\\.csv\\'"
+  :hook ((csv-mode . csv-align-mode)
+         (csv-mode . csv-header-line))
   :init (setq csv-separators '("," "	" ";" "|")))
 #+END_SRC
-
 *** CDS Core Data Services
 #+BEGIN_SRC emacs-lisp
 (use-package cds-mode
