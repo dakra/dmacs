@@ -8588,16 +8588,18 @@ xapian-core
 For =mu= to recognize personal email addresses you have to pass them to ~mu init~
 before indexing with:
 #+BEGIN_SRC sh :tangle no
-mu init --my-address daniel@kraus.my                 \
-        --my-address daniel.kraus@gmail.com          \
-        --my-address d@niel-kraus.de                 \
-        --my-address daniel@skor.buzz                \
-        --my-address dakra-cepheus@tr0ll.net         \
-        --my-address extern.daniel.kraus@sovendus.de \
-        --my-address daniel.kraus@paessler.com       \
-        --my-address daniel.kraus@ebenefuenf.de      \
-        --my-address daniel@restalchemy.org          \
-        --my-address daniel@hogaso.com
+mu init --maildir=./Maildir                          \
+        --my-address=daniel@kraus.my                 \
+        --my-address=daniel.kraus@gmail.com          \
+        --my-address=d@niel-kraus.de                 \
+        --my-address=daniel@skor.buzz                \
+        --my-address=/dakra-.*@tr0ll\.net/           \
+        --my-address=extern.daniel.kraus@sovendus.de \
+        --my-address=daniel.kraus@paessler.com       \
+        --my-address=daniel.kraus@ebenefuenf.de      \
+        --my-address=daniel@restalchemy.org          \
+        --my-address=daniel@price-monitor.info       \
+        --my-address=daniel@hogaso.com
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -8707,6 +8709,9 @@ mu init --my-address daniel@kraus.my                 \
      ;; and from Kindergarden to 'loewen'
      ((mu4e-message-contact-field-matches msg '(:to :cc :bcc) "loewenkindergarten@googlegroups\\.com")
       "/private/loewen")
+     ;; any to price-monitor
+     ((mu4e-message-contact-field-matches msg '(:to :cc :bcc) "price-monitor")
+      "/private/price-monitor")
      ;; important to have a catch-all at the end!
      (t  "/private/Archive")))
 
