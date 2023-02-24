@@ -1144,6 +1144,15 @@ With a prefix argument, copy the link to the online manual instead."
   ;; so when I call it, it will list all open ports with processes
   (setq netstat-program-options '("-tulpn")))
 #+END_SRC
+** dstat
+#+BEGIN_SRC emacs-lisp
+(defun dstat ()
+  "Run `dstat' cli tool to show various system resource stats."
+  (interactive)
+  (let ((compilation-buffer-name-function (lambda (_mode) "*dstat*")))
+    (compile "dstat -ta")))
+#+END_SRC
+
 ** Xwidget - Show a webkit view in a buffer
 #+BEGIN_SRC emacs-lisp
 (use-package xwidget
