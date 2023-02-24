@@ -5743,7 +5743,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
        process-filter)))
 
   ;; jack-in for babashka from corgi
-  ;; https://github.com/lambdaisland/corgi-packages/blob/main/corgi-clojure/corgi-clojure.el#L192-L211
+  ;; Code mostly from corgi: https://github.com/lambdaisland/corgi-packages/blob/main/corgi-clojure/corgi-clojure.el#L192-L211
   (defun cider-jack-in-babashka (&optional project-dir)
     "Start a utility CIDER REPL backed by Babashka, not related to a specific project."
     (interactive)
@@ -5774,7 +5774,10 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   (setq cider-switch-to-repl-on-insert nil)
   ;; Eval automatically when insreting in the repl (e..g. C-c C-j d/e) (unless called with prefix)
   (setq cider-invert-insert-eval-p t)
-  ;; Don't focus error buffer when error is thrown
+  ;; Show error as overlay instead of the buffer (buffer is generated anyway in case it's needed)
+  (setq cider-show-error-buffer nil)
+  ;; If we set `cider-show-error-buffer' to non-nil,
+  ;; don't focus error buffer when error is thrown
   (setq cider-auto-select-error-buffer nil)
   ;; Don't focus inspector after evaluating something
   (setq cider-inspector-auto-select-buffer nil)
