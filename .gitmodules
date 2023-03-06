@@ -124,6 +124,9 @@
 [submodule "clj-refactor"]
 	path = lib/clj-refactor
 	url = git@github.com:clojure-emacs/clj-refactor.el.git
+[submodule "clojure-essential-ref"]
+	path = lib/clojure-essential-ref
+	url = https://github.com/p3r7/clojure-essential-ref
 [submodule "clojure-mode"]
 	path = lib/clojure-mode
 	url = git@github.com:clojure-emacs/clojure-mode.git
@@ -578,6 +581,9 @@
 	path = lib/ivy
 	url = git@github.com:abo-abo/swiper.git
 	no-byte-compile = elpa.el
+[submodule "jarchive"]
+	path = lib/jarchive
+	url = https://github.com/emacsmirror/jarchive
 [submodule "jira-markup-mode"]
 	path = lib/jira-markup-mode
 	url = git@github.com:mnuessler/jira-markup-mode.git
