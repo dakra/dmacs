@@ -597,16 +597,11 @@ ttf-croscore
   :unless noninteractive
   :init
   (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-fringes nil ;; {nil,'subtle,'intense}
-        modus-themes-mode-line '(moody accented borderless)  ;; (padding . 4) (height . 0.9)
-        modus-themes-region '(accented bg-only)
-        modus-themes-syntax '(alt-syntax green-strings yellow-comments)  ;; faint
-        modus-themes-paren-match '(intense))
-  (modus-themes-load-themes)
+        modus-themes-bold-constructs t)
+  ;; (modus-themes-load-themes)
   :config
   ;; For the dark theme I want a lightly lighter background than completely black
-  (setq modus-themes-vivendi-color-overrides '((bg-main . "#101010")))
+  ;; (setq modus-themes-vivendi-color-overrides '((bg-main . "#101010")))
 
   ;; (modus-themes-load-operandi)  ;; light theme
   ;; (modus-themes-load-vivendi)  ;; dark theme
@@ -1485,7 +1480,7 @@ org-src-block actually calls `org-edit-src-code'.
 With prefix P, don't widen, just narrow even if buffer
 is already narrowed."
     (interactive "P")
-    (declare (interactive-only))
+    ;; (declare (interactive-only))
     (cond ((and (fancy-narrow-active-p) (not p)) (fancy-widen))
           ((region-active-p)
            (fancy-narrow-to-region (region-beginning)
@@ -1513,7 +1508,7 @@ org-src-block actually calls `org-edit-src-code'.
 With prefix P, don't widen, just narrow even if buffer
 is already narrowed."
     (interactive "P")
-    (declare (interactive-only))
+    ;; (declare (interactive-only))
     (cond ((and (buffer-narrowed-p) (not p)) (widen))
           ((region-active-p)
            (narrow-to-region (region-beginning)
@@ -2460,7 +2455,7 @@ With two `C-u' `C-u' prefix args, add and display current project."
                          (treemacs--select-visible-window)))
              ('exists  (treemacs-select-window))
              ('none    (treemacs--init))))
-          ((eq arg 4) (treemacs-display-current-project-exclusively))
+          ((eq arg 4) (treemacs-add-and-display-current-project-exclusively))
           ((eq arg 16) (treemacs-add-and-display-current-project))))
 
   (defun treemacs-ignore-python-files (file _)
@@ -3104,7 +3099,7 @@ no stored indexes (TAGS) or persistent background processes.  Dumb Jump performs
 (use-package dumb-jump
   :bind (("M-g o" . xref-find-definitions-other-window)
          ("M-g j" . xref-find-definitions)
-         ("M-g p" . xref-pop-marker-stack))
+         ("M-g p" . xref-go-back))
   :init
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :config
@@ -4025,12 +4020,12 @@ Set as backend in =eshell-mode-hook= in eshell section above.
     (prefix (and (eq major-mode 'eshell-mode)
                  (let ((word (company-grab-word)))
                    (save-excursion
-                     (eshell-bol)
+                     (beginning-of-line)
                      (and (looking-at-p (s-concat word "$")) word)))))
     (candidates (cl-remove-duplicates
                  (->> (ring-elements eshell-history-ring)
-                   (cl-remove-if-not (lambda (item) (s-prefix-p arg item)))
-                   (mapcar 's-trim))
+                      (cl-remove-if-not (lambda (item) (s-prefix-p arg item)))
+                      (mapcar 's-trim))
                  :test 'string=))
     (sorted t)))
 #+END_SRC
@@ -4777,9 +4772,6 @@ graphviz
   :mode ("\\.dot\\'")
   :config
   (setq graphviz-dot-indent-width 4))
-
-(use-package company-graphviz-dot
-  :after graphviz-dot-mode)
 #+END_SRC
 ** PlantUML
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
@@ -7389,7 +7381,7 @@ Show clock history when not in org buffer or when called with prefix argument."
                               " line missing at position %s")
                              (1+ start))))
                   (if (re-search-forward "^[ \t]*:END:" limit t)
-                      (outline-flag-region start (point-at-eol) t)
+                      (outline-flag-region start (line-end-position) t)
                     (user-error msg))))))))))
 
   (defun org-hide-all-drawers ()
@@ -7663,7 +7655,7 @@ Show clock history when not in org buffer or when called with prefix argument."
   (appt-activate)
   (org-agenda-to-appt)
 
-  (setq org-catch-invisible-edits 'show-and-error)
+  (setq org-fold-catch-invisible-edits 'show-and-error)
   (setq org-auto-align-tags t)
   ;; Display tags farther right
   ;; (setq org-agenda-tags-column 0)
