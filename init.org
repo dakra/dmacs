@@ -5614,11 +5614,30 @@ openjdk11-src
 (use-package cider
   :bind (:map cider-mode-map
          ("M-?" . cider-maybe-clojuredocs)
+         ("C-c C-t C-c" . -cider-test-run-rich-comment-tests)
+         ("C-c C-o" . -cider-find-and-clear-repl-and-result-output)
          :map cider-repl-mode-map
          ("M-?" . cider-doc))
   :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          (cider-mode . eldoc-mode))
   :config
+
+  ;; Output to the cider-result buffer
+  ;; This needs my personal WIP fork: https://github.com/dakra/cider/tree/wip
+  (setq cider-interactive-eval-output-destination 'cider-result-buffer)
+
+  (defun -cider-find-and-clear-repl-and-result-output (&optional clear-repl)
+    "Like `cider-find-and-clear-repl-output' but additionally clear
+the *cider-result* buffer."
+    (interactive "P")
+    (cider-find-and-clear-repl-output clear-repl)
+    (let ((buf (get-buffer cider-result-buffer)))
+      (when buf
+        (save-excursion
+          (with-current-buffer buf
+            (let ((inhibit-read-only t))
+              (delete-region (point-min) (point-max))))))))
+
   (defun cider-maybe-clojuredocs (&optional arg)
     "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
     (interactive "P")
@@ -5644,6 +5663,12 @@ openjdk11-src
          (s-contains? ":cljs" cider-clojure-cli-global-options)))
   (add-to-list 'cider-jack-in-nrepl-middlewares
                '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
+
+  (defun -cider-test-run-rich-comment-tests ()
+    "Run rich comment tests in current namespace."
+    (interactive)
+    (save-buffer)
+    (cider-interactive-eval "((requiring-resolve 'com.mjdowney.rich-comment-tests/run-ns-tests!) *ns*)"))
 
   ;; Update classpath without restarting the repl
   ;; Requires lambdaisland.classpath which is under :licp alias in my global deps.edn
