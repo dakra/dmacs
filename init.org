@@ -821,6 +821,9 @@ Allow some commands as safe by default
          ("M-c"   . dakra-capitalize-dwim))
   :hook ((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
   :config
+  ;; Hide commands in M-x which do not apply to the current mode.
+  (setq read-extended-command-predicate #'command-completion-default-include-p)
+
   (defun text-mode-autofill-setup ()
     "Set fill-column to 68 and turn on auto-fill-mode."
     (setq-local fill-column 68)
@@ -2112,9 +2115,9 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
 ** Undo
 #+BEGIN_SRC emacs-lisp
 (use-package undo-fu-session
+  :hook (after-init . undo-fu-session-global-mode)
   :config
-  (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'"))
-  (global-undo-fu-session-mode))
+  (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 
 (use-package vundo
   :config
@@ -2368,6 +2371,7 @@ created a dedicated process for the project."
           (pop-to-buffer vterm-buffer (bound-and-true-p display-comint-buffer-action))
         (vterm))))
   ;; (add-to-list 'project-switch-commands '(project-vterm "Vterm") t)
+  ;; (add-to-list 'project-switch-commands '(magit-project-status "Magit" ?m) t)
   ;; Don't show a dispatch menu when switching projects but always choose project buffer/file
   (setq project-switch-commands #'consult-project-extra-find)
   (add-to-list 'project-kill-buffer-conditions '(major-mode . vterm-mode)))
@@ -4490,6 +4494,8 @@ proselint
   :hook ((prog-mode ledger-mode systemd-mode
           mu4e-compose-mode markdown-mode rst-mode) . flycheck-mode)
   :config
+  ;; Don't initialize packages (as we don't use package.el)
+  (setq flycheck-emacs-lisp-initialize-packages nil)
   ;; Use the load-path from running Emacs when checking elisp files
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
@@ -4514,6 +4520,15 @@ proselint
   (setq flycheck-python-mypy-cache-dir "/home/daniel/.mypy-cache")
   (setq flycheck-flake8-maximum-line-length 110))
 #+END_SRC
+** Eglot: Emacs builtin LSP client
+#+BEGIN_SRC emacs-lisp
+(use-package eglot
+  :defer t
+  :config
+  (setq eglot-extend-to-xref t)
+  (setq eglot-autoshutdown t))
+#+END_SRC
+
 ** LSP: Language Server Protocol
 For C/C++/Objective C support install ~ccls~ and =lldb= for debugging.
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
@@ -4872,7 +4887,14 @@ Needs ~parquet-cli~ AUR package.
   :mode "\\.csv\\'"
   :hook ((csv-mode . csv-align-mode)
          (csv-mode . csv-header-line))
-  :init (setq csv-separators '("," "	" ";" "|")))
+  :init
+  ;; Don't font-lock as comment when there's a `##'
+  ;; string somewhere inside a CSV line.
+  (setq csv-comment-start-default nil)
+  ;; Add more separators.
+  ;; This variable has to be set *before*
+  ;; loading csv-mode (i.e. the use-pacakge :init block)
+  (setq csv-separators '("," "	" ";" "|")))
 #+END_SRC
 *** CDS Core Data Services
 #+BEGIN_SRC emacs-lisp
@@ -6912,7 +6934,7 @@ Helper function for URL encode / decode
   (use-package helm-emmet :after helm :disabled t))
 
 (use-package rainbow-mode
-  :hook (css-mode scss-mode sass-mode emacs-lisp-mode hy-mode))
+  :hook (css-mode scss-mode sass-mode emacs-lisp-mode))
 
 (use-package scss-mode
   :defer t

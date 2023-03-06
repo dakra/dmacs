@@ -126,6 +126,7 @@
         ivy-wgrep-change-to-wgrep-mode
         magit-section-backward
         magit-section-forward
+        mc--insert-number-and-increase
         mc/vertical-align-with-space
         org-clock-goto
         org-edit-src-save
