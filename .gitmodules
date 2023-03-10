@@ -840,6 +840,9 @@
 [submodule "org-modern"]
 	path = lib/org-modern
 	url = git@github.com:minad/org-modern.git
+[submodule "org-modern-indent"]
+	path = lib/org-modern-indent
+	url = git@github.com:jdtsmith/org-modern-indent.git
 [submodule "org-msg"]
 	path = lib/org-msg
 	url = git@github.com:jeremy-compostella/org-msg.git

@@ -7995,13 +7995,12 @@ NAME may be nil for unnamed sessions."
 *** Org-indent: Indent text according to outline structure.
 #+BEGIN_SRC emacs-lisp
 (use-package org-indent
-  :disabled t  ;; conflicts with some org-modern features (e.g. left src block borders)
   :hook (org-mode . org-indent-mode))
 #+END_SRC
 *** Org-superstar: Use utf-8 characters instead of `*` as bullet points
 #+BEGIN_SRC emacs-lisp
 (use-package org-superstar
-  :disabled t
+  :disabled t  ;; Replaced by org-modern
   :hook (org-mode . org-superstar-mode)
   :config
   ;;(setq org-superstar-headline-bullets-list '("◉" "🞛" "○" "▷" "✸"))
@@ -8023,6 +8022,14 @@ NAME may be nil for unnamed sessions."
      (internal-border-width . 0)))
 
   (setq org-modern-star ["❶" "❷" "❸" "❹" "❺" "❻" "❼"]))
+#+END_SRC
+*** org-moden-indent
+#+BEGIN_SRC emacs-lisp
+(use-package org-modern-indent
+  :defer t
+  :init
+  ;; Add late to hook
+  (add-hook 'org-mode-hook #'org-modern-indent-mode))
 #+END_SRC
 
 *** Org-capture
