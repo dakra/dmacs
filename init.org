@@ -485,7 +485,10 @@ have the latest Emacs from master installed.
 #+END_SRC
 *** Epkg
 #+BEGIN_SRC emacs-lisp
-(use-package epkg :defer t)
+(use-package epkg
+  :defer t
+  :init
+  (setq epkg-database-connector 'sqlite-builtin))
 #+END_SRC
 ** Emacs native-comp
 I use the Emacs =native-comp= branch.
