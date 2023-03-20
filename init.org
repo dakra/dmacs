@@ -5627,7 +5627,7 @@ openjdk11-src
 
   ;; Output to the cider-result buffer
   ;; This needs my personal WIP fork: https://github.com/dakra/cider/tree/wip
-  (setq cider-interactive-eval-output-destination 'cider-result-buffer)
+  ;; (setq cider-interactive-eval-output-destination 'cider-result-buffer)
 
   (defun -cider-find-and-clear-repl-and-result-output (&optional clear-repl)
     "Like `cider-find-and-clear-repl-output' but additionally clear
@@ -5830,12 +5830,14 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   ;; Eval automatically when insreting in the repl (e..g. C-c C-j d/e) (unless called with prefix)
   (setq cider-invert-insert-eval-p t)
   ;; Show error as overlay instead of the buffer (buffer is generated anyway in case it's needed)
-  (setq cider-show-error-buffer nil)
+  (setq cider-show-error-buffer 'except-in-repl)
   ;; If we set `cider-show-error-buffer' to non-nil,
   ;; don't focus error buffer when error is thrown
   (setq cider-auto-select-error-buffer nil)
   ;; Don't focus inspector after evaluating something
   (setq cider-inspector-auto-select-buffer nil)
+  ;; Don't show tooltip with mouse hover
+  (setq cider-use-tooltips nil)
   ;; Display context dependent info in the eldoc where possible.
   (setq cider-eldoc-display-context-dependent-info t)
   ;; Don't pop to the REPL buffer on connect
@@ -5849,14 +5851,19 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 (use-package clj-refactor
   :hook (clojure-mode . clj-refactor-mode)
   :config
-  (dolist (magic-require '(("csv"      . "clojure.data.csv")
+  (dolist (magic-require '(("aero"     . "aero.core")
+                           ("clerk"    . "nextjournal.clerk")
+                           ("csv"      . "clojure.data.csv")
                            ("edn"      . "clojure.edn")
+                           ("http"     . "babashka.http-client")
+                           ("jdbc"     . "next.jdbc")
                            ;; ("match"    . "clojure.core.match")
                            ("walk"     . "clojure.walk")
                            ("pprint"   . "clojure.pprint")
                            ;; ("http"  . "clj-http.client")
                            ("reagent"  . "reagent.core")
-                           ("re-frame" . "re-frame.core")))
+                           ("re-frame" . "re-frame.core")
+                           ("tick"     . "tick.core")))
     (add-to-list 'cljr-magic-require-namespaces magic-require)))
 #+END_SRC
 **** clj-kondo Flycheck integration with the clj-kondo linter
