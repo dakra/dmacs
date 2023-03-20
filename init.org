@@ -8677,6 +8677,7 @@ mu init --maildir=./Maildir                          \
         --my-address=daniel.kraus@ebenefuenf.de      \
         --my-address=daniel@restalchemy.org          \
         --my-address=daniel@price-monitor.info       \
+        --my-address=dakra@2spicy.de                 \
         --my-address=daniel@hogaso.com
 #+END_SRC
 
@@ -8692,6 +8693,8 @@ mu init --maildir=./Maildir                          \
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash)
          ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
+         :map mu4e-search-minor-mode-map
+         ("P" . mu4e-view-headers-prev)
          :map mu4e-view-mode-map
          ("A" . mu4e-view-attachment-action)
          ("M-o" . ace-link-mu4e)
@@ -8830,7 +8833,7 @@ mu init --maildir=./Maildir                          \
                                    "maildir:/sovendus/Inbox OR "
                                    "maildir:/sap/Inbox OR "
                                    "maildir:/gmail/inbox OR "
-                                   "maildir:/atomx/inbox OR "
+                                   "maildir:/spicy/inbox OR "
                                    "maildir:/hogaso/inbox OR "
                                    "maildir:/e5/Inbox")
                           "All inboxes" ?i)
@@ -8842,8 +8845,8 @@ mu init --maildir=./Maildir                          \
                                    "NOT list:emacs-orgmode.gnu.org AND "
                                    "NOT maildir:/private/Junk AND "
                                    "NOT maildir:/private/Trash AND "
-                                   "NOT maildir:/atomx/spam AND "
-                                   "NOT maildir:/atomx/trash AND "
+                                   "NOT maildir:/spicy/spam AND "
+                                   "NOT maildir:/spicy/trash AND "
                                    "NOT maildir:/paessler/Inbox AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
                                    "NOT maildir:/sovendus/Trash AND "
@@ -8859,8 +8862,8 @@ mu init --maildir=./Maildir                          \
                                    "NOT flag:seen AND "
                                    "NOT maildir:/private/Junk AND "
                                    "NOT maildir:/private/Trash AND "
-                                   "NOT maildir:/atomx/spam AND "
-                                   "NOT maildir:/atomx/trash AND "
+                                   "NOT maildir:/spicy/spam AND "
+                                   "NOT maildir:/spicy/trash AND "
                                    "NOT maildir:/paessler/Inbox AND "
                                    "NOT maildir:/paessler/Deleted\\ Items AND "
                                    "NOT maildir:/sovendus/Trash AND "
@@ -8888,8 +8891,8 @@ mu init --maildir=./Maildir                          \
 
   ;; allow for updating mail using 'U' in the main view:
   ;; (only update inboxes)
-  ;; (setq mu4e-get-mail-command "mbsync private:Inbox sovendus:Inbox e5:Inbox gmail-inbox atomx-inbox hogaso-inbox")
-  (setq mu4e-get-mail-command "mbsync private:INBOX gmail-inbox")  ;; sovendus:INBOX
+  ;; (setq mu4e-get-mail-command "mbsync private:Inbox sovendus:Inbox e5:Inbox gmail-inbox spicy-inbox hogaso-inbox")
+  (setq mu4e-get-mail-command "mbsync private:INBOX gmail-inbox spicy-inbox")  ;; sovendus:INBOX
   ;; for update all:
   ;;(setq mu4e-get-mail-command "mbsync -a")
 
@@ -9072,19 +9075,19 @@ mu init --maildir=./Maildir                          \
                      ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
                      ( mu4e-sent-messages-behavior  . delete)))
            ,(make-mu4e-context
-             :name "atomx"
-             :enter-func (lambda () (mu4e-message "Switch to the Atomx context"))
-             :match-func (mu4e-context-match-fun "^/atomx")
-             :vars '(( user-mail-address  . "daniel@atomx.com" )
-                     ( mu4e-maildir-shortcuts . (("/atomx/inbox"      . ?i)
-                                                 ("/atomx/sent_mail"  . ?s)
-                                                 ("/atomx/trash"      . ?t)
-                                                 ("/atomx/drafts"     . ?d)
-                                                 ("/atomx/all_mail"   . ?a)))
-                     ( mu4e-drafts-folder . "/atomx/drafts" )
-                     ( mu4e-sent-folder   . "/atomx/sent_mail" )
-                     ( mu4e-trash-folder  . "/atomx/trash" )
-                     ( mu4e-refile-folder . "/atomx/all_mail" )
+             :name "spicy"
+             :enter-func (lambda () (mu4e-message "Switch to the 2Spicy context"))
+             :match-func (mu4e-context-match-fun "^/spicy")
+             :vars '(( user-mail-address  . "daniel@spicy.com" )
+                     ( mu4e-maildir-shortcuts . (("/spicy/inbox"      . ?i)
+                                                 ("/spicy/sent_mail"  . ?s)
+                                                 ("/spicy/trash"      . ?t)
+                                                 ("/spicy/drafts"     . ?d)
+                                                 ("/spicy/all_mail"   . ?a)))
+                     ( mu4e-drafts-folder . "/spicy/drafts" )
+                     ( mu4e-sent-folder   . "/spicy/sent_mail" )
+                     ( mu4e-trash-folder  . "/spicy/trash" )
+                     ( mu4e-refile-folder . "/spicy/all_mail" )
                      ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
                      ( mu4e-sent-messages-behavior  . delete)))
            ,(make-mu4e-context
