@@ -1199,7 +1199,11 @@ With a prefix argument, copy the link to the online manual instead."
 ** Eldoc: Display help
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
-  :hook (prog-mode . eldoc-mode))
+  :hook (prog-mode . eldoc-mode)
+  :config
+  (setq eldoc-documentation-default 'eldoc-documentation-compose-eagerly)
+  (eldoc-add-command-completions "sp-")
+  (eldoc-add-command-completions "paredit-"))
 #+END_SRC
 ** Dimmer: Visually highlight the selected buffer
 #+BEGIN_SRC emacs-lisp
