@@ -17,6 +17,7 @@
         c-electric-slash
         c-electric-star
         c-indent-line-or-region
+        cider-eval-defun-at-point
         cljr-slash
         comint-delchar-or-maybe-eof
         comment-dwim-2
@@ -47,6 +48,7 @@
         markdown-exdent-or-delete
         markdown-outdent-or-delete
         mouse-yank-primary
+        org-archive-subtree-default
         org-beginning-of-line
         org-ctrl-c-ctrl-c
         org-cycle
