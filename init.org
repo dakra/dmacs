@@ -9380,10 +9380,10 @@ Encrypt mails by calling (mml-secure-message-encrypt-pgpmime)
               (local-set-key (kbd "<tab>") 'shr-next-link)
               (local-set-key (kbd "<backtab>") 'shr-previous-link))))
 #+END_SRC
-** mu4e-patch: Colorize patch-based emails
+** message-view-patch: Colorize patch-based emails
 #+BEGIN_SRC emacs-lisp
-(use-package mu4e-patch
-  :hook (mu4e-view-mode . mu4e-patch-highlight))
+(use-package message-view-patch
+  :hook (gnus-part-display . message-view-patch-highlight))
 #+END_SRC
 ** mm-*: View MIME objects
 #+BEGIN_SRC emacs-lisp

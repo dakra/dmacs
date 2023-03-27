@@ -728,6 +728,9 @@
 [submodule "markup-faces"]
 	path = lib/markup-faces
 	url = git@github.com:sensorflo/markup-faces.git
+[submodule "message-view-patch"]
+	path = lib/message-view-patch
+	url = https://github.com/seanfarley/message-view-patch
 [submodule "minions"]
 	path = lib/minions
 	url = git@github.com:tarsius/minions.git
@@ -757,9 +760,6 @@
 [submodule "mu4e-maildirs-extension"]
 	path = lib/mu4e-maildirs-extension
 	url = git@github.com:agpchil/mu4e-maildirs-extension.git
-[submodule "mu4e-patch"]
-	path = lib/mu4e-patch
-	url = git@github.com:seanfarley/mu4e-patch.git
 [submodule "multiple-cursors"]
 	path = lib/multiple-cursors
 	url = git@github.com:magnars/multiple-cursors.el.git
