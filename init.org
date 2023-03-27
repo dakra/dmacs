@@ -5653,23 +5653,26 @@ the *cider-result* buffer."
       (cider-doc)))
 
   ;; Location of the jdk sources. In Arch Linux package `openjdk-src'
-  (setq cider-jdk-src-paths "/usr/lib/jvm/java-11-openjdk/lib/src.zip")
+  (setq cider-jdk-src-paths "/usr/lib/jvm/java-19-openjdk/lib/src.zip")
 
   (require 's)
 
+  (defmacro -cider-check-alias-fn (alias)
+    "Return predicate function that check if cider contains alias string ALIAS."
+    `(lambda (&rest _)
+       (or
+        (and cider-clojure-cli-aliases
+             (s-contains? ,alias cider-clojure-cli-aliases))
+        (and cider-clojure-cli-global-options
+             (s-contains? ,alias cider-clojure-cli-global-options)))))
+
   ;; Inject reveal middleware in cider-jack-in when the `:reveal' alias is set
-  (defun cider-cli-global-options-contains-reveal? (&rest _)
-    (and cider-clojure-cli-global-options
-         (s-contains? ":reveal" cider-clojure-cli-global-options)))
   (add-to-list 'cider-jack-in-nrepl-middlewares
-               '("vlaaad.reveal.nrepl/middleware" :predicate cider-cli-global-options-contains-reveal?))
+               `("vlaaad.reveal.nrepl/middleware" :predicate ,(-cider-check-alias-fn ":reveal")))
 
   ;; Inject shadowcljs nrepl middleware in cider-jack-in when the `:cljs' alias is set
-  (defun cider-cli-global-options-contains-cljs? (&rest _)
-    (and cider-clojure-cli-global-options
-         (s-contains? ":cljs" cider-clojure-cli-global-options)))
   (add-to-list 'cider-jack-in-nrepl-middlewares
-               '("shadow.cljs.devtools.server.nrepl/middleware" :predicate cider-cli-global-options-contains-cljs?))
+               `("shadow.cljs.devtools.server.nrepl/middleware" :predicate ,(-cider-check-alias-fn ":cljs")))
 
   (defun -cider-test-run-rich-comment-tests ()
     "Run rich comment tests in current namespace."
@@ -5862,6 +5865,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
                            ("http"     . "babashka.http-client")
                            ("jdbc"     . "next.jdbc")
                            ;; ("match"    . "clojure.core.match")
+                           ("transit"  . "cognitect.transit")
                            ("walk"     . "clojure.walk")
                            ("pprint"   . "clojure.pprint")
                            ;; ("http"  . "clj-http.client")
