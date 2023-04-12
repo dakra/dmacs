@@ -8706,6 +8706,9 @@ mu init --maildir=./Maildir                          \
         --my-address=daniel.kraus@paessler.com       \
         --my-address=daniel.kraus@ebenefuenf.de      \
         --my-address=daniel@restalchemy.org          \
+        --my-address=support@price-monitor.ai        \
+        --my-address=info@price-monitor.ai           \
+        --my-address=daniel@price-monitor.ai         \
         --my-address=daniel@price-monitor.info       \
         --my-address=dakra@2spicy.de                 \
         --my-address=daniel@hogaso.com
@@ -8741,7 +8744,8 @@ mu init --maildir=./Maildir                          \
   ;; Prefer text over html/ritchtext
   (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
 
-  ;; Use completing-read (which is ivy) instead of ido
+  ;; Use completing-read (vertico) instead of ido or mu4e's own version
+  (setq mu4e-read-option-use-builtin nil)
   (setq mu4e-completing-read-function 'completing-read)
 
   ;; set mu4e as default mail client
