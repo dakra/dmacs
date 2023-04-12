@@ -2314,14 +2314,15 @@ languagetool-ngrams-de
   :bind-keymap (("s-p"   . project-prefix-map)  ; projectile-command-map
                 ("C-c p" . project-prefix-map))
   :bind (:map project-prefix-map
-         ("SPC"  . consult-project-extra-find)
-         ("d" . project-dired)
-         ("D" . project-edit-deps-edn)
-         ("s" . consult-ripgrep)
-         ("t" . project-toggle-test)
-         ("E" . project-edit-dir-locals)
-         ("P" . project-run-python)
-         ("T" . project-vterm))
+         ("SPC" . consult-project-extra-find)
+         ("B"   . project-edit-bb-edn)
+         ("d"   . project-dired)
+         ("D"   . project-edit-deps-edn)
+         ("s"   . consult-ripgrep)
+         ("t"   . project-toggle-test)
+         ("E"   . project-edit-dir-locals)
+         ("P"   . project-run-python)
+         ("T"   . project-vterm))
   :config
   (defun project-edit-dir-locals ()
     "Open buffer with .dir-locals.el for current project."
@@ -2329,6 +2330,14 @@ languagetool-ngrams-de
     (->> (project-current)
          (project-root)
          (expand-file-name ".dir-locals.el")
+         (find-file)))
+
+  (defun project-edit-bb-edn ()
+    "Open buffer with bb.edn for current project."
+    (interactive)
+    (->> (project-current)
+         (project-root)
+         (expand-file-name "bb.edn")
          (find-file)))
 
   (defun project-edit-deps-edn ()
