@@ -5629,6 +5629,7 @@ openjdk11-src
 #+BEGIN_SRC emacs-lisp
 (use-package cider
   :bind (:map cider-mode-map
+         ("<f6>" . cider-scratch-project)
          ("M-?" . cider-maybe-clojuredocs)
          ("C-c C-t C-c" . -cider-test-run-rich-comment-tests)
          ("C-c C-o" . -cider-find-and-clear-repl-and-result-output)
@@ -5637,6 +5638,11 @@ openjdk11-src
   :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          (cider-mode . eldoc-mode))
   :config
+  ;; Display cider-scratch buffer in the same window
+  (add-to-list
+   'display-buffer-alist
+   '("*cider-scratch.*" (display-buffer-reuse-window
+                         display-buffer-same-window)))
 
   ;; Output to the cider-result buffer
   ;; This needs my personal WIP fork: https://github.com/dakra/cider/tree/wip
@@ -5958,7 +5964,7 @@ Yasnippets for Datomic.
   :defer t
   :config
   (setq datomic-access-program (expand-file-name "~/clojure/datomic-aws/datomic-cli/datomic-access"))
-  (setq datomic-systems '("arlo")))
+  (setq datomic-systems '("pm-mvp")))
 #+END_SRC
 
 **** Clomacs: Call Clojure code from Emacs lisp and vice versa
