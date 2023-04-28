@@ -366,13 +366,13 @@ Emacs is loading certain packages.
                                       before-init-time)))
 #+END_SRC
 
-We're going to increase the gc-cons-threshold to a very high number to decrease
-the load and compile time.  We'll lower this value significantly after
+We're going to increase the gc-cons-threshold to a very high number (2G) to
+decrease the load and compile time.  We'll lower this value significantly after
 initialization has completed. We don't want to keep this value too high or it
 will result in long GC pauses during normal usage.
 
 #+BEGIN_SRC emacs-lisp
-(setq gc-cons-threshold (* 256 1024 1024))
+(setq gc-cons-threshold (* 2 1024 1024 1024))
 #+END_SRC
 
 Temporarily disable file name handlers as it's not needed on initialization
@@ -2315,7 +2315,7 @@ languagetool-ngrams-de
                 ("C-c p" . project-prefix-map))
   :bind (:map project-prefix-map
          ("SPC" . consult-project-extra-find)
-         ("B"   . project-edit-bb-edn)
+         ("B"   . babashka-find-project-file)
          ("d"   . project-dired)
          ("D"   . project-edit-deps-edn)
          ("s"   . consult-ripgrep)
@@ -2324,20 +2324,15 @@ languagetool-ngrams-de
          ("P"   . project-run-python)
          ("T"   . project-vterm))
   :config
+  ;; Ignore clj-kondo and cljs-runtime folder by default
+  (setq project-vc-ignores '(".clj-kondo/" "cljs-runtime/"))
+
   (defun project-edit-dir-locals ()
     "Open buffer with .dir-locals.el for current project."
     (interactive)
     (->> (project-current)
          (project-root)
          (expand-file-name ".dir-locals.el")
-         (find-file)))
-
-  (defun project-edit-bb-edn ()
-    "Open buffer with bb.edn for current project."
-    (interactive)
-    (->> (project-current)
-         (project-root)
-         (expand-file-name "bb.edn")
          (find-file)))
 
   (defun project-edit-deps-edn ()
@@ -8633,7 +8628,7 @@ Forge support for orgit
   (setq valign-max-table-size 6000)
   (setq valign-fancy-bar t))
 #+END_SRC
-* Irc
+* Erc (Emacs IRC client)
 #+BEGIN_SRC emacs-lisp
 (use-package erc
   :config
@@ -11190,7 +11185,7 @@ elisp packages to use and not for actual direct user usage.
                                         before-user-init-time)))
             ;; Restore original file name handlers
             (setq file-name-handler-alist file-name-handler-alist-old)
-            ;; Let's lower our GC thresholds back down to a sane level.
-            (setq gc-cons-threshold (* 32 1024 1024)))
+            ;; Let's lower our GC thresholds back down to 256MB.
+            (setq gc-cons-threshold (* 256 1024 1024)))
           t)
 #+END_SRC

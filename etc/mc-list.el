@@ -139,6 +139,7 @@
         undo-fu-only-undo
         undo-only
         undo-redo
+        wgrep-finish-edit
         windmove-swap-states-left
         windmove-swap-states-right
         ))
