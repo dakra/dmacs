@@ -410,9 +410,6 @@
 [submodule "fish-mode"]
 	path = lib/fish-mode
 	url = git@github.com:wwwjfy/emacs-fish.git
-[submodule "flx"]
-	path = lib/flx
-	url = git@github.com:lewang/flx.git
 [submodule "flycheck"]
 	path = lib/flycheck
 	url = git@github.com:flycheck/flycheck.git
@@ -431,13 +428,6 @@
 [submodule "flycheck-rust"]
 	path = lib/flycheck-rust
 	url = git@github.com:flycheck/flycheck-rust.git
-[submodule "flyspell-correct"]
-	path = lib/flyspell-correct
-	url = git@github.com:d12frosted/flyspell-correct.git
-	no-byte-compile = flyspell-correct-helm.el
-	no-byte-compile = flyspell-correct-ido.el
-	no-byte-compile = flyspell-correct-popup.el
-	no-byte-compile = flyspell-correct-avy-menu.el
 [submodule "forge"]
 	path = lib/forge
 	url = git@github.com:magit/forge.git
@@ -584,6 +574,9 @@
 [submodule "jarchive"]
 	path = lib/jarchive
 	url = https://github.com/emacsmirror/jarchive
+[submodule "jinx"]
+	path = lib/jinx
+	url = https://github.com/minad/jinx
 [submodule "jira-markup-mode"]
 	path = lib/jira-markup-mode
 	url = git@github.com:mnuessler/jira-markup-mode.git

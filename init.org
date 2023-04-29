@@ -2165,14 +2165,23 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
 #+END_SRC
 
 * Spell checker
+** Jinx
+
+#+BEGIN_SRC emacs-lisp
+(use-package jinx
+  :hook (((text-mode prog-mode conf-mode) . jinx-mode))
+  :bind ([remap ispell-word] . jinx-correct))
+#+END_SRC
+
 ** Ispell
 #+BEGIN_SRC emacs-lisp
 (use-package ispell
-  :bind (("C-c I c" . ispell-comments-and-strings)
-         ("C-c I d" . ispell-change-dictionary)
-         ("C-c I k" . ispell-kill-ispell)
-         ("C-c I m" . ispell-message)
-         ("C-c I r" . ispell-region))
+  :defer t
+  ;; :bind (("C-c I c" . ispell-comments-and-strings)
+  ;;        ("C-c I d" . ispell-change-dictionary)
+  ;;        ("C-c I k" . ispell-kill-ispell)
+  ;;        ("C-c I m" . ispell-message)
+  ;;        ("C-c I r" . ispell-region))
   :config
   ;; Spell check camel case strings
   (setq ispell-program-name "aspell"
@@ -2180,85 +2189,13 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
         ispell-extra-args '("--sug-mode=ultra"
                             "--run-together"
                             "--run-together-limit=5"
-                            "--run-together-min=2"))
-
-  ;; Javascript and ReactJS setup
-  (defun js-flyspell-verify ()
-    (let* ((f (get-text-property (- (point) 1) 'face)))
-      ;; *whitelist*
-      ;; only words with following font face will be checked
-      (memq f '(js2-function-call
-                js2-function-param
-                js2-object-property
-                font-lock-variable-name-face
-                font-lock-string-face
-                font-lock-function-name-face))))
-  (put 'js-mode 'flyspell-mode-predicate 'js-flyspell-verify)
-  (put 'rjsx-mode 'flyspell-mode-predicate 'js-flyspell-verify)
-  ;; }}
-
-  ;; http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html
-  ;; Don't use Camel Case when correcting a word
-  (defun flyspell-detect-ispell-args (&optional run-together)
-    "if RUN-TOGETHER is true, spell check the CamelCase words."
-    (let (args)
-      (cond
-       ((string-match  "aspell$" ispell-program-name)
-        ;; Force the English dictionary for aspell
-        ;; Support Camel Case spelling check (tested with aspell 0.6)
-        (setq args (list "--sug-mode=ultra"))
-        (if run-together
-            (setq args (append args '("--run-together" "--run-together-limit=5" "--run-together-min=2")))))
-       ((string-match "hunspell$" ispell-program-name)
-        ;; Force the English dictionary for hunspell
-        (setq args "")))
-      args))
-
-  (setq-default ispell-extra-args (flyspell-detect-ispell-args t))
-  ;; (setq ispell-cmd-args (flyspell-detect-ispell-args))
-  (defadvice ispell-word (around my-ispell-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-  ;; flyspell-correct uses this function
-  (defadvice flyspell-correct-word-generic (around my-ispell-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-  ;; flyspell-correct uses this function
-  (defadvice flyspell-correct-at-point (around my-ispell-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-
-  (defadvice flyspell-auto-correct-word (around my-flyspell-auto-correct-word activate)
-    (let ((old-ispell-extra-args ispell-extra-args))
-      (ispell-kill-ispell t)
-      ;; use emacs original arguments
-      (setq ispell-extra-args (flyspell-detect-ispell-args))
-      ad-do-it
-      ;; restore our own ispell arguments
-      (setq ispell-extra-args old-ispell-extra-args)
-      (ispell-kill-ispell t)))
-
-  (defun text-mode-hook-setup ()
-    ;; Turn off RUN-TOGETHER option when spell check text-mode
-    (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
-  (add-hook 'text-mode-hook 'text-mode-hook-setup))
+                            "--run-together-min=2")))
 #+END_SRC
 
 ** Flyspell
 #+BEGIN_SRC emacs-lisp
 (use-package flyspell
+  :disabled t
   :hook ((prog-mode . flyspell-prog-mode)
          ((org-mode mu4e-compose-mode markdown-mode rst-mode) . flyspell-mode))
   :config
@@ -2504,12 +2441,6 @@ With two `C-u' `C-u' prefix args, add and display current project."
   :after treemacs)
 #+END_SRC
 * Ivy
-** Flx: Fuzzy search
-#+BEGIN_SRC emacs-lisp
-(use-package flx
-  :disabled t
-  :defer t)
-#+END_SRC
 ** Smex: Improved M-x
 #+BEGIN_SRC emacs-lisp
 (use-package smex
@@ -2842,7 +2773,7 @@ Enable recursive minibuffers
 #+END_SRC
 *** vertico-multiform
 #+BEGIN_SRC emacs-lisp
-(use-package vertico-buffer
+(use-package vertico-multiform
   :after vertico
   :config
   (setq vertico-multiform-commands
@@ -2852,6 +2783,9 @@ Enable recursive minibuffers
           (consult-imenu buffer)
           (consult-project-buffer buffer)
           (consult-project-extra-find buffer)))
+
+  ;; (add-to-list 'vertico-multiform-categories
+  ;;              '(jinx grid (vertico-grid-annotate . 35)))
 
   (vertico-multiform-mode))
 #+END_SRC
