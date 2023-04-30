@@ -198,12 +198,6 @@
 [submodule "copy-as-format"]
 	path = lib/copy-as-format
 	url = git@github.com:sshaw/copy-as-format.git
-[submodule "counsel-org-clock"]
-	path = lib/counsel-org-clock
-	url = git@github.com:akirak/counsel-org-clock.git
-[submodule "counsel-projectile"]
-	path = lib/counsel-projectile
-	url = git@github.com:ericdanan/counsel-projectile.git
 [submodule "crontab-mode"]
 	path = lib/crontab-mode
 	url = git@github.com:emacs-pe/crontab-mode.git
@@ -852,9 +846,6 @@
 [submodule "org-super-agenda"]
 	path = lib/org-super-agenda
 	url = git@github.com:alphapapa/org-super-agenda.git
-[submodule "org-superstar"]
-	path = lib/org-superstar
-	url = git@github.com:integral-dw/org-superstar-mode.git
 [submodule "org-web-tools"]
 	path = lib/org-web-tools
 	url = git@github.com:alphapapa/org-web-tools.git
@@ -1076,9 +1067,6 @@
 [submodule "smartrep"]
 	path = lib/smartrep
 	url = git@github.com:myuhe/smartrep.el.git
-[submodule "smex"]
-	path = lib/smex
-	url = git@github.com:nonsequitur/smex.git
 [submodule "sodium"]
 	path = lib/sodium
 	url = git@github.com:dakra/sodium.el.git

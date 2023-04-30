@@ -113,7 +113,6 @@
   - [[init.org#ivy][Ivy]]
   - [[init.org#swiper-search-with-ivy][Swiper: Search with ivy]]
   - [[init.org#counsel][Counsel]]
-    - [[init.org#counsel-jq-counsel-interface-for-the-jq-command-line-tool][Counsel-jq: Counsel interface for the jq command line tool]]
   - [[init.org#ivy-posframe-display-ivy-in-child-frames-instead-of-minibuffer][ivy-posframe: Display ivy in child frames instead of minibuffer]]
 - [[init.org#navigation][Navigation]]
   - [[init.org#avy-quickly-jump-to-any-character-on-screen][Avy: Quickly jump to any character on screen]]
@@ -2204,16 +2203,6 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   (unbind-key "C-;" flyspell-mode-map)
   (unbind-key "C-," flyspell-mode-map))
 #+END_SRC
-** Flyspell-correct: Show list of correct spelling suggestions
-#+BEGIN_SRC emacs-lisp
-(use-package flyspell-correct
-  :after (flyspell)
-  :bind (:map flyspell-mode-map
-         ("C-c I I" . flyspell-correct-wrapper))
-  ;; :config
-  ;; (setq flyspell-correct-interface #'flyspell-correct-ivy)
-  )
-#+END_SRC
 ** Language tool: Grammar, Style and Spell Checker
 See https://languagetool.org/ and http://wiki.languagetool.org/finding-errors-using-n-gram-data
 
@@ -2329,7 +2318,8 @@ created a dedicated process for the project."
 ** Projectile
 #+BEGIN_SRC emacs-lisp
 (use-package projectile
-  :defer t
+  :disabled t
+  ;; :defer t
   ;; :bind-keymap (("s-p"   . projectile-command-map)
   ;;               ;; ("C-c p" . projectile-command-map)
   ;;               )
@@ -2442,12 +2432,6 @@ With two `C-u' `C-u' prefix args, add and display current project."
   :after treemacs)
 #+END_SRC
 * Ivy
-** Smex: Improved M-x
-#+BEGIN_SRC emacs-lisp
-(use-package smex
-  :disabled t
-  :defer t)
-#+END_SRC
 ** Ivy
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
@@ -2537,17 +2521,6 @@ With one prefix arg, show only EXWM buffers. With two, show all buffers."
   :config
   (setq ivy-read-action-function #'ivy-hydra-read-action))
 #+END_SRC
-** Swiper: Search with ivy
-#+BEGIN_SRC emacs-lisp
-(use-package swiper
-  :disabled t
-  :bind (;; When using swiper-isearch then comment out the counsel-grep-or-swiper binding
-         ;; in the counsel package below
-         ;; ("C-s" . swiper-isearch)
-         :map swiper-map
-         ("M-h" . swiper-avy)
-         ("M-c" . swiper-mc)))
-#+END_SRC
 ** Counsel
 For better search install =ripgrep= (rg) and alternative =silversearcher= (ag).
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
@@ -2629,87 +2602,6 @@ Note: Duplicate elements of `kill-ring' are always deleted."
   (setq counsel-describe-symbol-function #'helpful-symbol)
 
   (counsel-mode 1))
-
-(use-package counsel-projectile
-  :disabled t
-  :bind (:map projectile-command-map
-         (("s s" . dakra/counsel-search-project-empty)
-          ("s S" . dakra/counsel-search-project)))
-  :config
-  ;; Always use ripgrep instead of ag
-  (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg)
-
-  (defun parent-directory (dir &optional l)
-    "Go up L many directories from DIR. Go 1 parent up when L is nil."
-    (let ((l (or l 1)))
-      (if (or (equal "/" dir) (<= l 0))
-          dir
-        (parent-directory (file-name-directory (directory-file-name dir)) (1- l)))))
-
-  ;; https://github.com/purcell/emacs.d/blob/4e487d4ef2ab39875d96fd413fca3b075faf9612/lisp/init-ivy.el#L49
-  (defun dakra/counsel-search-project (initial-input &optional use-current-dir)
-    "Search using `counsel-rg' from the project root for INITIAL-INPUT.
-If there is no project root, or if the prefix argument USE-CURRENT-DIR is set,
-then search from the current directory instead.
-With multiple prefix arguments, or a numeric prefix argument
-go up multiple parent directories."
-    (interactive (list (thing-at-point 'symbol)
-                       current-prefix-arg))
-    (if (and (eq projectile-require-project-root 'prompt)
-             (not (projectile-project-p)))
-        (counsel-projectile-rg-action-switch-project)
-      (let* ((ivy--actions-list (copy-sequence ivy--actions-list))
-             (ignored
-              (mapconcat (lambda (i)
-                           (concat "--glob !" (shell-quote-argument i)))
-                         (append
-                          (projectile--globally-ignored-file-suffixes-glob)
-                          (projectile-ignored-files-rel)
-                          (projectile-ignored-directories-rel))
-                         " "))
-             (dir (cond
-                   ((equal use-current-dir nil) ; no prefix: use project root
-                    (condition-case _err
-                        (projectile-project-root)
-                      (error default-directory)))
-                   ((equal use-current-dir '(4)) ; C-u: use current dir
-                    (parent-directory default-directory 0))
-                   ((equal use-current-dir '(16)) ; C-u C-u: use parent dir
-                    (parent-directory default-directory 1))
-                   ((equal use-current-dir '(64)) ; C-u C-u C-u: go 2 up
-                    (parent-directory default-directory 2))
-                   (t  ; Numeric prefix: Go specified prefix up
-                    (parent-directory default-directory use-current-dir))))
-             (counsel-rg-base-command
-              (let ((counsel-ag-command counsel-rg-base-command))
-                (counsel--format-ag-command ignored "%s"))))
-        (ivy-add-actions
-         'counsel-rg
-         counsel-projectile-rg-extra-actions)
-        (counsel-rg (eval counsel-projectile-rg-initial-input)
-                    dir
-                    nil
-                    (projectile-prepend-project-name
-                     (concat (car (if (listp counsel-rg-base-command)
-                                      counsel-rg-base-command
-                                    (split-string counsel-rg-base-command)))
-                             ": "))))))
-
-  (defun dakra/counsel-search-project-empty (&optional use-current-dir)
-    "Like dakra/counsel-search-project but with no initial input."
-    (interactive "P")
-    (dakra/counsel-search-project "" use-current-dir))
-
-  (defun counsel-projectile-find-file-occur ()
-    (cd (projectile-project-root))
-    (counsel-cmd-to-dired
-     (format
-      "find . | grep -i -E '%s' | xargs -d '\n' ls"
-      (counsel-unquote-regex-parens ivy--old-re))))
-  (ivy-set-occur 'counsel-projectile-find-file 'counsel-projectile-find-file-occur)
-  (ivy-set-occur 'counsel-projectile 'counsel-projectile-find-file-occur)
-
-  (counsel-projectile-mode))
 #+END_SRC
 
 * Minibuffer interaction
@@ -7960,18 +7852,6 @@ NAME may be nil for unnamed sessions."
 (use-package org-indent
   :hook (org-mode . org-indent-mode))
 #+END_SRC
-*** Org-superstar: Use utf-8 characters instead of `*` as bullet points
-#+BEGIN_SRC emacs-lisp
-(use-package org-superstar
-  :disabled t  ;; Replaced by org-modern
-  :hook (org-mode . org-superstar-mode)
-  :config
-  ;;(setq org-superstar-headline-bullets-list '("◉" "🞛" "○" "▷" "✸"))
-  (setq org-superstar-headline-bullets-list '("❶" "❷" "❸" "❹" "❺" "❻" "❼"))
-  ;; (setq org-superstar-headline-bullets-list '("①" "②" "③" "④" "⑤" "⑥"))
-  ;; (setq org-superstar-headline-bullets-list '("◍" "●" "⊗" "○" "⊙" "◌" "▷" "✸"))
-  (setq org-superstar-prettify-item-bullets nil))
-#+END_SRC
 *** org-modern
 #+BEGIN_SRC emacs-lisp
 (use-package org-modern
@@ -7984,6 +7864,8 @@ NAME may be nil for unnamed sessions."
    '((right-divider-width . 2)
      (internal-border-width . 0)))
 
+  ;; (setq org-modern-star ["①" "②" "③" "④" "⑤" "⑥"])
+  ;; (setq org-modern-star ["◍" "●" "⊗" "○" "⊙" "◌" "▷" "✸"])
   (setq org-modern-star ["❶" "❷" "❸" "❹" "❺" "❻" "❼"]))
 #+END_SRC
 *** org-moden-indent
@@ -8548,12 +8430,6 @@ Forge support for orgit
   :after orgit)
 #+END_SRC
 
-*** Counsel-org-clock
-#+BEGIN_SRC emacs-lisp
-(use-package counsel-org-clock
-  :disabled t
-  :defer t)
-#+END_SRC
 *** valign: Pretty org-tables
 #+BEGIN_SRC emacs-lisp
 (use-package valign
@@ -9960,7 +9836,7 @@ It only works for frames with exactly two windows."
       (switch-to-buffer buffer)))
   (winner-mode 1))
 #+END_SRC
-* Transmission: Bittorent
+* Transmission: BitTorrent
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
 transmission-cli
 #+END_SRC
