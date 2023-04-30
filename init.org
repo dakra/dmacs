@@ -1080,8 +1080,9 @@ With a prefix argument, copy the link to the online manual instead."
   (setq display-time-load-average-threshold 0.9)
   ;; A list of timezones to show for `display-time-world`
   (setq zoneinfo-style-world-list
-        '(("Asia/Kuala_Lumpur" "Kuala Lumpur")
-          ("Europe/Berlin" "Berlin")
+        '(("Europe/Berlin" "Berlin")
+          ("Europe/London" "London")
+          ("Asia/Kuala_Lumpur" "Kuala Lumpur")
           ("America/Los_Angeles" "Los Angeles")
           ("America/New_York" "New York")
           ("Australia/Sydney" "Sydney")))
