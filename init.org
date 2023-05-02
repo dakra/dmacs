@@ -1806,6 +1806,33 @@ Minor modes to selectively hide/show code and comment blocks.
          ([backtab] . bicycle-cycle-global)))
 #+END_SRC
 
+** TempEL - Simple templates with syntax from Tempo
+#+BEGIN_SRC emacs-lisp
+(use-package tempel
+  :bind (("\C-c TAB" . tempel-complete)
+         :map tempel-map
+         ([tab] . tempel-next)
+         ([backtab] . tempel-previous))
+  :hook ((text-mode prog-mode) . tempel-setup-capf)
+  :config
+  ;; Don't auto reload templates.
+  ;; `(setq tempel--path-templates nil)' if you want to force a reload.
+  (setq tempel-auto-reload nil)
+
+  ;; Setup completion at point
+  (defun tempel-setup-capf ()
+    ;; Add the Tempel Capf to `completion-at-point-functions'.
+    ;; `tempel-expand' only triggers on exact matches. Alternatively use
+    ;; `tempel-complete' if you want to see all matches, but then you
+    ;; should also configure `tempel-trigger-prefix', such that Tempel
+    ;; does not trigger too often when you don't expect it. NOTE: We add
+    ;; `tempel-expand' *before* the main programming mode Capf, such
+    ;; that it will be tried first.
+    (setq-local completion-at-point-functions
+                (cons #'tempel-expand
+                      completion-at-point-functions))))
+#+END_SRC
+
 ** edit-indirect: Edit a region in a separate buffer
 #+BEGIN_SRC emacs-lisp
 (use-package edit-indirect
@@ -1968,7 +1995,8 @@ Move current line or region with M-up or M-down.
         backend
       (append (if (consp backend) backend (list backend))
               '(:with company-yasnippet))))
-  (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends)))
+  ;; (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+  )
 #+END_SRC
 *** company-tng
 company-tng (tab and go) allows you to use TAB to both select a
@@ -2006,8 +2034,7 @@ continue as long as the user wishes to cycle through the menu.
                                     company-shell-env
                                     company-files
                                     company-dabbrev-code
-                                    company-capf
-                                    company-yasnippet)))))
+                                    company-capf)))))
 #+END_SRC
 
 ** Discover-my-major: Display a list of keybindings for the current major mode
@@ -4208,7 +4235,7 @@ lldb
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]build$")
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.gradle$")
 
-  (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
+  ;; (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
 
 (use-package lsp-ui
@@ -4632,8 +4659,7 @@ Needs ~parquet-cli~ AUR package.
                                     company-shell
                                     company-shell-env
                                     company-files
-                                    company-dabbrev-code
-                                    company-yasnippet)))))
+                                    company-dabbrev-code)))))
 #+END_SRC
 ** Scala
 We need scala, sbt and metals installed
@@ -5556,6 +5582,7 @@ Yasnippets for Datomic.
 
 #+BEGIN_SRC emacs-lisp
 (use-package datomic-snippets
+  :disabled t
   :after yasnippet)
 #+END_SRC
 **** Datomic utility functions
@@ -5599,8 +5626,7 @@ Yasnippets for Datomic.
   (defun my-lua-mode-company-init ()
     (setq-local company-backends '((company-lua
                                     company-etags
-                                    company-dabbrev-code
-                                    company-yasnippet)))))
+                                    company-dabbrev-code)))))
 #+END_SRC
 ** Markup Languages
 #+BEGIN_SRC emacs-lisp
@@ -6739,6 +6765,7 @@ displayed anywhere else."
   :bind ("C-c ;" . iedit-mode))
 
 (use-package yasnippet
+  :disabled t
   :defer 10
   :mode (("\\.yasnippet\\'" . snippet-mode))
   :bind (:map yas-minor-mode-map
@@ -8763,7 +8790,6 @@ Should be added to `message-send-hook'."
 
 ;; ;; Mark all as read with 'M'
 ;; (define-key mu4e-headers-mode-map (kbd "M") 'mu4e-headers-mark-all-unread-read)
-
 #+END_SRC
 ** Gnus
 I don't use gnus but ~debbugs~, ~mu4e~ (the viewer) and ~mu4e-icalendar~ use it.

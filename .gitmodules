@@ -1085,6 +1085,9 @@
 [submodule "tea-timer"]
 	path = lib/tea-timer
 	url = git@github.com:dakra/tea-timer.el.git
+[submodule "tempel"]
+	path = lib/tempel
+	url = https://github.com/minad/tempel
 [submodule "terraform-mode"]
 	path = lib/terraform-mode
 	url = git@github.com:emacsorphanage/terraform-mode.git
