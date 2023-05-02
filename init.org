@@ -494,7 +494,6 @@ I use the Emacs =native-comp= branch.
 Compile asyncronously all lexically bound .elc files being loaded.
 #+BEGIN_SRC emacs-lisp
 (use-package comp
-  ;; :disabled t
   :config
   (setq inhibit-automatic-native-compilation nil)
   ;; Don't try to native compile this init file
@@ -1177,25 +1176,6 @@ With a prefix argument, copy the link to the online manual instead."
   ;; send alerts by default to D-Bus
   (setq alert-default-style 'notifications))
 #+END_SRC
-** Sauron: Event log (listen to d-bus and other messages and show them)
-#+BEGIN_SRC emacs-lisp
-(use-package sauron
-  :disabled t
-  :if (daemonp)
-  :defer 5
-  :bind (("<f12>" . sauron-toggle-hide-show)
-         ("C-c <f12>" . sauron-clear))
-  :config
-  ;; Feed sauron events into alert
-  (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)
-
-  (setq sauron-max-line-length 110)
-  (setq sauron-separate-frame nil)
-  ;;(setq sauron-sticky-frame t)
-
-  (setq sauron-watch-nicks '("dakra"))
-  (sauron-start-hidden))
-#+END_SRC
 ** Eldoc: Display help
 #+BEGIN_SRC emacs-lisp
 (use-package eldoc
@@ -1272,7 +1252,7 @@ different face
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-separator "/"))
 #+END_SRC
-** Highlight indentions
+** Highlight indentations
 #+BEGIN_SRC emacs-lisp
 ;; highlight indentations in python
 (use-package highlight-indent-guides
@@ -1401,13 +1381,6 @@ ttf-symbola
       (set-window-configuration zone--window-config)
       (setq zone--window-config nil)))
   (ad-activate 'zone))
-
-(use-package zone-matrix
-  :disabled t  ; Too slow on big screens
-  :defer t
-  :config
-  (setq zone-programs (vconcat zone-programs [zone-matrix]))
-  (setq zmx-unicode-mode t))
 #+END_SRC
 ** Sticky-buffer: Lock a buffer to a window
 From http://lists.gnu.org/archive/html/help-gnu-emacs/2007-05/msg00975.html
@@ -1983,10 +1956,6 @@ Move current line or region with M-up or M-down.
         '(company-sort-prefer-same-case-prefix
           company-sort-by-occurrence))
 
-  (use-package company-emoji
-    :disabled t
-    :config (add-to-list 'company-backends 'company-emoji))
-
   (use-package company-quickhelp
     :disabled t
     :config (company-quickhelp-mode 1))
@@ -2130,38 +2099,6 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
   :config
   (setq vundo-compact-display t)
   (setq vundo-glyph-alist vundo-unicode-symbols))
-
-(use-package undo-fu
-  :disabled t  ; Emacs 28 comes with `undo-redo`
-  :bind (("C-/"   . undo-fu-only-undo)
-         ("C-z"   . undo-fu-only-undo)
-         ("C-S-z" . undo-fu-only-redo)
-         ("C-?"   . undo-fu-only-redo)))
-
-(use-package undo-tree
-  :disabled t
-  :hook (after-init . global-undo-tree-mode)
-  :bind ("C-z" . undo-tree-undo)  ;; Don't (suspend-frame)
-  :config
-  (setq undo-tree-visualizer-timestamps t)  ; show timestamps in undo-tree
-  ;;(setq undo-tree-visualizer-diff t)
-
-  ;; autosave the undo-tree history
-  ;; (setq undo-tree-history-directory-alist
-  ;;       `((".*" . ,temporary-file-directory)))
-  (setq undo-tree-auto-save-history t)
-
-  ;; Keep region when undoing in region
-  (defadvice undo-tree-undo (around keep-region activate)
-    (if (use-region-p)
-        (let ((m (set-marker (make-marker) (mark)))
-              (p (set-marker (make-marker) (point))))
-          ad-do-it
-          (goto-char p)
-          (set-mark m)
-          (set-marker p nil)
-          (set-marker m nil))
-      ad-do-it)))
 #+END_SRC
 
 * Spell checker
@@ -3113,10 +3050,6 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
 #+END_SRC
 ** Misc
 #+BEGIN_SRC emacs-lisp
-(use-package fabric
-  :defer t)
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
 (use-package calc
   :bind ("<XF86Calculator>" . quick-calc)
   :config
@@ -3124,12 +3057,6 @@ You need to install the Firefox extension [[https://github.com/GhostText/GhostTe
   ;; E.g. default behavior of Emacs Calc is 10/2*5 = 10 / (2* 5) = 1
   ;; but you would expect (10 / 2) * 5 = 25.
   (setq calc-multiplication-has-precedence nil))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-;; Type like a hacker
-(use-package hacker-typer
-  :defer t
-  :config (setq hacker-typer-remove-comments t))
 #+END_SRC
 * Dired
 For =dired-dragon-popup= (drag-and-drop support) install
@@ -3361,116 +3288,6 @@ avfs
 (use-package treemacs-icons-dired
   :after dired
   :config (treemacs-icons-dired-mode))
-#+END_SRC
-* Helm
-#+BEGIN_SRC emacs-lisp
-  ;;; Helm config
-(use-package helm
-  :disabled t
-  :commands (helm-M-x helm-mini helm-imenu helm-resume helm-execute-persistent-action helm-select-action)
-  ;;:bind (("M-x"     . helm-M-x)
-  ;;       ("C-x C-m" . helm-M-x)
-  ;;       ("M-y"     . helm-show-kill-ring)
-  ;;       ("C-x b"   . helm-mini)
-  ;;       ("C-x C-b" . helm-buffers-list)
-  ;;       ("C-x C-f" . helm-find-files)
-  ;;       ("C-h r"   . helm-info-emacs)
-  ;;       ("C-h C-l" . helm-locate_library)
-  ;;       ("C-x r b" . helm-filtered-bookmarks)  ; Use helm bookmarks
-  ;;       ("C-c f"   . helm-recentf)
-  ;;       ("C-c j"   . helm-imenu)
-  ;;       ("C-x C-b" . helm-buffers-list)
-  ;;       ("C-c C-r" . helm-resume)
-  ;;       :map helm-map
-  ;;       ("<tab>" . helm-execute-persistent-action)  ; Rebind tab to run persistent action
-  ;;       ("C-i"   . helm-execute-persistent-action)  ; Make TAB work in terminals
-  ;;       ("C-z"   . helm-select-action)  ; List actions
-  ;;       :map shell-mode-map  ;; Shell history
-  ;;       ("C-c C-l" . helm-comint-input-ring)
-  ;;       )
-  :config
-  ;; See https://github.com/bbatsov/prelude/pull/670 for a detailed
-  ;; discussion of these options.
-  (setq helm-split-window-inside-p            t
-        helm-buffers-fuzzy-matching           t
-        helm-move-to-line-cycle-in-source     t
-        helm-ff-search-library-in-sexp        t
-        helm-ff-file-name-history-use-recentf t)
-
-  (setq helm-google-suggest-use-curl-p t)
-
-  ;; keep follow-mode in between helm sessions once activated
-  (setq helm-follow-mode-persistent t)
-
-  ;; Smaller helm window
-  (setq helm-autoresize-max-height 0)
-  (setq helm-autoresize-min-height 30)
-  (helm-autoresize-mode 1)
-
-  ;; Don't show details in helm-mini for tramp buffers
-  (setq helm-buffer-skip-remote-checking t)
-
-  (require 'helm-bookmark)
-  ;; Show bookmarks (and create bookmarks) in helm-mini
-  (setq helm-mini-default-sources '(helm-source-buffers-list
-                                    helm-source-recentf
-                                    helm-source-bookmarks
-                                    helm-source-bookmark-set
-                                    helm-source-buffer-not-found))
-
-  ;;(substitute-key-definition 'find-tag 'helm-etags-select global-map)
-  ;;(setq projectile-completion-system 'helm)
-
-  ;;(helm-mode 1)
-)
-
-(use-package helm-ag
-  :disabled t
-  :after helm
-  :commands (helm-ag helm-ag-this-file helm-do-ag helm-do-ag-this-file helm-do-ag-project-root))
-
-(use-package helm-descbinds
-  :disabled t
-  :after helm
-  :bind (("C-h b" . helm-descbinds)))
-
-(use-package helm-projectile
-  :disabled t
-  :after (helm projectile)
-  :defer 2)
-  ;;:config (helm-projectile-on))
-
-;; helm "hacks" like better path expandsion
-(use-package helm-ext
-  :disabled t
-  :after helm
-  :config
-  ;; Skip . and .. for non empty dirs
-  (helm-ext-ff-enable-skipping-dots t)
-
-  ;; Enable zsh/fish shell like path expansion
-  (helm-ext-ff-enable-zsh-path-expansion t)
-  (helm-ext-ff-enable-auto-path-expansion t)
-
-  ;; Don't use minibuffer if there's something there already
-  (helm-ext-minibuffer-enable-header-line-maybe t))
-(use-package helm-make
-  :disabled t
-  :after helm
-  :commands (helm-make helm-make-projectile))
-
-(use-package helm-backup :load-path "repos/helm-backup"
-  :disabled t
-  :after helm
-  :commands (helm-backup-versioning helm-backup)
-  :hook (after-save . helm-backup-versioning))
-
-;; use swiper with helm backend for search
-(use-package swiper-helm
-  :disabled t
-  :after helm
-  :bind ("\C-s" . swiper-helm)
-  )
 #+END_SRC
 * Tramp
 #+BEGIN_SRC emacs-lisp
@@ -3775,14 +3592,6 @@ file to edit."
 #+END_SRC
 ** Prompt
 #+BEGIN_SRC emacs-lisp
-;; Show git info in prompt
-(use-package eshell-git-prompt
-  :disabled t  ; Use eshell-prompt-extras
-  :after eshell
-  :config ;;(eshell-git-prompt-use-theme 'powerline)
-  ;; XXX: Wait for powerline font https://github.com/powerline/fonts/issues/154
-  (eshell-git-prompt-use-theme 'robbyrussell))
-
 (use-package eshell-prompt-extras
   :after esh-opt
   :config
@@ -3836,11 +3645,6 @@ file to edit."
   :if (executable-find "fish")
   :after eshell
   :config (global-fish-completion-mode))
-
-;; `company-mode' backend to provide eshell history suggestion
-(use-package esh-autosuggest
-  :disabled t
-  :hook (eshell-mode . esh-autosuggest-mode))
 
 ;; Autocomplete for git commands in shell and
 ;; the git command from magit ('!')
@@ -5015,21 +4819,6 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(use-package prettier-js
-  :disabled t  ; FIXME: Obsolete since Apheleia
-  ;;:hook (js-mode . prettier-js-mode)
-  :init
-  (put 'prettier-js-args 'safe-local-variable 'listp)
-  :config
-  (setq prettier-js-args '(
-                           "--trailing-comma" "all"
-                           ;;"--tab-width" "4"
-                           ;;"--single-quote" "true"
-                           "--bracket-spacing" "false"
-                           ))
-  ;; prettier "--print-width" argument is read from 'fill-column' variable
-  (setq prettier-js-width-mode 'fill))
-
 (use-package js
   :defer t
   :config
@@ -5110,17 +4899,6 @@ your =.dir-locals.el= where you want the prettier after save hook activated:
       ("k" js2r-kill)
       ("q" nil)
       )))
-
-;; use tern for js autocompletion
-(use-package tern
-  :disabled t  ; We use tide (typescript) also for javascript files
-  :commands tern-mode
-  :init (add-hook 'js-mode-hook 'tern-mode)
-  :config
-  (use-package company-tern
-    :config
-    (setq company-tern-property-marker "")  ; don't show circles for properties
-    (add-to-list 'company-backends 'company-tern)))
 
 (use-package skewer-mode
   :disabled t  ; Use indium
@@ -5892,56 +5670,6 @@ octave
   :defer t)
 #+END_SRC
 ** Python
-*** LSP with the Microsoft language server
-=lsp-python-ms= can now download the language server for you automatically.
-But if you want to use the latest from git follow this instructions:
-
-This needs the =dotnet-sdk= and the microsoft-python-language-server installed.
-#+BEGIN_SRC txt :tangle arch-pkglist.txt
-dotnet-sdk
-#+END_SRC
-
-Get the python language server from github:
-#+BEGIN_SRC shell :tangle no :dir ~/repos
-git clone git@github.com:microsoft/python-language-server.git
-#+END_SRC
-
-Then build it:
-#+BEGIN_SRC shell :tangle no :dir ~/repos/python-language-server/src/LanguageServer/Impl
-dotnet build -c Release
-dotnet publish -c Release -r linux-x64
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-python-ms
-  :disabled t
-  ;; :hook (python-mode . lsp-python-ms-init)
-  :config
-  ;; Only set those if you compile the ms python language server manually
-  ;; (setq lsp-python-ms-dir
-  ;;       (expand-file-name "~/repos/python-language-server/output/bin/Release/"))
-  ;; (setq lsp-python-ms-executable
-  ;;       (expand-file-name "~/repos/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
-
-  (defun lsp-python-ms-init ()
-    "We need to require ccls before loading lsp in a C buffer.
-Otherwise lsp would use the default clangd backend.
-use-package will load ccls for us simply by calling this function."
-    (lsp-deferred)))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package lsp-pyright
-  :defer t
-  ;; :hook (python-mode . lsp-pyright-init)
-  :config
-  (defun lsp-pyright-init ()
-    "We need to require ccls before loading lsp in a C buffer.
-Otherwise lsp would use the default clangd backend.
-use-package will load ccls for us simply by calling this function."
-    (lsp-deferred)))
-#+END_SRC
-
 *** Cython
 #+BEGIN_SRC emacs-lisp
 (use-package cython-mode
@@ -6809,9 +6537,7 @@ Helper function for URL encode / decode
          ("C-M-n" . emmet-next-edit-point))
   :config
   (setq emmet-move-cursor-between-quotes t)
-  (setq emmet-move-cursor-after-expanding t)
-
-  (use-package helm-emmet :after helm :disabled t))
+  (setq emmet-move-cursor-after-expanding t))
 
 (use-package rainbow-mode
   :hook (css-mode scss-mode sass-mode emacs-lisp-mode))
@@ -6978,10 +6704,6 @@ displayed anywhere else."
     (outline-minor-mode)
     (setq-local outline-regexp "##+")))
 
-(use-package restclient-helm
-  :disabled t
-  :after (restclient helm))
-
 (use-package company-restclient
   :after (restclient company)
   :config (add-to-list 'company-backends 'company-restclient))
@@ -6998,21 +6720,6 @@ displayed anywhere else."
 ;; change `find-file` so all files that belong to root are opened as root
 ;; too often unintentional changes. just use 'M-x crux-sudo-edit' when needed
 ;;(crux-reopen-as-root-mode)
-
-(use-package god-mode
-  :disabled t
-  ;; Make god-mode a little bit more vi-like
-  :bind (("<escape>" . god-local-mode)
-         :map god-local-mode-map ("i" . god-local-mode))
-  :config
-  ;; change cursor to bar when in god-mode
-  (defun god-update-cursor ()
-    "Toggle cursor style to bar when in god-mode"
-    (setq cursor-type (if (or god-local-mode buffer-read-only)
-                          'bar
-                        'box)))
-  (add-hook 'god-mode-enabled-hook 'god-update-cursor)
-  (add-hook 'god-mode-disabled-hook 'god-update-cursor))
 
 ;; Operate on system processes like dired
 (use-package proced
@@ -7926,23 +7633,6 @@ NAME may be nil for unnamed sessions."
            "* %a :website:\n\n%U %?\n\n%:initial"))))
 
 (use-package noflet :defer t)  ; let you locally overwrite functions
-
-(use-package orca
-  :disabled t
-  :after org-capture
-  :config
-  (setq orca-handler-list
-        `((orca-handler-match-url
-           "https://www.reddit.com/r/emacs"
-           ,(concat org-directory "refile.org") "\\* Reddit")
-          (orca-handler-match-url
-           "https://emacs.stackexchange.com/"
-           ,org-default-notes-file "\\* Questions")
-          (orca-handler-file
-           ,org-default-notes-file "\\* Refile")))
-  ;; To capture in current open org buffer:
-  ;;(push '(orca-handler-current-buffer "\\* Tasks") orca-handler-list)
-  )
 
 ;; FIXME: install bookmarklet and shell script (integrate with org-capture plugin?!)
 (use-package org-protocol-capture-html
@@ -9065,31 +8755,6 @@ Should be added to `message-send-hook'."
   (setq-default mu4e-maildirs-extension-use-maildirs nil)
   (mu4e-maildirs-extension))
 
-;; use helm-mu for search
-(use-package helm-mu
-  :disabled t
-  :commands helm-mu
-  :after mu4e
-  :bind (:map mu4e-main-mode-map ("s" . dakra-helm-mu)
-         :map mu4e-headers-mode-map ("s" . dakra-helm-mu)
-         :map mu4e-view-mode-map ("s" . dakra-helm-mu))
-  :init
-  ;; helm-mu expects a bash compatible shell (which fish isn't)
-  ;; and doesn't play nice with helms autofollow mode
-  (defun dakra-helm-mu ()
-    (interactive)
-    (let ((shell-file-name "/usr/bin/bash")
-          (helm-follow-mode-persistent nil))
-      (helm-mu)))
-  :config
-  ;; Only show contacts who sent you emails directly
-  (setq helm-mu-contacts-personal t)
-  ;; default search only inbox, archive or sent mail
-  ;; (setq helm-mu-default-search-string (concat "(maildir:/private/Inbox OR "
-  ;;                                             "maildir:/private/Archive OR "
-  ;;                                             "maildir:/private/Sent)"))
-  )
-
 ;; (define-key mu4e-headers-mode-map (kbd "d") 'my-move-to-trash)
 ;; (define-key mu4e-view-mode-map (kbd "d") 'my-move-to-trash)
 ;; ;; Overwrite normal 'D' keybinding
@@ -9903,34 +9568,6 @@ This needs imagemagick support compiled in Emacs to work.
   :config
   ;; always loop GIF images
   (setq image-animate-loop t))
-#+END_SRC
-
-This package allows interactive image manipulation from within Emacs.  It uses
-the mogrify utility from ImageMagick to do the actual transformations.
-#+BEGIN_SRC emacs-lisp
-(use-package eimp
-  :hook (image-mode . eimp-mode))
-#+END_SRC
-
-
-Blimp is a complete wrapper around all imagemagick commands with descriptions,
-autocompletion (for some commands) and hints displayed.
-
-_Usage_
-First enter a image-buffer and type =C-c C-i= to bring up the
-=blimp-interface=. After choosing a imagemagick command and its parameters, do =C-c
-C-e= to apply the chosen command(s) on the current image or =C-c C-r= to clear all
-queued commands. You can also do =C-c C-I= to apply the command right after
-selecting it and =C-c C-p= to toggle the current command prefix between "+" and "-".
-
-If you want to resize the current image to fit the buffer you have several
-alternatives: =M-x eimp-fit-image-height-to-window= or =M-x
-eimp-fit-image-to-whole-window= or =M-x eimp-fit-image-to-window= or =M-x
-eimp-fit-image-width-to-window=
-
-#+BEGIN_SRC emacs-lisp
-(use-package blimp
-  :hook (image-mode . blimp-mode))
 #+END_SRC
 ** Scrot: Screenshot utility using scrot
 #+BEGIN_SRC emacs-lisp

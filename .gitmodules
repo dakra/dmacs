@@ -94,9 +94,6 @@
 [submodule "blacken"]
 	path = lib/blacken
 	url = git@github.com:pythonic-emacs/blacken.git
-[submodule "blimp"]
-	path = lib/blimp
-	url = git@github.com:walseb/blimp.git
 [submodule "borg"]
 	path = lib/borg
 	url = git@github.com:emacscollective/borg.git
@@ -289,9 +286,6 @@
 [submodule "editorconfig"]
 	path = lib/editorconfig
 	url = git@github.com:editorconfig/editorconfig-emacs.git
-[submodule "eimp"]
-	path = lib/eimp
-	url = git@github.com:nicferrier/eimp.git
 [submodule "ejc-sql"]
 	path = lib/ejc-sql
 	url = git@github.com:kostafey/ejc-sql.git
@@ -346,9 +340,6 @@
 [submodule "erc-hl-nicks"]
 	path = lib/erc-hl-nicks
 	url = git@github.com:leathekd/erc-hl-nicks.git
-[submodule "esh-autosuggest"]
-	path = lib/esh-autosuggest
-	url = git@github.com:dieggsy/esh-autosuggest.git
 [submodule "eshell-bookmark"]
 	path = lib/eshell-bookmark
 	url = git@github.com:Fuco1/eshell-bookmark.git
@@ -392,9 +383,6 @@
 [submodule "f5vpn"]
 	path = lib/f5vpn
 	url = git@github.com:dakra/f5vpn.el.git
-[submodule "fabric"]
-	path = lib/fabric
-	url = git@github.com:nlamirault/fabric.el.git
 [submodule "fancy-narrow"]
 	path = lib/fancy-narrow
 	url = git@github.com:Malabarba/fancy-narrow.git
@@ -480,9 +468,6 @@
 [submodule "guess-language"]
 	path = lib/guess-language
 	url = git@github.com:tmalsburg/guess-language.el.git
-[submodule "hacker-typer"]
-	path = lib/hacker-typer
-	url = git@github.com:dieggsy/emacs-hacker-typer.git
 [submodule "haml-mode"]
 	path = lib/haml-mode
 	url = git@github.com:nex3/haml-mode.git
@@ -671,12 +656,6 @@
 	url = git@github.com:emacs-lsp/lsp-mode.git
 	load-path = .
 	load-path = clients
-[submodule "lsp-pyright"]
-	path = lib/lsp-pyright
-	url = git@github.com:emacs-lsp/lsp-pyright.git
-[submodule "lsp-python-ms"]
-	path = lib/lsp-python-ms
-	url = git@github.com:emacs-lsp/lsp-python-ms.git
 [submodule "lsp-treemacs"]
 	path = lib/lsp-treemacs
 	url = git@github.com:emacs-lsp/lsp-treemacs.git
@@ -786,9 +765,6 @@
 [submodule "operate-on-number"]
 	path = lib/operate-on-number
 	url = git@github.com:knu/operate-on-number.el.git
-[submodule "orca"]
-	path = lib/orca
-	url = git@github.com:abo-abo/orca.git
 [submodule "orderless"]
 	path = lib/orderless
 	url = git@github.com:oantolin/orderless.git
@@ -955,9 +931,6 @@
 [submodule "posframe"]
 	path = lib/posframe
 	url = git@github.com:tumashu/posframe.git
-[submodule "prettier-js"]
-	path = lib/prettier-js
-	url = git@github.com:prettier/prettier-emacs.git
 [submodule "projectile"]
 	path = lib/projectile
 	url = git@github.com:bbatsov/projectile.git
@@ -1020,10 +993,6 @@
 [submodule "sass-mode"]
 	path = lib/sass-mode
 	url = git@github.com:nex3/sass-mode.git
-[submodule "sauron"]
-	disabled = true
-	path = lib/sauron
-	url = git@github.com:djcb/sauron.git
 [submodule "sbt-mode"]
 	path = lib/sbt-mode
 	url = git@github.com:hvesalai/emacs-sbt-mode.git
@@ -1156,15 +1125,9 @@
 [submodule "umlaut"]
 	path = lib/umlaut
 	url = git@github.com:dakra/umlaut.el.git
-[submodule "undo-fu"]
-	path = lib/undo-fu
-	url = https://codeberg.org/ideasman42/emacs-undo-fu.git
 [submodule "undo-fu-session"]
 	path = lib/undo-fu-session
 	url = https://codeberg.org/ideasman42/emacs-undo-fu-session.git
-[submodule "undo-tree"]
-	path = lib/undo-tree
-	url = git@gitlab.com:tsc25/undo-tree.git
 [submodule "use-package"]
 	path = lib/use-package
 	url = git@github.com:jwiegley/use-package.git
