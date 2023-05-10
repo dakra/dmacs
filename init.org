@@ -5517,17 +5517,19 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 (use-package clj-refactor
   :hook (clojure-mode . clj-refactor-mode)
   :config
+  ;; Allow a few more chars each row in namespace (default 72)
+  (setq cljr-print-right-margin 90)
+  
   (dolist (magic-require '(("aero"     . "aero.core")
                            ("clerk"    . "nextjournal.clerk")
                            ("csv"      . "clojure.data.csv")
                            ("edn"      . "clojure.edn")
                            ("http"     . "babashka.http-client")
                            ("jdbc"     . "next.jdbc")
-                           ;; ("match"    . "clojure.core.match")
                            ("transit"  . "cognitect.transit")
                            ("walk"     . "clojure.walk")
                            ("pprint"   . "clojure.pprint")
-                           ;; ("http"  . "clj-http.client")
+                           ("http"     . "babashka.http-client")
                            ("reagent"  . "reagent.core")
                            ("re-frame" . "re-frame.core")
                            ("tick"     . "tick.core")))
