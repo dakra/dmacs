@@ -9652,6 +9652,23 @@ Automatically show battery info when laptop is not connected to line power.
 (use-package debbugs
   :defer t)
 #+END_SRC
+** ChatGPT
+#+BEGIN_SRC emacs-lisp
+(use-package chatgpt-shell
+  :config
+  (setq chatgpt-shell-openai-key
+        (auth-source-pick-first-password :host "openai.com" :user "apikey"))
+  (setq chatgpt-shell-model-version "gpt-4")
+
+  (setq chatgpt-shell-system-prompt
+        "You are a helpful programmer with AWS knowledge who's preferred programming language is
+Clojure and ClojureScript.
+Always show code snippets in markdown blocks with language labels.
+You help program a SaaS product called price-monitor.ai that help track the product prices
+of competitors for online shops.")
+  (add-to-list 'chatgpt-shell-system-prompts chatgpt-shell-system-prompt))
+#+END_SRC
+
 ** Gif-Screencasts: One-frame-per-action GIF recording
 You need to install ~scrot~, ImageMagick (~convert~) and optional ~Gifsicle~.
 

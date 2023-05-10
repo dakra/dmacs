@@ -115,6 +115,9 @@
 [submodule "cds-mode"]
 	path = lib/cds-mode
 	url = git@github.com:dakra/cds-mode.git
+[submodule "chatgpt-shell"]
+	path = lib/chatgpt-shell
+	url = https://github.com/xenodium/chatgpt-shell
 [submodule "cider"]
 	path = lib/cider
 	url = git@github.com:clojure-emacs/cider.git
