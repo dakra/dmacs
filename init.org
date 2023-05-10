@@ -2130,13 +2130,12 @@ Helpful is a replacement for ~*help*~ buffers that provides much more contextual
 
 * Spell checker
 ** Jinx
-
 #+BEGIN_SRC emacs-lisp
 (use-package jinx
   :hook (((text-mode prog-mode conf-mode) . jinx-mode))
-  :bind ([remap ispell-word] . jinx-correct))
+  :bind (([remap ispell-word] . jinx-correct)  ;; ispell-word bound to "M-$"
+         ("C-M-$" . jinx-languages)))
 #+END_SRC
-
 ** Ispell
 #+BEGIN_SRC emacs-lisp
 (use-package ispell
