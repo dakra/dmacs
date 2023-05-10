@@ -4496,6 +4496,25 @@ plantuml
 (use-package jsonian
   :disabled t  ;; Try json-ts-mode
   :mode ("\\.avsc\\'"))
+
+;; Helper function to decode and display JWT payload
+(defun jwt-payload (token)
+  "Return JWT JSON payload from TOKEN."
+  (json-parse-string
+   (base64-decode-string (cadr (split-string "\\.") token) t)))
+
+(defun jwt-decode (beg end)
+  "Print JWT payload from symbol at point or region (BEG to END)."
+  (interactive
+   (if (or (use-region-p) (not transient-mark-mode))
+       (prog1 (list (region-beginning) (region-end))
+         (deactivate-mark))
+     (if (nth 3 (syntax-ppss))
+         (list (beginning-of-thing 'symbol)
+               (end-of-thing 'symbol))
+       (user-error "No region marked and not inside a string."))))
+  (let ((json-encoding-pretty-print t))
+    (message (json-encode (jwt-payload (buffer-substring beg end))))))
 #+END_SRC
 *** Parquet
 
