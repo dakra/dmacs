@@ -595,17 +595,24 @@ ttf-croscore
 ** modus-themes
 #+BEGIN_SRC emacs-lisp
 (use-package modus-themes
+  :disabled t
   :unless noninteractive
-  :init
+  :config
   (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs t)
-  ;; (modus-themes-load-themes)
-  :config
+
+  ;; (setq modus-themes-common-palette-overrides
+  ;;     modus-themes-preset-overrides-intense)
+
+  (setq modus-themes-common-palette-overrides
+        '(;; Make the fringe invisible.
+          (fringe unspecified)))
+
   ;; For the dark theme I want a lightly lighter background than completely black
   ;; (setq modus-themes-vivendi-color-overrides '((bg-main . "#101010")))
 
-  ;; (modus-themes-load-operandi)  ;; light theme
-  ;; (modus-themes-load-vivendi)  ;; dark theme
+  ;; (load-theme 'modus-operandi)  ;; light theme
+  (load-theme 'modus-vivendi)  ;; dark theme
   )
 #+END_SRC
 ** moody modeline
@@ -629,6 +636,8 @@ ttf-croscore
   :config
   (setq x-underline-at-descent-line t)
   (setq moody-mode-line-height nil)
+  ;; moody buffer-identification doesn't work with modus themes and
+  ;; the following line needs to be commented out first or emacs hangs!
   (moody-replace-mode-line-buffer-identification)
   (moody-replace-vc-mode)
   (moody-replace-eldoc-minibuffer-message-function))
@@ -1334,12 +1343,10 @@ ttf-symbola
                                        "-->" "-<" ">->" ">>-" "<<-" "<->" "->>" "-<<" "<-<"
                                        "==>" "=>" "=/=" "!==" "!=" "<==" ">>=" "=>>" ">=>"
                                        "<=>" "<=<" "=<=" "=>=" "<<=" "=<<"
-                                       "=:=" "=!=" "==" "=~" "!~" "===" "::" ":=" ":>" ":<" ">:"
+                                       "=:=" "=!=" "==" "=~" "!~" "===" "::" ":=" ":>" ">:"
                                        ";;" "__" "..." ".." "&&" "++")))
-
 #+END_SRC
-
-** form-feed: Show line-breaks (~^L~ ) characters as lines
+** form-feed: Show line-breaks (~^L~) characters as lines
 #+BEGIN_SRC emacs-lisp
 (use-package form-feed
   :hook (((clojure-mode emacs-lisp-mode) . form-feed-mode)))
@@ -1911,14 +1918,10 @@ Move current line or region with M-up or M-down.
 ** Grep-context: Get more context for compilation/grep buffers by pressing +/-
 #+BEGIN_SRC emacs-lisp
 (use-package grep-context
-  :after ivy
   :bind (:map compilation-mode-map
          ("+" . grep-context-more-around-point)
          ("-" . grep-context-less-around-point)
          :map grep-mode-map
-         ("+" . grep-context-more-around-point)
-         ("-" . grep-context-less-around-point)
-         :map ivy-occur-grep-mode-map
          ("+" . grep-context-more-around-point)
          ("-" . grep-context-less-around-point)))
 #+END_SRC
@@ -1949,7 +1952,10 @@ Move current line or region with M-up or M-down.
 ** deadgrep: Interface for ripgrep
 #+BEGIN_SRC emacs-lisp
 (use-package deadgrep
-  :bind ("<f5>" . deadgrep))
+  :bind (("<f5>" . deadgrep)
+         :map deadgrep-mode-map
+         ("C-x C-q" . wgrep-change-to-wgrep-mode))
+  :hook (deadgrep-finished . wgrep-deadgrep-setup))
 #+END_SRC
 
 ** Company: Auto completion
@@ -3396,7 +3402,6 @@ avfs
   (defun dakra-eshell-split (&optional arg)
     "Like eshell but use pop-to-buffer to display."
     (interactive "P")
-    (interactive)
     (let ((cur-buf (buffer-name))
           (eshell-buf (eshell arg)))
       (pop-to-buffer-same-window cur-buf)
@@ -4501,7 +4506,7 @@ plantuml
 (defun jwt-payload (token)
   "Return JWT JSON payload from TOKEN."
   (json-parse-string
-   (base64-decode-string (cadr (split-string "\\.") token) t)))
+   (base64-decode-string (cadr (split-string token "\\.")) t)))
 
 (defun jwt-decode (beg end)
   "Print JWT payload from symbol at point or region (BEG to END)."
@@ -5516,10 +5521,12 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 #+BEGIN_SRC emacs-lisp
 (use-package clj-refactor
   :hook (clojure-mode . clj-refactor-mode)
+  :bind (:map cider-mode-map
+         ("C-c C-r n a" . cljr-add-missing-libspec))
   :config
   ;; Allow a few more chars each row in namespace (default 72)
   (setq cljr-print-right-margin 90)
-  
+
   (dolist (magic-require '(("aero"     . "aero.core")
                            ("clerk"    . "nextjournal.clerk")
                            ("csv"      . "clojure.data.csv")
@@ -5610,6 +5617,8 @@ Yasnippets for Datomic.
 (use-package datomic
   :defer t
   :config
+  ;; Don't query user on auto deploy when there is a dependency conflict.
+  (setq datomic-confirm-deploy-with-conflicts nil)
   (setq datomic-access-program (expand-file-name "~/clojure/datomic-aws/datomic-cli/datomic-access"))
   (setq datomic-systems '("pm-mvp")))
 #+END_SRC
@@ -5726,9 +5735,11 @@ octave
 *** Jupyter
 #+BEGIN_SRC emacs-lisp
 (use-package zmq
+  :disabled t
   :defer t)
 
 (use-package jupyter
+  :disabled t
   :after ob  ;; Load after org-babel
   :config
   ;; Set a default session and make execution async by default
@@ -5737,6 +5748,7 @@ octave
                                                        (:session . "py-default"))))
 
 (use-package jupyter-repl
+  :disabled t
   :after jupyter
   ;;:hook (jupyter-repl-mode . show-smartparens-mode)
   :config
@@ -7530,7 +7542,8 @@ session as the current block. ARG has same meaning as in
      (sqlite . t)
      ;; jupyter should be the last element as it depends on other lang-modes.
      ;; See jupyter readme for more info.
-     (jupyter . t)))
+     ;; (jupyter . t)
+     ))
 
   ;; Load personal library of babel
   (org-babel-lob-ingest (no-littering-expand-etc-file-name "library-of-babel.org")))
@@ -7698,7 +7711,7 @@ xprintidle
 ;;; Clock Setup
 (use-package org-clock
   :after org
-  :init
+  :config
   ;; FIXME: remove unused bh functions?
   (setq bh/keep-clock-running nil)
 
@@ -8873,7 +8886,9 @@ Send emails with =org-msg=. Some keybindings:
         org-msg-startup "hidestars indent inlineimages"
         org-msg-greeting-name-limit 3
         org-msg-convert-citation t
-        org-msg-text-plain-alternative t))
+        org-msg-default-alternatives '((new		. (text html))
+				       (reply-to-html	. (text html))
+				       (reply-to-text	. (text)))))
 #+END_SRC
 
 ** mml-sec: Auto sign mails
