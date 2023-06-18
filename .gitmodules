@@ -121,6 +121,9 @@
 [submodule "cider"]
 	path = lib/cider
 	url = git@github.com:clojure-emacs/cider.git
+[submodule "cider-storm"]
+	path = lib/cider-storm
+	url = git@github.com:jpmonettas/cider-storm.git
 [submodule "clj-refactor"]
 	path = lib/clj-refactor
 	url = git@github.com:clojure-emacs/clj-refactor.el.git
