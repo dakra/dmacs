@@ -6860,6 +6860,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
 #+BEGIN_SRC emacs-lisp
 (use-package org
   :mode ("\\.\\(org\\|org_archive\\|txt\\)\\'" . org-mode)
+  :hook (org-mode . org-mode--init)
   :bind (("C-c a"   . org-agenda)
          ("<f6>"    . org-agenda)
          ("<f7>"    . org-clock-goto)
@@ -6902,15 +6903,36 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
   ;; is also fast with overlays now. (See lib/org/etc/ORG_NEWS)
   (setq org-fold-core-style 'overlays)
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              ;; Automatic line-wrapping in org-mode
-              ;;(auto-fill-mode 1)
+  (defun org-mode--init ()
+    ;; Allow posting images in org-mode via yank-media
+    (yank-media-handler "image/.*" #'org-mode--image-yank-handler)
 
-              (setq completion-at-point-functions
-                    '(org-completion-symbols
-                      org-cap-filesystem))))
+    ;; Automatic line-wrapping in org-mode
+    ;;(auto-fill-mode 1)
+
+    (setq completion-at-point-functions
+          '(org-completion-symbols
+            org-cap-filesystem)))
+
   :config
+  ;; FIXME: Can be removed once the default goes down
+  (setq org-element--cache-self-verify-frequency 0.001)
+
+  ;; Mostly from sgml-mode.el html-mode--image-yank-handler
+  (defun org-mode--image-yank-handler (type image)
+    (let ((file (read-file-name (format "Save %s image to: " type)
+                                (expand-file-name "images/" default-directory))))
+      (when (file-directory-p file)
+        (user-error "%s is a directory"))
+      (when (and (file-exists-p file)
+                 (not (yes-or-no-p (format "%s exists; overwrite?" file))))
+        (user-error "%s exists"))
+      (with-temp-buffer
+        (set-buffer-multibyte nil)
+        (insert image)
+        (write-region (point-min) (point-max) file))
+      (insert (format "[[file:%s]]\n" (file-relative-name file)))
+      (org-display-inline-images)))
 
   ;; Put a real space in front of the content for each level
   ;; (setq org-adapt-indentation t)
