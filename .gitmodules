@@ -861,9 +861,6 @@
 [submodule "pacfiles-mode"]
 	path = lib/pacfiles-mode
 	url = git@github.com:UndeadKernel/pacfiles-mode.git
-[submodule "package-build"]
-	path = lib/package-build
-	url = git@github.com:melpa/package-build.git
 [submodule "package-lint"]
 	path = lib/package-lint
 	url = git@github.com:purcell/package-lint.git
