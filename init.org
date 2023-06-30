@@ -8873,7 +8873,9 @@ I don't use gnus but ~debbugs~, ~mu4e~ (the viewer) and ~mu4e-icalendar~ use it.
   :after mu4e
   :config
   ;; Don't go fullscreen startin gnus (e.g. from debbugs)
-  (setq gnus-use-full-window nil))
+  (setq gnus-use-full-window nil)
+  ;; Always just delete temp html files without asking
+  (setq gnus-article-browse-delete-temp t))
 
 (use-package gnus-icalendar
   :after gnus
