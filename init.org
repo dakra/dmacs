@@ -7951,6 +7951,9 @@ as the default task."
   ;; By default only export subtree instead of whole buffer
   (setq org-export-initial-scope 'subtree)
 
+  ;; Mark setting org-export scope as safe for usage in .dir-locals
+  (put 'org-export-initial-scope 'safe-local-variable (lambda (x) (or (eq x 'buffer) (eq x 'subtree))))
+
   ;; Don't evaluate babel source blocks during export
   (setq org-export-use-babel nil)
 
