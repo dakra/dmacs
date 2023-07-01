@@ -5350,6 +5350,10 @@ the *cider-result* buffer."
         (and cider-clojure-cli-global-options
              (s-contains? ,alias cider-clojure-cli-global-options)))))
 
+  ;; Inject flow-storm middleware in cider-jack-in when the `:flow-storm' alias is set
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               `("flow-storm.nrepl.middleware/wrap-flow-storm" :predicate ,(-cider-check-alias-fn ":flow-storm")))
+
   ;; Inject reveal middleware in cider-jack-in when the `:reveal' alias is set
   (add-to-list 'cider-jack-in-nrepl-middlewares
                `("vlaaad.reveal.nrepl/middleware" :predicate ,(-cider-check-alias-fn ":reveal")))
