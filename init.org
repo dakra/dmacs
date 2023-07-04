@@ -9733,6 +9733,11 @@ Always show code snippets in markdown blocks with language labels.
 You help program a SaaS product called price-monitor.ai that help track the product prices
 of competitors for online shops.")
   (add-to-list 'chatgpt-shell-system-prompts chatgpt-shell-system-prompt))
+
+(use-package dall-e-shell
+  :config
+  (setq dall-e-shell-openai-key
+        (auth-source-pick-first-password :host "openai.com" :user "apikey")))
 #+END_SRC
 
 ** Gif-Screencasts: One-frame-per-action GIF recording
