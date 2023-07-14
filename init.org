@@ -8296,26 +8296,28 @@ Packages to compile the mu binary:
 #+BEGIN_SRC txt :tangle arch-pkglist.txt
 gmime3
 xapian-core
+cld2-git
 #+END_SRC
 
 For =mu= to recognize personal email addresses you have to pass them to ~mu init~
 before indexing with:
 #+BEGIN_SRC sh :tangle no
-mu init --maildir=./Maildir                          \
+mu init --maildir=/home/daniel/Maildir               \
+        --ignored-address=/.*noreply*/               \
         --my-address=daniel@kraus.my                 \
         --my-address=daniel.kraus@gmail.com          \
         --my-address=d@niel-kraus.de                 \
-        --my-address=daniel@skor.buzz                \
         --my-address=/dakra-.*@tr0ll\.net/           \
-        --my-address=extern.daniel.kraus@sovendus.de \
+        --my-address=daniel@skor.buzz                \
+        --my-address=daniel@price-monitor.ai         \
+        --my-address=support@price-monitor.ai        \
+        --my-address=info@price-monitor.ai           \
+        --my-address=dakra@2spicy.de                 \
         --my-address=daniel.kraus@paessler.com       \
         --my-address=daniel.kraus@ebenefuenf.de      \
         --my-address=daniel@restalchemy.org          \
-        --my-address=support@price-monitor.ai        \
-        --my-address=info@price-monitor.ai           \
-        --my-address=daniel@price-monitor.ai         \
+        --my-address=extern.daniel.kraus@sovendus.de \
         --my-address=daniel@price-monitor.info       \
-        --my-address=dakra@2spicy.de                 \
         --my-address=daniel@hogaso.com
 #+END_SRC
 
