@@ -4184,8 +4184,13 @@ proselint
 ;; activate virtualenv for flycheck
 ;; (from https://github.com/lunaryorn/.emacs.d/blob/master/lisp/flycheck-virtualenv.el)
 (use-package flycheck
-  :hook ((prog-mode ledger-mode systemd-mode
-          mu4e-compose-mode markdown-mode rst-mode) . flycheck-mode)
+  :hook (((prog-mode
+           ledger-mode
+           systemd-mode
+           mu4e-compose-mode
+           markdown-mode
+           rst-mode) . flycheck-mode)
+         (flycheck-mode . mp-flycheck-prefer-eldoc))
   :config
   ;; Don't initialize packages (as we don't use package.el)
   (setq flycheck-emacs-lisp-initialize-packages nil)
@@ -4195,6 +4200,34 @@ proselint
   ;; Only do flycheck when I actually safe the buffer
   (setq flycheck-check-syntax-automatically '(save mode-enable))
 
+  ;; Work with `eldoc-documentation-functions'
+  ;; From https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
+  (defun mp-flycheck-eldoc (callback &rest _ignored)
+    "Print flycheck messages at point by calling CALLBACK."
+    (when-let ((flycheck-errors (and flycheck-mode (flycheck-overlay-errors-at (point)))))
+      (mapc
+       (lambda (err)
+         (funcall callback
+                  (format "%s: %s"
+                          (let ((level (flycheck-error-level err)))
+                            (pcase level
+                              ('info (propertize "I" 'face 'flycheck-error-list-info))
+                              ('error (propertize "E" 'face 'flycheck-error-list-error))
+                              ('warning (propertize "W" 'face 'flycheck-error-list-warning))
+                              (_ level)))
+                          (flycheck-error-message err))
+                  :thing (or (flycheck-error-id err)
+                             (flycheck-error-group err))
+                  :face 'font-lock-doc-face))
+       flycheck-errors)))
+
+  (defun mp-flycheck-prefer-eldoc ()
+    (add-hook 'eldoc-documentation-functions #'mp-flycheck-eldoc nil t)
+    (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
+    (setq flycheck-display-errors-function nil)
+    (setq flycheck-help-echo-function nil))
+
+  ;; Python setup
   (declare-function python-shell-calculate-exec-path "python")
 
   (defun flycheck-virtualenv-executable-find (executable)
