@@ -10423,7 +10423,18 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
 ** Nov: Read EPUBs
 #+BEGIN_SRC emacs-lisp
 (use-package nov
-  :mode ("\\.epub\\'" . nov-mode))
+  :mode ("\\.epub\\'" . nov-mode)
+  :bind (:map nov-mode-map
+         ;; In non editing buffers I like to move around with just n/p
+         ;; and go to the next/previous chapter with N/P
+         ("n" . next-line)
+         ("p" . previous-line)
+         ("N" . nov-next-document)
+         ("P" . nov-previous-document)
+         ("b" . nov-history-back)
+         ;; Make it a bit easier to adjust font size for reading
+         ("+" . text-scale-increase)
+         ("-" . text-scale-decrease)))
 #+END_SRC
 ** Piper: Shell scripting with Emacs
 #+BEGIN_SRC emacs-lisp
