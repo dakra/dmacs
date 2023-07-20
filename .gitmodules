@@ -1145,6 +1145,9 @@
 	path = lib/virtualenvwrapper
 	url = git@github.com:porterjamesj/virtualenvwrapper.el.git
 	remote = dakra git@github.com:dakra/virtualenvwrapper.el.git
+[submodule "visual-fill-column"]
+	path = lib/visual-fill-column
+	url = git@github.com:emacsmirror/visual-fill-column.git
 [submodule "visual-regexp"]
 	path = lib/visual-regexp
 	url = git@github.com:benma/visual-regexp.el.git

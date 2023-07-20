@@ -1221,6 +1221,11 @@ With a prefix argument, copy the link to the online manual instead."
 (use-package display-fill-column-indicator
   :hook ((git-commit-setup) . display-fill-column-indicator-mode))
 #+END_SRC
+** visual-fill-column: fill-column for visual-line-mode
+#+begin_src emacs-lisp
+(use-package visual-fill-column
+  :defer t)
+#+end_src
 ** Goggles: Visual feedback on some operations like yank,kill,undo
 #+BEGIN_SRC emacs-lisp
 (use-package goggles
