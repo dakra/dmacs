@@ -4278,6 +4278,9 @@ lldb
   ;; Increase lsp file watch threshold when lsp shows a warning
   (setq lsp-file-watch-threshold 1500)
 
+  (setq lsp-enable-on-type-formatting nil)
+  (setq lsp-enable-indentation nil)
+
   (defun lsp-find-definition-other (other?)
     "Like `lsp-find-definition' but open in other window when called with prefix arg."
     (interactive "P")
