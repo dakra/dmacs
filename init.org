@@ -2356,7 +2356,7 @@ created a dedicated process for the project."
   (defun treemacs-toggle-or-select (&optional arg)
     "Initialize or toggle treemacs.
 - If the treemacs window is visible and selected, hide it.
-- If the treemacs window is visible select it.
+- If the treemacs window is visible select it with cursor on current file.
 - If a treemacs buffer exists, but is not visible show it.
 - If no treemacs buffer exists for the current frame create and show it.
 - If the workspace is empty additionally ask for the root path of the first
@@ -2369,6 +2369,7 @@ With two `C-u' `C-u' prefix args, add and display current project."
            (pcase (treemacs-current-visibility)
              ('visible (if (string-prefix-p treemacs--buffer-name-prefix (buffer-name))
                            (delete-window (treemacs-get-local-window))
+                         (treemacs-find-file)
                          (treemacs--select-visible-window)))
              ('exists  (treemacs-select-window))
              ('none    (treemacs--init))))
