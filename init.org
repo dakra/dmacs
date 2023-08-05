@@ -2249,13 +2249,13 @@ languagetool-ngrams-de
     (interactive)
     (let* ((root (project-root (project-current t)))
            (fn (file-relative-name (buffer-file-name) root))
-           (test-p (s-starts-with-p "test" fn))
+           (test-p (s-contains-p "test" fn))
            (dir (file-name-directory fn))
            (base (file-name-base fn))
            (ext (file-name-extension fn))
            (toggle-dir (if test-p
-                           (replace-regexp-in-string "^test" "src" dir)
-                         (replace-regexp-in-string "^src" "test" dir)))
+                           (replace-regexp-in-string "/test" "/src" dir)
+                         (replace-regexp-in-string "/src" "/test" dir)))
            (toggle-base (if test-p
                             (replace-regexp-in-string "_test$" "" base)
                           (concat base "_test")))
