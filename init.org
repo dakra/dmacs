@@ -8232,8 +8232,8 @@ man-pages
 (use-package org-github
   :defer t
   :config
-  (setq org-github-default-owner "atomx")
-  (setq org-github-default-name "api"))
+  (setq org-github-default-owner "scarletcomply")
+  (setq org-github-default-name "slang"))
 #+END_SRC
 *** Org-link
 
@@ -8377,6 +8377,7 @@ mu init --maildir=/home/daniel/Maildir               \
         --my-address=daniel.kraus@gmail.com          \
         --my-address=d@niel-kraus.de                 \
         --my-address=/dakra-.*@tr0ll\.net/           \
+        --my-address=daniel@scarletcomply.com        \
         --my-address=daniel@skor.buzz                \
         --my-address=daniel@price-monitor.ai         \
         --my-address=support@price-monitor.ai        \
@@ -8398,7 +8399,7 @@ mu init --maildir=/home/daniel/Maildir               \
          ("U" . mu4e-update-mail-and-index-background)
          :map mu4e-headers-mode-map
          ("TAB" . mu4e-headers-next-unread)
-         ("j" . mu4e-move-to-junk)
+         ("J" . mu4e-move-to-junk)
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash)
          ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
@@ -8412,7 +8413,7 @@ mu init --maildir=/home/daniel/Maildir               \
          ("p" . mu4e-scroll-down)
          ("N" . mu4e-view-headers-next)
          ("P" . mu4e-view-headers-prev)
-         ("j" . mu4e-move-to-junk)
+         ("J" . mu4e-move-to-junk)
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash))
   :hook (message-send . message-warn-if-no-attachments)
@@ -8543,6 +8544,7 @@ mu init --maildir=/home/daniel/Maildir               \
                                    "maildir:/sovendus/Inbox OR "
                                    "maildir:/sap/Inbox OR "
                                    "maildir:/gmail/inbox OR "
+                                   "maildir:/scarlet/inbox OR "
                                    "maildir:/spicy/inbox OR "
                                    "maildir:/hogaso/inbox OR "
                                    "maildir:/e5/Inbox")
@@ -8555,6 +8557,8 @@ mu init --maildir=/home/daniel/Maildir               \
                                    "NOT list:emacs-orgmode.gnu.org AND "
                                    "NOT maildir:/private/Junk AND "
                                    "NOT maildir:/private/Trash AND "
+                                   "NOT maildir:/scarlet/spam AND "
+                                   "NOT maildir:/scarlet/trash AND "
                                    "NOT maildir:/spicy/spam AND "
                                    "NOT maildir:/spicy/trash AND "
                                    "NOT maildir:/paessler/Inbox AND "
@@ -8572,6 +8576,8 @@ mu init --maildir=/home/daniel/Maildir               \
                                    "NOT flag:seen AND "
                                    "NOT maildir:/private/Junk AND "
                                    "NOT maildir:/private/Trash AND "
+                                   "NOT maildir:/scarlet/spam AND "
+                                   "NOT maildir:/scarlet/trash AND "
                                    "NOT maildir:/spicy/spam AND "
                                    "NOT maildir:/spicy/trash AND "
                                    "NOT maildir:/paessler/Inbox AND "
@@ -8602,7 +8608,7 @@ mu init --maildir=/home/daniel/Maildir               \
   ;; allow for updating mail using 'U' in the main view:
   ;; (only update inboxes)
   ;; (setq mu4e-get-mail-command "mbsync private:Inbox sovendus:Inbox e5:Inbox gmail-inbox spicy-inbox hogaso-inbox")
-  (setq mu4e-get-mail-command "mbsync private:INBOX gmail-inbox spicy-inbox")  ;; sovendus:INBOX
+  (setq mu4e-get-mail-command "mbsync private:INBOX gmail-inbox scarlet-inbox")  ;; sovendus:INBOX
   ;; for update all:
   ;;(setq mu4e-get-mail-command "mbsync -a")
 
@@ -8782,6 +8788,22 @@ mu init --maildir=/home/daniel/Maildir               \
                      ( mu4e-sent-folder   . "/gmail/sent_mail" )
                      ( mu4e-trash-folder  . "/gmail/trash" )
                      ( mu4e-refile-folder . "/gmail/all_mail" )
+                     ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+                     ( mu4e-sent-messages-behavior  . delete)))
+           ,(make-mu4e-context
+             :name "scarlet"
+             :enter-func (lambda () (mu4e-message "Switch to the Scarlet context"))
+             :match-func (mu4e-context-match-fun "^/scarlet")
+             :vars '(( user-mail-address  . "daniel@scarletcomply.com" )
+                     ( mu4e-maildir-shortcuts . (("/scarlet/inbox"      . ?i)
+                                                 ("/scarlet/sent_mail"  . ?s)
+                                                 ("/scarlet/trash"      . ?t)
+                                                 ("/scarlet/drafts"     . ?d)
+                                                 ("/scarlet/all_mail"   . ?a)))
+                     ( mu4e-drafts-folder . "/scarlet/drafts" )
+                     ( mu4e-sent-folder   . "/scarlet/sent_mail" )
+                     ( mu4e-trash-folder  . "/scarlet/trash" )
+                     ( mu4e-refile-folder . "/scarlet/all_mail" )
                      ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
                      ( mu4e-sent-messages-behavior  . delete)))
            ,(make-mu4e-context
