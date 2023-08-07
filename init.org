@@ -5363,6 +5363,14 @@ openjdk11-src
   :hook (((cider-mode cider-repl-mode) . cider-company-enable-fuzzy-completion)
          (cider-mode . eldoc-mode))
   :config
+  ;; By default prefer clojure-cli build-tool when jacking in
+  (setq cider-preferred-build-tool 'clojure-cli)
+  ;; and set the :dev and :licp alias
+  (setq cider-clojure-cli-aliases ":dev:licp")
+
+  ;; Only show cider eval results as overlay and not in the minibuffer
+  (setq cider-use-overlays t)
+
   ;; Display cider-scratch buffer in the same window
   (add-to-list
    'display-buffer-alist
@@ -5388,7 +5396,8 @@ the *cider-result* buffer."
   (defun cider-maybe-clojuredocs (&optional arg)
     "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
     (interactive "P")
-    (if (and arg (eq major-mode 'clojure-mode))
+    (if (and arg (or (eq major-mode 'clojure-mode)
+                     (eq major-mode 'clojurec-mode)))
         (cider-clojuredocs arg)
       (cider-doc)))
 
@@ -5409,6 +5418,10 @@ the *cider-result* buffer."
   ;; Inject flow-storm middleware in cider-jack-in when the `:flow-storm' alias is set
   (add-to-list 'cider-jack-in-nrepl-middlewares
                `("flow-storm.nrepl.middleware/wrap-flow-storm" :predicate ,(-cider-check-alias-fn ":flow-storm")))
+
+  ;; Inject portal middleware in cider-jack-in when the `:portal' alias is set
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               `("portal.nrepl/wrap-portal" :predicate ,(-cider-check-alias-fn ":portal")))
 
   ;; Inject reveal middleware in cider-jack-in when the `:reveal' alias is set
   (add-to-list 'cider-jack-in-nrepl-middlewares
