@@ -3021,13 +3021,27 @@ BROKEN #+END_SRC
   (setq vlf-batch-size 5242880)
   ;; warn when opening files bigger than 30MB
   (setq large-file-warning-threshold 30000000))
+#+END_SRC
+** Logview: View and filter log files
+Logview provides syntax highlighting, filtering and other features for various log files
 
-;; Logview provides syntax highlighting, filtering and other features for various log files
+#+BEGIN_SRC emacs-lisp
 (use-package logview
-  :defer t
+  :mode ("log.out\\'" . logview-mode)
   :config
+  (setq logview-additional-timestamp-formats
+        '(("ISO 8601 datetime (with 'T') + millis + 'Z'"
+           (java-pattern . "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+           (datetime-options :any-decimal-separator t)
+           (aliases "yyyy-MM-dd HH:mm:ss.SSS") (aliases "yyyy-MM-dd HH:mm:ss.SSSSSS")
+           (aliases "yyyy-MM-dd'T'HH:mm:ss.SSS") (aliases "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+           (aliases "yyyy-MM-dd'T'HH:mm:ss.SSSSSS") (aliases "HH:mm:ss.SSS")
+           (aliases "HH:mm:ss.SSSSSS"))))
   (setq logview-additional-submodes
-        '(("Logback4me"
+        '(("Timbre"
+           (format  . "TIMESTAMP LEVEL [NAME] -")
+           (levels  . "SLF4J"))
+          ("Logback4me"
            (format . "TIMESTAMP [THREAD] {} LEVEL NAME -")
            (levels . "SLF4J")))))
 #+END_SRC
