@@ -5318,9 +5318,14 @@ $ sbcl
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
   :defer t
-  :interpreter ("bb" . clojure-mode)
-  :hook ((clojure-mode . clojure-mode-add-edn-imenu-regexp))
+  :hook ((clojure-mode . clojure-init))
   :config
+  (defun clojure-init ()
+    "Start lsp and add edn imenu regexp."
+    (clojure-mode-add-edn-imenu-regexp)
+    (setq-local lsp-completion-enable nil)
+    (lsp))
+
   ;; For large edn files I want to navigate with imenu to root level keywords.
   ;; For a similar hack with outline you can: `(setq-local outline-regexp "^.?.?:[^ ]+")'
   (defun clojure-mode-add-edn-imenu-regexp ()
@@ -5333,6 +5338,9 @@ $ sbcl
   (font-lock-add-keywords 'clojurescript-mode
                           '((":class[ \\r\\n\\t]*\\((str[ \\r\\n\\t]*\\)?\\\"\\(.+?\\)\\\"" 2
                              font-lock-variable-name-face t)))
+
+  ;; use project-root to find the root for a Clojure project
+  (setq clojure-project-root-function (lambda (&optional _) (project-root (project-current))))
 
   ;; Eval top level forms inside comment forms instead of the comment form itself
   (setq clojure-toplevel-inside-comment-form t)
@@ -5388,11 +5396,24 @@ the *cider-result* buffer."
     (interactive "P")
     (cider-find-and-clear-repl-output clear-repl)
     (let ((buf (get-buffer cider-result-buffer)))
-      (when buf
+      (when (and buf (> (buffer-size buf) 0))  ;; Only clear when buffer exists and is not empty
         (save-excursion
           (with-current-buffer buf
             (let ((inhibit-read-only t))
-              (delete-region (point-min) (point-max))))))))
+              (if clear-repl  ;; Remove all output when called with prefix
+                  (delete-region (point-min) (point-max))
+
+                ;; Only remove output of the "cell" where the cursor currently is
+                (goto-char (or (search-backward "\f" nil t) (point-min))) ;; Search the beginning
+                (forward-sexp)  ;; Skip input sexp
+                (forward-line 2)  ;; Skip the =*ns* <buffer>:line-ns=> info arrow
+                (beginning-of-line)
+                (let ((start (point)))
+                  (search-forward "\f" nil t)
+                  (backward-char)
+                  (delete-region start (point)))
+                (insert-before-markers
+                 (propertize ";; output cleared\n" 'font-lock-face 'font-lock-comment-face)))))))))
 
   (defun cider-maybe-clojuredocs (&optional arg)
     "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
@@ -5531,7 +5552,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
     (cider-nrepl-sync-request:eval
      "(do (ns dev)
         (def portal ((requiring-resolve 'portal.api/open)
-                      {:launcher :emacs :theme :portal.colors/material-ui}))
+                      {#_#_:launcher :emacs :theme :portal.colors/material-ui}))
         (add-tap (requiring-resolve 'portal.api/submit)))"))
 
   (defun portal-clear ()
