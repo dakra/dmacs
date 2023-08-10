@@ -4335,6 +4335,7 @@ lldb
   (setq lsp-ui-doc-use-childframe t)
   (setq lsp-ui-doc-include-signature t)
   (setq lsp-ui-doc-position 'at-point)
+  (setq lsp-lens-enable nil)  ;; "1 reference" etc at the end of the line
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-symbol nil))
