@@ -10538,7 +10538,9 @@ readable website content if the entry url matches `elfeed-readability-url-regex'
          ("b" . nov-history-back)
          ;; Make it a bit easier to adjust font size for reading
          ("+" . text-scale-increase)
-         ("-" . text-scale-decrease)))
+         ("-" . text-scale-decrease))
+  :config
+  (setq nov-text-width 78))
 #+END_SRC
 ** Piper: Shell scripting with Emacs
 #+BEGIN_SRC emacs-lisp
