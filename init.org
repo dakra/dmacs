@@ -9174,6 +9174,8 @@ command = "emacsclient --eval '(if (org-clock-is-active) (org-no-properties (org
 (use-package i3
   :bind (("s-j" . i3-windmove-left)
          ("s-l" . i3-windmove-right)
+         ("s-i" . i3-windmove-up)
+         ("s-k" . i3-windmove-down)
          ("s-J" . i3-windmove-swap-states-left)
          ("s-L" . i3-windmove-swap-states-right))
   :config
@@ -9197,6 +9199,28 @@ if there is no window on the right."
       (i3-command 0 "focus right")
       ;; (i3-command 0 "mode 'default'")
       ))
+
+  (defun i3-windmove-up (&optional arg)
+    "Like windmove-up but call i3 command `focus up'
+if there is no window on the up."
+    (interactive "P")
+    (if (windmove-find-other-window 'up arg)
+        (windmove-do-window-select 'up arg)
+      ;; No window to the up
+      (i3-command 0 "focus up")))
+
+  (defun i3-windmove-down (&optional arg)
+    "Like windmove-down but call i3 command `focus down'
+if there is no window on the down."
+    (interactive "P")
+    (let ((other-window (windmove-find-other-window 'down arg)))
+      (if (or (and other-window
+                   (not (window-minibuffer-p other-window)))
+              (and (window-minibuffer-p other-window)
+                   (minibuffer-window-active-p other-window)))
+          (windmove-do-window-select 'down arg)
+        ;; No window to the down
+        (i3-command 0 "focus down"))))
 
   (defun i3-windmove-swap-states-left (&optional arg)
     "Like windmove-swap-states-left but call i3 command `move left'
