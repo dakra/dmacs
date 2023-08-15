@@ -5378,6 +5378,9 @@ openjdk11-src
   ;; and set the :dev and :licp alias
   (setq cider-clojure-cli-aliases ":dev:licp")
 
+  ;; Always reuse a dead REPS without prompt when it's the only option
+  (setq cider-reuse-dead-repls 'auto)
+
   ;; Only show cider eval results as overlay and not in the minibuffer
   (setq cider-use-overlays t)
 
