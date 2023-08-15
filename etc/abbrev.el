@@ -550,6 +550,7 @@
     ("hauptsaechlich" "hauptsächlich")
     ("hauptstrasse" "hauptstraße")
     ("hausaerzte" "hausärzte")
+    ("heiss" "heiß")
     ("heissen" "heißen")
     ("heisst" "heißt")
     ("herausfliessen" "herausfließen")
