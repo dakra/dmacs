@@ -106,6 +106,7 @@
 (setq mc/cmds-to-run-once
       '(
         beginning-of-buffer
+        consult-imenu
         counsel-M-x
         counsel-linux-app
         counsel-projectile-switch-project
@@ -122,8 +123,12 @@
         handle-select-window
         handle-switch-frame
         helpful-key
+        i3-windmove-down
         i3-windmove-left
+        i3-windmove-right
+        i3-windmove-up
         iedit-switch-to-mc-mode
+        ignore-preserving-kill-region
         ivy-backward-delete-char
         ivy-wgrep-change-to-wgrep-mode
         magit-section-backward
