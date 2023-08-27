@@ -544,8 +544,8 @@ If you don't set your Xresources, you can load the font with:
 #+BEGIN_SRC emacs-lisp
 ;; (add-to-list 'default-frame-alist '(font . "Operator Mono-9:weight=light:width=normal"))
 ;; (set-frame-font "Operator Mono-9:weight=light:width=normal" nil t)
-(add-to-list 'default-frame-alist '(font . "Fira Code-9:weight=regular:width=normal"))
-(set-frame-font "Fira Code-9:weight=regular:width=normal" nil t)
+(add-to-list 'default-frame-alist '(font . "Fira Code-13:weight=regular:width=normal"))
+(set-frame-font "Fira Code-13:weight=regular:width=normal" nil t)
 ;; (set-frame-font "Victor Mono-9:weight=medium" nil t)
 ;; (set-frame-font "iA Writer Mono S-9:weight=regular" nil t)
 ;; (set-frame-font "B612 Mono-9:weight=regular" nil t)
@@ -649,7 +649,11 @@ ttf-croscore
   :defer 2
   :config
   (setq minions-mode-line-lighter "+")
-  (setq minions-prominent-modes '(projectile-mode flycheck-mode multiple-cursors-mode sticky-buffer-mode))
+  (setq minions-prominent-modes '(projectile-mode
+                                  flycheck-mode
+                                  multiple-cursors-mode
+                                  sticky-buffer-mode
+                                  mu4e-modeline-mode))
   (minions-mode))
 #+END_SRC
 
@@ -3570,9 +3574,9 @@ avfs
                                 ))
   ;; Functions starting with `eshell/' can be called directly from eshell
   ;; with only the last part. E.g. (eshell/foo) will call `$ foo'
-  (defun eshell/d (&rest args)
+  (defun eshell/d (&optional dir)
     "Open dired in current directory."
-    (dired (pop args) "."))
+    (dired (or dir ".")))
 
   (defun eshell/ccat (file)
     "Like `cat' but output with Emacs syntax highlighting."
@@ -3685,6 +3689,7 @@ file to edit."
 ** Eshell-fringe-status: Show last status in fringe
 #+BEGIN_SRC emacs-lisp
 (use-package eshell-fringe-status
+  :disabled t  ;; Broken with latest Emacs? Sometimes adds invisible space at the end of the prompt
   :hook (eshell-mode . eshell-fringe-status-mode)
   :config
   (define-fringe-bitmap 'efs-line-bitmap
@@ -5341,7 +5346,12 @@ $ sbcl
                              font-lock-variable-name-face t)))
 
   ;; use project-root to find the root for a Clojure project
-  (setq clojure-project-root-function (lambda (&optional _) (project-root (project-current))))
+  (setq clojure-project-root-function
+        (lambda (&optional path)
+          (let ((root-path (project-root (project-current))))
+            (if (string-match-p  "vsce" path)
+                (concat root-path "projects/vsce")
+              root-path))))
 
   ;; Eval top level forms inside comment forms instead of the comment form itself
   (setq clojure-toplevel-inside-comment-form t)
@@ -5423,8 +5433,9 @@ the *cider-result* buffer."
     "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
     (interactive "P")
     (if (and arg (or (eq major-mode 'clojure-mode)
-                     (eq major-mode 'clojurec-mode)))
-        (cider-clojuredocs arg)
+                     (eq major-mode 'clojurec-mode)
+                     (eq major-mode 'cider-clojure-interaction-mode)))
+        (cider-clojuredocs)
       (cider-doc)))
 
   ;; Location of the jdk sources. In Arch Linux package `openjdk-src'
@@ -8833,7 +8844,7 @@ mu init --maildir=/home/daniel/Maildir               \
                      ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
                      ( mu4e-sent-messages-behavior  . delete)))
            ,(make-mu4e-context
-             :name "spicy"
+             :name "2spicy"
              :enter-func (lambda () (mu4e-message "Switch to the 2Spicy context"))
              :match-func (mu4e-context-match-fun "^/spicy")
              :vars '(( user-mail-address  . "daniel@spicy.com" )
@@ -9866,16 +9877,15 @@ Automatically show battery info when laptop is not connected to line power.
 (use-package chatgpt-shell
   :config
   (setq chatgpt-shell-openai-key
-        (auth-source-pick-first-password :host "openai.com" :user "apikey"))
+        (lambda ()
+          (auth-source-pick-first-password :host "openai.com" :user "apikey")))
   (setq chatgpt-shell-model-version "gpt-4")
 
   (setq chatgpt-shell-system-prompt
         "You are a helpful programmer with AWS knowledge who's preferred programming language is
 Clojure and ClojureScript.
-Always show code snippets in markdown blocks with language labels.
-You help program a SaaS product called price-monitor.ai that help track the product prices
-of competitors for online shops.")
-  (add-to-list 'chatgpt-shell-system-prompts chatgpt-shell-system-prompt))
+Always show code snippets in markdown blocks with language labels.")
+  (add-to-list 'chatgpt-shell-system-prompts `("Clojure programmer" ,chatgpt-shell-system-prompt)))
 
 (use-package dall-e-shell
   :config
