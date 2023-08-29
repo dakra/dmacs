@@ -1002,6 +1002,9 @@
 [submodule "scala-mode"]
 	path = lib/scala-mode
 	url = git@github.com:hvesalai/emacs-scala-mode.git
+[submodule "scarlet"]
+	path = lib/scarlet
+	url = git@github.com:scarletcomply/scarlet-emacs.git
 [submodule "scrot"]
 	path = lib/scrot
 	url = git@github.com:dakra/scrot.el.git

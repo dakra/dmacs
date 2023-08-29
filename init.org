@@ -4801,6 +4801,21 @@ https://scalameta.org/metals/docs/editors/emacs.html
   ;; emacs can use indentation provided by scala-mode.
   (setq lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off")))
 #+END_SRC
+** Scarlet Slang
+#+begin_src emacs-lisp
+(use-package slang-mode
+  :defer t)
+
+(use-package lsp-slang
+  :hook (slang-mode . slang-lsp-init)
+  :config
+  (defun slang-lsp-init ()
+    "We need to require slang-lsp before loading lsp in a Slang buffer.
+use-package will load slang-lsp for us simply by calling this function."
+    (lsp-deferred))
+  ;; Set to your slang installation
+  (setq lsp-slang-dir "~/scarlet/slang"))
+#+end_src
 ** Go
 For better support install:
 arch package `go-tools' for goimports, guru and godoc
@@ -5798,7 +5813,7 @@ Yasnippets for Datomic.
 (use-package markdown-mode
   :mode (("/itsalltext/.*\\(gitlab\\|github\\).*\\.txt$" . gfm-mode)
          ("\\.markdown\\'" . gfm-mode)
-         ("\\.md\\'" . gfm-mode))
+         ("README\\.md\\'" . gfm-mode))
   :bind (:map markdown-mode-map
          ("C-c =" . markdown-insert-header-dwim))
   :config
