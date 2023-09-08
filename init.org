@@ -451,10 +451,7 @@ Since Emacs 27.1 we have to disable package.el in the early init file.
 (setq package-enable-at-startup nil)
 #+END_SRC
 
-But still leave it here so it's also disabled on machines that don't
-have the latest Emacs from master installed.
 #+BEGIN_SRC emacs-lisp
-(setq package-enable-at-startup nil)
 ;; (package-initialize)
 (setq load-prefer-newer t)
 #+END_SRC
@@ -1528,7 +1525,7 @@ is already narrowed."
 (use-package crux
   :bind (("C-c U" . crux-view-url)
          ("C-c f c" . write-file)
-         ("C-c f r" . crux-rename-buffer-and-file)
+         ("C-c f r" . rename-visited-file)
          ("C-c f d" . crux-delete-file-and-buffer)
          ;;("s-k"   . crux-kill-whole-line)
          ;;("s-o"   . crux-smart-open-line-above)
@@ -4296,6 +4293,9 @@ lldb
          ("M-," . lsp-find-references-other))
   :init (setq lsp-keymap-prefix nil)  ; Don't map the lsp keymap to any key
   :config
+  ;; Shutdown lsp-server when all buffers associated with that server are closed
+  (setq lsp-keep-workspace-alive nil)
+
   ;; Increase lsp file watch threshold when lsp shows a warning
   (setq lsp-file-watch-threshold 1500)
 
@@ -4810,8 +4810,14 @@ https://scalameta.org/metals/docs/editors/emacs.html
   :hook (slang-mode . slang-lsp-init)
   :config
   (defun slang-lsp-init ()
-    "We need to require slang-lsp before loading lsp in a Slang buffer.
-use-package will load slang-lsp for us simply by calling this function."
+    "Re-enable all fancy lsp features that I have normally disabled."
+    (setq-local lsp-enable-indentation t)
+    (setq-local lsp-headerline-breadcrumb-enable t)
+    (setq-local lsp-ui-doc-enable t)
+    (setq-local lsp-lens-enable t)
+    (setq-local lsp-ui-sideline-enable t)
+    (setq-local lsp-ui-sideline-show-hover t)
+    (setq-local lsp-ui-sideline-show-symbol t)
     (lsp-deferred))
   ;; Set to your slang installation
   (setq lsp-slang-dir "~/scarlet/slang"))
@@ -5404,6 +5410,13 @@ openjdk11-src
 
   ;; Only show cider eval results as overlay and not in the minibuffer
   (setq cider-use-overlays t)
+
+  ;; Use enrich-classpath for better Java lib completions/docs
+  (setq cider-enrich-classpath t)
+
+  ;; I basically never connect to a remote host nrepl, so skip the host question on connect
+  (defun cider--completing-read-host (hosts)
+    '("localhost"))
 
   ;; Display cider-scratch buffer in the same window
   (add-to-list
@@ -7010,6 +7023,7 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          ;; I explicitly specify agenda file directories in the config.
          ("C-c [" . nil)
          ("C-c ]" . nil)
+         ("\C-c TAB" . nil)  ;; Remove for tempel-expand
          ("C-a" . org-beginning-of-line)  ; Overwrite crux-beginning-of-line
          ("M-o" . ace-link-org)
          ("M-p" . org-previous-visible-heading)
@@ -7019,11 +7033,6 @@ A lot of functions and inspiration from http://doc.norang.ca/org-mode.html
          :map org-src-mode-map
          ("C-x n" . org-edit-src-exit))
   :init
-  ;; Disable org-fold (text-properties style) feature
-  ;; Doesn't play nice with consult-line yet and new Emacs 29
-  ;; is also fast with overlays now. (See lib/org/etc/ORG_NEWS)
-  (setq org-fold-core-style 'overlays)
-
   (defun org-mode--init ()
     ;; Allow posting images in org-mode via yank-media
     (yank-media-handler "image/.*" #'org-mode--image-yank-handler)
