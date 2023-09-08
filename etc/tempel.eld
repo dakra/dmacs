@@ -76,15 +76,17 @@ org-mode
 (name "#+name: ")
 ;; <s etc is not workign with tempel as `(bounds-of-thing-at-point 'symbol)`
 ;; (used in `tempel--prefix-bounds`) in org doesn't recognize `<` as part of the symbol.
-(quote "#+begin_quote" n> r> n "#+end_quote")
+(quote   "#+begin_quote" n> r> n "#+end_quote")
 (example "#+begin_example" n> r> n "#+end_example")
 (gnuplot "#+begin_src gnuplot :var data=" (p "table") " :file " (p "plot.png") n> r> n "#+end_src" :post (org-edit-src-code))
-(src (p (completing-read "Language: " (mapcar 'car org-babel-load-languages)) src t)
-     "#+begin_src " src n> r> n "#+end_src")
-(el "#+begin_src emacs-lisp" n> r> n "#+end_src" :post (org-edit-src-code))
-(clj "#+begin_src clojure" n> r> n "#+end_src" :post (org-edit-src-code))
-(py "#+begin_src python" n> r> n "#+end_src" :post (org-edit-src-code))
-(rest "#+begin_src restclient" n> r> n "#+end_src")
+(src     (p (completing-read "Language: " (mapcar 'car org-babel-load-languages)) src t)
+         "#+begin_src " src n> r> n "#+end_src")
+(el      "#+begin_src emacs-lisp" n> r> n "#+end_src")
+(clj     "#+begin_src clojure" n> r> n "#+end_src")
+(cljs    "#+begin_src clojurescript" n> r> n "#+end_src")
+(json    "#+begin_src json" n> r> n "#+end_src")
+(py      "#+begin_src python" n> r> n "#+end_src")
+(rest    "#+begin_src restclient" n> r> n "#+end_src")
 
 ;; Local Variables:
 ;; outline-regexp: "[a-z]"
