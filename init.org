@@ -4935,10 +4935,6 @@ Formatting is according to the commit message conventions."
     ;; gofmt on save
     (apheleia-mode)))
 
-(use-package company-go
-  :after (company go-mode)
-  :config (add-to-list 'company-backends 'company-go))
-
 (use-package gotest
   :after go-mode
   :bind (:map go-mode-map

@@ -170,10 +170,6 @@
 [submodule "company-glsl"]
 	path = lib/company-glsl
 	url = git@github.com:guidoschmidt/company-glsl.git
-[submodule "company-go"]
-	path = lib/company-go
-	url = git@github.com:nsf/gocode.git
-	load-path = emacs-company
 [submodule "company-irony"]
 	path = lib/company-irony
 	url = git@github.com:Sarcasm/company-irony.git
