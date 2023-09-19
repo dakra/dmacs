@@ -8513,11 +8513,11 @@ mu init --maildir=/home/daniel/Maildir               \
   (set-face-attribute 'mu4e-header-highlight-face nil :background "#626262" :foreground "#eeeeee")
 
   ;;; Save attachment (this can also be a function)
-  (setq-default mu4e-attachment-dir "~/Downloads")
+  (setq mu4e-attachment-dir "~/Downloads")
 
   ;; When saving multiple attachments (C-u prefix) save all in same directory
   ;; without asking for the location of every attachment
-  (setq-default mu4e-save-multiple-attachments-without-asking t)
+  (setq mu4e-save-multiple-attachments-without-asking t)
 
   (setq mu4e-msg2pdf "/usr/bin/msg2pdf")  ; to display html messages as pdf
 
@@ -8558,34 +8558,37 @@ mu init --maildir=/home/daniel/Maildir               \
      ;; and from Kindergarden to 'loewen'
      ((mu4e-message-contact-field-matches msg '(:to :cc :bcc) "loewenkindergarten@googlegroups\\.com")
       "/private/loewen")
+     ;; and from Grundschule to 'grundschule'
+     ((mu4e-message-contact-field-matches msg '(:from :to :cc :bcc) "grundschule-wolfartsweier-ka\\.schule\\.bwl\\.de")
+      "/private/grundschule")
      ;; any to price-monitor
      ((mu4e-message-contact-field-matches msg '(:to :cc :bcc) "price-monitor")
       "/private/price-monitor")
      ;; important to have a catch-all at the end!
      (t  "/private/Archive")))
 
-  (setq-default mu4e-refile-folder 'dakra-mu4e-private-refile)
+  (setq mu4e-refile-folder 'dakra-mu4e-private-refile)
 
   ;; Don't show duplicate mails when searching
-  (setq-default mu4e-headers-skip-duplicates t)
-
-  ;; Show email address as well and not only the name
-  (setq-default mu4e-view-show-addresses t)
+  (setq mu4e-search-skip-duplicates t)
 
   ;; Don't show related messages by default.
   ;; Activate with 'W' on demand
-  (setq-default mu4e-headers-include-related nil)
+  (setq mu4e-search-include-related nil)
 
   ;; Don't ask to quit
-  (setq-default mu4e-confirm-quit nil)
+  (setq mu4e-confirm-quit nil)
 
   ;; Don't spam the minibuffer with 'Indexing...' messages
-  (setq-default mu4e-hide-index-messages t)
+  (setq mu4e-hide-index-messages t)
 
   ;; Always update in background otherwise mu4e manipulates the window layout
   ;; when the update is finished but this breaks when we switch exwm workspaces
   ;; and the current focused window just gets hidden.
-  (setq-default mu4e-index-update-in-background t)
+  (setq mu4e-index-update-in-background t)
+
+  ;; Allow using temp-files for optimizing mu <-> mu4e communication.
+  (setq mu4e-mu-allow-temp-file t)
 
   ;; Add some mailing lists
   (dolist (mailing-list '(("intern.lists.entropia.de" . "Entropia")
@@ -8651,10 +8654,10 @@ mu init --maildir=/home/daniel/Maildir               \
                          ("list:emacs-orgmode.gnu.org" "Emacs orgmode" ?o)
                          ("list:magit.googlegroups.com OR list:mu-discuss.googlegroups.com" "Elisp" ?e)
                          ("list:pylons-discuss.googlegroups.com OR list:pylons-devel.googlegroups.com OR list:sqlalchemy.googlegroups.com" "Python" ?p)
-                         ("list:intern.lists.ccc.de" "CCC Intern" ?c)
+                         ("maildir:/private/github" "GitHub" ?g)
+                         ("maildir:/private/scarlet-github" "Scarlet GitHub" ?s)
                          ("list:intern.lists.entropia.de" "Entropia Intern" ?k)
-                         ("list:loewenkindergarten.googlegroups.com" "Löwen" ?l)
-                         ("list:uwsgi.lists.unbit.it" "uwsgi" ?u)))
+                         ("list:loewenkindergarten.googlegroups.com" "Löwen" ?l)))
 
   ;; (add-hook 'mu4e-mark-execute-pre-hook
   ;;           (lambda (mark msg)
@@ -8856,7 +8859,8 @@ mu init --maildir=/home/daniel/Maildir               \
                                                  ("/scarlet/sent_mail"  . ?s)
                                                  ("/scarlet/trash"      . ?t)
                                                  ("/scarlet/drafts"     . ?d)
-                                                 ("/scarlet/all_mail"   . ?a)))
+                                                 ("/scarlet/all_mail"   . ?a)
+                                                 ("/private/scarlet-github" . ?g)))
                      ( mu4e-drafts-folder . "/scarlet/drafts" )
                      ( mu4e-sent-folder   . "/scarlet/sent_mail" )
                      ( mu4e-trash-folder  . "/scarlet/trash" )
