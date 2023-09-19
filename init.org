@@ -8262,7 +8262,9 @@ man-pages
   (defun dakra/org-pomodoro-i3-bar-time ()
     "Display remaining pomodoro time in i3 status bar."
     (if (org-pomodoro-active-p)
-        (format "Pomodoro: %d minutes - %s" (/ org-pomodoro-countdown 60) org-clock-heading)
+        (let* ((time-left (time-subtract org-pomodoro-end-time (current-time)))
+               (minutes-left (/ (time-convert time-left 'integer) 60)))
+          (format "🍅 %d min left - %s" minutes-left org-clock-heading))
       (if (org-clock-is-active)
           (org-no-properties (org-clock-get-clock-string))
         "No active pomodoro or task")))
