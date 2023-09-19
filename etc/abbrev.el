@@ -697,6 +697,7 @@
     ("laestiger" "lästiger")
     ("laeufst" "läufst")
     ("laeuft" "läuft")
+    ("laeufts" "läufts")
     ("landstrasse" "landstraße")
     ("langaermlig" "langärmlig")
     ("legendaer" "legendär")
