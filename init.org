@@ -8255,8 +8255,8 @@ man-pages
 *** Org-pomodoro
 #+BEGIN_SRC emacs-lisp
 (use-package org-pomodoro
-  :defer t
-  :init
+  :commands (dakra/org-pomodoro-i3-bar-time)
+  :config
   ;; called with i3status-rs in ~/.config/i3/status.toml with
   ;; command = "emacsclient --eval '(dakra/org-pomodoro-i3-bar-time)' || echo 'Emacs daemon not started'"
   (defun dakra/org-pomodoro-i3-bar-time ()
@@ -8264,16 +8264,20 @@ man-pages
     (if (org-pomodoro-active-p)
         (let* ((time-left (time-subtract org-pomodoro-end-time (current-time)))
                (minutes-left (/ (time-convert time-left 'integer) 60)))
-          (format "🍅 %d min left - %s" minutes-left org-clock-heading))
+          (if (or (eq org-pomodoro-state :short-break)
+                  (eq org-pomodoro-state :long-break))
+              (format "🍅(break) %d min left - %s" minutes-left org-clock-heading)
+            (format "🍅(%d/%d) %d min left - %s"
+                    org-pomodoro-count org-pomodoro-long-break-frequency
+                    minutes-left org-clock-heading)))
       (if (org-clock-is-active)
           (org-no-properties (org-clock-get-clock-string))
         "No active pomodoro or task")))
 
-  :config
   ;; Don't delete already clocked time when killing a running pomodoro
   (setq org-pomodoro-keep-killed-pomodoro-time t)
   ;; Never clock-out automatically
-  (setq org-pomodoro-clock-always t))
+  (setq org-pomodoro-clock-break t))
 #+END_SRC
 *** Org-jira: Sync issues with Jira
 #+BEGIN_SRC emacs-lisp
