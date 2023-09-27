@@ -4148,6 +4148,24 @@ XXX: Only use =magit-gerrit= until functionality is implemented in =forge=.
   :config
   (setq magit-gerrit-signed-push-p t))
 #+END_SRC
+** code-review
+#+begin_src emacs-lisp
+(use-package code-review
+  :after forge
+  :config
+  ;; Add to forge-dispatch transient menu
+  (transient-append-suffix 'forge-dispatch "c f"
+    '("c r" "Code Review" code-review-forge-pr-at-point))
+
+  ;; Delete local comment with `k'
+  (define-key code-review-feedback-section-map (kbd "k") 'code-review-section-delete-comment)
+  (define-key code-review-local-comment-section-map (kbd "k") 'code-review-section-delete-comment)
+  (define-key code-review-reply-comment-section-map (kbd "k") 'code-review-section-delete-comment)
+
+  ;; Move between comments using `C-c C-n` and `C-c C-p`
+  (define-key code-review-mode-map (kbd "C-c C-n") 'code-review-comment-jump-next)
+  (define-key code-review-mode-map (kbd "C-c C-p") 'code-review-comment-jump-previous))
+#+end_src
 ** Annotate: Annotation any file and export as commented unified diff or as code comment
 Activate =annotate-mode= and then you can add, edit, delete
 annotations (use regions) with =C-c C-a=.
