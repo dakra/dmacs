@@ -830,7 +830,8 @@ Allow some commands as safe by default
          ("M-u"   . dakra-upcase-dwim)
          ("M-l"   . dakra-downcase-dwim)
          ("M-c"   . dakra-capitalize-dwim))
-  :hook ((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
+  :hook (((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
+         ((visual-fill-column-mode markdown-mode) . word-wrap-whitespace-mode))
   :config
   ;; Hide commands in M-x which do not apply to the current mode.
   (setq read-extended-command-predicate #'command-completion-default-include-p)
@@ -1225,7 +1226,16 @@ With a prefix argument, copy the link to the online manual instead."
 ** visual-fill-column: fill-column for visual-line-mode
 #+begin_src emacs-lisp
 (use-package visual-fill-column
-  :defer t)
+  :defer t
+  ;; :config
+  ;; Option to center text by default
+  ;; (setq-default visual-fill-column-center-text t)
+  )
+#+end_src
+** adaptive-wrap: visual indention for visual-fill-column
+#+begin_src emacs-lisp
+(use-package adaptive-wrap
+  :hook ((visual-fill-column-mode markdown-mode) . adaptive-wrap-prefix-mode))
 #+end_src
 ** Goggles: Visual feedback on some operations like yank,kill,undo
 #+BEGIN_SRC emacs-lisp

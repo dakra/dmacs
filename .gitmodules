@@ -12,6 +12,9 @@
 [submodule "ace-window"]
 	path = lib/ace-window
 	url = git@github.com:abo-abo/ace-window.git
+[submodule "adaptive-wrap"]
+	path = lib/adaptive-wrap
+	url = git@github.com:emacsmirror/adaptive-wrap.git
 [submodule "add-node-modules-path"]
 	path = lib/add-node-modules-path
 	url = git@github.com:codesuki/add-node-modules-path.git
@@ -149,6 +152,9 @@
 [submodule "code-cells"]
 	path = lib/code-cells
 	url = git@github.com:astoff/code-cells.el.git
+[submodule "code-review"]
+	path = lib/code-review
+	url = git@github.com:wandersoncferreira/code-review.git
 [submodule "color-theme-sanityinc-tomorrow"]
 	path = lib/color-theme-sanityinc-tomorrow
 	url = git@github.com:purcell/color-theme-sanityinc-tomorrow.git
