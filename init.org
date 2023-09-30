@@ -3079,8 +3079,7 @@ gtklp
   :hook ((pdf-view-mode . pdf-view-init))
   :bind (:map pdf-view-mode-map
          ("C-s" . isearch-forward)
-         ("M-w" . pdf-view-kill-ring-save)
-         ("M-p" . print-pdf))
+         ("M-w" . pdf-view-kill-ring-save))
   :config
   (defun pdf-view-init ()
     "Initialize pdf-tools view like enabline TOC functions or use dark theme at night."
@@ -3095,14 +3094,6 @@ gtklp
 
     ;; Disable while-line-or-region to free keybindings.
     (whole-line-or-region-local-mode -1))
-
-  ;; Use `gtklp' or `hp-print' to print as it has better cups support
-  (setq print-pdf-command "hp-print")
-  (defun print-pdf (&optional pdf)
-    "Print PDF using external program defined in `print-pdf-command'."
-    (interactive "P")
-    (start-process-shell-command
-     print-pdf-command nil (concat print-pdf-command " " (shell-quote-argument (or pdf (buffer-file-name))))))
 
   ;; more fine-grained zooming; +/- 10% instead of default 25%
   (setq pdf-view-resize-factor 1.1)
