@@ -731,9 +731,6 @@
         build-step = make -C mu4e > /dev/null
 	build-step = "(borg-update-autoloads \"mu4e\")"
 	load-path = build/mu4e
-[submodule "mu4e-maildirs-extension"]
-	path = lib/mu4e-maildirs-extension
-	url = git@github.com:agpchil/mu4e-maildirs-extension.git
 [submodule "multiple-cursors"]
 	path = lib/multiple-cursors
 	url = git@github.com:magnars/multiple-cursors.el.git

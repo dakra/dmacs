@@ -9033,24 +9033,6 @@ Should be added to `message-send-hook'."
                (not (message-attachment-present-p)))
       (unless (y-or-n-p message-attachment-reminder)
         (keyboard-quit)))))
-
-;; Show overview of unread/all mails for each maildir/bookmarks in mu4e main window
-(use-package mu4e-maildirs-extension
-  :disabled t
-  :commands mu4e-maildirs-extension-force-update
-  :config
-  (setq-default mu4e-maildirs-extension-use-bookmarks t)
-  (setq-default mu4e-maildirs-extension-use-maildirs nil)
-  (mu4e-maildirs-extension))
-
-;; (define-key mu4e-headers-mode-map (kbd "d") 'my-move-to-trash)
-;; (define-key mu4e-view-mode-map (kbd "d") 'my-move-to-trash)
-;; ;; Overwrite normal 'D' keybinding
-;; (define-key mu4e-headers-mode-map (kbd "D") 'my-move-to-trash)
-;; (define-key mu4e-view-mode-map (kbd "D") 'my-move-to-trash)
-
-;; ;; Mark all as read with 'M'
-;; (define-key mu4e-headers-mode-map (kbd "M") 'mu4e-headers-mark-all-unread-read)
 #+END_SRC
 ** Gnus
 I don't use gnus but ~debbugs~, ~mu4e~ (the viewer) and ~mu4e-icalendar~ use it.
