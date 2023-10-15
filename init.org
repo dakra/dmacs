@@ -498,15 +498,23 @@ Compile asyncronously all lexically bound .elc files being loaded.
 #+END_SRC
 
 * Don't litter configs
+Put native compilation cache in no-litter var folder.
+NOTE: This is loaded in =early-init.el=.
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
+(when (fboundp 'startup-redirect-eln-cache)
+  (startup-redirect-eln-cache
+   (convert-standard-filename
+    (expand-file-name  "var/eln-cache/" user-emacs-directory))))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
 (use-package no-littering
   :demand t
   :config
   ;; /etc is version controlled and I want to store mc-lists in git
   (setq mc/list-file (no-littering-expand-etc-file-name "mc-list.el"))
-  ;; Put the auto-save files in the var directory to the other data files
-  (setq auto-save-file-name-transforms
-        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+  ;; Put the auto-save and backup files in the var directory to the other data files
+  (no-littering-theme-backups))
 
 (use-package custom
   :config
@@ -3386,9 +3394,9 @@ avfs
   ;; Backup tramp files like local files and don't litter the remote
   ;; file system with my emacs backup files
   ;;(setq tramp-backup-directory-alist backup-directory-alist)
-  (add-to-list 'backup-directory-alist
-               (cons tramp-file-name-regexp
-                     (no-littering-expand-var-file-name "backup/")))
+  ;; (add-to-list 'backup-directory-alist
+  ;;              (cons tramp-file-name-regexp
+  ;;                    (no-littering-expand-var-file-name "backup/")))
 
   ;; See https://www.gnu.org/software/tramp/#Ad_002dhoc-multi_002dhops
   ;; For all hosts, except my local one, first connect via ssh, and then apply sudo -u root:
