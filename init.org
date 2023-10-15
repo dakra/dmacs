@@ -5433,6 +5433,9 @@ openjdk11-src
   ;; Use enrich-classpath for better Java lib completions/docs
   (setq cider-enrich-classpath t)
 
+  ;; Use `moon' spinner that looks nice and doesn't take as much space as the progress bar
+  (setq cider-eval-spinner-type 'moon)
+
   ;; I basically never connect to a remote host nrepl, so skip the host question on connect
   (defun cider--completing-read-host (hosts)
     '("localhost"))
