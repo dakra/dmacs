@@ -9304,6 +9304,17 @@ Better syntax highlighting for =.config/i3/config=
   :defer t)
 #+END_SRC
 
+** emacs-everywhere: Edit non-emacs input fields with Emacs
+#+begin_src emacs-lisp
+(use-package emacs-everywhere
+  :if (daemonp)
+  :defer 20
+  :config
+  ;; Don't insert the selection-buffer content on start
+  (setq emacs-everywhere-init-hooks '(emacs-everywhere-set-frame-name
+                                      emacs-everywhere-set-frame-position
+                                      emacs-everywhere-apply-major-mode)))
+#+end_src
 ** Exwm
 #+BEGIN_SRC emacs-lisp
 (use-package xelb

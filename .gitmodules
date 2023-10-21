@@ -319,6 +319,9 @@
 [submodule "elixir-mode"]
 	path = lib/elixir-mode
 	url = git@github.com:elixir-editors/emacs-elixir.git
+[submodule "emacs-everywhere"]
+	path = lib/emacs-everywhere
+	url = https://github.com/tecosaur/emacs-everywhere
 [submodule "emacsql"]
 	path = lib/emacsql
 	url = git@github.com:magit/emacsql.git
