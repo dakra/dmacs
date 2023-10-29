@@ -4056,6 +4056,10 @@ is not a title but instead is displayed as a comment."
   ;; Always highlight word differences in diff
   (setq magit-diff-refine-hunk 'all)
 
+  ;; Show margin with author and date in the status buffer
+  ;; NOTE: This also cut's off the right side in the diffs which is the reason I disabled it by default.
+  ;; (setq magit-status-margin '(t age magit-log-margin-width t 18))
+
   ;; Only show 2 ediff panes
   (setq magit-ediff-dwim-show-on-hunks t)
 
@@ -4831,7 +4835,7 @@ https://scalameta.org/metals/docs/editors/emacs.html
 ** Scarlet Slang
 #+begin_src emacs-lisp
 (use-package slang-mode
-  :defer t)
+  :mode "/scarlet-os/docs/.*\\.md\\'")
 
 (use-package lsp-slang
   :hook (slang-mode . slang-lsp-init)
@@ -5367,8 +5371,9 @@ $ sbcl
 *** Clojure
 #+BEGIN_SRC emacs-lisp
 (use-package clojure-mode
-  :defer t
   :hook ((clojure-mode . clojure-init))
+  :bind (:map clojure-mode-map
+         ("C-M-;" . clojure-toggle-ignore))
   :config
   (defun clojure-init ()
     "Start lsp and add edn imenu regexp."

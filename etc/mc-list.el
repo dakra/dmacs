@@ -19,6 +19,7 @@
         c-indent-line-or-region
         cider-eval-defun-at-point
         cljr-slash
+        clojure-toggle-ignore
         comint-delchar-or-maybe-eof
         comment-dwim-2
         consult-yank-pop
