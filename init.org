@@ -1846,6 +1846,9 @@ Minor modes to selectively hide/show code and comment blocks.
          ([backtab] . tempel-previous))
   :hook ((text-mode prog-mode) . tempel-setup-capf)
   :config
+  ;; Load templates from etc folder
+  (setq tempel-path (no-littering-expand-etc-file-name "tempel.eld"))
+
   ;; Don't auto reload templates.
   ;; `(setq tempel--path-templates nil)' if you want to force a reload.
   (setq tempel-auto-reload nil)
