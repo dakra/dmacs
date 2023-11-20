@@ -399,7 +399,7 @@
 	url = git@github.com:Malabarba/fancy-narrow.git
 [submodule "fish-completion"]
 	path = lib/fish-completion
-	url = git@gitlab.com:Ambrevar/emacs-fish-completion.git
+	url = git@github.com:LemonBreezes/emacs-fish-completion.git
 [submodule "fish-mode"]
 	path = lib/fish-mode
 	url = git@github.com:wwwjfy/emacs-fish.git
