@@ -1,0 +1,160 @@
+[submodule "aggressive-indent"]
+	path = lib/aggressive-indent
+	url = https://github.com/Malabarba/aggressive-indent-mode
+[submodule "alert"]
+	path = lib/alert
+	url = https://github.com/jwiegley/alert
+[submodule "beacon"]
+	path = lib/beacon
+	url = https://github.com/Malabarba/beacon
+[submodule "borg"]
+	path = lib/borg
+	url = git@github.com:emacscollective/borg.git
+[submodule "clojure-mode"]
+	path = lib/clojure-mode
+	url = https://github.com/clojure-emacs/clojure-mode
+[submodule "closql"]
+	path = lib/closql
+	url = git@github.com:emacscollective/closql.git
+[submodule "compat"]
+	path = lib/compat
+	url = git@github.com:emacs-compat/compat.git
+[submodule "consult"]
+	path = lib/consult
+	url = https://github.com/minad/consult
+[submodule "corfu"]
+	path = lib/corfu
+	url = https://github.com/minad/corfu
+	load-path = .	
+	load-path = extensions	
+[submodule "dash"]
+	path = lib/dash
+	url = https://github.com/magnars/dash.el
+[submodule "diff-hl"]
+	path = lib/diff-hl
+	url = https://github.com/dgutov/diff-hl
+[submodule "dired-hacks"]
+	path = lib/dired-hacks
+	url = https://github.com/Fuco1/dired-hacks
+[submodule "disk-usage"]
+	path = lib/disk-usage
+	url = https://gitlab.com/ambrevar/emacs-disk-usage
+[submodule "edit-indirect"]
+	path = lib/edit-indirect
+	url = https://github.com/Fanael/edit-indirect
+[submodule "emacsql"]
+	path = lib/emacsql
+	url = git@github.com:skeeto/emacsql.git
+[submodule "embark"]
+	path = lib/embark
+	url = https://github.com/oantolin/embark
+[submodule "epkg"]
+	path = lib/epkg
+	url = git@github.com:emacscollective/epkg.git
+[submodule "expand-region"]
+	path = lib/expand-region
+	url = https://github.com/magnars/expand-region.el
+[submodule "f"]
+	path = lib/f
+	url = https://github.com/rejeep/f.el
+[submodule "forge"]
+	path = lib/forge
+	url = https://github.com/magit/forge
+[submodule "form-feed"]
+	path = lib/form-feed
+	url = https://depp.brause.cc/form-feed.git
+[submodule "git-modes"]
+	path = lib/git-modes
+	url = https://github.com/magit/git-modes
+[submodule "gptel"]
+	path = lib/gptel
+	url = https://github.com/karthink/gptel
+[submodule "htmlize"]
+	path = lib/htmlize
+	url = https://github.com/hniksic/emacs-htmlize
+[submodule "ibuffer-project"]
+	path = lib/ibuffer-project
+	url = https://github.com/muffinmad/emacs-ibuffer-project
+[submodule "jinx"]
+	path = lib/jinx
+	url = https://github.com/minad/jinx
+[submodule "ligature"]
+	path = lib/ligature
+	url = https://github.com/mickeynp/ligature.el
+[submodule "magit"]
+	path = lib/magit
+	url = https://github.com/magit/magit
+[submodule "marginalia"]
+	path = lib/marginalia
+	url = https://github.com/minad/marginalia
+[submodule "markdown-mode"]
+	path = lib/markdown-mode
+	url = https://github.com/jrblevin/markdown-mode
+[submodule "message-view-patch"]
+	path = lib/message-view-patch
+	url = https://github.com/seanfarley/message-view-patch
+[submodule "minions"]
+	path = lib/minions
+	url = https://github.com/tarsius/minions
+[submodule "moe-theme"]
+	path = lib/moe-theme
+	url = https://github.com/kuanyui/moe-theme.el
+[submodule "multiple-cursors"]
+	path = lib/multiple-cursors
+	url = https://github.com/magnars/multiple-cursors.el
+[submodule "no-littering"]
+	path = lib/no-littering
+	url = https://github.com/emacscollective/no-littering
+[submodule "orderless"]
+	path = lib/orderless
+	url = https://github.com/oantolin/orderless
+[submodule "org-msg"]
+	path = lib/org-msg
+	url = https://github.com/jeremy-compostella/org-msg
+[submodule "rainbow-delimiters"]
+	path = lib/rainbow-delimiters
+	url = https://github.com/Fanael/rainbow-delimiters
+[submodule "s"]
+	path = lib/s
+	url = https://github.com/magnars/s.el
+[submodule "selected"]
+	path = lib/selected
+	url = https://github.com/Kungsgeten/selected.el
+[submodule "smartparens"]
+	path = lib/smartparens
+	url = https://github.com/Fuco1/smartparens
+[submodule "speed-type"]
+	path = lib/speed-type
+	url = https://github.com/dakra/speed-type
+[submodule "spinner"]
+	path = lib/spinner
+	url = https://github.com/Malabarba/spinner.el
+[submodule "symbol-overlay"]
+	path = lib/symbol-overlay
+	url = https://github.com/wolray/symbol-overlay
+[submodule "tempel"]
+	path = lib/tempel
+	url = https://github.com/minad/tempel
+[submodule "undo-fu-session"]
+	path = lib/undo-fu-session
+	url = https://codeberg.org/ideasman42/emacs-undo-fu-session
+[submodule "vertico"]
+	path = lib/vertico
+	url = https://github.com/minad/vertico
+	load-path = .	
+	load-path = extensions	
+[submodule "vundo"]
+	path = lib/vundo
+	url = https://github.com/casouri/vundo
+[submodule "wgrep"]
+	path = lib/wgrep
+	url = https://github.com/mhayashi1120/Emacs-wgrep
+[submodule "whole-line-or-region"]
+	path = lib/whole-line-or-region
+	url = https://github.com/purcell/whole-line-or-region
+[submodule "with-editor"]
+	path = lib/with-editor
+	url = https://github.com/magit/with-editor
+[submodule "yaml"]
+	path = lib/yaml
+	url = https://github.com/zkry/yaml.el
