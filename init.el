@@ -284,8 +284,13 @@
 (use-package hippie-exp
   :bind (("M-/" . hippie-expand)))
 
+(use-package editorconfig
+  :defer t
+  :config
+  (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
+
 (use-package recentf
-  :hook (elpaca-after-init . recentf-mode)
+  :hook (after-init . recentf-mode)
   :config
   (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
   (add-to-list 'recentf-exclude no-littering-var-directory)
@@ -309,10 +314,26 @@
   ;; Hide all the fringe bookmarks as dogears uses bookmarks
   (setq bookmark-fringe-mark nil))
 
+(use-package dogears
+  :hook (after-init . dogears-mode)
+  :bind (("C-x SPC" . dogears-go)
+         ("C-x C-SPC" . dogears-back)
+         ("C-x M-SPC" . dogears-forward))
+  :config
+  (setq dogears-idle 3))
+
+(use-package proced
+  :bind ("C-x p" . proced)
+  :config
+  (add-to-list 'proced-filter-alist '(java (comm . "java")))
+  (setq-default proced-filter 'user-running)
+  (setq proced-format 'medium)
+  (setq proced-tree-flag t))
+
 (use-package display-fill-column-indicator
   :hook ((git-commit-setup) . display-fill-column-indicator-mode))
 
-(use-package winner-mode
+(use-package winner
   :hook (after-init . winner-mode))
 
 (use-package xwidget
@@ -393,6 +414,15 @@
              ("'" . dired-ranger-bookmark)
              ("`" . dired-ranger-bookmark-visit)))
 
+(use-package bash-completion
+  :hook ((shell-dynamic-complete-functions . bash-completion-dynamic-complete)
+         (eshell-mode . bash-completion-setup-capf))
+  :init
+  (defun bash-completion-setup-capf ()
+    (setq-local completion-at-point-functions
+                (cons #'bash-completion-capf-nonexclusive
+                      completion-at-point-functions))))
+
 (use-package eshell
   :bind (("C-x m" . eshell)
          :map eshell-mode-map
@@ -466,11 +496,10 @@
       (buffer-string)))
 
   (defun eshell/lcd (&optional directory)
-    "Like regular 'cd' but don't jump out of a tramp directory.
-When on a remote directory with tramp don't jump 'out' of the server.
-So if we're connected with sudo to 'remotehost'
-'$ lcd /etc' would go to '/sudo:remotehost:/etc' instead of just
-'/etc' on localhost."
+    "Like regular `cs' but don't jump out of a tramp directory.
+When on a remote directory with tramp don't jump \"out\" of the server.
+So if we're connected with sudo to \"remotehost\", \"$ lcd /etc\" would
+go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
     (setq directory (or directory "~/"))
     (unless (file-remote-p directory)
       (setq directory (concat (file-remote-p default-directory) directory)))
@@ -599,6 +628,9 @@ So if we're connected with sudo to 'remotehost'
 
   (setq consult-narrow-key "<"))
 
+(use-package consult-project-extra
+  :defer t)
+
 (use-package embark
   :bind (("C-." . embark-act)         ;; pick some comfortable binding
          ("C-," . embark-dwim)        ;; good alternative: M-.
@@ -698,6 +730,36 @@ So if we're connected with sudo to 'remotehost'
   ;; (setq-default visual-fill-column-center-text t)
   )
 
+(use-package csv-mode
+  :hook ((csv-mode . csv-align-mode)
+         (csv-mode . csv-header-line))
+  :init
+  ;; Don't font-lock as comment when there's a `##'
+  ;; string somewhere inside a CSV line.
+  (setq csv-comment-start-default nil)
+  ;; Add more separators.
+  ;; This variable has to be set *before*
+  ;; loading csv-mode (i.e. the use-package :init block)
+  (setq csv-separators '("," "	" ";" "|")))
+
+;; Only deps: datetime, extmap
+(use-package logview
+  :mode ("log.out\\'" . logview-mode)
+  :config
+  (setq datetime-timezone 'Europe/Berlin)
+  (setq logview-additional-timestamp-formats
+        '(("ISO 8601 datetime (with 'T') + millis + 'Z'"
+           (java-pattern . "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+           (datetime-options :any-decimal-separator t)
+           (aliases "yyyy-MM-dd HH:mm:ss.SSS") (aliases "yyyy-MM-dd HH:mm:ss.SSSSSS")
+           (aliases "yyyy-MM-dd'T'HH:mm:ss.SSS") (aliases "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+           (aliases "yyyy-MM-dd'T'HH:mm:ss.SSSSSS") (aliases "HH:mm:ss.SSS")
+           (aliases "HH:mm:ss.SSSSSS"))))
+  (add-to-list 'logview-additional-submodes
+               '(("Timbre"
+                  (format  . "TIMESTAMP LEVEL [NAME] -")
+                  (levels  . "SLF4J")))))
+
 (use-package gptel
   :defer t
   :config
@@ -707,6 +769,102 @@ So if we're connected with sudo to 'remotehost'
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
                         :key gptel-api-key)))
+
+;; Only deps: pfuture
+(use-package treemacs
+  :bind (([f8] . treemacs-select-window)
+         ([f12] . treemacs-find-file)
+         :map treemacs-mode-map
+         ("M-l" . nil)  ;; We bind `M-l' to `windmove-right'
+         ("C-t a" . treemacs-add-project-to-workspace)
+         ("C-t d" . treemacs-remove-project)
+         ("C-t r" . treemacs-rename-project)
+         ;; If we only hide the treemacs buffer (default binding) then, when we switch
+         ;; a frame to a different project and toggle treemacs again we still get the old project
+         ("q" . treemacs-kill-buffer))
+  :config
+  (defun treemacs-ignore-python-files (file _)
+    (or (s-ends-with-p ".pyc" file)
+        (string= file "__pycache__")))
+  (add-to-list 'treemacs-ignored-file-predicates 'treemacs-ignore-python-files)
+
+  ;; Read input from minibuffer instead of childframe (which requires an extra package)
+  (setq treemacs-read-string-input 'from-minibuffer)
+
+  (setq treemacs-follow-after-init          t
+        treemacs-indentation                1
+        treemacs-width                      30
+        treemacs-collapse-dirs              5)
+
+  (treemacs-resize-icons 14)  ;; Make icons a bit smaller (22 pixels by default)
+
+  (treemacs-follow-mode -1)
+  (if (eq system-type 'windows-nt)
+      (treemacs-git-mode -1)  ;; Turn git and filewatch mode off on slow Windows
+    (treemacs-git-mode 'simple)
+    (treemacs-filewatch-mode t)))
+
+;; Use magit hooks to notify treemacs of git changes
+(use-package treemacs-magit
+  :after treemacs)
+
+(use-package treemacs-icons-dired
+  :after dired
+  :config
+  (treemacs-icons-dired-mode))
+
+(use-package flycheck
+  :hook (((prog-mode
+           conf-mode
+           ledger-mode
+           systemd-mode
+           mu4e-compose-mode
+           markdown-mode
+           rst-mode) . flycheck-mode)
+         (flycheck-mode . mp-flycheck-prefer-eldoc))
+  :config
+  ;; Don't initialize packages (as we don't use package.el)
+  (setq flycheck-emacs-lisp-initialize-packages nil)
+  ;; Use the load-path from running Emacs when checking elisp files
+  (setq flycheck-emacs-lisp-load-path 'inherit)
+
+  ;; Only do flycheck when I actually safe the buffer
+  (setq flycheck-check-syntax-automatically '(save mode-enable))
+
+  ;; Work with `eldoc-documentation-functions'
+  ;; From https://www.masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
+  (defun mp-flycheck-eldoc (callback &rest _ignored)
+    "Print flycheck messages at point by calling CALLBACK."
+    (when-let* ((flycheck-errors (and flycheck-mode (flycheck-overlay-errors-at (point)))))
+      (mapc
+       (lambda (err)
+         (funcall callback
+                  (format "%s: %s"
+                          (let ((level (flycheck-error-level err)))
+                            (pcase level
+                              ('info (propertize "I" 'face 'flycheck-error-list-info))
+                              ('error (propertize "E" 'face 'flycheck-error-list-error))
+                              ('warning (propertize "W" 'face 'flycheck-error-list-warning))
+                              (_ level)))
+                          (flycheck-error-message err))
+                  :thing (or (flycheck-error-id err)
+                             (flycheck-error-group err))
+                  :face 'font-lock-doc-face))
+       flycheck-errors)))
+
+  (defun mp-flycheck-prefer-eldoc ()
+    (add-hook 'eldoc-documentation-functions #'mp-flycheck-eldoc nil t)
+    (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
+    (setq flycheck-display-errors-function nil)
+    (setq flycheck-help-echo-function nil)))
+
+(use-package shrink-whitespace
+  :bind ("M-SPC" . shrink-whitespace))
+
+;; Automatically remove trailing whitespace (only if I put them there)
+(use-package ws-butler
+  :hook ((text-mode prog-mode) . ws-butler-mode)
+  :config (setq ws-butler-keep-whitespace-before-point nil))
 
 ;; * Git
 
@@ -779,6 +937,7 @@ So if we're connected with sudo to 'remotehost'
 (use-package git-modes
   :defer t)
 
+;; Only deps: ghub, treepy
 (use-package forge
   :after magit
   :config
@@ -807,7 +966,7 @@ So if we're connected with sudo to 'remotehost'
   :config (setq wgrep-auto-save-buffer t))
 
 (use-package undo-fu-session
-  :hook (elpaca-after-init . undo-fu-session-global-mode)
+  :hook (after-init . undo-fu-session-global-mode)
   :config
   (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 

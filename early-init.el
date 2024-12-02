@@ -1,5 +1,8 @@
 ;; Temporarily set `gc-cons-threshold' to 2G until the initialization is done
 (setq gc-cons-threshold (* 2 1024 1024 1024))  ;; 2G
+;; Temporarily disable file name handlers as it's not needed on initialization
+(defvar file-name-handler-alist-old file-name-handler-alist)
+(setq file-name-handler-alist nil)
 
 ;; Hide title-bar on MacOS
 (add-to-list 'default-frame-alist '(undecorated-round . t))
