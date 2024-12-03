@@ -117,6 +117,7 @@
         counsel-projectile-switch-project
         dakra-ivy-switch-buffer
         dakra/counsel-search-project-empty
+        dap-java-run-test-class
         dap-tooltip-mouse-motion
         delete-window
         end-of-buffer

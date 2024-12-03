@@ -26,6 +26,9 @@
   ;; Put the auto-save and backup files in the var directory to the other data files
   (no-littering-theme-backups))
 
+;; Load personal config that shouldn't end up on github
+(load-file (expand-file-name "personal.el" user-emacs-directory))
+
 (use-package emacs
   :config
   ;; ;; Compile loaded .elc files asynchronously
@@ -370,6 +373,48 @@
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
 
+(use-package project
+  :bind-keymap (("s-p"   . project-prefix-map)  ; projectile-command-map
+                ("C-c p" . project-prefix-map))
+  :bind (("C-x C-x" . consult-project-extra-find)
+         :map project-prefix-map
+         ("SPC" . consult-project-extra-find)
+         ("d"   . project-dired)
+         ("D"   . project-edit-deps-edn)
+         ("s"   . consult-ripgrep)
+         ("E"   . project-edit-dir-locals)
+         ("P"   . project-run-python))
+  :config
+  ;; Ignore clj-kondo and cljs-runtime folder by default
+  (setq project-vc-ignores '(".clj-kondo/" "cljs-runtime/"))
+
+  (defun project-edit-dir-locals ()
+    "Open buffer with .dir-locals.el for current project."
+    (interactive)
+    (thread-last (project-current)
+                 (project-root)
+                 (expand-file-name ".dir-locals.el")
+                 (find-file)))
+
+  (defun project-edit-deps-edn ()
+    "Open buffer with deps.edn for current project."
+    (interactive)
+    (thread-last (project-current)
+                 (project-root)
+                 (expand-file-name "deps.edn")
+                 (find-file)))
+
+  (require 'python)
+  (defun project-run-python ()
+    "Run a dedicated inferior Python process for the current project.
+Like `run-python' started with a prefix-arg and then choosing to
+created a dedicated process for the project."
+    (interactive)
+    (run-python (python-shell-calculate-command) 'project t))
+
+  ;; Don't show a dispatch menu when switching projects but always choose project buffer/file
+  (setq project-switch-commands #'consult-project-extra-find))
+
 (use-package ibuffer-project
   :hook (ibuffer . ibuffer-project-set-filter-groups)
   :config
@@ -509,6 +554,21 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
     (magit-status-setup-buffer (or (pop args) default-directory))
     ;; The echo command suppresses output
     (eshell/echo)))
+
+(use-package eat
+  :hook (eshell-load-hook . eat-eshell-visual-command-mode)
+  :bind (:map eat-semi-char-mode-map
+              ("M-i" . windmove-up)
+              ("M-k" . windmove-down)
+              ("M-j" . windmove-left)
+              ("M-l" . windmove-right)
+              ("M-J" . windmove-swap-states-left)
+              ("M-K" . windmove-swap-states-down)
+              ("M-I" . windmove-swap-states-up)
+              ("M-L" . windmove-swap-states-right))
+  :config
+  (setq eat-term-name "xterm-256color"
+        eat-kill-buffer-on-exit t))
 
 ;; * vertico/consult etc
 
@@ -1384,7 +1444,181 @@ mark the string and call `edit-indirect-region' with it."
 				                       (reply-to-text . (text)))))
 
 
+;; Install mu with brew and not latest master with elpaca
+(use-package mu4e
+  ;; Open mu4e with the 'Mail' key (if your keyboard has one)
+  :bind (("<XF86Mail>" . mu4e)
+         :map mu4e-main-mode-map
+         ("U" . mu4e-update-mail-and-index-background)
+         :map mu4e-headers-mode-map
+         ("TAB" . mu4e-headers-next-unread)
+         ("J" . mu4e-move-to-junk)
+         ("d" . my-move-to-trash)
+         ("D" . my-move-to-trash)
+         ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
+         :map mu4e-search-minor-mode-map
+         ("P" . mu4e-view-headers-prev)
+         :map mu4e-view-mode-map
+         ("A" . mu4e-view-attachment-action)
+         ("M-o" . ace-link-mu4e)
+         ("o" . ace-link-mu4e)
+         ("n" . mu4e-scroll-up)
+         ("p" . mu4e-scroll-down)
+         ("N" . mu4e-view-headers-next)
+         ("P" . mu4e-view-headers-prev)
+         ("J" . mu4e-move-to-junk)
+         ("d" . my-move-to-trash)
+         ("D" . my-move-to-trash))
+  :hook (message-send . message-warn-if-no-attachments)
+  :init
+  ;; Prefer text over html/ritchtext
+  (setq mm-discouraged-alternatives '("text/html" "text/richtext"))
+
+  ;; Use completing-read (vertico) instead of ido or mu4e's own version
+  (setq mu4e-read-option-use-builtin nil
+        mu4e-completing-read-function 'completing-read)
+
+  ;; set mu4e as default mail client
+  (setq mail-user-agent 'mu4e-user-agent)
+
+  ;; Always use local smtp server (msmtp in my case) to send mails
+  (setq send-mail-function 'sendmail-send-it
+        sendmail-program (executable-find "msmtp")
+        mail-specify-envelope-from t
+        mail-envelope-from 'header)
+  :config
+  (require 'mu4e-contrib)  ;; Define some extra commands like mark-all-unread-read
+
+  ;; Display the main window in the current window instead of making it full screen
+  (add-to-list
+   'display-buffer-alist
+   '("*mu4e-main*" (display-buffer-same-window)))
+
+  (defun mu4e-update-mail-and-index-background ()
+    "Call `mu4e-update-mail-and-index' to run in background."
+    (interactive)
+    (mu4e-update-mail-and-index t))
+
+  ;; gmail delete == move mail to trash folder
+  (fset 'my-move-to-trash "mt")
+
+  ;; Move mails to spam/junk folder
+  (fset 'mu4e-move-to-junk "mj")
+
+  ;; Fix mu4e highlighting in moe-dark theme
+  (set-face-attribute 'mu4e-header-highlight-face nil :background "#626262" :foreground "#eeeeee")
+
+  ;;; Save attachment (this can also be a function)
+  (setq mu4e-attachment-dir "~/Downloads")
+
+  ;; Show additional user-agent header
+  (setq-default mu4e-view-fields
+                '(:from :to :cc :subject :flags :date :maildir :user-agent :mailing-list
+                        :tags :attachments :signature :decryption))
+
+  ;; Don't show duplicate mails when searching
+  (setq mu4e-search-skip-duplicates t)
+
+  ;; Don't show related messages by default.
+  ;; Activate with 'W' on demand
+  (setq mu4e-search-include-related nil)
+
+  ;; Don't ask to quit
+  (setq mu4e-confirm-quit nil)
+
+  ;; Don't spam the minibuffer with 'Indexing...' messages
+  (setq mu4e-hide-index-messages t)
+
+  ;; Always update in background otherwise mu4e manipulates the window layout
+  ;; when the update is finished but this breaks when we switch exwm workspaces
+  ;; and the current focused window just gets hidden.
+  (setq mu4e-index-update-in-background t)
+
+  ;; Allow using temp-files for optimizing mu <-> mu4e communication.
+  (setq mu4e-mu-allow-temp-file t)
+
+  ;; update database every ten minutes
+  ;; (setq  mu4e-update-interval (* 60 10))
+  (setq  mu4e-update-interval nil)
+
+  ;; We do a full index (that verify integrity) with a systemd job
+  ;; Go fast inside emacs
+  ;; (setq mu4e-index-cleanup nil)   ;; don't do a full cleanup check
+  ;; (setq mu4e-index-lazy-check t)  ;; don't consider up-to-date dirs
+
+  ;; And change default threading characters to some "nicer" looking chars
+  (setq mu4e-headers-thread-child-prefix '("├>" . "├→ ")
+        mu4e-headers-thread-last-child-prefix '("└>" . "└→ ")
+        mu4e-headers-thread-connection-prefix '("│" . "│ ")
+        mu4e-headers-thread-orphan-prefix '("┬>" . "┬→ ")
+        mu4e-headers-thread-single-orphan-prefix '("─>" . "─→ "))
+  
+  ;; Also change to some nicer characters for marks
+  (setq mu4e-headers-new-mark       '("N" . "📨")
+        mu4e-headers-flagged-mark   '("F" . "📍")
+        mu4e-headers-passed-mark    '("P" . "❯")
+        mu4e-headers-replied-mark   '("R" . "❮")
+        mu4e-headers-seen-mark      '("S" . "")
+        mu4e-headers-trashed-mark   '("T" . "🗑️")
+        mu4e-headers-attach-mark    '("a" . "📎")
+        mu4e-headers-encrypted-mark '("x" . "🔒")
+        mu4e-headers-signed-mark    '("s" . "🔑")
+        mu4e-headers-unread-mark    '("u" . "📫")
+        mu4e-headers-calendar-mark  '("c" . "📅"))
+  
+  ;; rename files when moving
+  ;; NEEDED FOR MBSYNC
+  (setq mu4e-change-filenames-when-moving t)
+
+  ;; start with the first (default) context;
+  ;; default is to ask-if-none (ask when there's no context yet, and none match)
+  (setq mu4e-context-policy 'pick-first)
+
+  ;; compose with the current context is no context matches;
+  ;; default is to ask
+  (setq mu4e-compose-context-policy nil)
+
+  ;; don't keep message buffers around
+  (setq message-kill-buffer-on-exit t)
+
+  ;; If there's 'attach' 'file' 'pdf' in the message warn when sending w/o attachment
+  ;; From http://mbork.pl/2016-02-06_An_attachment_reminder_in_mu4e
+  (defun message-attachment-present-p ()
+    "Return t if an attachment is found in the current message."
+    (save-excursion
+      (save-restriction
+        (widen)
+        (goto-char (point-min))
+        (when (search-forward "<#part" nil t) t))))
+
+  (defvar message-attachment-intent-re
+    (regexp-opt '("attach" "pdf" "anhang" "angehängt" "angehaengt"))
+    "A regex which - if found in the message, and if there is no
+attachment - should launch the no-attachment warning.")
+
+  (defvar message-attachment-reminder
+    "Are you sure you want to send this message without any attachment? "
+    "The default question asked when trying to send a message
+containing `message-attachment-intent-re' without an
+actual attachment.")
+
+  (defun message-warn-if-no-attachments ()
+    "Ask the user if he wants to send the message even though
+there are no attachments.
+Should be added to `message-send-hook'."
+    (when (and (save-excursion
+                 (save-restriction
+                   (widen)
+                   (goto-char (point-min))
+                   (re-search-forward message-attachment-intent-re nil t)))
+               (not (message-attachment-present-p)))
+      (unless (y-or-n-p message-attachment-reminder)
+        (keyboard-quit)))))
+
+
+
 ;; * Programming languages
+
 (use-package elisp-mode
   :bind (:map emacs-lisp-mode-map
               ("C-c C-c" . eval-defun)

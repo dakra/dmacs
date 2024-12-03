@@ -75,6 +75,9 @@
 	path = lib/dogears
 	url = https://github.com/alphapapa/dogears.el
 	no-byte-compile = helm-dogears.el
+[submodule "eat"]
+	path = lib/eat
+	url = https://codeberg.org/akib/emacs-eat
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = https://github.com/Fanael/edit-indirect
