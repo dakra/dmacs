@@ -41,27 +41,7 @@
   (unless (eq system-type 'darwin)
     (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") nil 'append))
 
-  ;; (require-theme 'modus-themes) ; `require-theme' is ONLY for the built-in Modus themes
-
-  ;; Add all your customizations prior to loading the themes
-  ;; (setq modus-themes-italic-constructs t
-  ;;       modus-themes-bold-constructs nil)
-
-  ;; Load the theme of your choice.
-  ;; (load-theme 'modus-vivendi)
-
-  ;; Register all left windows-key presses as "super".
-  ;; Doesn't work for "s-l" as this always locks Windows on a low level.
-  (if (eq system-type 'windows-nt)
-      (progn
-        (prefer-coding-system 'utf-8-dos)
-
-        (setq w32-lwindow-modifier 'super
-              w32-pass-lwindow-to-system nil
-              w32-pass-alt-to-system nil)
-        (w32-register-hot-key [M-])
-        (w32-register-hot-key [s-]))
-    (prefer-coding-system 'utf-8))
+  (prefer-coding-system 'utf-8)
 
   ;; Always just use left-to-right text. This makes Emacs a bit faster for very long lines
   (setq-default bidi-paragraph-direction 'left-to-right)
@@ -74,7 +54,7 @@
   (setq mouse-yank-at-point t)  ;; Paste with middle mouse button doesn't move the cursor
   (delete-selection-mode t)  ;; Delete the selection with a keypress
   (setq auth-source-save-behavior nil)  ;; Don't ask to store credentials in .authinfo.gpg
-  ;; (setq truncate-string-ellipsis "…")  ;; Use 'fancy' ellipses for truncated strings
+  (setq truncate-string-ellipsis "…")  ;; Use 'fancy' ellipses for truncated strings
 
   ;; Focus follows mouse for Emacs windows and frames
   (setq mouse-autoselect-window t)
@@ -117,11 +97,10 @@
 
   ;; Disable blinking cursor and the bell ring
   (blink-cursor-mode -1)
-  (setq ring-bell-function 'ignore)
 
-  (setq create-lockfiles nil)  ; disable lock file symlinks
-
-  (setq make-backup-files t    ;; backup of a file the first time it is saved.
+  (setq ring-bell-function 'ignore
+        create-lockfiles nil   ;; disable lock file symlinks
+        make-backup-files t    ;; backup of a file the first time it is saved.
         backup-by-copying t    ;; don't clobber symlinks
         version-control t      ;; version numbers for backup files
         delete-old-versions t  ;; delete excess backup files silently
@@ -567,8 +546,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
               ("M-I" . windmove-swap-states-up)
               ("M-L" . windmove-swap-states-right))
   :config
-  (setq eat-term-name "xterm-256color"
-        eat-kill-buffer-on-exit t))
+  (setq eat-kill-buffer-on-exit t))
 
 ;; * vertico/consult etc
 
@@ -1128,6 +1106,13 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
       ("r" "→" (lambda () (interactive) (dakra/insert-unicode "RIGHTWARDS ARROW")))
       ("m" "µ" (lambda () (interactive) (dakra/insert-unicode "MICRO SIGN")))]])
 
+  (defun ns-lock-screen ()
+    "Lock Screen on MacOS"
+    (interactive)
+    (start-process-shell-command
+     "ScreenSaver" nil
+     "osascript -e 'tell application \"System Events\" to keystroke \"q\" using {command down, control down}'"))
+
   (transient-define-prefix transient-emacs-launcher ()
     "Launch (Emacs) apps"
     [["Apps"
@@ -1158,14 +1143,10 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
       ("k" "Kitty" (lambda ()
                      (interactive)
                      (start-process-shell-command "kitty" nil "kitty")))
-      ("L" "Lock" (lambda ()
-                    (interactive)
-                    (start-process-shell-command "pmset" nil "pmset sleepnow")))
-      
-      ;; ("b" "brain.fm - Stream music" brain-fm-play)
-      ;; ("y" "YouTube - Open dired buffer" (lambda () (interactive) (dired youtube-dl-directory)))
-      ]])
-  )
+      ("L" "Lock Screen" ns-lock-screen)
+      ("S" "Sleep" (lambda ()
+                     (interactive)
+                     (start-process-shell-command "pmset" nil "pmset sleepnow")))]]))
 
 ;; Do action that normally works on a region to the whole line if no region active.
 ;; That way you can just C-w to copy the whole line for example.

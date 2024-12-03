@@ -7,18 +7,22 @@
 ;; Hide title-bar on MacOS
 (add-to-list 'default-frame-alist '(undecorated-round . t))
 
-(setq package-enable-at-startup nil
-      load-prefer-newer t)
-
 ;; Disable the scroll-bar
 (scroll-bar-mode -1)
 
-;; Disable startup screen and startup echo area message and select the scratch buffer by default
-(setq inhibit-startup-buffer-menu t
+(setq package-enable-at-startup nil
+      load-prefer-newer t
+
+      ;; Disable startup screen and startup echo area message and select the scratch buffer by default
+      inhibit-startup-buffer-menu t
       inhibit-startup-screen t
       inhibit-startup-echo-area-message user-login-name
       initial-buffer-choice t
-      initial-scratch-message nil)
+      initial-scratch-message nil
+
+      ;; Disable certain byte compiler warnings to cut down on the noise. This is a personal
+      ;; choice and can be removed if you would like to see any and all byte compiler warnings.
+      byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
 
 ;; Put native compilation cache in no-litter var folder.
 (when (fboundp 'startup-redirect-eln-cache)
