@@ -7,13 +7,13 @@
          (float-time (time-subtract before-user-init-time
                                     before-init-time)))
 
+(setq use-package-enable-imenu-support t)
+(require 'use-package)
+
 ;; * Initialize borg
 (add-to-list 'load-path (expand-file-name "lib/borg" user-emacs-directory))
 (require 'borg)
 (borg-initialize)
-
-(setq use-package-enable-imenu-support t)
-(require 'use-package)
 
 
 
@@ -66,7 +66,7 @@
   ;; Only split horizontally if there are at least 90 chars column after splitting
   (setq split-width-threshold 180)
   ;; Only split vertically on very tall screens
-  (setq split-height-threshold 140)
+  (setq split-height-threshold 150)
 
   ;; Save whatever’s in the current (system) clipboard before
   ;; replacing it with the Emacs’ text.
@@ -909,6 +909,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
   (treemacs-resize-icons 14)  ;; Make icons a bit smaller (22 pixels by default)
 
   (treemacs-follow-mode -1)
+  (treemacs-fringe-indicator-mode -1)
   (if (eq system-type 'windows-nt)
       (treemacs-git-mode -1)  ;; Turn git and filewatch mode off on slow Windows
     (treemacs-git-mode 'simple)
@@ -978,6 +979,16 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
 
 ;; * Git
 
+;; Highlight and link issue IDs to website
+;; bug-reference-url-format has to be set in dir-locals (S-p E)
+;; E.g. for github: (bug-reference-url-format . "https://github.com/dakra/dmacs/issues/%s")
+(use-package bug-reference
+  :hook ((prog-mode . bug-reference-prog-mode)
+         (log-view-mode magit-status-mode-hook . bug-reference-mode))
+  :config
+  ;; (setq bug-reference-bug-regexp "#\\(?2:[0-9]+\\)")
+  (setq bug-reference-bug-regexp "\\(\\b\\(?:[Bb]ug ?#?\\|[Ii]ssue ?#\\|[Pp]atch ?#\\|RFE ?#\\|PR [a-z+-]+/\\)\\([0-9]+\\(?:#[0-9]+\\)?\\)\\)"))
+
 (use-package with-editor
   ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
   :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
@@ -998,9 +1009,6 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
          ("k" . magit-process-kill))
   :hook (after-save . magit-after-save-refresh-status)
   :config
-  ;; Set remote.pushDefault
-  (setq magit-remote-set-if-missing 'default)
-
   ;; Don't override date for extend or reword
   (setq magit-commit-extend-override-date nil)
   (setq magit-commit-reword-override-date nil)
@@ -1028,10 +1036,6 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
   (dolist (x '(rename resurrect untrack stage-all-changes unstage-all-changes))
     (add-to-list 'magit-no-confirm x t))
 
-  ;; When showing refs (In magit status press `y y') show only merged into master by default
-  (setq magit-show-refs-arguments '("--merged=master"))
-  ;; Show color and graph in magit-log. Since color makes it a bit slow, only show the last 128 commits
-  (setq magit-log-arguments '("--graph" "--color" "--decorate" "-n128"))
   ;; Always highlight word differences in diff
   (setq magit-diff-refine-hunk 'all)
 
@@ -1115,7 +1119,10 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
   :config
   ;; Display transient buffer below current window
   ;; and not bottom of the complete frame (minibuffer like)
-  (setq transient-display-buffer-action '(display-buffer-below-selected))
+  ;; (setq transient-display-buffer-action '(display-buffer-below-selected))
+  (setq transient-show-during-minibuffer-read t
+        transient-display-buffer-action '(display-buffer-below-selected (dedicated . t)
+                                                                        (inhibit-same-window . t)))
 
   (defmacro transient-help-toggle (text toggle)
     `(if (bound-and-true-p ,toggle)
@@ -1493,8 +1500,8 @@ mark the string and call `edit-indirect-region' with it."
         org-msg-greeting-name-limit 3
         org-msg-convert-citation t
         org-msg-default-alternatives '((new           . (text html))
-				                       (reply-to-html . (text html))
-				                       (reply-to-text . (text)))))
+                                       (reply-to-html . (text html))
+                                       (reply-to-text . (text)))))
 
 
 ;; Install mu with brew and not latest master with elpaca
@@ -1573,7 +1580,7 @@ mark the string and call `edit-indirect-region' with it."
   (setq mu4e-search-skip-duplicates t)
 
   ;; Don't show related messages by default.
-  ;; Activate with 'W' on demand
+  ;; Activate with 'a s' (mu4e action - show thread) on demand.
   (setq mu4e-search-include-related nil)
 
   ;; Don't ask to quit
@@ -1599,15 +1606,16 @@ mark the string and call `edit-indirect-region' with it."
   ;; (setq mu4e-index-cleanup nil)   ;; don't do a full cleanup check
   ;; (setq mu4e-index-lazy-check t)  ;; don't consider up-to-date dirs
 
-  ;; And change default threading characters to some "nicer" looking chars
+  ;; Change the default threading characters to some "nicer" looking chars
   (setq mu4e-headers-thread-child-prefix '("├>" . "├→ ")
         mu4e-headers-thread-last-child-prefix '("└>" . "└→ ")
         mu4e-headers-thread-connection-prefix '("│" . "│ ")
         mu4e-headers-thread-orphan-prefix '("┬>" . "┬→ ")
         mu4e-headers-thread-single-orphan-prefix '("─>" . "─→ "))
-  
+
   ;; Also change to some nicer characters for marks
-  (setq mu4e-headers-new-mark       '("N" . "📨")
+  (setq mu4e-use-fancy-chars t
+        mu4e-headers-new-mark       '("N" . "📨")
         mu4e-headers-flagged-mark   '("F" . "📍")
         mu4e-headers-passed-mark    '("P" . "❯")
         mu4e-headers-replied-mark   '("R" . "❮")
@@ -1618,7 +1626,7 @@ mark the string and call `edit-indirect-region' with it."
         mu4e-headers-signed-mark    '("s" . "🔑")
         mu4e-headers-unread-mark    '("u" . "📫")
         mu4e-headers-calendar-mark  '("c" . "📅"))
-  
+
   ;; rename files when moving
   ;; NEEDED FOR MBSYNC
   (setq mu4e-change-filenames-when-moving t)
@@ -1633,6 +1641,13 @@ mark the string and call `edit-indirect-region' with it."
 
   ;; don't keep message buffers around
   (setq message-kill-buffer-on-exit t)
+
+  (defun dakra-mu4e-update-index (&optional alert?)
+    "Like `mu4e-update-index' but also update modeline and optionally send an alert message."
+    (mu4e-update-index)
+    (mu4e--modeline-update)
+    (when alert?
+      (alert "You've got new mails" :title "New Mail")))
 
   ;; If there's 'attach' 'file' 'pdf' in the message warn when sending w/o attachment
   ;; From http://mbork.pl/2016-02-06_An_attachment_reminder_in_mu4e
