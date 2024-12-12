@@ -286,6 +286,12 @@
 [submodule "visual-fill-column"]
 	path = lib/visual-fill-column
 	url = https://codeberg.org/joostkremers/visual-fill-column
+[submodule "vterm"]
+	path = lib/vterm
+	url = https://github.com/akermu/emacs-libvterm
+	build-step = cd build && cmake .. && make
+	build-step = borg-byte-compile
+	build-step = borg-update-autoloads
 [submodule "vundo"]
 	path = lib/vundo
 	url = https://github.com/casouri/vundo

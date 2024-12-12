@@ -546,7 +546,79 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
               ("M-I" . windmove-swap-states-up)
               ("M-L" . windmove-swap-states-right))
   :config
+  (defun eat-compile (command name)
+    (let ((buf (pop-to-buffer name '((display-buffer-no-window)
+                                     (inhibit-same-window . t))))
+          (eat-mode-hook nil)
+          (eat-kill-buffer-on-exit nil))
+      (with-current-buffer buf
+        (delete-region (point-min) (point-max))
+        (eat-exec buf name "bash" nil (list "-ilc" command))
+        (setq eat--synchronize-scroll-function #'eat--synchronize-scroll)
+        (eat-emacs-mode)
+        (compilation-minor-mode))))
+
   (setq eat-kill-buffer-on-exit t))
+
+(use-package vterm
+  :defer t
+  :bind (:map vterm-mode-map
+              ("C-y" . vterm-yank)
+              ("M-y" . vterm-yank-pop)
+              ("C-k" . vterm-send-C-k-and-kill)
+              ;; I'm used to go up/down the shell history with M-n/p from eshell
+              ;; Simulate this behavior in vterm
+              ("M-p" . vterm-send-C-p)
+              ("M-n" . vterm-send-C-n))
+  ;; Disable whole-line-or-region otherwise I can't bind "C-y"
+  :hook (vterm-mode . (lambda () (whole-line-or-region-local-mode -1)))
+  :config
+  (defun vterm-send-C-p ()
+    "Sends C-p to the libvterm."
+    (interactive)
+    (vterm-send-key "p" nil nil t))
+
+  (defun vterm-send-C-n ()
+    "Sends C-n to the libvterm."
+    (interactive)
+    (vterm-send-key "n" nil nil t))
+
+  ;; Kill dead vterm buffers
+  (setq vterm-kill-buffer-on-exit t)
+
+  ;; Run a shell command in vterm with compilation-minor-mode
+  (defun vterm-compile (command &optional name)
+    (interactive
+     (list
+      (let ((command (eval compile-command)))
+        (if (or compilation-read-command current-prefix-arg)
+            (compilation-read-command command)
+          command))
+      (consp current-prefix-arg)))
+    (let ((buffer (generate-new-buffer (or name "*vterm*"))))
+      (with-current-buffer buffer
+        (let ((vterm-shell command)
+              (vterm-kill-buffer-on-exit nil)
+              (vterm-mode-hook nil)
+              (next-error-function 'vterm-next-error-function))
+          (vterm-mode)
+          (compilation-minor-mode))
+        (pop-to-buffer buffer))))
+
+  ;; Like normal `C-k'. Send `C-k' to libvterm but also put content in kill-ring
+  (defun vterm-send-C-k-and-kill ()
+    "Send `C-k' to libvterm."
+    (interactive)
+    (kill-ring-save (point) (vterm-end-of-line))
+    (vterm-send-key "k" nil nil t))
+
+  ;; Allow vterm to invoke some elisp functions
+  (setq vterm-eval-cmds '(("dired-other-window" dired-other-window)
+                          ("find-file" find-file)
+                          ("find-file-other-window" find-file-other-window)
+                          ("magit-status-setup-buffer" magit-status-setup-buffer)
+                          ("message" message)
+                          ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
 ;; * vertico/consult etc
 
