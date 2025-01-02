@@ -120,6 +120,7 @@
         dap-java-run-test-class
         dap-tooltip-mouse-motion
         delete-window
+        embark-prefix-help-command
         end-of-buffer
         exwm-windmove-down
         exwm-windmove-left

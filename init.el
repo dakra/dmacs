@@ -63,8 +63,8 @@
   ;; Activate character folding in searches i.e. searching for 'a' matches 'ä' as well
   (setq search-default-mode 'char-fold-to-regexp)
 
-  ;; Only split horizontally if there are at least 90 chars column after splitting
-  (setq split-width-threshold 180)
+  ;; Only split horizontally if there are at least 100 chars column after splitting
+  (setq split-width-threshold 200)
   ;; Only split vertically on very tall screens
   (setq split-height-threshold 150)
 
