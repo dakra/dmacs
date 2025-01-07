@@ -423,6 +423,12 @@ created a dedicated process for the project."
   (setq dired-recursive-copies 'always)
   (setq dired-dwim-target t))
 
+(use-package dired-aux
+  :after dired
+  :config
+  ;; Add unrar to `dired-compress'
+  (add-to-list 'dired-compress-file-suffixes '("\\.rar\\'" "" "unrar x %i")))
+
 (use-package dired-ranger  ;; From dired-hacks package
   :after dired
   :init
@@ -820,9 +826,29 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
 
 ;; * Third party packages
 
+(use-package pulse
+  :config
+  (setq pulse-flag t
+        pulse-delay .05))
+
 (use-package beacon
   :unless noninteractive
-  :hook (after-init . beacon-mode))
+  :hook (after-init . beacon-mode)
+  :config
+  (setq beacon-blink-when-focused t
+        beacon-size 60
+        beacon-blink-duration 0.4))
+
+(use-package visual-replace
+  :bind (("C-c r" . visual-replace)
+         ([remap query-replace] . visual-replace)
+         ([remap replace-string] . visual-replace)
+         ([remap isearch-query-replace] . visual-replace-from-isearch)
+         ([remap isearch-query-replace-regexp] . visual-replace-from-isearch)
+         :map isearch-mode-map
+         ("C-c r" . visual-replace-from-isearch))
+  :config
+  (setq visual-replace-default-to-full-scope t))
 
 (use-package minions
   :unless noninteractive

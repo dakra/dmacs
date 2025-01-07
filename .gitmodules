@@ -286,6 +286,9 @@
 [submodule "visual-fill-column"]
 	path = lib/visual-fill-column
 	url = https://codeberg.org/joostkremers/visual-fill-column
+[submodule "visual-replace"]
+	path = lib/visual-replace
+	url = https://github.com/szermatt/visual-replace
 [submodule "vterm"]
 	path = lib/vterm
 	url = https://github.com/akermu/emacs-libvterm
