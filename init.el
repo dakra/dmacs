@@ -1099,7 +1099,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
   (setq git-link-use-commit t
         git-link-open-in-browser t))
 
-;; * xxx 
+;; * xxx
 (use-package wgrep
   :bind (:map grep-mode-map
               ("C-x C-q" . wgrep-change-to-wgrep-mode))
@@ -1248,6 +1248,9 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
       ("k" "Kitty" (lambda ()
                      (interactive)
                      (start-process-shell-command "kitty" nil "kitty")))
+      ("g" "Ghostty" (lambda ()
+                       (interactive)
+                       (start-process-shell-command "Ghostty" nil "open -a Ghostty")))
       ("L" "Lock Screen" ns-lock-screen)
       ("S" "Sleep" (lambda ()
                      (interactive)
@@ -1535,7 +1538,8 @@ mark the string and call `edit-indirect-region' with it."
   ;; Open mu4e with the 'Mail' key (if your keyboard has one)
   :bind (("<XF86Mail>" . mu4e)
          :map mu4e-main-mode-map
-         ("U" . mu4e-update-mail-and-index-background)
+         ("U" . mu4e-update-index-nonlazy)
+         ;; ("U" . mu4e-update-mail-and-index-background)
          :map mu4e-headers-mode-map
          ("TAB" . mu4e-headers-next-unread)
          ("J" . mu4e-move-to-junk)
@@ -1545,9 +1549,9 @@ mark the string and call `edit-indirect-region' with it."
          :map mu4e-search-minor-mode-map
          ("P" . mu4e-view-headers-prev)
          :map mu4e-view-mode-map
-         ("A" . mu4e-view-attachment-action)
-         ("M-o" . ace-link-mu4e)
-         ("o" . ace-link-mu4e)
+         ;; ("A" . mu4e-view-attachment-action)
+         ;; ("M-o" . ace-link-mu4e)
+         ;; ("o" . ace-link-mu4e)
          ("n" . mu4e-scroll-up)
          ("p" . mu4e-scroll-down)
          ("N" . mu4e-view-headers-next)
@@ -1595,22 +1599,18 @@ mark the string and call `edit-indirect-region' with it."
   (set-face-attribute 'mu4e-header-highlight-face nil :background "#626262" :foreground "#eeeeee")
 
   ;;; Save attachment (this can also be a function)
-  (setq mu4e-attachment-dir "~/Downloads")
+  (setq mu4e-attachment-dir "~/Downloads"
+        mu4e-confirm-quit nil
+        mu4e-view-scroll-to-next nil)
 
   ;; Show additional user-agent header
   (setq-default mu4e-view-fields
                 '(:from :to :cc :subject :flags :date :maildir :user-agent :mailing-list
                         :tags :attachments :signature :decryption))
 
-  ;; Don't show duplicate mails when searching
-  (setq mu4e-search-skip-duplicates t)
-
   ;; Don't show related messages by default.
   ;; Activate with 'a s' (mu4e action - show thread) on demand.
   (setq mu4e-search-include-related nil)
-
-  ;; Don't ask to quit
-  (setq mu4e-confirm-quit nil)
 
   ;; Don't spam the minibuffer with 'Indexing...' messages
   (setq mu4e-hide-index-messages t)
@@ -1629,8 +1629,8 @@ mark the string and call `edit-indirect-region' with it."
 
   ;; We do a full index (that verify integrity) with a systemd job
   ;; Go fast inside emacs
-  ;; (setq mu4e-index-cleanup nil)   ;; don't do a full cleanup check
-  ;; (setq mu4e-index-lazy-check t)  ;; don't consider up-to-date dirs
+  (setq mu4e-index-cleanup nil)   ;; don't do a full cleanup check
+  (setq mu4e-index-lazy-check t)  ;; don't consider up-to-date dirs
 
   ;; Change the default threading characters to some "nicer" looking chars
   (setq mu4e-headers-thread-child-prefix '("├>" . "├→ ")
