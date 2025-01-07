@@ -1747,6 +1747,755 @@ Should be added to `message-send-hook'."
   ;; Don't align the body of clojure.core/match with the first argument
   (put-clojure-indent 'match 1))
 
+;; Only deps: queue, parseedn; parseclj, sesman
+(use-package cider
+  :bind (:map cider-mode-map
+              ("<f6>" . cider-scratch-project)
+              ("M-?" . cider-maybe-clojuredocs)
+              ("C-c C-o" . -cider-find-and-clear-repl-and-result-output)
+              :map cider-repl-mode-map
+              ("M-?" . cider-doc))
+  :config
+  ;; By default prefer clojure-cli build-tool when jacking in
+  (setq cider-preferred-build-tool 'clojure-cli)
+  ;; and set the :dev and :licp alias
+  (setq cider-clojure-cli-aliases ":dev")
+
+  ;; Always reuse a dead REPS without prompt when it's the only option
+  (setq cider-reuse-dead-repls 'auto)
+
+  ;; Only show cider eval results as overlay and not in the minibuffer
+  (setq cider-use-overlays t)
+
+  ;; Use `moon' spinner that looks nice and doesn't take as much space as the progress bar
+  (setq cider-eval-spinner-type 'moon)
+
+  ;; Store more items in repl history (default 500)
+  (setq cider-repl-history-size 2000)
+  ;; When loading the buffer (C-c C-k) save first without asking
+  (setq cider-save-file-on-load t)
+  ;; Don't show cider help text in repl after jack-in
+  (setq cider-repl-display-help-banner nil)
+  ;; Don't focus repl after sending somehint to there from another buffer
+  (setq cider-switch-to-repl-on-insert nil)
+  ;; Eval automatically when insreting in the repl (e..g. C-c C-j d/e) (unless called with prefix)
+  (setq cider-invert-insert-eval-p t)
+  ;; Show error as overlay instead of the buffer (buffer is generated anyway in case it's needed)
+  (setq cider-show-error-buffer 'except-in-repl)
+  ;; If we set `cider-show-error-buffer' to non-nil,
+  ;; don't focus error buffer when error is thrown
+  (setq cider-auto-select-error-buffer nil)
+  ;; Don't focus inspector after evaluating something
+  (setq cider-inspector-auto-select-buffer nil)
+  ;; Don't show tooltip with mouse hover
+  (setq cider-use-tooltips nil)
+  ;; Display context dependent info in the eldoc where possible.
+  (setq cider-eldoc-display-context-dependent-info t)
+  ;; Don't pop to the REPL buffer on connect
+  ;; Create and display the buffer, but don't focus it.
+  (setq cider-repl-pop-to-buffer-on-connect 'display-only)
+  ;; Just use symbol under point and don't prompt for symbol in e.g. cider-doc.
+  (setq cider-prompt-for-symbol nil)
+  ;; Use clj-reload instead of clojure.tools.namespace
+  (setq cider-ns-code-reload-tool 'clj-reload)
+
+  ;; I basically never connect to a remote host nrepl, so skip the host question on connect
+  (defun cider--completing-read-host (hosts)
+    '("localhost"))
+
+  ;; Display cider-scratch buffer in the same window
+  (add-to-list
+   'display-buffer-alist
+   '("*cider-scratch.*" (display-buffer-reuse-window
+                         display-buffer-same-window)))
+
+  (setq cider-scratch-initial-message
+        "(ns scratch
+  (:require [clojure.java.io :as io]
+            [clojure.pprint :as pprint]
+            [clojure.set :as set]
+            [clojure.string :as str]))
+")
+
+  ;; Output to the cider-result buffer
+  ;; This needs my personal WIP fork: https://github.com/dakra/cider/tree/wip
+  ;; (setq cider-interactive-eval-output-destination 'cider-result-buffer)
+
+  (defun -cider-find-and-clear-repl-and-result-output (&optional clear-repl)
+    "Like `cider-find-and-clear-repl-output' but additionally clear
+the *cider-result* buffer."
+    (interactive "P")
+    (cider-find-and-clear-repl-output clear-repl)
+    (let ((buf (get-buffer cider-result-buffer)))
+      (when (and buf (> (buffer-size buf) 0))  ;; Only clear when buffer exists and is not empty
+        (save-excursion
+          (with-current-buffer buf
+            (let ((inhibit-read-only t))
+              (if clear-repl  ;; Remove all output when called with prefix
+                  (delete-region (point-min) (point-max))
+
+                ;; Only remove output of the "cell" where the cursor currently is
+                (goto-char (or (search-backward "\f" nil t) (point-min))) ;; Search the beginning
+                (forward-sexp)  ;; Skip input sexp
+                (forward-line 2)  ;; Skip the =*ns* <buffer>:line-ns=> info arrow
+                (beginning-of-line)
+                (let ((start (point)))
+                  (search-forward "\f" nil t)
+                  (backward-char)
+                  (delete-region start (point)))
+                (insert-before-markers
+                 (propertize ";; output cleared\n" 'font-lock-face 'font-lock-comment-face)))))))))
+
+  (defun cider-maybe-clojuredocs (&optional arg)
+    "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
+    (interactive "P")
+    (if (and arg (or (eq major-mode 'clojure-mode)
+                     (eq major-mode 'clojurec-mode)
+                     (eq major-mode 'cider-clojure-interaction-mode)))
+        (cider-clojuredocs)
+      (cider-doc)))
+
+  (require 's)
+  (defun -cider-check-alias-fn (alias)
+    "Return predicate function that check if cider contains alias string ALIAS."
+    (lambda (&rest _)
+      (or
+       (and cider-clojure-cli-aliases
+            (s-contains? alias cider-clojure-cli-aliases))
+       (and cider-clojure-cli-global-options
+            (s-contains? alias cider-clojure-cli-global-options)))))
+
+  ;; Inject flow-storm middleware in cider-jack-in when the `:flow-storm' alias is set
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               `("flow-storm.nrepl.middleware/wrap-flow-storm" :predicate ,(-cider-check-alias-fn ":flow-storm")))
+
+  ;; Inject portal middleware in cider-jack-in when the `:portal' alias is set
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               `("portal.nrepl/wrap-portal" :predicate ,(-cider-check-alias-fn ":portal")))
+
+  ;; Inject reveal middleware in cider-jack-in when the `:reveal' alias is set
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               `("vlaaad.reveal.nrepl/middleware" :predicate ,(-cider-check-alias-fn ":reveal")))
+
+  ;; Inject shadowcljs nrepl middleware in cider-jack-in when the `:cljs' alias is set
+  (add-to-list 'cider-jack-in-nrepl-middlewares
+               `("shadow.cljs.devtools.server.nrepl/middleware" :predicate ,(-cider-check-alias-fn ":cljs")))
+
+  ;; Update classpath without restarting the repl
+  ;; Requires lambdaisland.classpath which is under :licp alias in my global deps.edn
+  (defun cider-update-deps-classpath ()
+    "Update classpath from deps.edn with lambdaisland.classpath."
+    (interactive)
+    ;; FIXME: Catch cider error and just display `user-error' when licp not found
+    (cider-interactive-eval "(require 'lambdaisland.classpath)")
+    (let* ((deps-path (concat (project-root (project-current t)) "deps.edn"))
+           (deps-str (with-temp-buffer
+                       (insert-file-contents deps-path)
+                       (buffer-string))))
+      (cider-interactive-eval
+       (concat "(lambdaisland.classpath/update-classpath! '{:extra " deps-str "})"))))
+
+  ;; XXX: Refactor clerk functions in own package
+  (defun clerk-serve ()
+    "Serve clerk notebooks."
+    (interactive)
+    (cider-interactive-eval "(nextjournal.clerk/serve! {:browse? true})"))
+
+  (defun clerk-tap-inspector ()
+    "Open tap inspector notebook to let Clerk show a tap> stream."
+    (interactive)
+    (message "Show tap> stream in clerk.")
+    (cider-interactive-eval "(nextjournal.clerk/show! 'nextjournal.clerk.tap)"))
+
+  (defun clerk-tap-table (&optional full-p)
+    "Evaluate and tap the expression preceding point as a clerk table."
+    (interactive "P")
+    (let ((tapped-form (concat "(clojure.core/doto "
+                               (cider-last-sexp)
+                               " (->> "
+                               "(nextjournal.clerk/table "
+                               (if full-p "{:nextjournal.clerk/width :full}" "")
+                               ") clojure.core/tap>))")))
+      (cider-interactive-eval tapped-form
+                              nil
+                              nil
+                              (cider--nrepl-pr-request-map))))
+
+  (defun clerk-tap-vega-lite (&optional wide-p)
+    "Evaluate and tap the expression preceding point as a vega lite chart.
+If invoked with WIDE-P, make the chart ::clerk/width :wide"
+    (interactive "P")
+    (let ((tapped-form (concat "(clojure.core/doto "
+                               (cider-last-sexp)
+                               " (->> "
+                               "(nextjournal.clerk/vl "
+                               (if wide-p "{:nextjournal.clerk/width :wide}" "")
+                               ") clojure.core/tap>))")))
+      (cider-interactive-eval tapped-form
+                              nil
+                              nil
+                              (cider--nrepl-pr-request-map))))
+  (defun clerk-build ()
+    "Build static html for the current clerk notebook."
+    (interactive)
+    (message "Building static page")
+    (when-let ((filename (buffer-file-name)))
+      (let ((root (project-root (project-current t))))
+        (cider-interactive-eval
+         (concat "(nextjournal.clerk/build! {:paths [\""
+                 (file-relative-name filename root) "\"]})")))))
+
+  (defun clerk-show ()
+    "Show buffer in clerk."
+    (interactive)
+    (message "Show buffer in clerk.")
+    (when-let ((filename (buffer-file-name)))
+      (cider-interactive-eval
+       (concat "(nextjournal.clerk/show! \"" filename "\")"))))
+
+  (defun clerk-save-and-show ()
+    "Save buffer and show in clerk."
+    (interactive)
+    (save-buffer)
+    (clerk-show))
+
+  (define-minor-mode clerk-mode
+    "A mode that calls `clerk-show' after save and adds a keybinding to `<M-return>'."
+    :lighter " clerk"
+    :keymap `((,(kbd "<M-return>") . clerk-save-and-show)
+              (,(kbd "<C-c t>") . clerk-tap-table))
+    (if clerk-mode
+        (add-hook 'after-save-hook #'clerk-show 100 t)
+      (remove-hook 'after-save-hook #'clerk-show t)))
+
+  ;; jack-in for babashka
+  ;; Code mostly from corgi: https://github.com/lambdaisland/corgi-packages/blob/main/corgi-clojure/corgi-clojure.el#L192-L211
+  (defun cider-jack-in-babashka (&optional project-dir)
+    "Start a utility CIDER REPL backed by Babashka, not related to a specific project."
+    (interactive)
+    (let ((project-dir (or project-dir (project-root (project-current t)))))
+      (nrepl-start-server-process
+       project-dir
+       "bb --nrepl-server 0"
+       (lambda (server-buffer)
+         (cider-nrepl-connect
+          (list :repl-buffer server-buffer
+                :repl-type 'clj
+                :host (plist-get nrepl-endpoint :host)
+                :port (plist-get nrepl-endpoint :port)
+                :project-dir project-dir
+                :session-name "babashka"
+                :repl-init-function (lambda ()
+                                      (setq-local cljr-suppress-no-project-warning t
+                                                  cljr-suppress-middleware-warnings t)
+                                      (rename-buffer "*babashka-repl*")))))))))
+
+;; (use-package nrepl-client
+;;   :config
+;;   ;; Give sync requests a bit more time to respond (default 10s)
+;;   ;; Especially when using with ejc-sql and e.g. Athena queries
+;;   (setq nrepl-sync-request-timeout 90))
+
+;; (use-package clj-refactor
+;;   ;;:ensure (:remotes (("dakra" :host github :repo "dakra/clj-refactor.el" :branch "no-yas-no-hydra") "origin"))
+;;   :hook (clojure-mode . clj-refactor-mode)
+;;   :config
+;;   ;; Allow a few more chars each row in namespace (default 72)
+;;   (setq cljr-print-right-margin 90)
+;;
+;;   (dolist (magic-require '(("aero"     . "aero.core")
+;;                            ("clerk"    . "nextjournal.clerk")
+;;                            ("csv"      . "clojure.data.csv")
+;;                            ("edn"      . "clojure.edn")
+;;                            ("http"     . "babashka.http-client")
+;;                            ("jdbc"     . "next.jdbc")
+;;                            ("transit"  . "cognitect.transit")
+;;                            ("walk"     . "clojure.walk")
+;;                            ("pprint"   . "clojure.pprint")
+;;                            ("http"     . "babashka.http-client")
+;;                            ("reagent"  . "reagent.core")
+;;                            ("re-frame" . "re-frame.core")
+;;                            ("tick"     . "tick.core")))
+;;     (add-to-list 'cljr-magic-require-namespaces magic-require)))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :hook (((java-mode java-ts-mode) . lsp-deferred)
+         (lsp-completion-mode . lsp-mode-setup-orderless))
+  :bind (:map lsp-mode-map
+              ("C-c C-a" . lsp-execute-code-action)
+              ("M-." . lsp-find-definition-other)
+              ("M-," . lsp-find-references-other))
+  :init (setq lsp-keymap-prefix nil)  ; Don't map the lsp keymap to any key
+  :config
+  ;; Shutdown lsp-server when all buffers associated with that server are closed
+  (setq lsp-keep-workspace-alive nil)
+
+  (require 'lsp-completion)
+  (setq lsp-completion-provider :none)  ;; we use Corfu
+
+  (defun lsp-mode-setup-orderless ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(orderless)))
+
+  (setq lsp-enable-on-type-formatting nil
+        lsp-enable-indentation nil
+        lsp-enable-snippet nil
+        lsp-semantic-tokens-enable t)
+
+  (defun lsp-find-definition-other (other?)
+    "Like `lsp-find-definition' but open in other window when called with prefix arg."
+    (interactive "P")
+    (dogears-remember)
+    (if other?
+        (lsp-find-definition :display-action 'window)
+      (lsp-find-definition)))
+  (defun lsp-find-references-other (other?)
+    "Like `lsp-find-references' but open in other window when called with prefix arg."
+    (interactive "P")
+    (dogears-remember)
+    (if other?
+        (lsp-find-references :display-action 'window)
+      (lsp-find-references)))
+
+  ;; Don't watch `build' directory for file changes
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]build\\'")
+
+  ;; (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
+  (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
+
+(use-package lsp-ui
+  :after lsp-mode
+  :bind (:map lsp-mode-map
+              ("M-?" . lsp-ui-doc-toggle))
+  :config
+  (defun lsp-ui-doc-toggle ()
+    "Shows or hides lsp-ui-doc popup."
+    (interactive)
+    (if lsp-ui-doc--bounds
+        (lsp-ui-doc-hide)
+      (lsp-ui-doc-show)))
+
+  (setq lsp-ui-doc-include-signature t
+        lsp-ui-doc-position 'at-point)
+
+  ;; Deactivate most of the annoying "fancy features"
+  (setq lsp-headerline-breadcrumb-enable nil
+        lsp-ui-doc-enable nil
+        lsp-lens-enable t  ;; "1 reference" etc at the end of the line
+        lsp-ui-sideline-enable nil
+        lsp-ui-sideline-show-hover nil
+        lsp-ui-sideline-show-symbol nil)
+  )
+
+(use-package lsp-treemacs
+  :after lsp-mode
+  :config
+  ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
+  (lsp-treemacs-sync-mode))
+
+;; Onlye deps: requests, deferred, (lsp-treemacs)
+(use-package lsp-java
+  :after lsp-mode
+  :hook (((java-mode java-ts-mode conf-javaprop-mode) . lsp-java-boot-lens-mode))
+  :init
+  ;; Set java vmargs in init so we can use with-eval-after-load in personal.el to call `add-to-list'.
+  (setq lsp-java-vmargs
+        '("-noverify"
+          "-XX:+UseParallelGC"
+          "-XX:GCTimeRatio=4"
+          "-XX:AdaptiveSizePolicyWeight=90"
+          "-XX:+UseStringDeduplication"
+          "-Dsun.zip.disableMemoryMapping=true"
+          "-Xmx4G"
+          "-Xms256m"))
+  :config
+  ;; Use Google style formatting by default
+  ;; (setq lsp-java-format-settings-url
+  ;;      "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
+  ;; (setq lsp-java-format-settings-profile "GoogleStyle")
+
+  ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/CHANGELOG.md
+  ;; and download from https://download.eclipse.org/jdtls/milestones/
+  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.42.0/jdt-language-server-1.42.0-202411281516.tar.gz")
+
+  (setq lsp-java-compile-null-analysis-mode "automatic"
+        lsp-java-format-on-type-enabled nil
+        lsp-java-completion-max-results 20
+        ;; Use 3rd party decompiler
+        lsp-java-content-provider-preferred "fernflower"))
+
+;; Only deps: bui, lsp-docker, (posframe)
+(use-package dap-mode
+  :after lsp-mode
+  :bind (
+         ;; :map dap-server-log-mode-map
+         ;; ("g" . recompile)
+         :map dap-mode-map
+         ("C-c C-t C-c" . dap-java-run-test-class)
+         ("C-c C-t C-t" . dap-java-run-last-test)
+         ("C-c C-t C-m" . dap-java-run-test-method)
+         ([f9]    . dap-continue)
+         ([S-f9]  . dap-disconnect)
+         ([f10]   . dap-next)
+         ([f11]   . dap-step-in)
+         ([S-f11] . dap-step-out))
+  :config
+  ;; I don't want the dap output in a dedicated side-window. I like a simple regular buffer!
+  (defun dap-go-to-output-buffer (&optional no-select)
+    "Go to output buffer."
+    (interactive)
+    (unless no-select
+      (select-window (dap--debug-session-output-buffer (dap--cur-session-or-die)))))
+
+  ;; Would like a repl in java but it doesn't seem to work,
+  (setq dap-auto-configure-features '(sessions locals expressions tooltip))
+  (dap-auto-configure-mode))
+
+(use-package dap-java
+  :after dap-mode)
+
+(use-package json-ts-mode
+  :mode ("\\.json\\'" "\\.avsc\\'"))
+
+(use-package java-ts-mode
+  :mode ("\\.java\\'")
+  :init
+  (add-to-list 'major-mode-remap-alist '(java-mode . java-ts-mode)))
+
+(use-package groovy-mode
+  :defer t)
+
+(use-package jenkinsfile-mode
+  :mode ("/Jenkinsfile.*"))
+
+(use-package yaml-ts-mode
+  :mode ("\\.yaml\\'" "\\.yml\\'")
+  :config
+  ;; Not the perfect outline regexp but better than no folding support
+  (setq outline-regexp "\\([[:space:]]\\{0,2\\}[a-zA-Z_-]+\\):$"))
+
+(use-package toml-ts-mode
+  :mode ("\\.toml\\'" "Cargo.lock\\'"))
+
+(use-package python
+  :mode (("\\.py\\'" . python-ts-mode))
+  :interpreter ("python" . python-ts-mode)
+  :bind (:map python-ts-mode-map
+              ("C-x C-e" . python-shell-send-whole-line-or-region)
+              ("C-c C-c" . python-shell-send-whole-line-or-region)
+              ("C-c C-k" . python-shell-send-buffer)
+              ("C-c C-d" . python-shell-send-defun)
+              :map python-mode-map
+              ("C-x C-e" . python-shell-send-whole-line-or-region)
+              ("C-c C-c" . python-shell-send-whole-line-or-region)
+              ("C-c C-k" . python-shell-send-buffer)
+              ("C-c C-d" . python-shell-send-defun))
+  :init
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+  :config
+  ;; Don't spam message buffer when python-mode can't guess indent-offset
+  (setq python-indent-guess-indent-offset-verbose nil)
+
+  (defun python-shell-send-whole-line-or-region (prefix)
+    "Send whole line or region to inferior Python process."
+    (interactive "*p")
+    (whole-line-or-region-wrap-beg-end 'python-shell-send-region prefix)
+    (deactivate-mark)))
+
+(use-package web-mode
+  :mode ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.tpl\\'" "\\.blade\\.php\\'" "\\.jsp\\'" "\\.as[cp]x\\'"
+         "\\.erb\\'" "\\.html.?\\'" "/\\(views\\|html\\|theme\\|templates\\)/.*\\.php\\'"
+         "\\.jinja2?\\'" "\\.mako\\'" "\\.vue\\'" "_template\\.txt" "\\.ftl\\'")
+  :config
+  ;; Expand e.g. s/ to <span>|</span>
+  (setq web-mode-enable-auto-expanding t)
+  ;; Enable current element highlight
+  (setq web-mode-enable-current-element-highlight t)
+  ;; Show column for current element
+  ;; Like highlight-indent-guide but only one line for current element
+  (setq web-mode-enable-current-column-highlight t)
+
+  ;; Don't indent directly after a <script> or <style> tag
+  (setq web-mode-script-padding 0)
+  (setq web-mode-style-padding 0)
+
+  ;; Set default indent to 2 spaces
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  ;; auto close tags in web-mode
+  (setq web-mode-enable-auto-closiqng t))
+
+(use-package dockerfile-ts-mode
+  :mode ("Dockerfile"))
+
+(use-package docker-compose-mode
+  :mode ("docker-compose[^/]*\\.ya?ml\\'"))
+
+
+;; * Org mode
+
+(use-package org
+  :mode ("\\.\\(org\\|org_archive\\)\\'" . org-mode)
+  :bind (("C-c a"   . org-agenda)
+         :map org-mode-map
+         ("<M-return>" . org-insert-todo-heading-respect-content)
+         ("<M-S-return>" . org-meta-return)
+         ("M-." . org-open-at-point)  ; So M-. behaves like in source code.
+         ("M-," . org-mark-ring-goto)
+         ("M-;" . org-comment-dwim)
+         ("M-m" . consult-org-heading)
+         ;; Disable adding and removing org-agenda files via keybinding.
+         ("C-c [" . nil)
+         ("C-c ]" . nil)
+         ("\C-c TAB" . nil)  ;; Remove for tempel-expand
+         ("C-a" . org-beginning-of-line)
+         ("M-p" . org-previous-visible-heading)
+         ("M-n" . org-next-visible-heading)
+         ("<M-up>" . org-metaup)
+         ("<M-down>" . org-metadown)
+         :map org-src-mode-map
+         ("C-x n" . org-edit-src-exit))
+  :config
+  (setq org-auto-align-tags t
+        org-tags-column -105
+        org-startup-folded t
+        org-fold-catch-invisible-edits 'show-and-error
+        org-special-ctrl-a/e t
+        org-insert-heading-respect-content t
+        org-startup-with-inline-images t
+        org-imenu-depth 5
+        org-special-ctrl-a/e t
+        org-special-ctrl-k t
+        org-enforce-todo-dependencies t
+        org-use-fast-todo-selection t
+        org-treat-S-cursor-todo-selection-as-state-change nil
+        org-startup-indented t
+        ;; Org styling, hide markup etc.
+        org-hide-emphasis-markers t
+        org-pretty-entities t
+        ;; Ellipsis styling
+        org-ellipsis "…"
+        ;; But Don't print "bar" as subscript in "foo_bar"
+        org-pretty-entities-include-sub-superscripts nil
+        ;; And also don't display ^ or _ as super/subscripts
+        org-use-sub-superscripts nil
+        org-default-notes-file (concat org-directory "inbox.org")
+        ;; Set todo colors from moe-theme
+        org-todo-keyword-faces '(("TODO" :foreground "#5f0000" :weight bold)  ;; red-4
+                                 ("NEXT" :foreground "#0000af" :weight bold)  ;; blue-5
+                                 ("DONE" :foreground "#005f00" :weight bold)  ;; green-5
+                                 ("WAITING" :foreground "#af5f00" :weight bold)  ;; orange-5
+                                 ("HOLD" :foreground "#ff2f9b" :weight bold)  ;; magenta-00
+                                 ("CANCELLED" :foreground "#005f00" :weight bold)  ;; green-5
+                                 ("MEETING" :foreground "#875f00" :weight bold))  ;; yellow-4
+        org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                            (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|"
+                                      "CANCELLED(c@/!)" "MEETING")))
+
+  (set-face-attribute 'org-ellipsis nil :inherit 'default :box nil))
+
+(use-package org-duration
+  :defer t
+  :after org
+  :config
+  ;; Never show 'days' in clocksum (e.g. in report clocktable)
+  ;; format string used when creating CLOCKSUM lines and when generating a
+  ;; time duration (avoid showing days)
+  (setq org-duration-format '((special . h:mm))))
+
+(use-package org-clock
+  :bind (("<f7>"    . org-clock-goto)
+         ("C-c o i" . org-clock-in)
+         ("C-c C-x C-j" . org-clock-goto)
+         ("C-c C-x C-i" . org-clock-in)
+         ("C-c C-x C-o" . org-clock-out))
+  :config
+  (setq org-clock-history-length 30)
+
+  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
+  (setq org-clock-persist t)
+  (org-clock-persistence-insinuate)
+
+  ;; Resume clocking task on clock-in if the clock is open
+  (setq org-clock-in-resume t)
+
+  ;; org-clock-display (C-c C-x C-d) shows times for this month by default
+  (setq org-clock-display-default-range 'thismonth)
+
+  ;; Only show the current clocked time in mode line (not all)
+  (setq org-clock-mode-line-total 'current)
+
+  ;; Clocktable (C-c C-x C-r) defaults
+  ;; Use fixed month instead of (current-month) because I want to keep a table for each month
+  (setq org-clock-clocktable-default-properties
+        `(:block ,(format-time-string "%Y-%m") :scope file-with-archives))
+
+  ;; Clocktable (reporting: r) in the agenda
+  (setq org-clocktable-defaults
+        '(:maxlevel 3 :lang "en" :scope file-with-archives
+                    :wstart 1 :mstart 1 :tstart nil :tend nil :step nil :stepskip0 t :fileskip0 t
+                    :tags nil :emphasize nil :link t :narrow 70! :indent t :formula nil :timestamp nil
+                    :level nil :tcolumns nil :formatter nil))
+
+  ;; Resume clocking task on clock-in if the clock is open
+  (setq org-clock-in-resume t)
+  ;; Log all State changes to drawer
+  (setq org-log-into-drawer t)
+  ;; make time editing use discrete minute intervals (no rounding) increments
+  (setq org-time-stamp-rounding-minutes (quote (1 1)))
+  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+  (setq org-clock-out-remove-zero-time-clocks t)
+  ;; Don't clock out when moving task to a done state
+  (setq org-clock-out-when-done nil)
+
+  ;; Enable auto clock resolution for finding open clocks
+  (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
+  ;; Include current clocking task in clock reports
+  (setq org-clock-report-include-clocking-task t))
+
+(use-package ol  ;; org-link
+  :bind (("C-c l" . org-store-link))
+  :config
+  ;; Don't remove links after inserting
+  (setq org-link-keep-stored-after-insertion t))
+
+(use-package org-agenda
+  :defer t
+  :config
+  ;; Keep tasks with dates/deadlines/scheduled dates/timestamps on the global todo lists
+  (setq org-agenda-todo-ignore-with-date nil
+        org-agenda-todo-ignore-deadlines nil
+        org-agenda-todo-ignore-scheduled nil
+        org-agenda-todo-ignore-timestamp nil
+        ;; Remove completed deadline tasks from the agenda view
+        org-agenda-skip-deadline-if-done t
+        org-extend-today-until 4  ;; For 0 to 4am show yesterday in the agenda view "toady"
+        org-agenda-show-all-dates t)
+
+  (setq org-agenda-window-setup 'current-window
+        org-agenda-log-mode-items (quote (closed state clock))
+        org-agenda-tags-column -105
+        org-agenda-block-separator ?─
+        org-agenda-time-grid
+        '((daily today require-timed)
+          (800 1000 1200 1400 1600 1800 2000)
+          " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+        org-agenda-current-time-string
+        "◀── now ─────────────────────────────────────────────────"))
+
+(use-package ob
+  :after org
+  :hook ((org-babel-after-execute . org-display-inline-images))
+  :config
+  ;; don't prompt me to confirm every time I want to evaluate a block
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; Add more languages to org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((C . t)
+     (awk)
+     (calc . t)
+     (clojure . t)
+     (css)
+     (ditaa . t)
+     (dot . t)
+     (emacs-lisp . t)
+     (gnuplot . t)
+     (haskell)
+     (java . t)
+     (js . t)
+     (latex)
+     (lisp)
+     (lua . t)
+     (matlab)
+     (ocaml)
+     (octave . t)
+     (perl)
+     (plantuml . t)
+     (python . t)
+     ;; (restclient . t)
+     (ruby)
+     (sass)
+     (scala)
+     (scheme)
+     (shell . t)
+     (sql . t)
+     (sqlite . t))))
+
+(use-package ob-clojure
+  :after ob
+  :config
+  (setq org-babel-clojure-backend 'babashka))
+
+;; (use-package ob-restclient
+;;   :after ob)
+
+;; (use-package ob-mongo
+;;   :after ob)
+
+(use-package org-src
+  :after org
+  :config
+  ;; Always split babel source window below.
+  ;; Alternative is `current-window' to don't mess with window layout at all
+  (setq org-src-window-setup 'split-window-below)
+
+  (setq org-edit-src-content-indentation 0)
+
+  ;; Add 'conf-mode' to org-babel
+  (add-to-list 'org-src-lang-modes '("ini" . conf))
+  (add-to-list 'org-src-lang-modes '("conf" . conf)))
+
+(use-package ol
+  :after org
+  :config
+  (setq org-link-keep-stored-after-insertion t))
+
+;; org-link support for magit buffers
+(use-package orgit
+  ;; Automatically copy orgit link to last commit after commit
+  :hook (git-commit-post-finish . orgit-store-after-commit)
+  :config
+  (defun orgit-store-after-commit ()
+    "Store orgit-link for latest commit after commit message editor is finished."
+    (let* ((repo (abbreviate-file-name default-directory))
+           (rev (magit-git-string "rev-parse" "HEAD"))
+           (link (format "orgit-rev:%s::%s" repo rev))
+           (summary (substring-no-properties (magit-format-rev-summary rev)))
+           (desc (format "%s (%s)" summary repo)))
+      (push (list link desc) org-stored-links))))
+
+(use-package org-modern
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda))
+  :config
+  (setq org-modern-hide-stars nil
+        org-modern-star 'replace
+        org-modern-replace-stars "❶❷❸❹❺❻❼"
+        org-modern-progress 7
+        ;; Set todo colors from moe-theme
+        org-modern-todo-faces '(("TODO" :background "#5f0000" :weight bold)  ;; red-4
+                                ("NEXT" :background "#0000af" :weight bold)  ;; blue-5
+                                ("DONE" :background "#005f00" :weight bold)  ;; green-5
+                                ("WAITING" :background "#af5f00" :weight bold)  ;; orange-5
+                                ("HOLD" :background "#ff2f9b" :weight bold)  ;; magenta-00
+                                ("CANCELLED" :background "#005f00" :weight bold)  ;; green-5
+                                ("MEETING" :background "#875f00" :weight bold))))  ;; yellow-4
+
+;; (use-package org-modern-indent
+;;   :defer t
+;;   :init
+;;   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+
+(use-package org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autolinks nil))
+
+
 
 ;; * Post Initialization
 (message "Loading %s...done (%.3fs)" user-init-file
