@@ -572,6 +572,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
               ("C-y" . vterm-yank)
               ("M-y" . vterm-yank-pop)
               ("C-k" . vterm-send-C-k-and-kill)
+              ("M-d" . vterm-send-M-d-and-kill)
               ;; I'm used to go up/down the shell history with M-n/p from eshell
               ;; Simulate this behavior in vterm
               ("M-p" . vterm-send-C-p)
@@ -611,12 +612,19 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
           (compilation-minor-mode))
         (pop-to-buffer buffer))))
 
-  ;; Like normal `C-k'. Send `C-k' to libvterm but also put content in kill-ring
   (defun vterm-send-C-k-and-kill ()
-    "Send `C-k' to libvterm."
+    "Send `C-k' to libvterm.
+Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring"
     (interactive)
     (kill-ring-save (point) (vterm-end-of-line))
     (vterm-send-key "k" nil nil t))
+
+  (defun vterm-send-M-d-and-kill ()
+    "Send `M-d' to libvterm.
+Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
+    (interactive)
+    (kill-ring-save (point) (save-excursion (forward-word) (point)))
+    (vterm-send-key "d" nil t nil))
 
   ;; Allow vterm to invoke some elisp functions
   (setq vterm-eval-cmds '(("dired-other-window" dired-other-window)
@@ -1010,10 +1018,19 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
 ;; E.g. for github: (bug-reference-url-format . "https://github.com/dakra/dmacs/issues/%s")
 (use-package bug-reference
   :hook ((prog-mode . bug-reference-prog-mode)
-         (log-view-mode magit-status-mode-hook . bug-reference-mode))
+         ((log-view-mode magit-status-mode-hook) . bug-reference-mode)
+         (magit-log-wash-summary-hook . magit-highlight-bug-reference-regexp))
   :config
   ;; (setq bug-reference-bug-regexp "#\\(?2:[0-9]+\\)")
-  (setq bug-reference-bug-regexp "\\(\\b\\(?:[Bb]ug ?#?\\|[Ii]ssue ?#\\|[Pp]atch ?#\\|RFE ?#\\|PR [a-z+-]+/\\)\\([0-9]+\\(?:#[0-9]+\\)?\\)\\)"))
+  (setq bug-reference-bug-regexp "\\(\\b\\(?:[Bb]ug ?#?\\|[Ii]ssue ?#\\|[Pp]atch ?#\\|RFE ?#\\|PR [a-z+-]+/\\)\\([0-9]+\\(?:#[0-9]+\\)?\\)\\)")
+
+  (defun magit-highlight-bug-reference-regexp ()
+    "Highlight bug-reference-regexp in magit logs."
+    (while (re-search-forward bug-reference-bug-regexp nil t)
+      (put-text-property (match-beginning 0)
+                         (match-end 0)
+                         'font-lock-face 'magit-keyword))))
+
 
 (use-package with-editor
   ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
@@ -1216,7 +1233,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
     (interactive)
     (start-process-shell-command
      "ScreenSaver" nil
-     "osascript -e 'tell application \"System Events\" to keystroke \"q\" using {command down, control down}'"))
+     "open -a ScreenSaverEngine"))
 
   (transient-define-prefix transient-emacs-launcher ()
     "Launch (Emacs) apps"
@@ -1939,7 +1956,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
     "Build static html for the current clerk notebook."
     (interactive)
     (message "Building static page")
-    (when-let ((filename (buffer-file-name)))
+    (when-let* ((filename (buffer-file-name)))
       (let ((root (project-root (project-current t))))
         (cider-interactive-eval
          (concat "(nextjournal.clerk/build! {:paths [\""
@@ -1949,7 +1966,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
     "Show buffer in clerk."
     (interactive)
     (message "Show buffer in clerk.")
-    (when-let ((filename (buffer-file-name)))
+    (when-let* ((filename (buffer-file-name)))
       (cider-interactive-eval
        (concat "(nextjournal.clerk/show! \"" filename "\")"))))
 
@@ -2117,7 +2134,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
   ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
-  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.42.0/jdt-language-server-1.42.0-202411281516.tar.gz")
+  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.43.0/jdt-language-server-1.43.0-202412191447.tar.gz")
 
   (setq lsp-java-compile-null-analysis-mode "automatic"
         lsp-java-format-on-type-enabled nil
@@ -2225,7 +2242,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   (setq web-mode-css-indent-offset 2)
   (setq web-mode-code-indent-offset 2)
   ;; auto close tags in web-mode
-  (setq web-mode-enable-auto-closiqng t))
+  (setq web-mode-enable-auto-closing t))
 
 (use-package dockerfile-ts-mode
   :mode ("Dockerfile"))
