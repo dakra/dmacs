@@ -1151,7 +1151,10 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
                                        "==>" "=>" "=/=" "!==" "!=" "<==" ">>=" "=>>" ">=>"
                                        "<=>" "<=<" "=<=" "=>=" "<<=" "=<<"
                                        "=:=" "=!=" "==" "=~" "!~" "===" "::" ":=" ":>" ">:"
-                                       ";;" "__" "..." ".." "&&" "++")))
+                                       ";;" "__" "..." ".." "&&" "++"
+                                       ;; Add ligatures for git merge conflicts. If they don't exist, they'll
+                                       ;; be displayed with normal fonts instead of multiple combined ligatures.
+                                       "<<<<<<<" "=======" "|||||||" ">>>>>>>")))
 
 (use-package transient
   :defer t
@@ -1725,6 +1728,25 @@ Should be added to `message-send-hook'."
                (not (message-attachment-present-p)))
       (unless (y-or-n-p message-attachment-reminder)
         (keyboard-quit)))))
+
+(use-package consult-mu
+  :after mu4e
+  :bind (:map mu4e-main-mode-map
+              ("s" . consult-mu-dynamic))
+  :config
+  (setq consult-mu-maxnum 300
+        consult-mu-mark-viewed-as-read nil))
+
+(use-package consult-mu-compose
+  :after mu4e
+  :config
+  (require 'consult-mu-compose-embark)
+  (setq consult-mu-compose-preview-key "M-o"))
+
+(use-package consult-mu-contacts
+  :after mu4e
+  :config
+  (require 'consult-mu-contacts-embark))
 
 
 

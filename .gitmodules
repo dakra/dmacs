@@ -35,14 +35,19 @@
 [submodule "consult"]
 	path = lib/consult
 	url = https://github.com/minad/consult
+[submodule "consult-mu"]
+	path = lib/consult-mu
+	url = git@github.com:armindarvish/consult-mu.git
+	load-path = .
+	load-path = extras
 [submodule "consult-project-extra"]
 	path = lib/consult-project-extra
 	url = https://github.com/Qkessler/consult-project-extra
 [submodule "corfu"]
 	path = lib/corfu
 	url = https://github.com/minad/corfu
-	load-path = .	
-	load-path = extensions	
+	load-path = .
+	load-path = extensions
 [submodule "csv-mode"]
 	path = lib/csv-mode
 	url = git@github.com:emacsmirror/csv-mode.git
@@ -198,7 +203,7 @@
 	build-step = make compile
 	build-step = borg-update-autoloads
 	load-path = lisp
-	info-path = doc	
+	info-path = doc
 [submodule "org-appear"]
 	path = lib/org-appear
 	url = https://github.com/awth13/org-appear
@@ -281,8 +286,8 @@
 [submodule "vertico"]
 	path = lib/vertico
 	url = https://github.com/minad/vertico
-	load-path = .	
-	load-path = extensions	
+	load-path = .
+	load-path = extensions
 [submodule "visual-fill-column"]
 	path = lib/visual-fill-column
 	url = https://codeberg.org/joostkremers/visual-fill-column
