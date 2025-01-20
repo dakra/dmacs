@@ -197,7 +197,8 @@
 
 (use-package compile
   :config
-  (setq compilation-ask-about-save nil  ;; Always save before compiling
+  (setq compilation-environment '("TERM=xterm-256color")
+        compilation-ask-about-save nil  ;; Always save before compiling
         compilation-always-kill t  ;; Kill old compile processes before starting a new one
         compilation-scroll-output t))  ;; Scroll with the compilation output
 
@@ -657,6 +658,7 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
           (consult-org-heading buffer)
           (consult-imenu buffer)
           (consult-project-buffer buffer)
+          (consult-mu-dynamic buffer)
           (consult-project-extra-find buffer)))
   (vertico-multiform-mode))
 
@@ -916,10 +918,12 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
 
 ;; Only deps: pfuture
 (use-package treemacs
-  :bind (([f8] . treemacs-select-window)
-         ([f12] . treemacs-find-file)
+  :bind (([f8] . treemacs-find-file-select-window)
+         ([f12] . treemacs-find-file-deep)
          :map treemacs-mode-map
          ("M-l" . nil)  ;; We bind `M-l' to `windmove-right'
+         ("{" . treemacs-decrease-width)
+         ("}" . treemacs-increase-width)
          ("C-t a" . treemacs-add-project-to-workspace)
          ("C-t d" . treemacs-remove-project)
          ("C-t r" . treemacs-rename-project)
@@ -927,6 +931,20 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
          ;; a frame to a different project and toggle treemacs again we still get the old project
          ("q" . treemacs-kill-buffer))
   :config
+  (defun treemacs-find-file-deep ()
+    "`treemacs-find-file' only opens 1 layer at a time.
+Just call it 8 times in a row should be enough to always show the file."
+    (interactive)
+    (dotimes (_ 8)
+      (treemacs-find-file)))
+
+  (defun treemacs-find-file-select-window ()
+    "Like `treemacs-select-window' but calls `treemacs-find-file' first."
+    (interactive)
+    (when (buffer-file-name)
+      (treemacs-find-file-deep))
+    (treemacs-select-window))
+
   (defun treemacs-ignore-python-files (file _)
     (or (s-ends-with-p ".pyc" file)
         (string= file "__pycache__")))
