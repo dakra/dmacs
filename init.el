@@ -107,6 +107,10 @@
         kept-old-versions 6    ;; oldest versions to keep when a new numbered backup is made
         kept-new-versions 9)   ;; newest versions to keep when a new numbered backup is made
 
+  ;; Don't quit Emacs on C-x C-c
+  (when (daemonp)
+    (global-set-key (kbd "C-x C-c") 'kill-buffer-and-window))
+
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
   (defun crm-indicator (args)
@@ -361,6 +365,7 @@
          ("SPC" . consult-project-extra-find)
          ("d"   . project-dired)
          ("D"   . project-edit-deps-edn)
+         ("t"   . project-toggle-test)
          ("s"   . consult-ripgrep)
          ("E"   . project-edit-dir-locals)
          ("P"   . project-run-python))
@@ -383,6 +388,32 @@
                  (project-root)
                  (expand-file-name "deps.edn")
                  (find-file)))
+
+  (defun project-toggle-test ()
+    "Toggle between source and test buffers."
+    (interactive)
+    (let* ((root (project-root (project-current t)))
+           (fn (file-relative-name (buffer-file-name) root))
+           (main-src (if (derived-mode-p 'java-mode) "/main" "/src"))
+           (test-suffix (if (derived-mode-p 'java-mode) "Test" "_test"))
+           (test-p (s-contains-p "test" fn))
+           (dir (file-name-directory fn))
+           (base (file-name-base fn))
+           (ext (file-name-extension fn))
+           (toggle-dir (if test-p
+                           (replace-regexp-in-string "/test" "/main" dir)
+                         (replace-regexp-in-string main-src "/test" dir)))
+           (toggle-base (if test-p
+                            (replace-regexp-in-string (concat test-suffix "$") "" base)
+                          (concat base test-suffix)))
+           (toggle-fn (concat root toggle-dir toggle-base "." ext))
+           (buf (find-buffer-visiting toggle-fn)))
+      (if buf
+          (pop-to-buffer buf)
+        (if (file-exists-p toggle-fn)
+            (find-file toggle-fn)
+          (when (y-or-n-p (format "Test file not found. Create '%s'?" toggle-fn))
+            (find-file toggle-fn))))))
 
   (require 'python)
   (defun project-run-python ()
@@ -902,9 +933,9 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
            (aliases "yyyy-MM-dd'T'HH:mm:ss.SSSSSS") (aliases "HH:mm:ss.SSS")
            (aliases "HH:mm:ss.SSSSSS"))))
   (add-to-list 'logview-additional-submodes
-               '(("Timbre"
-                  (format  . "TIMESTAMP LEVEL [NAME] -")
-                  (levels  . "SLF4J")))))
+               '("Timbre"
+                 (format  . "TIMESTAMP LEVEL [NAME] -")
+                 (levels  . "SLF4J"))))
 
 (use-package gptel
   :defer t
@@ -1036,8 +1067,8 @@ Just call it 8 times in a row should be enough to always show the file."
 ;; E.g. for github: (bug-reference-url-format . "https://github.com/dakra/dmacs/issues/%s")
 (use-package bug-reference
   :hook ((prog-mode . bug-reference-prog-mode)
-         ((log-view-mode magit-status-mode-hook) . bug-reference-mode)
-         (magit-log-wash-summary-hook . magit-highlight-bug-reference-regexp))
+         ((log-view-mode magit-status-mode) . bug-reference-mode)
+         (magit-log-wash-summary . magit-highlight-bug-reference-regexp))
   :config
   ;; (setq bug-reference-bug-regexp "#\\(?2:[0-9]+\\)")
   (setq bug-reference-bug-regexp "\\(\\b\\(?:[Bb]ug ?#?\\|[Ii]ssue ?#\\|[Pp]atch ?#\\|RFE ?#\\|PR [a-z+-]+/\\)\\([0-9]+\\(?:#[0-9]+\\)?\\)\\)")
@@ -1813,48 +1844,47 @@ Should be added to `message-send-hook'."
               :map cider-repl-mode-map
               ("M-?" . cider-doc))
   :config
-  ;; By default prefer clojure-cli build-tool when jacking in
-  (setq cider-preferred-build-tool 'clojure-cli)
-  ;; and set the :dev and :licp alias
-  (setq cider-clojure-cli-aliases ":dev")
-
-  ;; Always reuse a dead REPS without prompt when it's the only option
-  (setq cider-reuse-dead-repls 'auto)
-
-  ;; Only show cider eval results as overlay and not in the minibuffer
-  (setq cider-use-overlays t)
-
-  ;; Use `moon' spinner that looks nice and doesn't take as much space as the progress bar
-  (setq cider-eval-spinner-type 'moon)
-
-  ;; Store more items in repl history (default 500)
-  (setq cider-repl-history-size 2000)
-  ;; When loading the buffer (C-c C-k) save first without asking
-  (setq cider-save-file-on-load t)
-  ;; Don't show cider help text in repl after jack-in
-  (setq cider-repl-display-help-banner nil)
-  ;; Don't focus repl after sending somehint to there from another buffer
-  (setq cider-switch-to-repl-on-insert nil)
-  ;; Eval automatically when insreting in the repl (e..g. C-c C-j d/e) (unless called with prefix)
-  (setq cider-invert-insert-eval-p t)
-  ;; Show error as overlay instead of the buffer (buffer is generated anyway in case it's needed)
-  (setq cider-show-error-buffer 'except-in-repl)
-  ;; If we set `cider-show-error-buffer' to non-nil,
-  ;; don't focus error buffer when error is thrown
-  (setq cider-auto-select-error-buffer nil)
-  ;; Don't focus inspector after evaluating something
-  (setq cider-inspector-auto-select-buffer nil)
-  ;; Don't show tooltip with mouse hover
-  (setq cider-use-tooltips nil)
-  ;; Display context dependent info in the eldoc where possible.
-  (setq cider-eldoc-display-context-dependent-info t)
-  ;; Don't pop to the REPL buffer on connect
-  ;; Create and display the buffer, but don't focus it.
-  (setq cider-repl-pop-to-buffer-on-connect 'display-only)
-  ;; Just use symbol under point and don't prompt for symbol in e.g. cider-doc.
-  (setq cider-prompt-for-symbol nil)
-  ;; Use clj-reload instead of clojure.tools.namespace
-  (setq cider-ns-code-reload-tool 'clj-reload)
+  (setq
+   ;; By default prefer clojure-cli build-tool when jacking in
+   cider-preferred-build-tool 'clojure-cli
+   ;; and set the :dev and :licp alias
+   cider-clojure-cli-aliases ":dev"
+   ;; Always reuse a dead REPS without prompt when it's the only option
+   cider-reuse-dead-repls 'auto
+   ;; Automatically download source artifacts for 3rd-party Java classes
+   cider-download-java-sources t
+   ;; Only show cider eval results as overlay and not in the minibuffer
+   cider-use-overlays t
+   ;; Use `moon' spinner that looks nice and doesn't take as much space as the progress bar
+   cider-eval-spinner-type 'moon
+   ;; Store more items in repl history (default 500)
+   cider-repl-history-size 2000
+   ;; When loading the buffer (C-c C-k) save first without asking
+   cider-save-file-on-load t
+   ;; Don't show cider help text in repl after jack-in
+   cider-repl-display-help-banner nil
+   ;; Don't focus repl after sending somehint to there from another buffer
+   cider-switch-to-repl-on-insert nil
+   ;; Eval automatically when insreting in the repl (e..g. C-c C-j d/e) (unless called with prefix)
+   cider-invert-insert-eval-p t
+   ;; Show error as overlay instead of the buffer (buffer is generated anyway in case it's needed)
+   cider-show-error-buffer 'except-in-repl
+   ;; If we set `cider-show-error-buffer' to non-nil,
+   ;; don't focus error buffer when error is thrown
+   cider-auto-select-error-buffer nil
+   ;; Don't focus inspector after evaluating something
+   cider-inspector-auto-select-buffer nil
+   ;; Don't show tooltip with mouse hover
+   cider-use-tooltips nil
+   ;; Display context dependent info in the eldoc where possible.
+   cider-eldoc-display-context-dependent-info t
+   ;; Don't pop to the REPL buffer on connect
+   ;; Create and display the buffer, but don't focus it.
+   cider-repl-pop-to-buffer-on-connect 'display-only
+   ;; Just use symbol under point and don't prompt for symbol in e.g. cider-doc.
+   cider-prompt-for-symbol nil
+   ;; Use clj-reload instead of clojure.tools.namespace
+   cider-ns-code-reload-tool 'clj-reload)
 
   ;; I basically never connect to a remote host nrepl, so skip the host question on connect
   (defun cider--completing-read-host (hosts)
@@ -2200,7 +2230,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :config
   ;; I don't want the dap output in a dedicated side-window. I like a simple regular buffer!
   (defun dap-go-to-output-buffer (&optional no-select)
-    "Go to output buffer."
+    "Go to output buffer. No dedicated side-window."
     (interactive)
     (unless no-select
       (select-window (dap--debug-session-output-buffer (dap--cur-session-or-die)))))
