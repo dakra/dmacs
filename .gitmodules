@@ -146,6 +146,9 @@
 [submodule "ligature"]
 	path = lib/ligature
 	url = https://github.com/mickeynp/ligature.el
+[submodule "llama"]
+	path = lib/llama
+	url = https://github.com/tarsius/llama
 [submodule "logview"]
 	path = lib/logview
 	url = https://github.com/doublep/logview
