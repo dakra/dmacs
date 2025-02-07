@@ -286,6 +286,9 @@
 [submodule "undo-fu-session"]
 	path = lib/undo-fu-session
 	url = https://codeberg.org/ideasman42/emacs-undo-fu-session
+[submodule "verb"]
+	path = lib/verb
+	url = https://github.com/federicotdn/verb
 [submodule "vertico"]
 	path = lib/vertico
 	url = https://github.com/minad/vertico

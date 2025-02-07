@@ -2582,6 +2582,15 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :config
   (setq org-appear-autolinks nil))
 
+(use-package verb
+  :after org
+  :config
+  (setq verb-tag "http")  ;; Use :http: instead of :verb: which is a bit more meaningful
+
+  ;; Open application/edn responses in clojure mode
+  (add-to-list 'verb-content-type-handlers '("application/edn" clojure-mode) t)
+
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
 
 
 ;; * Post Initialization
