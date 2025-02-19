@@ -789,8 +789,8 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
   :defer t)
 
 (use-package embark
-  :bind (("C-." . embark-act)         ;; pick some comfortable binding
-         ("C-," . embark-dwim)        ;; good alternative: M-.
+  :bind (("C-." . embark-dwim)         ;; pick some comfortable binding
+         ("C-," . embark-act)        ;; good alternative: M-.
          ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -989,7 +989,9 @@ Just call it 8 times in a row should be enough to always show the file."
         treemacs-width                      30
         treemacs-collapse-dirs              5)
 
-  (treemacs-resize-icons 14)  ;; Make icons a bit smaller (22 pixels by default)
+  ;; HACK: We can only call resize-icons once we created a frame.
+  ;; Since we start Emacs in daemon mode, just wait 3min to make sure there is a frame.
+  (run-with-timer 180 nil #'treemacs-resize-icons 14)  ;; Make icons a bit smaller (22 pixels by default)
 
   (treemacs-follow-mode -1)
   (treemacs-fringe-indicator-mode -1)
@@ -1140,8 +1142,29 @@ Just call it 8 times in a row should be enough to always show the file."
   ;; Show magit status in the same window
   (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(use-package magit-wip
+  :after magit
+  :config
+  ;; Disable more safety nets that can be reverted with WIP mode
+  (add-to-list 'magit-no-confirm 'safe-with-wip t)
+  (magit-wip-mode))
+
 (use-package git-modes
   :defer t)
+
+(use-package git-commit
+  :defer t
+  :bind ( :map git-commit-mode-map
+          ("C-c ." . git-commit-insert-date))
+  :commands (git-commit-insert-date)
+  :config
+  (defun git-commit-insert-date (&optional arg)
+      "Insert current date in YYYY-MM-DD format at point.
+With prefix ARG, also insert time in HH:MM format."
+  (interactive "P")
+  (insert (format-time-string (if arg
+                                  "%Y-%m-%d %H:%M"
+                                "%Y-%m-%d"))))
 
 ;; Only deps: ghub, treepy
 (use-package forge
@@ -2147,6 +2170,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
   ;; Don't watch `build' directory for file changes
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]build\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.aider\\.tags\\.cache\\.v3\\'")
 
   ;; (require 'yasnippet)  ;; We use yasnippet for lsp snippet support
   (setq-default flycheck-disabled-checkers '(c/c++-clang c/c++-cppcheck c/c++-gcc)))
@@ -2204,7 +2228,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
   ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
-  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.43.0/jdt-language-server-1.43.0-202412191447.tar.gz")
+  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.44.0/jdt-language-server-1.44.0-202501221502.tar.gz")
 
   (setq lsp-java-compile-null-analysis-mode "automatic"
         lsp-java-format-on-type-enabled nil
@@ -2585,7 +2609,8 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 (use-package verb
   :after org
   :config
-  (setq verb-tag "http")  ;; Use :http: instead of :verb: which is a bit more meaningful
+  (setq verb-tag "http"  ;; Use :http: instead of :verb: which is a bit more meaningful
+        verb-auto-kill-response-buffers 3) ;; Auto kill all but the last 3 http response buffers
 
   ;; Open application/edn responses in clojure mode
   (add-to-list 'verb-content-type-handlers '("application/edn" clojure-mode) t)
