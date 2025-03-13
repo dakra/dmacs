@@ -941,7 +941,7 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
   :defer t
   :config
   (setq gptel-default-mode 'org-mode
-        gptel-model 'claude-3-5-sonnet-20241022
+        gptel-model 'claude-3-7-sonnet-20250219
         gptel-prompt-prefix-alist '((markdown-mode . "# ") (org-mode . "* ") (text-mode . "# "))
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
@@ -1161,10 +1161,10 @@ Just call it 8 times in a row should be enough to always show the file."
   (defun git-commit-insert-date (&optional arg)
       "Insert current date in YYYY-MM-DD format at point.
 With prefix ARG, also insert time in HH:MM format."
-  (interactive "P")
-  (insert (format-time-string (if arg
-                                  "%Y-%m-%d %H:%M"
-                                "%Y-%m-%d"))))
+      (interactive "P")
+      (insert (format-time-string (if arg
+                                      "%Y-%m-%d %H:%M"
+                                    "%Y-%m-%d")))))
 
 ;; Only deps: ghub, treepy
 (use-package forge
@@ -2228,7 +2228,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
   ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
-  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.44.0/jdt-language-server-1.44.0-202501221502.tar.gz")
+  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.45.0/jdt-language-server-1.45.0-202502271238.tar.gz")
 
   (setq lsp-java-compile-null-analysis-mode "automatic"
         lsp-java-format-on-type-enabled nil
