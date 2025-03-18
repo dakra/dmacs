@@ -5,7 +5,8 @@
 (setq file-name-handler-alist nil)
 
 ;; Hide title-bar on MacOS
-(add-to-list 'default-frame-alist '(undecorated-round . t))
+;; (add-to-list 'default-frame-alist '(undecorated-round . t))
+(tool-bar-mode -1)
 
 ;; Disable the scroll-bar
 (scroll-bar-mode -1)

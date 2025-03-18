@@ -22,7 +22,10 @@
 [submodule "cider"]
 	path = lib/cider
 	url = git@github.com:clojure-emacs/cider
-	remote = dakra git@github.com:dakra/moe-theme.el.git
+	remote = dakra git@github.com:dakra/cider.git
+[submodule "clj-refactor"]
+	path = lib/clj-refactor
+	url = https://github.com/clojure-emacs/clj-refactor.el
 [submodule "clojure-mode"]
 	path = lib/clojure-mode
 	url = git@github.com:clojure-emacs/clojure-mode
@@ -143,6 +146,10 @@
 [submodule "jinx"]
 	path = lib/jinx
 	url = git@github.com:minad/jinx
+[submodule "jump"]
+	path = lib/jump
+	url = https://github.com/eschulte/jump.el
+	no-byte-compile = jump.el
 [submodule "ligature"]
 	path = lib/ligature
 	url = git@github.com:mickeynp/ligature.el
@@ -219,6 +226,9 @@
 [submodule "orgit"]
 	path = lib/orgit
 	url = git@github.com:magit/orgit
+[submodule "paredit"]
+	path = lib/paredit
+	url = https://mumble.net/~campbell/git/paredit.git
 [submodule "parseclj"]
 	path = lib/parseclj
 	url = git@github.com:clojure-emacs/parseclj

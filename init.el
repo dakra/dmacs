@@ -2100,6 +2100,30 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
                                                   cljr-suppress-middleware-warnings t)
                                       (rename-buffer "*babashka-repl*")))))))))
 
+(use-package clj-refactor
+  :hook (clojure-mode . clj-refactor-mode)
+  :bind (:map cider-mode-map
+              ("C-c C-r n a" . cljr-add-missing-libspec))
+  :config
+  ;; Allow a few more chars each row in namespace (default 72)
+  (setq cljr-print-right-margin 90)
+
+  (dolist (magic-require '(("aero"     . "aero.core")
+                           ("clerk"    . "nextjournal.clerk")
+                           ("csv"      . "clojure.data.csv")
+                           ("edn"      . "clojure.edn")
+                           ("fs"       . "babashka.fs")
+                           ("http"     . "babashka.http-client")
+                           ("jdbc"     . "next.jdbc")
+                           ("transit"  . "cognitect.transit")
+                           ("walk"     . "clojure.walk")
+                           ("pprint"   . "clojure.pprint")
+                           ("http"     . "babashka.http-client")
+                           ("reagent"  . "reagent.core")
+                           ("re-frame" . "re-frame.core")
+                           ("tick"     . "tick.core")))
+    (add-to-list 'cljr-magic-require-namespaces magic-require)))
+
 ;; (use-package nrepl-client
 ;;   :config
 ;;   ;; Give sync requests a bit more time to respond (default 10s)
@@ -2261,7 +2285,8 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
   ;; Would like a repl in java but it doesn't seem to work,
   (setq dap-auto-configure-features '(sessions locals expressions tooltip))
-  (dap-auto-configure-mode))
+  ;; (dap-auto-configure-mode)
+  )
 
 (use-package dap-java
   :after dap-mode)
@@ -2343,6 +2368,16 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
 (use-package docker-compose-mode
   :mode ("docker-compose[^/]*\\.ya?ml\\'"))
+
+(use-package windmove
+  :bind (("s-i" . windmove-up)
+         ("s-k" . windmove-down)
+         ("s-j" . windmove-left)
+         ("s-l" . windmove-right)
+         ("s-J" . windmove-swap-states-left)
+         ("s-K" . windmove-swap-states-down)
+         ("s-I" . windmove-swap-states-up)
+         ("s-L" . windmove-swap-states-right)))
 
 
 ;; * Org mode
