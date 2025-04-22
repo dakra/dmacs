@@ -981,6 +981,8 @@
     ("staendige" "ständige")
     ("staendigen" "ständigen")
     ("staendiger" "ständiger")
+    ("steuererklaerung" "steuererklärung")
+    ("steuererklaerungen" "steuererklärungen")
     ("stichwoerter" "stichwörter")
     ("stoebern" "stöbern")
     ("stoeren" "stören")

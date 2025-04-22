@@ -1271,7 +1271,9 @@ With prefix ARG, also insert time in HH:MM format."
       ("w" "Whitespace" whitespace-mode
        :description (lambda () (transient-help-toggle "whitespace-mode" whitespace-mode)))
       ("l" "Truncate lines" toggle-truncate-lines
-       :description (lambda () (transient-help-toggle "truncate-lines" truncate-lines)))]
+       :description (lambda () (transient-help-toggle "truncate-lines" truncate-lines)))
+      ("p" "Visual wrap prefix mode" visual-wrap-prefix-mode
+       :description (lambda () (transient-help-toggle "visual-wrap-prefix-mode" visual-wrap-prefix-mode)))]
      ["Org"
       ("ol" "Link display" org-toggle-link-display
        :description (lambda () (transient-help-toggle "org link-display" org-descriptive-links)))
@@ -2129,28 +2131,6 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 ;;   ;; Give sync requests a bit more time to respond (default 10s)
 ;;   ;; Especially when using with ejc-sql and e.g. Athena queries
 ;;   (setq nrepl-sync-request-timeout 90))
-
-;; (use-package clj-refactor
-;;   ;;:ensure (:remotes (("dakra" :host github :repo "dakra/clj-refactor.el" :branch "no-yas-no-hydra") "origin"))
-;;   :hook (clojure-mode . clj-refactor-mode)
-;;   :config
-;;   ;; Allow a few more chars each row in namespace (default 72)
-;;   (setq cljr-print-right-margin 90)
-;;
-;;   (dolist (magic-require '(("aero"     . "aero.core")
-;;                            ("clerk"    . "nextjournal.clerk")
-;;                            ("csv"      . "clojure.data.csv")
-;;                            ("edn"      . "clojure.edn")
-;;                            ("http"     . "babashka.http-client")
-;;                            ("jdbc"     . "next.jdbc")
-;;                            ("transit"  . "cognitect.transit")
-;;                            ("walk"     . "clojure.walk")
-;;                            ("pprint"   . "clojure.pprint")
-;;                            ("http"     . "babashka.http-client")
-;;                            ("reagent"  . "reagent.core")
-;;                            ("re-frame" . "re-frame.core")
-;;                            ("tick"     . "tick.core")))
-;;     (add-to-list 'cljr-magic-require-namespaces magic-require)))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
