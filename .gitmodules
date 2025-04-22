@@ -73,6 +73,7 @@
 [submodule "dired-hacks"]
 	path = lib/dired-hacks
 	url = git@github.com:Fuco1/dired-hacks
+	no-byte-compile = dired-images.el
 [submodule "disk-usage"]
 	path = lib/disk-usage
 	url = https://gitlab.com/ambrevar/emacs-disk-usage
@@ -220,6 +221,9 @@
 [submodule "org-modern"]
 	path = lib/org-modern
 	url = git@github.com:minad/org-modern
+[submodule "org-modern-indent"]
+	path = lib/org-modern-indent
+	url = git@github.com:jdtsmith/org-modern-indent.git
 [submodule "org-msg"]
 	path = lib/org-msg
 	url = git@github.com:jeremy-compostella/org-msg

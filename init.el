@@ -2631,10 +2631,10 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
                                 ("CANCELLED" :background "#005f00" :weight bold)  ;; green-5
                                 ("MEETING" :background "#875f00" :weight bold))))  ;; yellow-4
 
-;; (use-package org-modern-indent
-;;   :defer t
-;;   :init
-;;   (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+(use-package org-modern-indent
+  :defer t
+  :init
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
 
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
