@@ -457,6 +457,8 @@
     ("geroestet" "geröstet")
     ("geroestete" "geröstete")
     ("geschaeft" "geschäft")
+    ("geschaeftsstelle" "geschäftsstelle")
+    ("geschaeftsstellen" "geschäftsstellen")
     ("geschaefte" "geschäfte")
     ("geschaeftlich" "geschäftlich")
     ("geschaeftliche" "geschäftliche")

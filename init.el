@@ -940,12 +940,17 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
 (use-package gptel
   :defer t
   :config
+  (gptel-make-gemini "Gemini" :key gptel-api-key :stream t :models '(gemini-2.5-pro))
+  (gptel-make-gh-copilot "Copilot" :models '(gpt-4.1))
+
   (setq gptel-default-mode 'org-mode
-        gptel-model 'claude-3-7-sonnet-20250219
+        gptel-track-media t
+        gptel-model 'claude-opus-4
         gptel-prompt-prefix-alist '((markdown-mode . "# ") (org-mode . "* ") (text-mode . "# "))
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
-                        :key gptel-api-key)))
+                        :key gptel-api-key
+                        :models '(claude-opus-4-20250514 claude-sonnet-4-20250514))))
 
 ;; Only deps: pfuture
 (use-package treemacs
@@ -2232,7 +2237,8 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
   ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
-  (setq lsp-java-jdt-download-url "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.45.0/jdt-language-server-1.45.0-202502271238.tar.gz")
+  (setq lsp-java-jdt-download-url
+        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.47.0/jdt-language-server-1.47.0-202505151856.tar.gz")
 
   (setq lsp-java-compile-null-analysis-mode "automatic"
         lsp-java-format-on-type-enabled nil
