@@ -666,6 +666,11 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
                           ("message" message)
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
+(use-package claude-code
+  :bind-keymap ("C-c c" . claude-code-command-map)
+  :config
+  (claude-code-mode))
+
 ;; * vertico/consult etc
 
 (use-package vertico
@@ -945,7 +950,7 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
 
   (setq gptel-default-mode 'org-mode
         gptel-track-media t
-        gptel-model 'claude-opus-4
+        gptel-model 'claude-opus-4-20250514
         gptel-prompt-prefix-alist '((markdown-mode . "# ") (org-mode . "* ") (text-mode . "# "))
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t

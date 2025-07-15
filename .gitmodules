@@ -23,6 +23,9 @@
 	path = lib/cider
 	url = git@github.com:clojure-emacs/cider
 	remote = dakra git@github.com:dakra/cider.git
+[submodule "claude-code"]
+	path = lib/claude-code
+	url = git@github.com:stevemolitor/claude-code.el.git
 [submodule "clj-refactor"]
 	path = lib/clj-refactor
 	url = https://github.com/clojure-emacs/clj-refactor.el
