@@ -144,6 +144,7 @@
         mc/vertical-align-with-space
         org-clock-goto
         org-edit-src-save
+        save-some-buffers
         smart-region
         swiper-mc
         undefined
@@ -151,6 +152,7 @@
         undo-fu-only-undo
         undo-only
         undo-redo
+        wdired-finish-edit
         wgrep-finish-edit
         windmove-swap-states-left
         windmove-swap-states-right

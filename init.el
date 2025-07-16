@@ -2642,6 +2642,8 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :after org
   :config
   (setq verb-tag "http"  ;; Use :http: instead of :verb: which is a bit more meaningful
+        verb-enable-ctrl-c-ctrl-c nil  ;; Don't overwrite org-ctrl-c-ctrl-c
+        verb-suppress-load-unsecure-prelude-warning nil  ;; Don't show warning when loading verb preludes
         verb-auto-kill-response-buffers 3) ;; Auto kill all but the last 3 http response buffers
 
   ;; Open application/edn responses in clojure mode
