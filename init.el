@@ -2305,6 +2305,12 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 (use-package toml-ts-mode
   :mode ("\\.toml\\'" "Cargo.lock\\'"))
 
+(use-package hcl-mode  ;; Only needed for terraform-mode
+  :defer t)
+
+(use-package terraform-mode
+  :defer t)
+
 (use-package python
   :mode (("\\.py\\'" . python-ts-mode))
   :interpreter ("python" . python-ts-mode)

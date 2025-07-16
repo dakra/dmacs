@@ -135,6 +135,9 @@
 [submodule "groovy-mode"]
 	path = lib/groovy-mode
 	url = git@github.com:Groovy-Emacs-Modes/groovy-emacs-modes
+[submodule "hcl-mode"]
+	path = lib/hcl-mode
+	url = https://github.com/hcl-emacs/hcl-mode
 [submodule "ht"]
 	path = lib/ht
 	url = git@github.com:Wilfred/ht.el
@@ -284,6 +287,9 @@
 [submodule "tempel"]
 	path = lib/tempel
 	url = git@github.com:minad/tempel
+[submodule "terraform-mode"]
+	path = lib/terraform-mode
+	url = https://github.com/hcl-emacs/terraform-mode
 [submodule "transient"]
 	path = lib/transient
 	url = git@github.com:magit/transient
