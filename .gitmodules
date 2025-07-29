@@ -49,6 +49,9 @@
 [submodule "consult-project-extra"]
 	path = lib/consult-project-extra
 	url = git@github.com:Qkessler/consult-project-extra
+[submodule "copilot"]
+	path = lib/copilot
+	url = https://github.com/copilot-emacs/copilot.el
 [submodule "corfu"]
 	path = lib/corfu
 	url = git@github.com:minad/corfu
@@ -147,6 +150,9 @@
 [submodule "ibuffer-project"]
 	path = lib/ibuffer-project
 	url = git@github.com:muffinmad/emacs-ibuffer-project
+[submodule "indent-bars"]
+	path = lib/indent-bars
+	url = https://github.com/jdtsmith/indent-bars
 [submodule "jenkinsfile-mode"]
 	path = lib/jenkinsfile-mode
 	url = git@github.com:john2x/jenkinsfile-mode

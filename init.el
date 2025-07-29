@@ -1019,6 +1019,40 @@ Just call it 8 times in a row should be enough to always show the file."
   :config
   (treemacs-icons-dired-mode))
 
+(use-package indent-bars
+  :hook (prog-mode . indent-bars-mode)
+  :config
+  (setq indent-bars-treesit-support t
+        indent-bars-color-by-depth nil
+        indent-bars-color '(highlight :face-bg t :blend 0.6)
+        indent-bars-highlight-current-depth '(:face default :blend 0.2 :pattern ".")
+        indent-bars-no-descend-lists t
+        indent-bars-treesit-wrap '((c      argument_list parameter_list init_declarator parenthesized_expression)
+                                   (java   argument_list formal_parameters block_comment)
+                                   (python argument_list parameters
+				                           list list_comprehension
+				                           dictionary dictionary_comprehension
+				                           parenthesized_expression subscript)
+                                   (yaml   block_mapping_pair comment))
+        indent-bars-treesit-scope '((python function_definition class_definition for_statement
+				                            if_statement with_statement while_statement))
+        indent-bars-treesit-ignore-blank-lines-types '("module")))
+
+(use-package copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ;; ("<tab>" . 'copilot-accept-completion)
+              ;; ("TAB" . 'copilot-accept-completion)
+              ;; ("C-TAB" . 'copilot-accept-completion-by-word)
+              ;; ("C-<tab>" . 'copilot-accept-completion-by-word)
+              ("C-g" . 'copilot-clear-overlay)
+              ("<right>" . 'copilot-accept-completion)
+              ("C-f" . 'copilot-accept-completion)
+              ("M-<right>" . 'copilot-accept-completion-by-word)
+              ("M-f" . 'copilot-accept-completion-by-word)
+              ("M-n" . 'copilot-next-completion)
+              ("M-p" . 'copilot-previous-completion)))
+
 (use-package flycheck
   :hook (((prog-mode
            conf-mode
@@ -2210,8 +2244,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
         lsp-lens-enable t  ;; "1 reference" etc at the end of the line
         lsp-ui-sideline-enable nil
         lsp-ui-sideline-show-hover nil
-        lsp-ui-sideline-show-symbol nil)
-  )
+        lsp-ui-sideline-show-symbol nil))
 
 (use-package lsp-treemacs
   :after lsp-mode
