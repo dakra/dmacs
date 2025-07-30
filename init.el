@@ -301,13 +301,26 @@
   ;; Hide all the fringe bookmarks as dogears uses bookmarks
   (setq bookmark-fringe-mark nil))
 
-(use-package dogears
-  :hook (after-init . dogears-mode)
-  :bind (("C-x SPC" . dogears-go)
-         ("C-x C-SPC" . dogears-back)
-         ("C-x M-SPC" . dogears-forward))
+(use-package gumshoe
+  :hook (after-init . global-gumshoe-mode)
+  :bind (("C-x SPC" . gumshoe-backtrack)
+         ("C-x C-SPC" . gumshoe-buf-backtrack)
+         ("C-x M-SPC" . global-gumshoe-backtracking-mode-forward)
+         :map global-gumshoe-backtracking-mode-map
+         ("p" . global-gumshoe-backtracking-mode-back)
+         ("n" . global-gumshoe-backtracking-mode-forward)
+         ("SPC" . global-gumshoe-backtracking-mode-back)
+         ("C-SPC" . global-gumshoe-backtracking-mode-forward))
   :config
-  (setq dogears-idle 3))
+  (setq gumshoe-ignored-major-modes '(fundamental-mode minibuffer-mode treemacs-mode)))
+
+;;(use-package dogears
+;;  :hook (after-init . dogears-mode)
+;;  :bind (("C-x SPC" . dogears-go)
+;;         ("C-x C-SPC" . dogears-back)
+;;         ("C-x M-SPC" . dogears-forward))
+;;  :config
+;;  (setq dogears-idle 3))
 
 (use-package proced
   :bind ("C-x p" . proced)

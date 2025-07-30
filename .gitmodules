@@ -138,6 +138,10 @@
 [submodule "groovy-mode"]
 	path = lib/groovy-mode
 	url = git@github.com:Groovy-Emacs-Modes/groovy-emacs-modes
+[submodule "gumshoe"]
+	path = lib/gumshoe
+	url = https://github.com/Overdr0ne/gumshoe
+	no-byte-compile = gumshoe-persp.el
 [submodule "hcl-mode"]
 	path = lib/hcl-mode
 	url = https://github.com/hcl-emacs/hcl-mode
