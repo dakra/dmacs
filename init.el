@@ -1064,7 +1064,11 @@ Just call it 8 times in a row should be enough to always show the file."
               ("M-<right>" . 'copilot-accept-completion-by-word)
               ("M-f" . 'copilot-accept-completion-by-word)
               ("M-n" . 'copilot-next-completion)
-              ("M-p" . 'copilot-previous-completion)))
+              ("M-p" . 'copilot-previous-completion))
+  :config
+  (setq copilot-max-char 20000)
+  (add-to-list 'copilot-indentation-alist '(closure-mode 2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2)))
 
 (use-package flycheck
   :hook (((prog-mode
@@ -2501,20 +2505,31 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
          ("C-c C-x C-i" . org-clock-in)
          ("C-c C-x C-o" . org-clock-out))
   :config
-  (setq org-clock-history-length 30)
-
-  ;; Save the running clock and all clock history when exiting Emacs, load it on startup
-  (setq org-clock-persist t)
   (org-clock-persistence-insinuate)
 
-  ;; Resume clocking task on clock-in if the clock is open
-  (setq org-clock-in-resume t)
+  (setq
+   org-clock-history-length 30
 
-  ;; org-clock-display (C-c C-x C-d) shows times for this month by default
-  (setq org-clock-display-default-range 'thismonth)
+   ;; Save the running clock and all clock history when exiting Emacs, load it on startup
+   org-clock-persist t
 
-  ;; Only show the current clocked time in mode line (not all)
-  (setq org-clock-mode-line-total 'current)
+   ;; Resume clocking task on clock-in if the clock is open
+   org-clock-in-resume t
+   ;; org-clock-display (C-c C-x C-d) shows times for this month by default
+   org-clock-display-default-range 'thismonth
+
+   ;; Only show the current clocked time in mode line (not all)
+   org-clock-mode-line-total 'current
+
+   ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
+   org-clock-out-remove-zero-time-clocks t
+   ;; Don't clock out when moving task to a done state
+   org-clock-out-when-done nil
+
+   ;; Enable auto clock resolution for finding open clocks
+   org-clock-auto-clock-resolution (quote when-no-clock-is-running)
+   ;; Include current clocking task in clock reports
+   org-clock-report-include-clocking-task t)
 
   ;; Clocktable (C-c C-x C-r) defaults
   ;; Use fixed month instead of (current-month) because I want to keep a table for each month
@@ -2528,21 +2543,13 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
                     :tags nil :emphasize nil :link t :narrow 70! :indent t :formula nil :timestamp nil
                     :level nil :tcolumns nil :formatter nil))
 
-  ;; Resume clocking task on clock-in if the clock is open
-  (setq org-clock-in-resume t)
   ;; Log all State changes to drawer
-  (setq org-log-into-drawer t)
-  ;; make time editing use discrete minute intervals (no rounding) increments
-  (setq org-time-stamp-rounding-minutes (quote (1 1)))
-  ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
-  (setq org-clock-out-remove-zero-time-clocks t)
-  ;; Don't clock out when moving task to a done state
-  (setq org-clock-out-when-done nil)
+  (setq org-log-into-drawer t
+        ;; and add not when closing ticket
+        org-log-done 'note)
 
-  ;; Enable auto clock resolution for finding open clocks
-  (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
-  ;; Include current clocking task in clock reports
-  (setq org-clock-report-include-clocking-task t))
+  ;; make time editing use discrete minute intervals (no rounding) increments
+  (setq org-time-stamp-rounding-minutes (quote (1 1))))
 
 (use-package ol  ;; org-link
   :bind (("C-c l" . org-store-link))
