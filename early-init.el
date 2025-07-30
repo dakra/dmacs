@@ -1,3 +1,5 @@
+;; Early init file for Emacs 28 and later.             -*- lexical-binding: t -*-
+
 ;; Temporarily set `gc-cons-threshold' to 2G until the initialization is done
 (setq gc-cons-threshold (* 2 1024 1024 1024))  ;; 2G
 ;; Temporarily disable file name handlers as it's not needed on initialization
