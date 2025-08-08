@@ -1066,7 +1066,7 @@ Just call it 8 times in a row should be enough to always show the file."
               ("M-n" . 'copilot-next-completion)
               ("M-p" . 'copilot-previous-completion))
   :config
-  (setq copilot-max-char 20000)
+  (setq copilot-max-char 150000)
   (add-to-list 'copilot-indentation-alist '(closure-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2)))
 
@@ -1193,6 +1193,9 @@ Just call it 8 times in a row should be enough to always show the file."
 
   ;; Always highlight word differences in diff
   (setq magit-diff-refine-hunk 'all)
+
+  ;; Wrap excessively long summary lines (doesn't wrap the body)
+  (setq magit-revision-fill-summary-line 100)
 
   ;; Don't change my window layout after quitting magit
   ;; Often I invoke magit and then do a lot of things in other windows
@@ -2293,7 +2296,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
   (setq lsp-java-jdt-download-url
-        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.47.0/jdt-language-server-1.47.0-202505151856.tar.gz")
+        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.49.0/jdt-language-server-1.49.0-202507311558.tar.gz")
 
   (setq lsp-java-compile-null-analysis-mode "automatic"
         lsp-java-format-on-type-enabled nil
