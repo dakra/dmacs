@@ -26,6 +26,9 @@
 [submodule "claude-code"]
 	path = lib/claude-code
 	url = git@github.com:stevemolitor/claude-code.el.git
+[submodule "claude-code-ide"]
+	path = lib/claude-code-ide
+	url = git@github.com:manzaltu/claude-code-ide.el.git
 [submodule "clj-refactor"]
 	path = lib/clj-refactor
 	url = https://github.com/clojure-emacs/clj-refactor.el
@@ -38,6 +41,9 @@
 [submodule "compat"]
 	path = lib/compat
 	url = git@github.com:emacs-compat/compat.git
+[submodule "cond-let"]
+	path = lib/cond-let
+	url = https://github.com/tarsius/cond-let
 [submodule "consult"]
 	path = lib/consult
 	url = git@github.com:minad/consult
@@ -337,7 +343,7 @@
 	path = lib/vterm
 	url = git@github.com:akermu/emacs-libvterm
 	build-step = cd build && cmake .. && make
-	build-step = borg-byte-compile
+	build-step = borg-compile
 	build-step = borg-update-autoloads
 [submodule "vundo"]
 	path = lib/vundo

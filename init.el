@@ -679,10 +679,16 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
                           ("message" message)
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
-(use-package claude-code
-  :bind-keymap ("C-c c" . claude-code-command-map)
+;; (use-package claude-code
+;;   :bind-keymap ("C-c c" . claude-code-command-map)
+;;   :config
+;;   (claude-code-mode))
+
+(use-package claude-code-ide
+  :bind ("C-c c" . claude-code-ide-menu)
   :config
-  (claude-code-mode))
+  (setq claude-code-ide-window-side 'right)
+  (claude-code-ide-emacs-tools-setup))
 
 ;; * vertico/consult etc
 
@@ -1043,12 +1049,12 @@ Just call it 8 times in a row should be enough to always show the file."
         indent-bars-treesit-wrap '((c      argument_list parameter_list init_declarator parenthesized_expression)
                                    (java   argument_list formal_parameters block_comment)
                                    (python argument_list parameters
-				                           list list_comprehension
-				                           dictionary dictionary_comprehension
-				                           parenthesized_expression subscript)
+                                           list list_comprehension
+                                           dictionary dictionary_comprehension
+                                           parenthesized_expression subscript)
                                    (yaml   block_mapping_pair comment))
         indent-bars-treesit-scope '((python function_definition class_definition for_statement
-				                            if_statement with_statement while_statement))
+                                            if_statement with_statement while_statement))
         indent-bars-treesit-ignore-blank-lines-types '("module")))
 
 (use-package copilot
@@ -1223,12 +1229,12 @@ Just call it 8 times in a row should be enough to always show the file."
   :commands (git-commit-insert-date)
   :config
   (defun git-commit-insert-date (&optional arg)
-      "Insert current date in YYYY-MM-DD format at point.
+    "Insert current date in YYYY-MM-DD format at point.
 With prefix ARG, also insert time in HH:MM format."
-      (interactive "P")
-      (insert (format-time-string (if arg
-                                      "%Y-%m-%d %H:%M"
-                                    "%Y-%m-%d")))))
+    (interactive "P")
+    (insert (format-time-string (if arg
+                                    "%Y-%m-%d %H:%M"
+                                  "%Y-%m-%d")))))
 
 ;; Only deps: ghub, treepy
 (use-package forge
