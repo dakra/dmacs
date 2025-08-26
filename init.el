@@ -147,7 +147,7 @@
          ("C-a"   . move-beginning-of-line-or-indentation)
          ("C-x k" . kill-current-buffer)
          ("M-u"   . dakra-upcase-dwim)
-         ("M-U"   . dakra-downcase-dwim)
+         ("M-l"   . dakra-downcase-dwim)
          ("M-c"   . dakra-capitalize-dwim))
   :hook (((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
          ((visual-fill-column-mode markdown-mode) . word-wrap-whitespace-mode))
@@ -176,22 +176,33 @@
   ;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
   (setq-default fill-column 80)
 
-  (defmacro dakra-define-up/downcase-dwim (case)
-    (let ((func (intern (concat "dakra-" case "-dwim")))
-          (doc (format "Like `%s-dwim' but %s from beginning when no region is active." case case))
-          (case-region (intern (concat case "-region")))
-          (case-word (intern (concat case "-word"))))
-      `(defun ,func (arg)
-         ,doc
-         (interactive "*p")
-         (save-excursion
-           (if (use-region-p)
-               (,case-region (region-beginning) (region-end))
-             (beginning-of-thing 'symbol)
-             (,case-word arg))))))
-  (dakra-define-up/downcase-dwim "upcase")
-  (dakra-define-up/downcase-dwim "downcase")
-  (dakra-define-up/downcase-dwim "capitalize"))
+  (require 'thingatpt)
+  (defun dakra-upcase-dwim (arg)
+    "Like `upcase-dwim' but upcase from beginning when no region is active."
+    (interactive "*p")
+    (save-excursion
+      (if (use-region-p)
+          (upcase-region (region-beginning) (region-end))
+        (beginning-of-thing 'symbol)
+        (upcase-word arg))))
+
+  (defun dakra-downcase-dwim (arg)
+    "Like `downcase-dwim' but downcase from beginning when no region is active."
+    (interactive "*p")
+    (save-excursion
+      (if (use-region-p)
+          (downcase-region (region-beginning) (region-end))
+        (beginning-of-thing 'symbol)
+        (downcase-word arg))))
+
+  (defun dakra-capitalize-dwim (arg)
+    "Like `capitalize-dwim' but Capitalize from beginning when no region is active."
+    (interactive "*p")
+    (save-excursion
+      (if (use-region-p)
+          (capitalize-region (region-beginning) (region-end))
+        (beginning-of-thing 'symbol)
+        (capitalize-word arg)))))
 
 ;; So-long: Mitigating slowness due to extremely long lines
 (use-package so-long
