@@ -2310,7 +2310,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   ;;      "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml")
   ;; (setq lsp-java-format-settings-profile "GoogleStyle")
 
-  ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/master/CHANGELOG.md
+  ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/main/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
   (setq lsp-java-jdt-download-url
         "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.49.0/jdt-language-server-1.49.0-202507311558.tar.gz")
