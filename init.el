@@ -2463,12 +2463,107 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 (use-package windmove
   :bind (("s-i" . windmove-up)
          ("s-k" . windmove-down)
-         ("s-j" . windmove-left)
-         ("s-l" . windmove-right)
-         ("s-J" . windmove-swap-states-left)
-         ("s-K" . windmove-swap-states-down)
-         ("s-I" . windmove-swap-states-up)
-         ("s-L" . windmove-swap-states-right)))
+         ("s-j" . aerospace-windmove-left)
+         ("s-l" . aerospace-windmove-right)
+         ("s-J" . aerospace-windmove-swap-states-left)
+         ("s-K" . aerospace-windmove-swap-states-down)
+         ("s-I" . aerospace-windmove-swap-states-up)
+         ("s-L" . aerospace-windmove-swap-states-right))
+  :config
+  (defun aerospace-command (args)
+    "Call `aerospace' shell command with ARGS."
+    (let ((command (concat "aerospace " args)))
+      (start-process-shell-command "aerospace" nil command)))
+
+  (defun aerospace-windmove-left (&optional arg)
+    "Like windmove-left but call aerospace command `focus left'
+if there is no window on the left."
+    (interactive "P")
+    (if (and (frame-focus-state)
+             (windmove-find-other-window 'left arg))
+        (windmove-do-window-select 'left arg)
+      ;; No window to the left
+      (aerospace-command "focus left --boundaries all-monitors-outer-frame")))
+
+  (defun aerospace-windmove-right (&optional arg)
+    "Like windmove-right but call aerospace command `focus right'
+if there is no window on the right."
+    (interactive "P")
+    (if (and (frame-focus-state)
+             (windmove-find-other-window 'right arg))
+        (windmove-do-window-select 'right arg)
+      ;; No window to the right
+      (aerospace-command "focus right --boundaries all-monitors-outer-frame")))
+
+  (defun aerospace-windmove-up (&optional arg)
+    "Like windmove-up but call aerospace command `focus up'
+if there is no window on the up."
+    (interactive "P")
+    (if (and (frame-focus-state)
+             (windmove-find-other-window 'up arg))
+        (windmove-do-window-select 'up arg)
+      ;; No window to the up
+      (aerospace-command "focus up --boundaries all-monitors-outer-frame")))
+
+  (defun aerospace-windmove-down (&optional arg)
+    "Like windmove-down but call aerospace command `focus down'
+if there is no window on the down."
+    (interactive "P")
+    (let ((other-window (windmove-find-other-window 'down arg)))
+      (if (and (frame-focus-state)
+               (or (and other-window
+                        (not (window-minibuffer-p other-window)))
+                   (and (window-minibuffer-p other-window)
+                        (minibuffer-window-active-p other-window))))
+          (windmove-do-window-select 'down arg)
+        ;; No window to the down
+        (aerospace-command "focus down --boundaries all-monitors-outer-frame"))))
+
+  (defun aerospace-windmove-swap-states-left (&optional arg)
+    "Like windmove-swap-states-left but call aerospace command `move left'
+if there is no window on the left."
+    (interactive "P")
+    (if (and (frame-focus-state)
+             (windmove-find-other-window 'left arg))
+        (windmove-swap-states-left)
+      ;; No window to the left
+      (aerospace-command "move left")))
+
+  (defun aerospace-windmove-swap-states-right (&optional arg)
+    "Like windmove-swap-states-right but call aerospace command `move right'
+if there is no window on the right."
+    (interactive "P")
+    (if (and (frame-focus-state)
+             (windmove-find-other-window 'right arg))
+        (windmove-swap-states-right)
+      ;; No window to the right
+      (aerospace-command "move right")))
+
+  (defun aerospace-windmove-swap-states-up (&optional arg)
+    "Like windmove-swap-states-up but call aerospace command `move up'
+if there is no window on the up."
+    (interactive "P")
+    (if (and (frame-focus-state)
+             (windmove-find-other-window 'up arg))
+        (windmove-swap-states-up)
+      ;; No window to the up
+      (aerospace-command "move up")))
+
+  (defun aerospace-windmove-swap-states-down (&optional arg)
+    "Like windmove-swap-states-down but call aerospace command `move down'
+if there is no window on the down."
+    (interactive "P")
+    (let ((other-window (windmove-find-other-window 'down arg)))
+      (if (and (frame-focus-state)
+               (or (and other-window
+                        (not (window-minibuffer-p other-window)))
+                   (and (window-minibuffer-p other-window)
+                        (minibuffer-window-active-p other-window))))
+          (windmove-swap-states-down)
+        (windmove-do-window-select 'down arg)
+        ;; No window to the down
+        (aerospace-command "move down"))))
+  )
 
 
 ;; * Org mode
