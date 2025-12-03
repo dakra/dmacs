@@ -1266,6 +1266,7 @@
     ("verdraengen" "verdrängen")
     ("verfuegbar" "verfügbar")
     ("verfuegbarkeit" "verfügbarkeit")
+    ("verfuegbarkeiten" "verfügbarkeiten")
     ("verfuegen" "verfügen")
     ("verfuegung" "verfügung")
     ("verhaeltnis" "verhältnis")

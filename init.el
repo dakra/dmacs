@@ -690,16 +690,28 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
                           ("message" message)
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
-;; (use-package claude-code
-;;   :bind-keymap ("C-c c" . claude-code-command-map)
-;;   :config
-;;   (claude-code-mode))
+;; Only deps: websocket
+(use-package monet
+  :hook ((after-init . monet-mode)
+         (claude-code-process-environment-functions . monet-start-server-function)))
 
-(use-package claude-code-ide
-  :bind ("C-c c" . claude-code-ide-menu)
+;; Only deps: inheritenv, monet
+(use-package claude-code
+  :bind-keymap ("C-c c" . claude-code-command-map)
+  :bind (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
+  :hook ((after-init . claude-code-mode)))
+
+;; Only deps: web-server, websocket
+;; (use-package claude-code-ide
+;;   :bind ("C-c c" . claude-code-ide-menu)
+;;   :config
+;;   (claude-code-ide-emacs-tools-setup))
+
+(use-package eca
+  :bind ("C-c e" . eca-transient-menu)
   :config
-  (setq claude-code-ide-window-side 'right)
-  (claude-code-ide-emacs-tools-setup))
+  (setq eca-server-install-path (no-littering-expand-var-file-name "eca/eca")
+        eca-chat-use-side-window nil))
 
 ;; * vertico/consult etc
 

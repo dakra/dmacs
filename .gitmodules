@@ -4,6 +4,9 @@
 [submodule "alert"]
 	path = lib/alert
 	url = git@github.com:jwiegley/alert
+[submodule "apheleia"]
+	path = lib/apheleia
+	url = https://github.com/radian-software/apheleia
 [submodule "avy"]
 	path = lib/avy
 	url = git@github.com:abo-abo/avy
@@ -99,6 +102,9 @@
 [submodule "eat"]
 	path = lib/eat
 	url = https://codeberg.org/akib/emacs-eat
+[submodule "eca"]
+	path = lib/eca
+	url = https://github.com/editor-code-assistant/eca-emacs
 [submodule "edit-indirect"]
 	path = lib/edit-indirect
 	url = git@github.com:Fanael/edit-indirect
@@ -163,6 +169,12 @@
 [submodule "indent-bars"]
 	path = lib/indent-bars
 	url = https://github.com/jdtsmith/indent-bars
+[submodule "inheritenv"]
+	path = lib/inheritenv
+	url = https://github.com/purcell/inheritenv
+[submodule "ipinfo"]
+	path = lib/ipinfo
+	url = git@github.com:dakra/ipinfo.el.git
 [submodule "jenkinsfile-mode"]
 	path = lib/jenkinsfile-mode
 	url = git@github.com:john2x/jenkinsfile-mode
@@ -218,6 +230,9 @@
 	path = lib/moe-theme
 	url = git@github.com:kuanyui/moe-theme.el
 	remote = dakra git@github.com:dakra/moe-theme.el.git
+[submodule "monet"]
+	path = lib/monet
+	url = git@github.com:stevemolitor/monet.git
 [submodule "multiple-cursors"]
 	path = lib/multiple-cursors
 	url = git@github.com:magnars/multiple-cursors.el
@@ -351,6 +366,12 @@
 [submodule "web-mode"]
 	path = lib/web-mode
 	url = git@github.com:fxbois/web-mode
+[submodule "web-server"]
+	path = lib/web-server
+	url = https://github.com/eschulte/emacs-web-server
+[submodule "websocket"]
+	path = lib/websocket
+	url = https://github.com/ahyatt/emacs-websocket
 [submodule "wgrep"]
 	path = lib/wgrep
 	url = git@github.com:mhayashi1120/Emacs-wgrep
