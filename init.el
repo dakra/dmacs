@@ -226,6 +226,8 @@
   ;; Download the pre-build grammars from https://github.com/emacs-tree-sitter/tree-sitter-langs/releases
   ;; Place them in `treesit-extra-load-path' and rename them with a libtree-sitter-<LANG> prefix.
   ;; E.g. in bash something like `for i in *.*; do mv $i libtree-sitter-$i; done'
+  ;; For MacOS you may have to remove the apple quarantine flag with `xattr -d com.apple.quarantine <file>`
+  ;; For all in the folder: for i in *; do xattr -d com.apple.quarantine $i; done
   (setq treesit-extra-load-path
         (list (no-littering-expand-var-file-name (concat "tree-sitter-grammars/"
                                                          (symbol-name system-type))))))
@@ -558,7 +560,7 @@ created a dedicated process for the project."
         eshell-error-if-no-glob t
         eshell-hist-ignoredups t
         eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim" "watch"
-                                 "nmtui" "dstat" "mycli" "pgcli" "vue" "ngrok"
+                                 "nmtui" "dstat" "mycli" "pgcli" "vue" "ngrok" "bandwhich"
                                  "tmux" "screen" "top" "htop" "less" "more" "ncftp")
         eshell-prefer-lisp-functions nil)
 
@@ -1062,8 +1064,13 @@ Just call it 8 times in a row should be enough to always show the file."
   (treemacs-icons-dired-mode))
 
 (use-package indent-bars
-  :hook (prog-mode . indent-bars-mode)
+  :hook ((python-ts-mode sh-mode java-ts-mode toml-ts-mode yaml-ts-mode) . indent-bars-mode)
   :config
+  ;; (setopt indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 1))
+  ;; (setopt indent-bars-color-by-depth nil)
+  ;; (setopt indent-bars-color '(highlight :face-bg t :blend 0.6))
+  ;; (setopt indent-bars-highlight-current-depth '(:face default :blend 0.2 :pattern "."))
+  ;; (setopt indent-bars-width-frac 0.25)
   (setq indent-bars-treesit-support t
         indent-bars-color-by-depth nil
         indent-bars-color '(highlight :face-bg t :blend 0.6)
@@ -1095,8 +1102,10 @@ Just call it 8 times in a row should be enough to always show the file."
               ("M-n" . 'copilot-next-completion)
               ("M-p" . 'copilot-previous-completion))
   :config
-  (setq copilot-max-char 150000)
-  (add-to-list 'copilot-indentation-alist '(closure-mode 2))
+  (setq copilot-max-char 150000
+        copilot-indent-offset-warning-disable t)
+  (add-to-list 'copilot-indentation-alist '(sh-mode 4))
+  (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2)))
 
 (use-package flycheck
@@ -1335,45 +1344,45 @@ With prefix ARG, also insert time in HH:MM format."
         transient-display-buffer-action '(display-buffer-below-selected (dedicated . t)
                                                                         (inhibit-same-window . t)))
 
-  (defmacro transient-help-toggle (text toggle)
-    `(if (bound-and-true-p ,toggle)
-         (format "[x] %s" ,text)
-       (format "[ ] %s" ,text)))
+  (defun transient-help-toggle (text toggle)
+    (if (bound-and-true-p toggle)
+        (format "[x] %s" text)
+      (format "[ ] %s" text)))
 
   (transient-define-prefix transient-toggle-stuff ()
     "Toggle various modes and settings"
     [["Misc"
       ("a" "Abbrev" abbrev-mode
-       :description (lambda () (transient-help-toggle "abbrev" abbrev-mode)))
+       :description (lambda () (transient-help-toggle "abbrev" 'abbrev-mode)))
       ("b" "Browser" dakra-toggle-browser
        :description (lambda () (format "[%s] toggle eww/firefox"
                                        (if (eq browse-url-browser-function 'browse-url-firefox) "Firefox" "eww"))))
       ("d e" "Debug" toggle-debug-on-error
-       :description (lambda () (transient-help-toggle "debug-on-error" debug-on-error)))
+       :description (lambda () (transient-help-toggle "debug-on-error" 'debug-on-error)))
       ("d q" "Debug" toggle-debug-on-quit
-       :description (lambda () (transient-help-toggle "debug-on-quit" debug-on-quit)))
+       :description (lambda () (transient-help-toggle "debug-on-quit" 'debug-on-quit)))
       ("s" "Sticky" toggle-window-dedicated
-       :description (lambda () (transient-help-toggle "Sticky buffer mode" window-dedicated-p)))]
+       :description (lambda () (transient-help-toggle "Sticky buffer mode" 'window-dedicated-p)))]
      ["Text"
       ("c" "Column number" column-number-mode
-       :description (lambda () (transient-help-toggle "column-number-mode" column-number-mode)))
+       :description (lambda () (transient-help-toggle "column-number-mode" 'column-number-mode)))
       ("f" "Fill mode" auto-fill-mode
-       :description (lambda () (transient-help-toggle "fill-mode" auto-fill-function)))
+       :description (lambda () (transient-help-toggle "fill-mode" 'auto-fill-function)))
       ("v" "Visual fill column mode" visual-fill-column-mode
-       :description (lambda () (transient-help-toggle "visual-fill-column-mode" visual-fill-column-mode)))
+       :description (lambda () (transient-help-toggle "visual-fill-column-mode" 'visual-fill-column-mode)))
       ("w" "Whitespace" whitespace-mode
-       :description (lambda () (transient-help-toggle "whitespace-mode" whitespace-mode)))
+       :description (lambda () (transient-help-toggle "whitespace-mode" 'whitespace-mode)))
       ("l" "Truncate lines" toggle-truncate-lines
-       :description (lambda () (transient-help-toggle "truncate-lines" truncate-lines)))
+       :description (lambda () (transient-help-toggle "truncate-lines" 'truncate-lines)))
       ("p" "Visual wrap prefix mode" visual-wrap-prefix-mode
-       :description (lambda () (transient-help-toggle "visual-wrap-prefix-mode" visual-wrap-prefix-mode)))]
+       :description (lambda () (transient-help-toggle "visual-wrap-prefix-mode" 'visual-wrap-prefix-mode)))]
      ["Org"
       ("ol" "Link display" org-toggle-link-display
-       :description (lambda () (transient-help-toggle "org link-display" org-descriptive-links)))
+       :description (lambda () (transient-help-toggle "org link-display" 'org-descriptive-links)))
       ("op" "Pretty entities" org-toggle-pretty-entities
-       :description (lambda () (transient-help-toggle "org pretty-entities" org-pretty-entities)))
+       :description (lambda () (transient-help-toggle "org pretty-entities" 'org-pretty-entities)))
       ("oi" "Inline images" org-toggle-inline-images
-       :description (lambda () (transient-help-toggle "org inline-images" org-inline-image-overlays)))]])
+       :description (lambda () (transient-help-toggle "org inline-images" 'org-inline-image-overlays)))]])
 
   (defun dakra/insert-unicode (unicode-name)
     "Same as C-x 8 enter UNICODE-NAME."
@@ -1671,6 +1680,9 @@ mark the string and call `edit-indirect-region' with it."
     (add-to-list 'form-feed--font-lock-keywords
                  `(,(concat comment-start-skip "-\\{40,\\}") 0 form-feed--font-lock-face t))
     (form-feed-mode)))
+
+(use-package ipinfo
+  :defer t)
 
 ;; * Mail and News
 
@@ -2325,7 +2337,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/main/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
   (setq lsp-java-jdt-download-url
-        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.49.0/jdt-language-server-1.49.0-202507311558.tar.gz")
+        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.54.0/jdt-language-server-1.54.0-202511261751.tar.gz")
 
   (setq lsp-java-compile-null-analysis-mode "automatic"
         lsp-java-format-on-type-enabled nil
