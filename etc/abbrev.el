@@ -999,6 +999,8 @@
     ("stoebern" "stöbern")
     ("stoeren" "stören")
     ("stoert" "stört")
+    ("stoerung" "störung")
+    ("stoerungen" "störungen")
     ("stoesst" "stößt")
     ("stossen" "stoßen")
     ("stosst" "stoßt")

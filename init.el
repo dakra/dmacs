@@ -2231,11 +2231,27 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
                            ("tick"     . "tick.core")))
     (add-to-list 'cljr-magic-require-namespaces magic-require)))
 
+(use-package babashka
+  :defer t)
+
 ;; (use-package nrepl-client
 ;;   :config
 ;;   ;; Give sync requests a bit more time to respond (default 10s)
 ;;   ;; Especially when using with ejc-sql and e.g. Athena queries
 ;;   (setq nrepl-sync-request-timeout 90))
+
+(use-package eglot
+  :defer t
+  :config
+  ;; XXX Check https://zubanls.com/blog/ for updates (no auto impoerts, docstrings yet)
+  ;; (add-to-list 'eglot-server-programs
+  ;;              `((python-ts-mode python-mode) . ("uv" "tool" "run" "zuban" "server")))
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode)
+                 . ("uv" "tool" "run" "--from" "basedpyright" "basedpyright-langserver" "--stdio")))
+
+  (setq eglot-extend-to-xref t
+        eglot-autoshutdown t))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
@@ -2312,6 +2328,14 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :config
   ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
   (lsp-treemacs-sync-mode))
+
+(use-package lsp-pyright
+  :after lsp-mode
+  :hook (python-ts-mode . lsp-deferred)
+  :config
+  (setq lsp-disabled-clients '(ruff))
+  (setq lsp-pyright-language-server-command "basedpyright"
+        lsp-pyright-langserver-command-args '("tool" "run" "--from" "basedpyright" "basedpyright-langserver" "--stdio")))
 
 ;; Onlye deps: requests, deferred, (lsp-treemacs)
 (use-package lsp-java
@@ -2421,8 +2445,16 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :init
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
   :config
-  ;; Don't spam message buffer when python-mode can't guess indent-offset
-  (setq python-indent-guess-indent-offset-verbose nil)
+
+  (setq python-shell-interpreter "uv"
+        python-shell-interpreter-args "run python"
+        ;;python-shell-interpreter-args "run ipython --simple-prompt -i"
+
+        python-shell-prompt-detect-failure-warning nil
+        python-shell-completion-native-enable nil
+
+        ;; Don't spam message buffer when python-mode can't guess indent-offset
+        python-indent-guess-indent-offset-verbose nil)
 
   (defun python-shell-send-whole-line-or-region (prefix)
     "Send whole line or region to inferior Python process."
@@ -2719,6 +2751,45 @@ if there is no window on the down."
           " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
         org-agenda-current-time-string
         "◀── now ─────────────────────────────────────────────────"))
+
+(use-package org-capture
+  :bind ("C-c c" . org-capture)
+  :config
+  ;; I don't want that org-capture rearanges the windows for me.
+  ;; From https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific-window/54251825#54251825
+  (defun org-capture-place-template-dont-delete-windows (oldfun args)
+    (cl-letf (((symbol-function 'delete-other-windows) 'ignore))
+      (apply oldfun args)))
+  (advice-add 'org-capture-place-template :around 'org-capture-place-template-dont-delete-windows)
+
+  (setq org-capture-bookmark nil   ; Do *NOT* bookmark to the last location when capturing
+        org-reverse-note-order t)  ; Capture/refile new items to the top of the list
+
+  ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+  (setq org-capture-templates
+        `(("t" "todo" entry (file ,(concat org-directory "refile.org"))
+           "* TODO %?\n" :clock-in t :clock-resume t)
+          ("T" "todo with link" entry (file ,(concat org-directory "refile.org"))
+           "* TODO %?\n%a\n" :clock-in t :clock-resume t)
+          ("e" "email" entry (file ,(concat org-directory "refile.org"))
+           "* TODO %? Email: %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
+           :clock-in t :clock-resume t :immediate-finish nil)
+          ("j" "Journal entry" entry (file+olp+datetree ,(concat org-directory "journal.org"))
+           "* %?\n")
+          ("J" "Journal with link" entry (file+olp+datetree ,(concat org-directory "journal.org"))
+           "* %?\n%a\n")
+          ("r" "respond" entry (file ,(concat org-directory "refile.org"))
+           "* TODO Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+          ("n" "note" entry (file ,(concat org-directory "refile.org"))
+           "* %? :NOTE:\n%a\n" :clock-in t :clock-resume t)
+          ("w" "org-protocol" entry (file ,(concat org-directory "refile.org"))
+           "* TODO Review %c\n%U\n" :immediate-finish t)
+          ("p" "Protocol" entry (file ,(concat org-directory "refile.org"))
+           "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+          ("L" "Protocol Link" entry (file ,(concat org-directory "refile.org"))
+           "* %?\n[[%:link][%:description]]\n")
+          ("w" "Web site" entry (file "")
+           "* %a :website:\n\n%U %?\n\n%:initial"))))
 
 (use-package ob
   :after org

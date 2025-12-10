@@ -10,6 +10,9 @@
 [submodule "avy"]
 	path = lib/avy
 	url = git@github.com:abo-abo/avy
+[submodule "babashka"]
+	path = lib/babashka
+	url = git@github.com:dakra/babashka.el.git
 [submodule "bash-completion"]
 	path = lib/bash-completion
 	url = git@github.com:szermatt/emacs-bash-completion
@@ -205,6 +208,9 @@
 	url = git@github.com:emacs-lsp/lsp-mode
 	load-path = .
 	load-path = clients
+[submodule "lsp-pyright"]
+	path = lib/lsp-pyright
+	url = https://github.com/emacs-lsp/lsp-pyright
 [submodule "lsp-treemacs"]
 	path = lib/lsp-treemacs
 	url = git@github.com:emacs-lsp/lsp-treemacs
