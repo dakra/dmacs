@@ -994,12 +994,12 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
 
   (setq gptel-default-mode 'org-mode
         gptel-track-media t
-        gptel-model 'claude-opus-4-20250514
+        gptel-model 'claude-opus-4-5-20251101
         gptel-prompt-prefix-alist '((markdown-mode . "# ") (org-mode . "* ") (text-mode . "# "))
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
                         :key gptel-api-key
-                        :models '(claude-opus-4-20250514 claude-sonnet-4-20250514))))
+                        :models '(claude-opus-4-5-20251101 claude-sonnet-4-5-20250929))))
 
 ;; Only deps: pfuture
 (use-package treemacs
@@ -1096,9 +1096,9 @@ Just call it 8 times in a row should be enough to always show the file."
               ;; ("C-<tab>" . 'copilot-accept-completion-by-word)
               ("C-g" . 'copilot-clear-overlay)
               ("<right>" . 'copilot-accept-completion)
-              ("C-f" . 'copilot-accept-completion)
+              ("M-f" . 'copilot-accept-completion)
               ("M-<right>" . 'copilot-accept-completion-by-word)
-              ("M-f" . 'copilot-accept-completion-by-word)
+              ("M-F" . 'copilot-accept-completion-by-word)
               ("M-n" . 'copilot-next-completion)
               ("M-p" . 'copilot-previous-completion))
   :config
