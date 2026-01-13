@@ -1001,6 +1001,11 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
                         :key gptel-api-key
                         :models '(claude-opus-4-5-20251101 claude-sonnet-4-5-20250929))))
 
+(use-package gptel-agent
+  :after gptel
+  :config
+  (gptel-agent-update))
+
 ;; Only deps: pfuture
 (use-package treemacs
   :bind (([f8] . treemacs-find-file-select-window)

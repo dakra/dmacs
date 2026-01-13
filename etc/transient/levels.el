@@ -14,5 +14,7 @@
   (magit-log:--no-merges . 3)
   (magit-log:--until . 2)
   (magit-log:--since . 2))
+ (magit-merge
+  (magit-merge:--strategy-option . 2))
  (magit-push
   (transient:magit-push:--follow-tags . 2)))

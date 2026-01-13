@@ -150,6 +150,9 @@
 [submodule "gptel"]
 	path = lib/gptel
 	url = git@github.com:karthink/gptel
+[submodule "gptel-agent"]
+	path = lib/gptel-agent
+	url = https://github.com/karthink/gptel-agent
 [submodule "groovy-mode"]
 	path = lib/groovy-mode
 	url = git@github.com:Groovy-Emacs-Modes/groovy-emacs-modes
