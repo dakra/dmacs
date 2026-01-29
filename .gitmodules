@@ -102,6 +102,9 @@
 	path = lib/dogears
 	url = git@github.com:alphapapa/dogears.el
 	no-byte-compile = helm-dogears.el
+[submodule "dumb-jump"]
+	path = lib/dumb-jump
+	url = https://github.com/jacktasia/dumb-jump
 [submodule "eat"]
 	path = lib/eat
 	url = https://codeberg.org/akib/emacs-eat
@@ -159,7 +162,10 @@
 [submodule "gumshoe"]
 	path = lib/gumshoe
 	url = https://github.com/Overdr0ne/gumshoe
+	no-byte-compile = context-perspective.el
 	no-byte-compile = gumshoe-persp.el
+	no-byte-compile = gumshoe-perspective.el
+	no-byte-compile = gumshoe-completionist.el
 [submodule "hcl-mode"]
 	path = lib/hcl-mode
 	url = https://github.com/hcl-emacs/hcl-mode
@@ -242,6 +248,13 @@
 [submodule "monet"]
 	path = lib/monet
 	url = git@github.com:stevemolitor/monet.git
+[submodule "mu4e"]
+	path = lib/mu4e
+	url = https://github.com/djcb/mu
+	build-step = ./autogen.sh
+	build-step = make -C mu4e > /dev/null
+	build-step = "(borg-update-autoloads \"mu4e\")"
+	load-path = build/mu4e
 [submodule "multiple-cursors"]
 	path = lib/multiple-cursors
 	url = git@github.com:magnars/multiple-cursors.el
@@ -285,6 +298,9 @@
 [submodule "parseedn"]
 	path = lib/parseedn
 	url = git@github.com:clojure-emacs/parseedn
+[submodule "pdf-tools"]
+	path = lib/pdf-tools
+	url = https://github.com/vedang/pdf-tools
 [submodule "pfuture"]
 	path = lib/pfuture
 	url = git@github.com:Alexander-Miller/pfuture
@@ -324,6 +340,9 @@
 [submodule "symbol-overlay"]
 	path = lib/symbol-overlay
 	url = git@github.com:wolray/symbol-overlay
+[submodule "tablist"]
+	path = lib/tablist
+	url = https://github.com/emacsorphanage/tablist
 [submodule "tempel"]
 	path = lib/tempel
 	url = git@github.com:minad/tempel

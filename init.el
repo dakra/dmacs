@@ -56,6 +56,10 @@
   (setq auth-source-save-behavior nil)  ;; Don't ask to store credentials in .authinfo.gpg
   (setq truncate-string-ellipsis "…")  ;; Use 'fancy' ellipses for truncated strings
 
+  ;; Increase the limit to catch infinite recursions.
+  ;; Large scala files need sometimes more and this value can safely be increased.
+  (setq max-lisp-eval-depth 32768)
+
   ;; Focus follows mouse for Emacs windows and frames
   (setq mouse-autoselect-window t)
   (setq focus-follows-mouse t)
@@ -313,6 +317,15 @@
   :config
   ;; Hide all the fringe bookmarks as dogears uses bookmarks
   (setq bookmark-fringe-mark nil))
+
+(use-package dumb-jump
+  :bind (("M-g o" . xref-find-definitions-other-window)
+         ("M-g j" . xref-find-definitions)
+         ("M-g p" . xref-go-back))
+  :init
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  :config
+  (setq dumb-jump-selector 'completing-read))
 
 (use-package gumshoe
   :hook (after-init . global-gumshoe-mode)
@@ -701,7 +714,9 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
 (use-package claude-code
   :bind-keymap ("C-c c" . claude-code-command-map)
   :bind (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
-  :hook ((after-init . claude-code-mode)))
+  :hook ((after-init . claude-code-mode))
+  :config
+  (setq claude-code-terminal-backend 'vterm))
 
 ;; Only deps: web-server, websocket
 ;; (use-package claude-code-ide
@@ -827,9 +842,10 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
   (consult-customize
    consult-theme
    :preview-key "M-."
-   consult-ripgrep consult-git-grep consult-grep
+   consult-ripgrep consult-git-grep consult-grep consult-man
    consult-bookmark consult-recent-file consult-xref
-   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+   consult-source-bookmark consult-source-file-register
+   consult-source-recent-file consult-source-project-recent-file consult-source-bookmark
    :preview-key '(:debounce 0.2 any))
 
   (setq consult-narrow-key "<"))
@@ -948,6 +964,43 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
   (setq minions-prominent-modes '(flycheck-mode
                                   multiple-cursors-mode
                                   mu4e-modeline-mode)))
+
+(use-package pdf-tools
+  ;; manually update
+  ;; after each update we have to call:
+  ;; Install pdf-tools but don't ask or raise error (otherwise daemon mode will wait for input)
+  ;; (pdf-tools-install t t t)
+  :magic ("%PDF" . pdf-view-mode)
+  :mode (("\\.pdf\\'" . pdf-view-mode))
+  :hook ((pdf-view-mode . pdf-view-init))
+  :bind (:map pdf-view-mode-map
+              ("C-s" . isearch-forward)
+              ("M-w" . pdf-view-kill-ring-save))
+  :config
+  (defun pdf-view-init ()
+    "Initialize pdf-tools view like enabline TOC functions or use dark theme at night."
+
+    ;; Use dark theme when opening PDFs at night time
+    (let ((hour (string-to-number (format-time-string "%H"))))
+      (when (or (< hour 5) (< 20 hour))
+        (pdf-view-midnight-minor-mode)))
+
+    ;; Enable pdf-tools minor mode to have features like TOC extraction by pressing `o'.
+    (pdf-tools-enable-minor-modes)
+
+    ;; Disable while-line-or-region to free keybindings.
+    (whole-line-or-region-local-mode -1))
+
+  (setq pdf-misc-print-program-executable "lpr"
+
+        pdf-roll-vertical-margin 5
+        pdf-roll-margin-color "black"
+
+        pdf-view-resize-factor 1.1  ;; more fine-grained zooming; +/- 10% instead of default 25%
+
+        ;; Always use midnight-mode and almost same color as default font.
+        ;; Just slightly brighter background to see the page boarders
+        pdf-view-midnight-colors '("#c6c6c6" . "#363636")))
 
 (use-package visual-fill-column
   :defer t
@@ -1083,13 +1136,25 @@ Just call it 8 times in a row should be enough to always show the file."
         indent-bars-no-descend-lists t
         indent-bars-treesit-wrap '((c      argument_list parameter_list init_declarator parenthesized_expression)
                                    (java   argument_list formal_parameters block_comment)
+                                   (rust arguments parameters)
                                    (python argument_list parameters
                                            list list_comprehension
                                            dictionary dictionary_comprehension
                                            parenthesized_expression subscript)
+                                   (toml   table array comment)
                                    (yaml   block_mapping_pair comment))
         indent-bars-treesit-scope '((python function_definition class_definition for_statement
-                                            if_statement with_statement while_statement))
+                                            if_statement with_statement while_statement)
+                                    (rust trait_item impl_item
+                                          macro_definition macro_invocation
+                                          struct_item enum_item mod_item
+                                          const_item let_declaration
+                                          function_item for_expression
+                                          if_expression loop_expression
+                                          while_expression match_expression
+                                          match_arm call_expression
+                                          token_tree token_tree_pattern
+                                          token_repetition))
         indent-bars-treesit-ignore-blank-lines-types '("module")))
 
 (use-package copilot
@@ -1107,7 +1172,8 @@ Just call it 8 times in a row should be enough to always show the file."
               ("M-n" . 'copilot-next-completion)
               ("M-p" . 'copilot-previous-completion))
   :config
-  (setq copilot-max-char 150000
+  ;; Don't pop up a warning buffer
+  (setq copilot-max-char-warning-disable t
         copilot-indent-offset-warning-disable t)
   (add-to-list 'copilot-indentation-alist '(sh-mode 4))
   (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
@@ -1313,7 +1379,9 @@ With prefix ARG, also insert time in HH:MM format."
 (use-package jinx
   :hook (((text-mode prog-mode conf-mode) . jinx-mode))
   :bind (([remap ispell-word] . jinx-correct)  ;; ispell-word bound to "M-$"
-         ("C-M-$" . jinx-languages)))
+         ("C-M-$" . jinx-languages))
+  :config
+  (setq jinx-languages "en_US de_DE"))
 
 (use-package speed-type
   :defer t)
@@ -2498,7 +2566,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :mode ("docker-compose[^/]*\\.ya?ml\\'"))
 
 (use-package windmove
-  :bind (("s-i" . windmove-up)
+  :bind (("s-i" . aerospace-windmove-up)
          ("s-k" . windmove-down)
          ("s-j" . aerospace-windmove-left)
          ("s-l" . aerospace-windmove-right)
@@ -2506,6 +2574,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
          ("s-K" . aerospace-windmove-swap-states-down)
          ("s-I" . aerospace-windmove-swap-states-up)
          ("s-L" . aerospace-windmove-swap-states-right))
+  :commands (aerospace-windmove-up aerospace-windmove-down aerospace-windmove-left aerospace-windmove-right)
   :config
   (defun aerospace-command (args)
     "Call `aerospace' shell command with ARGS."
