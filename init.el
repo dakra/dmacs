@@ -293,6 +293,9 @@
   :config
   (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
 
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
+
 (use-package recentf
   :hook (after-init . recentf-mode)
   :config
@@ -2316,7 +2319,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 (use-package eglot
   :defer t
   :config
-  ;; XXX Check https://zubanls.com/blog/ for updates (no auto impoerts, docstrings yet)
+  ;; XXX Check https://zubanls.com/blog/ for updates (no auto imports, docstrings yet)
   ;; (add-to-list 'eglot-server-programs
   ;;              `((python-ts-mode python-mode) . ("uv" "tool" "run" "zuban" "server")))
   (add-to-list 'eglot-server-programs

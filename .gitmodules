@@ -120,6 +120,9 @@
 [submodule "embark"]
 	path = lib/embark
 	url = git@github.com:oantolin/embark
+[submodule "envrc"]
+	path = lib/envrc
+	url = https://github.com/purcell/envrc
 [submodule "epkg"]
 	path = lib/epkg
 	url = git@github.com:emacscollective/epkg.git
