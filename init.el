@@ -341,7 +341,14 @@
          ("SPC" . global-gumshoe-backtracking-mode-back)
          ("C-SPC" . global-gumshoe-backtracking-mode-forward))
   :config
-  (setq gumshoe-ignored-major-modes '(fundamental-mode minibuffer-mode treemacs-mode)))
+  (setq gumshoe-ignored-major-modes
+        '( fundamental-mode minibuffer-mode treemacs-mode
+           vterm-mode eat-mode compilation-mode eshell-mode shell-mode term-mode comint-mode
+           magit-process-mode magit-status-mode magit-log-mode magit-diff-mode magit-blame-mode
+           xwidget-webkit-mode)))
+
+(use-package consult-gumshoe
+  :after (gumshoe consult))
 
 ;;(use-package dogears
 ;;  :hook (after-init . dogears-mode)

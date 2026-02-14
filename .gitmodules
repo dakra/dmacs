@@ -53,6 +53,9 @@
 [submodule "consult"]
 	path = lib/consult
 	url = git@github.com:minad/consult
+[submodule "consult-gumshoe"]
+	path = lib/consult-gumshoe
+	url = git@github.com:Overdr0ne/consult-gumshoe.git
 [submodule "consult-mu"]
 	path = lib/consult-mu
 	url = git@github.com:armindarvish/consult-mu.git
@@ -165,10 +168,6 @@
 [submodule "gumshoe"]
 	path = lib/gumshoe
 	url = https://github.com/Overdr0ne/gumshoe
-	no-byte-compile = context-perspective.el
-	no-byte-compile = gumshoe-persp.el
-	no-byte-compile = gumshoe-perspective.el
-	no-byte-compile = gumshoe-completionist.el
 [submodule "hcl-mode"]
 	path = lib/hcl-mode
 	url = https://github.com/hcl-emacs/hcl-mode
