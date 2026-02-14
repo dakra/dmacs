@@ -412,6 +412,7 @@
   :bind (("C-x C-x" . consult-project-extra-find)
          :map project-prefix-map
          ("SPC" . consult-project-extra-find)
+         ("B"   . babashka-find-project-file)
          ("d"   . project-dired)
          ("D"   . project-edit-deps-edn)
          ("t"   . project-toggle-test)
@@ -715,18 +716,54 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
                           ("message" message)
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
+(use-package markdown-mode
+  :mode (("\\.markdown\\'" . gfm-mode)
+         ("README\\.md\\'" . gfm-mode))
+  :bind (:map markdown-mode-map
+              ("\C-c TAB" . nil)  ;; Reserve for tempel-expand instead of markdown-insert-image
+              ("C-c =" . markdown-insert-header-dwim))
+  :config
+  ;; Display remote images
+  (setq markdown-display-remote-images t)
+  ;; Enable fontification for code blocks
+  (setq markdown-fontify-code-blocks-natively t)
+  ;; Add some more languages
+  (dolist (x '(("ini" . conf-mode)
+               ("clj" . clojure-mode)
+               ("cljs" . clojure-mode)
+               ("cljc" . clojure-mode)))
+    (add-to-list 'markdown-code-lang-modes x))
+
+  ;; use pandoc with source code syntax highlighting to preview markdown (C-c C-c p)
+  (setq markdown-command "pandoc -s --highlight-style pygments -f markdown_github -t html5"))
+
 ;; Only deps: websocket
 (use-package monet
-  :hook ((after-init . monet-mode)
-         (claude-code-process-environment-functions . monet-start-server-function)))
+  :hook ((after-init . monet-mode))
+  ;; :config
+  ;; (setq monet-diff-tool #'monet-ediff-tool)
+  ;; (setq monet-diff-cleanup-tool #'monet-ediff-cleanup-tool)
+  )
 
 ;; Only deps: inheritenv, monet
 (use-package claude-code
-  :bind-keymap ("C-c c" . claude-code-command-map)
-  :bind (:repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
+  ;; :bind-keymap ("C-c c" . claude-code-command-map)
+  :bind (("C-c c" . claude-code-transient)
+         :repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
   :hook ((after-init . claude-code-mode))
   :config
-  (setq claude-code-terminal-backend 'vterm))
+  ;; This hook has to go here as use-package :hook adds a -hook to the name.
+  (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
+
+  (defun -claude-code-mac-notify (title message)
+    "Display a MacOS notification with sound."
+    (call-process "osascript" nil nil nil
+                  "-e" (format "display notification \"%s\" with title \"%s\" sound name \"Glass\""
+                               message title)))
+
+  (setq ;; claude-code-program "happy"
+        claude-code-notification-function #'-claude-code-mac-notify
+        claude-code-terminal-backend 'vterm))
 
 ;; Only deps: web-server, websocket
 ;; (use-package claude-code-ide
@@ -887,7 +924,7 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
-  :hook (((prog-mode conf-mode) . corfu-mode)
+  :hook (((prog-mode conf-mode markdown-mode) . corfu-mode)
          (eshell-mode . corfu-no-auto-mode))
   :bind (:map corfu-map
               ("RET" . nil))
@@ -1050,10 +1087,10 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
                  (levels  . "SLF4J"))))
 
 (use-package gptel
-  :defer t
+  ;; :hook (gptel-mode . (visual-line-mode visual-fill-column-mode))
   :config
-  (gptel-make-gemini "Gemini" :key gptel-api-key :stream t :models '(gemini-2.5-pro))
-  (gptel-make-gh-copilot "Copilot" :models '(gpt-4.1))
+  (gptel-make-gemini "Gemini" :key gptel-api-key :stream t)  ;;  :models '(gemini-2.5-pro)
+  (gptel-make-gh-copilot "Copilot")  ;;  :models '(gpt-4.1)
 
   (setq gptel-default-mode 'org-mode
         gptel-track-media t
@@ -1265,7 +1302,7 @@ Just call it 8 times in a row should be enough to always show the file."
 
 (use-package with-editor
   ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
-  :hook ((shell-mode eshell-mode vterm-mode term-exec) . with-editor-export-editor))
+  :hook ((shell-mode eshell-mode term-exec) . with-editor-export-editor))
 
 (use-package magit
   :bind (("C-x g" . magit-status)
@@ -2159,11 +2196,8 @@ the *cider-result* buffer."
   (defun -cider-check-alias-fn (alias)
     "Return predicate function that check if cider contains alias string ALIAS."
     (lambda (&rest _)
-      (or
-       (and cider-clojure-cli-aliases
-            (s-contains? alias cider-clojure-cli-aliases))
-       (and cider-clojure-cli-global-options
-            (s-contains? alias cider-clojure-cli-global-options)))))
+      (and cider-clojure-cli-aliases
+           (s-contains? alias cider-clojure-cli-aliases))))
 
   ;; Inject flow-storm middleware in cider-jack-in when the `:flow-storm' alias is set
   (add-to-list 'cider-jack-in-nrepl-middlewares
@@ -2597,7 +2631,9 @@ if there is no window on the left."
     (interactive "P")
     (if (and (frame-focus-state)
              (windmove-find-other-window 'left arg))
-        (windmove-do-window-select 'left arg)
+        (progn
+          (windmove-do-window-select 'left arg)
+          (beacon-blink))
       ;; No window to the left
       (aerospace-command "focus left --boundaries all-monitors-outer-frame")))
 
@@ -2607,7 +2643,9 @@ if there is no window on the right."
     (interactive "P")
     (if (and (frame-focus-state)
              (windmove-find-other-window 'right arg))
-        (windmove-do-window-select 'right arg)
+        (progn
+          (windmove-do-window-select 'right arg)
+          (beacon-blink))
       ;; No window to the right
       (aerospace-command "focus right --boundaries all-monitors-outer-frame")))
 
@@ -2617,7 +2655,9 @@ if there is no window on the up."
     (interactive "P")
     (if (and (frame-focus-state)
              (windmove-find-other-window 'up arg))
-        (windmove-do-window-select 'up arg)
+        (progn
+          (windmove-do-window-select 'up arg)
+          (beacon-blink))
       ;; No window to the up
       (aerospace-command "focus up --boundaries all-monitors-outer-frame")))
 
@@ -2631,7 +2671,9 @@ if there is no window on the down."
                         (not (window-minibuffer-p other-window)))
                    (and (window-minibuffer-p other-window)
                         (minibuffer-window-active-p other-window))))
-          (windmove-do-window-select 'down arg)
+          (progn
+            (windmove-do-window-select 'down arg)
+            (beacon-blink))
         ;; No window to the down
         (aerospace-command "focus down --boundaries all-monitors-outer-frame"))))
 
@@ -2837,7 +2879,7 @@ if there is no window on the down."
         "◀── now ─────────────────────────────────────────────────"))
 
 (use-package org-capture
-  :bind ("C-c c" . org-capture)
+  :bind ("C-c o c" . org-capture)
   :config
   ;; I don't want that org-capture rearanges the windows for me.
   ;; From https://stackoverflow.com/questions/54192239/open-org-capture-buffer-in-specific-window/54251825#54251825

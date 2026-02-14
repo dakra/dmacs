@@ -13,6 +13,9 @@
 ;; Disable the scroll-bar
 (scroll-bar-mode -1)
 
+;; Show tooltips in the echo area instead of a pup-up window which doesn't play nice with Aerospace
+(tooltip-mode -1)
+
 (setq package-enable-at-startup nil
       load-prefer-newer t
 
