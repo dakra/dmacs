@@ -698,7 +698,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
     "Send `C-k' to libvterm.
 Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring"
     (interactive)
-    (kill-ring-save (point) (vterm-end-of-line))
+    (kill-ring-save (point) (line-end-position))
     (vterm-send-key "k" nil nil t))
 
   (defun vterm-send-M-d-and-kill ()
@@ -1099,7 +1099,7 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
                         :key gptel-api-key
-                        :models '(claude-opus-4-5-20251101 claude-sonnet-4-5-20250929))))
+                        :models '(claude-opus-4-6 claude-sonnet-4-5-20250929 claude-haiku-4-5-20251001))))
 
 (use-package gptel-agent
   :after gptel
