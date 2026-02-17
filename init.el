@@ -655,6 +655,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
               ("M-y" . vterm-yank-pop)
               ("C-k" . vterm-send-C-k-and-kill)
               ("M-d" . vterm-send-M-d-and-kill)
+              ("M-DEL" . vterm-backward-kill-word)
               ;; I'm used to go up/down the shell history with M-n/p from eshell
               ;; Simulate this behavior in vterm
               ("M-p" . vterm-send-C-p)
@@ -696,17 +697,24 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
 
   (defun vterm-send-C-k-and-kill ()
     "Send `C-k' to libvterm.
-Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring"
+Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
     (interactive)
     (kill-ring-save (point) (line-end-position))
     (vterm-send-key "k" nil nil t))
 
   (defun vterm-send-M-d-and-kill ()
     "Send `M-d' to libvterm.
-Like normal Emacs `M-d'.  Kill word and put content in kill-ring"
+Like normal Emacs `M-d'.  Kill word and put content in kill-ring."
     (interactive)
     (kill-ring-save (point) (save-excursion (forward-word) (point)))
     (vterm-send-key "d" nil t nil))
+
+  (defun vterm-backward-kill-word ()
+    "Send `M-DEL' to libvterm.
+Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
+    (interactive)
+    (kill-ring-save (save-excursion (backward-word) (point)) (point))
+    (vterm-send-key "DEL" nil t nil))
 
   ;; Allow vterm to invoke some elisp functions
   (setq vterm-eval-cmds '(("dired-other-window" dired-other-window)
@@ -1394,9 +1402,14 @@ With prefix ARG, also insert time in HH:MM format."
   (setq forge-pull-notifications nil))
 
 (use-package diff-hl
-  :hook (((prog-mode conf-mode vc-dir-mode ledger-mode) . turn-on-diff-hl-mode)
+  :hook (((prog-mode conf-mode vc-dir-mode ledger-mode yaml-ts-mode toml-ts-mode markdown-mode) . turn-on-diff-hl-mode)
          (magit-pre-refresh  . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
+  :bind (:map diff-hl-mode-map
+              ("C-x v s" . diff-hl-show-hunk)
+              ("C-x v n" . diff-hl-next-hunk)
+              ("C-x v p" . diff-hl-previous-hunk)
+              ("C-x v r" . diff-hl-revert-hunk))
   :config
   ;; Disable diff-hl in Tramp
   (setq diff-hl-disable-on-remote t)
@@ -2441,6 +2454,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
         lsp-ui-sideline-show-symbol nil))
 
 (use-package lsp-treemacs
+  :disabled t
   :after lsp-mode
   :config
   ;; Enable bidirectional synchronization of lsp workspace folders and treemacs
