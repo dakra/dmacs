@@ -674,7 +674,8 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
     (vterm-send-key "n" nil nil t))
 
   ;; Kill dead vterm buffers
-  (setq vterm-kill-buffer-on-exit t)
+  (setq vterm-kill-buffer-on-exit t
+        vterm-max-scrollback 100000)
 
   ;; Run a shell command in vterm with compilation-minor-mode
   (defun vterm-compile (command &optional name)
@@ -748,7 +749,10 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 ;; Only deps: websocket
 (use-package monet
   :hook ((after-init . monet-mode))
-  ;; :config
+  :config
+  ;; monet-simple-diff has no benefit over the diff in claude code
+  ;; so don't disturb my windows and only use the diff inside claude code
+  (setq monet-diff-tool nil)
   ;; (setq monet-diff-tool #'monet-ediff-tool)
   ;; (setq monet-diff-cleanup-tool #'monet-ediff-cleanup-tool)
   )
@@ -763,13 +767,36 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
   ;; This hook has to go here as use-package :hook adds a -hook to the name.
   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
 
+  (load-file (expand-file-name "examples/hooks/claude-code-auto-revert-hook.el" (borg-worktree "claude-code")))
+  (setup-claude-auto-revert)
+
+  ;; Display claude buffer on the right
+  ;; (add-to-list 'display-buffer-alist
+  ;;              '("^\\*claude"
+  ;;                (display-buffer-in-direction)
+  ;;                (direction . right)))
+
+  ;; Display claude in an existing window if one exists, otherwise create one on the right
+  ;; (add-to-list 'display-buffer-alist
+  ;;              '("^\\*claude"
+  ;;                (display-buffer-reuse-window
+  ;;                 display-buffer-in-direction)
+  ;;                (direction . right)))
+
+  (add-to-list 'display-buffer-alist
+               '("^\\*claude"
+                 (display-buffer-reuse-window
+                  display-buffer-use-some-window)
+                 (inhibit-same-window . t)))
+
   (defun -claude-code-mac-notify (title message)
     "Display a MacOS notification with sound."
     (call-process "osascript" nil nil nil
                   "-e" (format "display notification \"%s\" with title \"%s\" sound name \"Glass\""
                                message title)))
 
-  (setq ;; claude-code-program "happy"
+  (setq claude-code-toggle-auto-select t
+        ;; claude-code-program "happy"
         claude-code-notification-function #'-claude-code-mac-notify
         claude-code-terminal-backend 'vterm))
 
@@ -1105,7 +1132,7 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 
   (setq gptel-default-mode 'org-mode
         gptel-track-media t
-        gptel-model 'claude-opus-4-5-20251101
+        gptel-model 'claude-opus-4-6
         gptel-prompt-prefix-alist '((markdown-mode . "# ") (org-mode . "* ") (text-mode . "# "))
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
@@ -2396,6 +2423,29 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
               ("M-," . lsp-find-references-other))
   :init (setq lsp-keymap-prefix nil)  ; Don't map the lsp keymap to any key
   :config
+  (defcustom lsp-clients-vtsls-server "vtsls"
+    "The vtsls executable to use.
+Leave as just the executable name to use the default behavior of
+finding the executable with variable `exec-path'."
+    :group 'lsp-mode
+    :risky t
+    :type 'file)
+
+  (defcustom lsp-clients-vtsls-server-args '("--stdio")
+    "Extra arguments for starting the vtsls language server."
+    :group 'lsp-mode
+    :risky t
+    :type '(repeat string))
+
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection (lambda ()
+                                                            (cons lsp-clients-vtsls-server
+                                                                  lsp-clients-vtsls-server-args)))
+                    :activation-fn #'lsp-typescript-javascript-tsx-jsx-activate-p
+                    :priority -1
+                    :completion-in-comments? t
+                    :server-id 'vtsls))
+
   ;; Shutdown lsp-server when all buffers associated with that server are closed
   (setq lsp-keep-workspace-alive nil)
 
