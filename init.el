@@ -992,6 +992,9 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
   (setq pulse-flag t
         pulse-delay .05))
 
+(use-package winpulse
+  :hook (after-init . winpulse-mode))
+
 (use-package beacon
   :unless noninteractive
   :hook (after-init . beacon-mode)

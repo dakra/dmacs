@@ -408,6 +408,9 @@
 [submodule "whole-line-or-region"]
 	path = lib/whole-line-or-region
 	url = git@github.com:purcell/whole-line-or-region
+[submodule "winpulse"]
+	path = lib/winpulse
+	url = git@github.com:xenodium/winpulse.git
 [submodule "with-editor"]
 	path = lib/with-editor
 	url = git@github.com:magit/with-editor
