@@ -1473,6 +1473,12 @@ With prefix ARG, also insert time in HH:MM format."
   :config
   (setq jinx-languages "en_US de_DE"))
 
+(use-package just-ts-mode
+  :defer t)
+
+(use-package justl
+  :defer t)
+
 (use-package speed-type
   :defer t)
 
@@ -2645,6 +2651,12 @@ finding the executable with variable `exec-path'."
     (interactive "*p")
     (whole-line-or-region-wrap-beg-end 'python-shell-send-region prefix)
     (deactivate-mark)))
+
+(use-package python-pytest
+  :defer t
+  :config
+  (setq python-pytest-executable "uv run pytest"))
+
 
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.tpl\\'" "\\.blade\\.php\\'" "\\.jsp\\'" "\\.as[cp]x\\'"

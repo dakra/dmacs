@@ -198,6 +198,12 @@
 	path = lib/jump
 	url = https://github.com/eschulte/jump.el
 	no-byte-compile = jump.el
+[submodule "just-ts-mode"]
+	path = lib/just-ts-mode
+	url = https://github.com/leon-barrett/just-ts-mode.el
+[submodule "justl"]
+	path = lib/justl
+	url = https://github.com/psibi/justl.el
 [submodule "ligature"]
 	path = lib/ligature
 	url = git@github.com:mickeynp/ligature.el
@@ -308,6 +314,9 @@
 [submodule "posframe"]
 	path = lib/posframe
 	url = git@github.com:tumashu/posframe
+[submodule "python-pytest"]
+	path = lib/python-pytest
+	url = https://github.com/wbolster/emacs-python-pytest
 [submodule "queue"]
 	path = lib/queue
 	url = git@github.com:emacsmirror/queue.git
