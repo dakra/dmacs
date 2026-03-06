@@ -174,11 +174,11 @@
 
   (defun text-mode-autofill-setup ()
     "Set fill-column to 68 and turn on auto-fill-mode."
-    (setq-local fill-column 68)
+    (setq-local fill-column 80)
     (auto-fill-mode))
 
-  ;; Autofill (e.g. M-x autofill-paragraph or M-q) to 80 chars (default 70)
-  (setq-default fill-column 80)
+  ;; Increase autofill (e.g. M-x autofill-paragraph or M-q) (default 70 chars)
+  (setq-default fill-column 90)
 
   (require 'thingatpt)
   (defun dakra-upcase-dwim (arg)
@@ -660,9 +660,14 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
               ;; Simulate this behavior in vterm
               ("M-p" . vterm-send-C-p)
               ("M-n" . vterm-send-C-n))
-  ;; Disable whole-line-or-region otherwise I can't bind "C-y"
-  :hook (vterm-mode . (lambda () (whole-line-or-region-local-mode -1)))
+  :hook (vterm-mode . -vterm-init)
   :config
+  (defun -vterm-init ()
+    "Disable whole-line-or-region otherwise I can't bind `C-y'.
+And disable hl-line-mode which causes a flicker on prompt when typing."
+    (whole-line-or-region-local-mode -1)
+    (hl-line-mode 'toggle))
+
   (defun vterm-send-C-p ()
     "Sends C-p to the libvterm."
     (interactive)
@@ -797,6 +802,7 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 
   (setq claude-code-toggle-auto-select t
         ;; claude-code-program "happy"
+        claude-code-program-switchesr '("--chrome")
         claude-code-notification-function #'-claude-code-mac-notify
         claude-code-terminal-backend 'vterm))
 
@@ -1243,7 +1249,7 @@ Just call it 8 times in a row should be enough to always show the file."
         indent-bars-treesit-ignore-blank-lines-types '("module")))
 
 (use-package copilot
-  :hook (prog-mode . copilot-mode)
+  ;; :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ;; ("<tab>" . 'copilot-accept-completion)
               ;; ("TAB" . 'copilot-accept-completion)
@@ -2551,7 +2557,7 @@ finding the executable with variable `exec-path'."
   ;; See https://github.com/eclipse-jdtls/eclipse.jdt.ls/blob/main/CHANGELOG.md
   ;; and download from https://download.eclipse.org/jdtls/milestones/
   (setq lsp-java-jdt-download-url
-        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.54.0/jdt-language-server-1.54.0-202511261751.tar.gz")
+        "https://www.eclipse.org/downloads/download.php?file=/jdtls/milestones/1.57.0/jdt-language-server-1.57.0-202602261110.tar.gz")
 
   (setq lsp-java-compile-null-analysis-mode "automatic"
         lsp-java-format-on-type-enabled nil

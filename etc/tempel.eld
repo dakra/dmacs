@@ -92,9 +92,57 @@ org-mode
 (el      "#+begin_src emacs-lisp" n> r> n "#+end_src")
 (clj     "#+begin_src clojure" n> r> n "#+end_src")
 (cljs    "#+begin_src clojurescript" n> r> n "#+end_src")
+(js      "#+begin_src js" n> r> n "#+end_src")
 (json    "#+begin_src json" n> r> n "#+end_src")
 (py      "#+begin_src python" n> r> n "#+end_src")
 (rest    "#+begin_src restclient" n> r> n "#+end_src")
+
+markdown-mode
+
+;; Agentic prompt with frontmatter
+(agp
+ "---" n
+ "model: opus" n
+ "description: " r n
+ "argument-hint: [arg1] [arg2]" n
+ "allowed-tools: Task, TaskOutput, Bash, Glob, Grep, Read, Edit, Write, NotebookEdit, WebFetch, TodoWrite, WebSearch, KillShell, AskUserQuestion, Skill, EnterPlanMode, ExitPlanMode" n
+ "context: fork" n
+ "agent: general-purpose" n
+ "disable-model-invocation: false" n
+ "hooks:" n
+ "  PreToolUse:" n
+ "    - matcher: \"Bash\"" n
+ "      hooks:" n
+ "        - type: command" n
+ "          command: \"echo 'pre-hook'\"" n
+ "          once: true" n
+ "  PostToolUse:" n
+ "    - matcher: \"Edit|Write\"" n
+ "      hooks:" n
+ "        - type: command" n
+ "          command: \"echo 'post-hook'\"" n
+ "          once: true" n
+ "  Stop:" n
+ "    - hooks:" n
+ "        - type: command" n
+ "          command: \"echo 'stop-hook'\"" n
+ "          once: true" n
+ "---" n n
+ "# Purpose" n n "xxx" n n
+ "## Variables" n n "xxx" n n
+ "## Codebase Structure" n n "xxx" n n
+ "## Instructions" n n "xxx" n n
+ "## Workflow" n n "xxx" n n
+ "## Report" n n "xxx" n)
+
+;; Agentic prompt no frontmatter
+(agpn
+ "# Purpose" n n "xxx" n n
+ "## Variables" n n "xxx" n n
+ "## Codebase Structure" n n "xxx" n n
+ "## Instructions" n n "xxx" n n
+ "## Workflow" n n "xxx" n n
+ "## Report" n n "xxx" n)
 
 ;; Local Variables:
 ;; outline-regexp: "[a-z]"
