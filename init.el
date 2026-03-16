@@ -802,7 +802,7 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 
   (setq claude-code-toggle-auto-select t
         ;; claude-code-program "happy"
-        claude-code-program-switchesr '("--chrome")
+        claude-code-program-switches '("--allow-dangerously-skip-permissions")
         claude-code-notification-function #'-claude-code-mac-notify
         claude-code-terminal-backend 'vterm))
 
@@ -2856,7 +2856,7 @@ if there is no window on the down."
         org-pretty-entities-include-sub-superscripts nil
         ;; And also don't display ^ or _ as super/subscripts
         org-use-sub-superscripts nil
-        org-default-notes-file (concat org-directory "inbox.org")
+        org-default-notes-file (concat org-directory "/inbox.org")
         ;; Set todo colors from moe-theme
         org-todo-keyword-faces '(("TODO" :foreground "#5f0000" :weight bold)  ;; red-4
                                  ("NEXT" :foreground "#0000af" :weight bold)  ;; blue-5
@@ -2978,26 +2978,26 @@ if there is no window on the down."
 
   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
   (setq org-capture-templates
-        `(("t" "todo" entry (file ,(concat org-directory "refile.org"))
+        `(("t" "todo" entry (file ,(concat org-directory "/refile.org"))
            "* TODO %?\n" :clock-in t :clock-resume t)
-          ("T" "todo with link" entry (file ,(concat org-directory "refile.org"))
+          ("T" "todo with link" entry (file ,(concat org-directory "/refile.org"))
            "* TODO %?\n%a\n" :clock-in t :clock-resume t)
-          ("e" "email" entry (file ,(concat org-directory "refile.org"))
+          ("e" "email" entry (file ,(concat org-directory "/refile.org"))
            "* TODO %? Email: %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n"
            :clock-in t :clock-resume t :immediate-finish nil)
-          ("j" "Journal entry" entry (file+olp+datetree ,(concat org-directory "journal.org"))
+          ("j" "Journal entry" entry (file+olp+datetree ,(concat org-directory "/journal.org"))
            "* %?\n")
-          ("J" "Journal with link" entry (file+olp+datetree ,(concat org-directory "journal.org"))
+          ("J" "Journal with link" entry (file+olp+datetree ,(concat org-directory "/journal.org"))
            "* %?\n%a\n")
-          ("r" "respond" entry (file ,(concat org-directory "refile.org"))
+          ("r" "respond" entry (file ,(concat org-directory "/refile.org"))
            "* TODO Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
-          ("n" "note" entry (file ,(concat org-directory "refile.org"))
+          ("n" "note" entry (file ,(concat org-directory "/refile.org"))
            "* %? :NOTE:\n%a\n" :clock-in t :clock-resume t)
-          ("w" "org-protocol" entry (file ,(concat org-directory "refile.org"))
+          ("w" "org-protocol" entry (file ,(concat org-directory "/refile.org"))
            "* TODO Review %c\n%U\n" :immediate-finish t)
-          ("p" "Protocol" entry (file ,(concat org-directory "refile.org"))
+          ("p" "Protocol" entry (file ,(concat org-directory "/refile.org"))
            "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-          ("L" "Protocol Link" entry (file ,(concat org-directory "refile.org"))
+          ("L" "Protocol Link" entry (file ,(concat org-directory "/refile.org"))
            "* %?\n[[%:link][%:description]]\n")
           ("w" "Web site" entry (file "")
            "* %a :website:\n\n%U %?\n\n%:initial"))))

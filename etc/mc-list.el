@@ -37,6 +37,7 @@
         emmet-next-edit-point
         end-of-defun
         eval-last-sexp
+        forward-sexp
         grep-context-less-around-point
         grep-context-more-around-point
         haml-electric-backspace
