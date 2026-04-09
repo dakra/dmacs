@@ -9,6 +9,7 @@
         artist-forward-char
         artist-next-line
         artist-previous-line
+        backward-sexp
         beginning-of-defun
         c-electric-brace
         c-electric-colon

@@ -88,6 +88,9 @@
 [submodule "diff-hl"]
 	path = lib/diff-hl
 	url = git@github.com:dgutov/diff-hl
+[submodule "dimmer"]
+	path = lib/dimmer
+	url = https://github.com/gonewest818/dimmer.el
 [submodule "dired-hacks"]
 	path = lib/dired-hacks
 	url = git@github.com:Fuco1/dired-hacks
@@ -144,6 +147,11 @@
 [submodule "form-feed"]
 	path = lib/form-feed
 	url = https://depp.brause.cc/form-feed.git
+[submodule "ghostel"]
+	path = lib/ghostel
+	url = git@github.com:dakra/ghostel.git
+	build-step = make build
+	build-step = borg-update-autoloads
 [submodule "ghub"]
 	path = lib/ghub
 	url = git@github.com:magit/ghub
@@ -429,3 +437,6 @@
 [submodule "yaml"]
 	path = lib/yaml
 	url = git@github.com:zkry/yaml.el
+[submodule "zig-ts-mode"]
+	path = lib/zig-ts-mode
+	url = https://codeberg.org/meow_king/zig-ts-mode

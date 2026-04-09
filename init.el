@@ -730,6 +730,28 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
                           ("message" message)
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
+(use-package ghostel
+  :bind (("C-x M" . ghostel)
+         :map ghostel-mode-map
+         ;; ("C-r" . isearch-backward)
+         ;; ("C-y" . vterm-yank)
+         ;; ("M-y" . vterm-yank-pop)
+         ;; ("C-k" . vterm-send-C-k-and-kill)
+         ;; ("M-d" . vterm-send-M-d-and-kill)
+         ;; ("M-DEL" . vterm-backward-kill-word)
+         ;; I'm used to go up/down the shell history with M-n/p from eshell
+         ;; Simulate this behavior in ghostel by sending C-p and C-n
+         ("M-p" . (lambda () (interactive) (ghostel--send-key "\x10")))
+         ("M-n" . (lambda () (interactive) (ghostel--send-key "\x0e"))))
+  :config
+  (setq ghostel-full-redraw nil)
+  (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
+
+;; (use-package gterm
+;;   :defer t
+;;   :config
+;;   (setq gterm-shell "/opt/homebrew/bin/bash"))
+
 (use-package markdown-mode
   :mode (("\\.markdown\\'" . gfm-mode)
          ("README\\.md\\'" . gfm-mode))
@@ -802,9 +824,10 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 
   (setq claude-code-toggle-auto-select t
         ;; claude-code-program "happy"
-        claude-code-program-switches '("--allow-dangerously-skip-permissions")
+        claude-code-program-switches '("--allow-dangerously-skip-permissions"
+                                       "--channels" "plugin:telegram@claude-plugins-official")
         claude-code-notification-function #'-claude-code-mac-notify
-        claude-code-terminal-backend 'vterm))
+        claude-code-terminal-backend 'ghostel))
 
 ;; Only deps: web-server, websocket
 ;; (use-package claude-code-ide
@@ -1021,12 +1044,28 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 ;; * Third party packages
 
 (use-package pulse
+  :unless noninteractive
   :config
   (setq pulse-flag t
         pulse-delay .05))
 
 (use-package winpulse
+  :unless noninteractive
   :hook (after-init . winpulse-mode))
+
+(use-package dimmer  ;; Visually highlight the selected buffer
+  :disabled t  ; doesn't work right with my emacsclient window navigation?
+  :unless noninteractive
+  :hook (after-init . dimmer-mode)
+  :config
+  ;; Don't dim hydra, transient buffers or minibuffers
+  (setq dimmer-buffer-exclusion-regexps '(" \\*\\(LV\\|transient\\)\\*"
+                                          "^ \\*.*posframe.*buffer.*\\*$"
+                                          "^\\*Minibuf-[0-9]+\\*"
+                                          "^.\\*which-key\\*$"
+                                          "^.\\*Echo.*\\*"))
+  ;;(setq dimmer-use-colorspace ':rgb)
+  (setq dimmer-fraction 0.3))
 
 (use-package beacon
   :unless noninteractive
@@ -1365,8 +1404,8 @@ Just call it 8 times in a row should be enough to always show the file."
   :hook (after-save . magit-after-save-refresh-status)
   :config
   ;; Don't override date for extend or reword
-  (setq magit-commit-extend-override-date nil)
-  (setq magit-commit-reword-override-date nil)
+  (setq magit-commit-extend-override-date nil
+        magit-commit-reword-override-date nil)
 
   ;; Always show recent/unpushed/unpulled commits
   (setq magit-section-initial-visibility-alist '((unpushed . show)
@@ -1392,7 +1431,11 @@ Just call it 8 times in a row should be enough to always show the file."
     (add-to-list 'magit-no-confirm x t))
 
   ;; Always highlight word differences in diff
-  (setq magit-diff-refine-hunk 'all)
+  (setq magit-diff-refine-hunk 'all
+        ;; Add syntax highlighting to diff hunks
+        magit-diff-fontify-hunk 'all
+        magit-diff-specify-hunk-foreground nil
+        magit-diff-use-indicator-faces t)
 
   ;; Wrap excessively long summary lines (doesn't wrap the body)
   (setq magit-revision-fill-summary-line 100)
@@ -2619,6 +2662,9 @@ finding the executable with variable `exec-path'."
 (use-package toml-ts-mode
   :mode ("\\.toml\\'" "Cargo.lock\\'"))
 
+(use-package zig-ts-mode
+  :defer t)
+
 (use-package hcl-mode  ;; Only needed for terraform-mode
   :defer t)
 
@@ -3124,6 +3170,11 @@ if there is no window on the down."
   (add-to-list 'verb-content-type-handlers '("application/edn" clojure-mode) t)
 
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
+
+(use-package server
+  :config
+  (unless (server-running-p)
+    (server-start)))
 
 
 ;; * Post Initialization
