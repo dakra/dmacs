@@ -36,8 +36,16 @@
   ;; (if (eq system-type 'windows-nt)
   ;;     (setq native-comp-async-jobs-number 4))
 
-  (add-to-list 'default-frame-alist '(font . "Fira Code-12:weight=regular:width=normal"))
-  (set-frame-font "Fira Code-12:weight=regular:width=normal" nil t)
+  (setq use-default-font-for-symbols)
+  ;; (add-to-list 'default-frame-alist '(font . "Fira Code-12:weight=regular:width=normal"))
+  ;; (set-frame-font "Fira Code-12:weight=regular:width=normal" nil t)
+
+  ;; (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-12:weight=regular:width=normal"))
+  ;; (set-frame-font "FiraCode Nerd Font-12:weight=regular:width=normal" nil t)
+
+  (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font Mono Julia-12:weight=regular:width=normal"))
+  (set-frame-font "FiraCode Nerd Font Mono Julia-12:weight=regular:width=normal" nil t)
+
   (unless (eq system-type 'darwin)
     (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") nil 'append))
 
@@ -71,6 +79,9 @@
   (setq split-width-threshold 200)
   ;; Only split vertically on very tall screens
   (setq split-height-threshold 150)
+
+  ;; When (un-)splitting windows, resize all windows in the frame
+  (setq window-combination-resize t)
 
   ;; Save whatever’s in the current (system) clipboard before
   ;; replacing it with the Emacs’ text.
@@ -214,6 +225,9 @@
   :config
   (global-so-long-mode))
 
+(use-package help
+  :config (setq help-window-select t))
+
 (use-package compile
   :config
   (setq compilation-environment '("TERM=xterm-256color")
@@ -283,7 +297,7 @@
   :hook (after-init . savehist-mode)
   :config
   (setq savehist-additional-variables
-        '(compile-command kill-ring regexp-search-ring corfu-history)))
+        '(compile-command kill-ring search-ring regexp-search-ring corfu-history)))
 
 (use-package hippie-exp
   :bind (("M-/" . hippie-expand)))
@@ -536,7 +550,7 @@ created a dedicated process for the project."
                       completion-at-point-functions))))
 
 (use-package eshell
-  :bind (("C-x m" . eshell)
+  :bind (("C-x M" . eshell)
          :map eshell-mode-map
          ("M-P" . eshell-previous-prompt)
          ("C-d" . dakra-eshell-quit-or-delete-char)
@@ -623,7 +637,7 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
     (eshell/echo)))
 
 (use-package eat
-  :hook (eshell-load-hook . eat-eshell-visual-command-mode)
+  ;;:hook (eshell-load-hook . eat-eshell-visual-command-mode)
   :bind (:map eat-semi-char-mode-map
               ("M-i" . windmove-up)
               ("M-k" . windmove-down)
@@ -731,21 +745,48 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
 (use-package ghostel
-  :bind (("C-x M" . ghostel)
+  :bind (("C-x m" . ghostel)
          :map ghostel-mode-map
-         ;; ("C-r" . isearch-backward)
-         ;; ("C-y" . vterm-yank)
-         ;; ("M-y" . vterm-yank-pop)
-         ;; ("C-k" . vterm-send-C-k-and-kill)
-         ;; ("M-d" . vterm-send-M-d-and-kill)
-         ;; ("M-DEL" . vterm-backward-kill-word)
+         ("C-s" . consult-line)
+         ("C-k" . ghostel-send-C-k-and-kill)
+         ("M-d" . ghostel-send-M-d-and-kill)
+         ("M-<backspace>" . ghostel-backward-kill-word)
          ;; I'm used to go up/down the shell history with M-n/p from eshell
          ;; Simulate this behavior in ghostel by sending C-p and C-n
-         ("M-p" . (lambda () (interactive) (ghostel--send-key "\x10")))
-         ("M-n" . (lambda () (interactive) (ghostel--send-key "\x0e"))))
+         ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
+         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
+         :map project-prefix-map
+         ("m" . ghostel-project))
   :config
-  (setq ghostel-full-redraw nil)
+  (defun ghostel-send-C-k-and-kill ()
+    "Send `C-k' to ghostel.
+Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
+    (interactive)
+    (kill-ring-save (point) (line-end-position))
+    (ghostel-send-key "k" "ctrl"))
+
+  (defun ghostel-send-M-d-and-kill ()
+    "Send `M-d' to ghostel.
+Like normal Emacs `M-d'.  Kill word and put content in kill-ring."
+    (interactive)
+    (kill-ring-save (point) (save-excursion (forward-word) (point)))
+    (ghostel-send-key "d" "alt"))
+
+  (defun ghostel-backward-kill-word ()
+    "Send `M-backspace' to ghostel.
+Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
+    (interactive)
+    (kill-ring-save (save-excursion (backward-word) (point)) (point))
+    (ghostel-send-key "backspace" "alt"))
+
+  ;; (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
+
+(use-package ghostel-eshell
+  :hook (eshell-load-hook . ghostel-eshell-visual-command-mode))
+
+(use-package ghostel-compile
+  :hook (after-init . ghostel-compile-global-mode))
 
 ;; (use-package gterm
 ;;   :defer t
@@ -794,8 +835,8 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
   ;; This hook has to go here as use-package :hook adds a -hook to the name.
   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
 
-  (load-file (expand-file-name "examples/hooks/claude-code-auto-revert-hook.el" (borg-worktree "claude-code")))
-  (setup-claude-auto-revert)
+  ;; (load-file (expand-file-name "examples/hooks/claude-code-auto-revert-hook.el" (borg-worktree "claude-code")))
+  ;; (setup-claude-auto-revert)
 
   ;; Display claude buffer on the right
   ;; (add-to-list 'display-buffer-alist
@@ -825,8 +866,10 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
   (setq claude-code-toggle-auto-select t
         ;; claude-code-program "happy"
         claude-code-program-switches '("--allow-dangerously-skip-permissions"
-                                       "--channels" "plugin:telegram@claude-plugins-official")
-        claude-code-notification-function #'-claude-code-mac-notify
+                                       ;; "--channels" "plugin:telegram@claude-plugins-official"
+                                       )
+        claude-code-enable-notifications nil
+        ;; claude-code-notification-function #'-claude-code-mac-notify
         claude-code-terminal-backend 'ghostel))
 
 ;; Only deps: web-server, websocket
@@ -1068,12 +1111,21 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
   (setq dimmer-fraction 0.3))
 
 (use-package beacon
+  :disabled t
   :unless noninteractive
   :hook (after-init . beacon-mode)
   :config
   (setq beacon-blink-when-focused t
         beacon-size 60
         beacon-blink-duration 0.4))
+
+;; You can change syntax in regex-builder with "C-c TAB"
+;; "read" is 'code' syntax
+;; "string" is already read and no extra escaping. Like what Emacs prompts interactively
+(use-package re-builder
+  :defer t
+  :config
+  (setq reb-re-syntax 'string))
 
 (use-package visual-replace
   :bind (("C-c r" . visual-replace)
@@ -3174,6 +3226,7 @@ if there is no window on the down."
 (use-package server
   :config
   (unless (server-running-p)
+    (setq confirm-kill-emacs #'y-or-n-p)
     (server-start)))
 
 
