@@ -138,6 +138,9 @@
 [submodule "f"]
 	path = lib/f
 	url = git@github.com:rejeep/f.el
+[submodule "flash"]
+	path = lib/flash
+	url = https://github.com/Prgebish/flash
 [submodule "flycheck"]
 	path = lib/flycheck
 	url = git@github.com:flycheck/flycheck

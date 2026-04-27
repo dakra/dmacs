@@ -36,7 +36,6 @@
   ;; (if (eq system-type 'windows-nt)
   ;;     (setq native-comp-async-jobs-number 4))
 
-  (setq use-default-font-for-symbols)
   ;; (add-to-list 'default-frame-alist '(font . "Fira Code-12:weight=regular:width=normal"))
   ;; (set-frame-font "Fira Code-12:weight=regular:width=normal" nil t)
 
@@ -46,8 +45,8 @@
   (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font Mono Julia-12:weight=regular:width=normal"))
   (set-frame-font "FiraCode Nerd Font Mono Julia-12:weight=regular:width=normal" nil t)
 
-  (unless (eq system-type 'darwin)
-    (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") nil 'append))
+  ;; (unless (eq system-type 'darwin)
+  ;;   (set-fontset-font t 'emoji (font-spec :family "Segoe UI Emoji") nil 'append))
 
   (prefer-coding-system 'utf-8)
 
@@ -747,9 +746,10 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 (use-package ghostel
   :bind (("C-x m" . ghostel)
          :map ghostel-mode-map
-         ("C-s" . consult-line)
-         ("C-k" . ghostel-send-C-k-and-kill)
-         ("M-d" . ghostel-send-M-d-and-kill)
+         ("<f7>" . org-clock-goto)
+         ("C-s"  . consult-line)
+         ("C-k"  . ghostel-send-C-k-and-kill)
+         ("M-d"  . ghostel-send-M-d-and-kill)
          ("M-<backspace>" . ghostel-backward-kill-word)
          ;; I'm used to go up/down the shell history with M-n/p from eshell
          ;; Simulate this behavior in ghostel by sending C-p and C-n
@@ -865,7 +865,8 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 
   (setq claude-code-toggle-auto-select t
         ;; claude-code-program "happy"
-        claude-code-program-switches '("--allow-dangerously-skip-permissions"
+        claude-code-program-switches '("--dangerously-skip-permissions"
+                                       ;; "--allow-dangerously-skip-permissions"
                                        ;; "--channels" "plugin:telegram@claude-plugins-official"
                                        )
         claude-code-enable-notifications nil
@@ -1826,11 +1827,23 @@ With prefix ARG, also insert time in HH:MM format."
   (setq symbol-overlay-map (make-sparse-keymap)))
 
 (use-package avy
+  :disabled t  ;; use flash instead
   :bind ("C-;" . avy-goto-char-timer)
   :config
   (setq avy-background t)
   (setq avy-style 'at-full)
   (setq avy-timeout-seconds 0.2))
+
+(use-package flash
+  :bind ("C-;" . flash-jump-or-treesitter)
+  :config
+  (defun flash-jump-or-treesitter (treesitter?)
+    "When called with prefix arg, do `flash-treesitter'.
+Otherwise execute `flash-jump'."
+    (interactive "P")
+    (if treesitter?
+        (flash-treesitter)
+      (flash-jump))))
 
 (use-package expand-region
   :bind (([remap set-mark-command] . set-mark-or-expand-region))
