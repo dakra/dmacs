@@ -598,6 +598,7 @@ created a dedicated process for the project."
         eshell-hist-ignoredups t
         eshell-visual-commands '("ptpython" "ipython" "pshell" "tail" "vi" "vim" "watch"
                                  "nmtui" "dstat" "mycli" "pgcli" "vue" "ngrok" "bandwhich"
+                                 "claude" "codex" "pi" "opencode"
                                  "tmux" "screen" "top" "htop" "less" "more" "ncftp")
         eshell-prefer-lisp-functions nil)
 
@@ -745,16 +746,17 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 
 (use-package ghostel
   :bind (("C-x m" . ghostel)
-         :map ghostel-mode-map
-         ("<f7>" . org-clock-goto)
-         ("C-s"  . consult-line)
-         ("C-k"  . ghostel-send-C-k-and-kill)
-         ("M-d"  . ghostel-send-M-d-and-kill)
-         ("M-<backspace>" . ghostel-backward-kill-word)
-         ;; I'm used to go up/down the shell history with M-n/p from eshell
-         ;; Simulate this behavior in ghostel by sending C-p and C-n
-         ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
-         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
+         ;; :map ghostel-mode-map
+         ;; :map ghostel-semi-char-mode-map
+         ;; ("<f7>" . org-clock-goto)
+         ;; ("C-s"  . consult-line)
+         ;; ("C-k"  . ghostel-send-C-k-and-kill)
+         ;; ("M-d"  . ghostel-send-M-d-and-kill)
+         ;; ("M-<backspace>" . ghostel-backward-kill-word)
+         ;; ;; I'm used to go up/down the shell history with M-n/p from eshell
+         ;; ;; Simulate this behavior in ghostel by sending C-p and C-n
+         ;; ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
+         ;; ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          :map project-prefix-map
          ("m" . ghostel-project))
   :config
@@ -1098,7 +1100,6 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   :hook (after-init . winpulse-mode))
 
 (use-package dimmer  ;; Visually highlight the selected buffer
-  :disabled t  ; doesn't work right with my emacsclient window navigation?
   :unless noninteractive
   :hook (after-init . dimmer-mode)
   :config
@@ -1112,7 +1113,7 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   (setq dimmer-fraction 0.3))
 
 (use-package beacon
-  :disabled t
+  :disabled t  ; doesn't play too nice with ghostel
   :unless noninteractive
   :hook (after-init . beacon-mode)
   :config
@@ -1578,7 +1579,7 @@ With prefix ARG, also insert time in HH:MM format."
 (use-package just-ts-mode
   :defer t)
 
-(use-package justl
+(use-package just
   :defer t)
 
 (use-package speed-type
@@ -2829,6 +2830,7 @@ if there is no window on the left."
              (windmove-find-other-window 'left arg))
         (progn
           (windmove-do-window-select 'left arg)
+          (dimmer-process-all)
           (beacon-blink))
       ;; No window to the left
       (aerospace-command "focus left --boundaries all-monitors-outer-frame")))
@@ -2841,6 +2843,7 @@ if there is no window on the right."
              (windmove-find-other-window 'right arg))
         (progn
           (windmove-do-window-select 'right arg)
+          (dimmer-process-all)
           (beacon-blink))
       ;; No window to the right
       (aerospace-command "focus right --boundaries all-monitors-outer-frame")))
@@ -2853,6 +2856,7 @@ if there is no window on the up."
              (windmove-find-other-window 'up arg))
         (progn
           (windmove-do-window-select 'up arg)
+          (dimmer-process-all)
           (beacon-blink))
       ;; No window to the up
       (aerospace-command "focus up --boundaries all-monitors-outer-frame")))
@@ -2869,6 +2873,7 @@ if there is no window on the down."
                         (minibuffer-window-active-p other-window))))
           (progn
             (windmove-do-window-select 'down arg)
+            (dimmer-process-all)
             (beacon-blink))
         ;; No window to the down
         (aerospace-command "focus down --boundaries all-monitors-outer-frame"))))
