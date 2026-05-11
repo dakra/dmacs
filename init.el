@@ -163,8 +163,8 @@
          ("M-u"   . dakra-upcase-dwim)
          ("M-l"   . dakra-downcase-dwim)
          ("M-c"   . dakra-capitalize-dwim))
-  :hook (((mu4e-compose-mode markdown-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
-         ((visual-fill-column-mode markdown-mode) . word-wrap-whitespace-mode))
+  :hook (((mu4e-compose-mode markdown-ts-mode rst-mode git-commit-setup) . text-mode-autofill-setup)
+         ((visual-fill-column-mode markdown-ts-mode) . word-wrap-whitespace-mode))
   :config
   ;; mode line settings
   (line-number-mode t)
@@ -272,7 +272,7 @@
 
 (use-package abbrev
   :hook (text-mode . abbrev-mode)
-  ;; :hook ((message-mode org-mode markdown-mode rst-mode) . abbrev-mode)
+  ;; :hook ((message-mode org-mode markdown-ts-mode rst-mode) . abbrev-mode)
   :config
   ;; Don't ask to save abbrevs when saving all buffers
   (setq save-abbrevs 'silently)
@@ -487,7 +487,8 @@ created a dedicated process for the project."
     (run-python (python-shell-calculate-command) 'project t))
 
   ;; Don't show a dispatch menu when switching projects but always choose project buffer/file
-  (setq project-switch-commands #'consult-project-extra-find))
+  ;;(setq project-switch-commands #'consult-project-extra-find)
+  )
 
 (use-package ibuffer-project
   :hook (ibuffer . ibuffer-project-set-filter-groups)
@@ -746,17 +747,17 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 
 (use-package ghostel
   :bind (("C-x m" . ghostel)
-         ;; :map ghostel-mode-map
-         ;; :map ghostel-semi-char-mode-map
-         ;; ("<f7>" . org-clock-goto)
-         ;; ("C-s"  . consult-line)
-         ;; ("C-k"  . ghostel-send-C-k-and-kill)
-         ;; ("M-d"  . ghostel-send-M-d-and-kill)
-         ;; ("M-<backspace>" . ghostel-backward-kill-word)
+         :map ghostel-mode-map
+         ("<f7>" . org-clock-goto)
+         :map ghostel-semi-char-mode-map
+         ("C-s"  . consult-line)
+         ("C-k"  . ghostel-send-C-k-and-kill)
+         ("M-d"  . ghostel-send-M-d-and-kill)
+         ("M-<backspace>" . ghostel-backward-kill-word)
          ;; ;; I'm used to go up/down the shell history with M-n/p from eshell
          ;; ;; Simulate this behavior in ghostel by sending C-p and C-n
-         ;; ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
-         ;; ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
+         ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
+         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          :map project-prefix-map
          ("m" . ghostel-project))
   :config
@@ -781,7 +782,7 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
     (ghostel-send-key "backspace" "alt"))
 
-  ;; (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
 
 (use-package ghostel-eshell
@@ -790,17 +791,10 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 (use-package ghostel-compile
   :hook (after-init . ghostel-compile-global-mode))
 
-;; (use-package gterm
-;;   :defer t
-;;   :config
-;;   (setq gterm-shell "/opt/homebrew/bin/bash"))
-
+;; I don't need markdown-mode anymore but lots of packages depend on it
+;; (forge, lsp-mode, lsp-java, claude-code, copilot, eca)
 (use-package markdown-mode
-  :mode (("\\.markdown\\'" . gfm-mode)
-         ("README\\.md\\'" . gfm-mode))
-  :bind (:map markdown-mode-map
-              ("\C-c TAB" . nil)  ;; Reserve for tempel-expand instead of markdown-insert-image
-              ("C-c =" . markdown-insert-header-dwim))
+  :defer t
   :config
   ;; Display remote images
   (setq markdown-display-remote-images t)
@@ -815,6 +809,17 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 
   ;; use pandoc with source code syntax highlighting to preview markdown (C-c C-c p)
   (setq markdown-command "pandoc -s --highlight-style pygments -f markdown_github -t html5"))
+
+(use-package markdown-ts-mode
+  :demand t
+  :config
+  (setq markdown-ts-inline-images t)
+  ;; Add some more languages
+  (dolist (x '((ini  conf-mode)
+               (clj  clojure-mode)
+               (cljs clojure-mode)
+               (cljc clojure-mode)))
+    (add-to-list 'markdown-ts-code-block-modes x)))
 
 ;; Only deps: websocket
 (use-package monet
@@ -983,7 +988,7 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
          ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
          ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
          ("M-s L" . consult-line-multi))           ;; needed by consult-line to detect isearch
-  :hook (completion-list-mode . consult-preview-at-point-mode)
+  ;; :hook (completion-list-mode . consult-preview-at-point-mode)
 
   :init
   (setq register-preview-delay 0
@@ -1034,7 +1039,7 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package corfu
-  :hook (((prog-mode conf-mode markdown-mode) . corfu-mode)
+  :hook (((prog-mode conf-mode markdown-ts-mode) . corfu-mode)
          (eshell-mode . corfu-no-auto-mode))
   :bind (:map corfu-map
               ("RET" . nil))
@@ -1232,7 +1237,7 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   (setq gptel-default-mode 'org-mode
         gptel-track-media t
         gptel-model 'claude-opus-4-6
-        gptel-prompt-prefix-alist '((markdown-mode . "# ") (org-mode . "* ") (text-mode . "# "))
+        gptel-prompt-prefix-alist '((markdown-ts-mode . "# ") (org-mode . "* ") (text-mode . "# "))
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
                         :key gptel-api-key
@@ -1369,7 +1374,7 @@ Just call it 8 times in a row should be enough to always show the file."
            ledger-mode
            systemd-mode
            mu4e-compose-mode
-           markdown-mode
+           markdown-ts-mode
            rst-mode) . flycheck-mode)
          (flycheck-mode . mp-flycheck-prefer-eldoc))
   :config
@@ -1436,10 +1441,19 @@ Just call it 8 times in a row should be enough to always show the file."
                          (match-end 0)
                          'font-lock-face 'magit-keyword))))
 
+(use-package ediff
+  ;; Always expand files before diffing (especially org files)
+  :hook ((ediff-prepare-buffer-hook . outline-show-all))
+  :config
+  ;; Do everything in one frame
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  ;; Split ediff windows horizontally by default
+  (setq ediff-split-window-function 'split-window-horizontally))
 
+;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 (use-package with-editor
-  ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
-  :hook ((shell-mode eshell-mode term-exec) . with-editor-export-editor))
+  :hook (((shell-mode eshell-mode term-exec) . with-editor-export-editor)
+         (ghostel-pre-spawn-hook . with-editor-setup-environment)))
 
 (use-package magit
   :bind (("C-x g" . magit-status)
@@ -1454,9 +1468,13 @@ Just call it 8 times in a row should be enough to always show the file."
          ("s-m b" . magit-blame-addition)
          ("s-m B" . magit-blame)
          :map magit-process-mode-map
-         ("k" . magit-process-kill))
+         ("k" . magit-process-kill)
+         :map project-prefix-map
+         ("g" . magit-project-status))
   :hook (after-save . magit-after-save-refresh-status)
   :config
+  (add-to-list 'project-switch-commands '(magit-project-status "Magit"))
+
   ;; Don't override date for extend or reword
   (setq magit-commit-extend-override-date nil
         magit-commit-reword-override-date nil)
@@ -1529,13 +1547,14 @@ With prefix ARG, also insert time in HH:MM format."
 
 ;; Only deps: ghub, treepy
 (use-package forge
+  ;; :disabled t  ;; doesn't support markdown-ts-mode yet
   :after magit
   :config
   ;; Don't pull notifications as it blocks Emacs for a long time
   (setq forge-pull-notifications nil))
 
 (use-package diff-hl
-  :hook (((prog-mode conf-mode vc-dir-mode ledger-mode yaml-ts-mode toml-ts-mode markdown-mode) . turn-on-diff-hl-mode)
+  :hook (((prog-mode conf-mode vc-dir-mode ledger-mode yaml-ts-mode toml-ts-mode markdown-ts-mode) . turn-on-diff-hl-mode)
          (magit-pre-refresh  . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :bind (:map diff-hl-mode-map
