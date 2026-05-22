@@ -433,6 +433,9 @@
          ("E"   . project-edit-dir-locals)
          ("P"   . project-run-python))
   :config
+  ;; Give each project its own compilation buffer
+  (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+
   ;; Ignore clj-kondo and cljs-runtime folder by default
   (setq project-vc-ignores '(".clj-kondo/" "cljs-runtime/"))
 
@@ -1453,7 +1456,7 @@ Just call it 8 times in a row should be enough to always show the file."
 ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 (use-package with-editor
   :hook (((shell-mode eshell-mode term-exec) . with-editor-export-editor)
-         (ghostel-pre-spawn-hook . with-editor-setup-environment)))
+         (ghostel-pre-spawn . with-editor-setup-environment)))
 
 (use-package magit
   :bind (("C-x g" . magit-status)
