@@ -76,6 +76,9 @@
 	path = lib/dap-mode
 	url = git@github.com:emacs-lsp/dap-mode
 	no-byte-compile = dap-hydra.el
+[submodule "dape"]
+	path = lib/dape
+	url = https://github.com/svaante/dape
 [submodule "dash"]
 	path = lib/dash
 	url = git@github.com:magnars/dash.el
@@ -153,8 +156,11 @@
 [submodule "ghostel"]
 	path = lib/ghostel
 	url = git@github.com:dakra/ghostel.git
-	build-step = make build
 	build-step = borg-update-autoloads
+	build-step = borg-compile
+	build-step = borg-maketexi
+	build-step = borg-makeinfo
+	build-step = make build
 [submodule "ghub"]
 	path = lib/ghub
 	url = git@github.com:magit/ghub

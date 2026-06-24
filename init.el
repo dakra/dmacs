@@ -750,9 +750,8 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
 
 (use-package ghostel
   :bind (("C-x m" . ghostel)
-         :map ghostel-mode-map
-         ("<f7>" . org-clock-goto)
          :map ghostel-semi-char-mode-map
+         ("<f7>" . org-clock-goto)
          ("C-s"  . consult-line)
          ("C-k"  . ghostel-send-C-k-and-kill)
          ("M-d"  . ghostel-send-M-d-and-kill)
@@ -762,7 +761,8 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          :map project-prefix-map
-         ("m" . ghostel-project))
+         ("m" . ghostel-project)
+         ("M" . ghostel-project-list-buffers))
   :config
   (defun ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel.
@@ -786,18 +786,23 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
     (ghostel-send-key "backspace" "alt"))
 
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
+  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
 
 (use-package ghostel-eshell
-  :hook (eshell-load-hook . ghostel-eshell-visual-command-mode))
+  :hook (eshell-load . ghostel-eshell-visual-command-mode))
 
 (use-package ghostel-compile
   :hook (after-init . ghostel-compile-global-mode))
+
+(use-package ghostel-comint
+  :hook (after-init . ghostel-comint-global-mode))
 
 ;; I don't need markdown-mode anymore but lots of packages depend on it
 ;; (forge, lsp-mode, lsp-java, claude-code, copilot, eca)
 (use-package markdown-mode
   :defer t
+  ;; :hook (markdown-mode . (visual-line-mode visual-fill-column-mode word-wrap-whitespace-mode))
   :config
   ;; Display remote images
   (setq markdown-display-remote-images t)
@@ -1455,7 +1460,7 @@ Just call it 8 times in a row should be enough to always show the file."
 
 ;; Use local Emacs instance as $EDITOR (e.g. in `git commit' or `crontab -e')
 (use-package with-editor
-  :hook (((shell-mode eshell-mode term-exec) . with-editor-export-editor)
+  :hook (((eshell-mode term-exec) . with-editor-export-editor)
          (ghostel-pre-spawn . with-editor-setup-environment)))
 
 (use-package magit
@@ -2544,6 +2549,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 ;;   (setq nrepl-sync-request-timeout 90))
 
 (use-package eglot
+  :hook ((python-ts-mode . eglot-ensure))
   :defer t
   :config
   ;; XXX Check https://zubanls.com/blog/ for updates (no auto imports, docstrings yet)
@@ -2556,9 +2562,31 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   (setq eglot-extend-to-xref t
         eglot-autoshutdown t))
 
+(use-package dape
+  :hook ((dape-display-source . pulse-momentary-highlight-one-line))
+  :init
+  ;; TODO: Make the check for dape-configs more strict.
+  (put 'dape-configs 'safe-local-variable 'listp)
+  :config
+
+  (add-to-list 'display-buffer-alist '((category . dape-info-0)  ; Locals
+                                       (display-buffer-in-side-window)
+                                       (window-height . 0.7)
+                                       (window-width . 0.3)))
+  (add-to-list 'display-buffer-alist '((category . dape-info-1)  ; Stack
+                                       (display-buffer-in-side-window)
+                                       (window-height . 0.2)
+                                       (window-width . 0.3)))
+  (add-to-list 'display-buffer-alist '((category . dape-info-2)  ; Breakpoints
+                                       (display-buffer-in-side-window)
+                                       (window-height . 0.1)
+                                       (window-width . 0.3)))
+  (setq dape-buffer-window-arrangement 'right))
+
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :hook (((java-mode java-ts-mode) . lsp-deferred)
+  :hook (;; ((java-mode java-ts-mode) . lsp-deferred)
          (lsp-completion-mode . lsp-mode-setup-orderless))
   :bind (:map lsp-mode-map
               ("C-c C-a" . lsp-execute-code-action)
@@ -2657,6 +2685,7 @@ finding the executable with variable `exec-path'."
   (lsp-treemacs-sync-mode))
 
 (use-package lsp-pyright
+  :disabled t
   :after lsp-mode
   :hook (python-ts-mode . lsp-deferred)
   :config
@@ -2748,7 +2777,9 @@ finding the executable with variable `exec-path'."
   (setq outline-regexp "\\([[:space:]]\\{0,2\\}[a-zA-Z_-]+\\):$"))
 
 (use-package toml-ts-mode
-  :mode ("\\.toml\\'" "Cargo.lock\\'"))
+  :mode ("\\.toml\\'" "Cargo.lock\\'")
+  :config
+  (setq toml-ts-indent-offset 4))
 
 (use-package zig-ts-mode
   :defer t)

@@ -131,6 +131,7 @@
         exwm-windmove-left
         exwm-windmove-right
         exwm-windmove-up
+        fill-paragraph
         god-local-mode
         handle-select-window
         handle-switch-frame
