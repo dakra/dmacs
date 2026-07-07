@@ -218,6 +218,32 @@
         (beginning-of-thing 'symbol)
         (capitalize-word arg)))))
 
+(use-package frame
+  :hook (after-init . window-divider-mode)
+  :config
+  (setq window-divider-default-places 'right-only
+        window-divider-default-right-width 1))
+
+;; (use-package minibuffer
+;;   :bind (:map minibuffer-local-completion-map
+;;               ("SPC" . nil))  ; Unbind `minibuffer-complete-word'
+;;   :config
+;;   (setq
+;;    ;; One column view with annotations
+;;    completions-format 'one-column
+;;    completions-detailed t
+;;    completions-group t
+;;    ;; Sort candidates by history position
+;;    completions-sort 'historical
+;;    ;; Allow navigating from the minibuffer
+;;    minibuffer-visible-completions 'up-down
+;;    ;; Show completions eagerly and update automatically
+;;    completion-eager-update t
+;;    completion-eager-display t
+;;    completion-auto-help 'always
+;;    ;; Disable noise in the *Completions* buffer
+;;    completion-show-help nil))
+
 ;; So-long: Mitigating slowness due to extremely long lines
 (use-package so-long
   :defer 5
@@ -234,8 +260,8 @@
         compilation-always-kill t  ;; Kill old compile processes before starting a new one
         compilation-scroll-output t))  ;; Scroll with the compilation output
 
-(use-package ansi-color
-  :hook (compilation-filter . ansi-color-compilation-filter))
+;; (use-package ansi-color  ;; not needed with ghostel-comint integration
+;;   :hook (compilation-filter . ansi-color-compilation-filter))
 
 (use-package treesit
   :defer t
@@ -798,6 +824,16 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 (use-package ghostel-comint
   :hook (after-init . ghostel-comint-global-mode))
 
+(use-package plstore
+  :config
+  (setq plstore-encrypt-to "daniel@kraus.my"))
+
+(use-package sodium
+  :defer t)
+
+(use-package keepassxc
+  :hook ((after-init . keepassxc-auth-source-enable)))
+
 ;; I don't need markdown-mode anymore but lots of packages depend on it
 ;; (forge, lsp-mode, lsp-java, claude-code, copilot, eca)
 (use-package markdown-mode
@@ -845,7 +881,7 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   ;; :bind-keymap ("C-c c" . claude-code-command-map)
   :bind (("C-c c" . claude-code-transient)
          :repeat-map my-claude-code-map ("M" . claude-code-cycle-mode))
-  :hook ((after-init . claude-code-mode))
+  ;; :hook ((after-init . claude-code-mode))
   :config
   ;; This hook has to go here as use-package :hook adds a -hook to the name.
   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
@@ -1735,12 +1771,14 @@ With prefix ARG, also insert time in HH:MM format."
       ("E" "elisp-index-search" elisp-index-search)
       ;; ("S" "Screenshot with scrot" scrot)
       ;; ("w" "woman - Man page viewer" woman)
+      ("k" "KeepassXC" keepassxc)
+      ("l" "Ghostel List Buffers" ghostel-list-buffers)
       ("M" "Man page viewer" man)
+
       ;; ("y" "YouTube - Open dired buffer" (lambda () (interactive) (dired youtube-dl-directory)))
       ("z" "Zone - Screensaver" zone)]
      ["External"
-      ;; ("K" "Kitty" (start-process-lambda "kitty"))
-      ("k" "Kitty" (lambda ()
+      ("K" "Kitty" (lambda ()
                      (interactive)
                      (start-process-shell-command "kitty" nil "kitty")))
       ("g" "Ghostty" (lambda ()

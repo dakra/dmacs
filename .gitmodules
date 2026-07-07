@@ -221,6 +221,9 @@
 [submodule "just-ts-mode"]
 	path = lib/just-ts-mode
 	url = https://github.com/leon-barrett/just-ts-mode.el
+[submodule "keepassxc"]
+	path = lib/keepassxc
+	url = git@github.com:dakra/keepassxc.el.git
 [submodule "ligature"]
 	path = lib/ligature
 	url = git@github.com:mickeynp/ligature.el
@@ -358,6 +361,12 @@
 [submodule "smartparens"]
 	path = lib/smartparens
 	url = git@github.com:Fuco1/smartparens
+[submodule "sodium"]
+	path = lib/sodium
+	url = git@github.com:dakra/sodium.el.git
+	build-step = make
+	build-step = borg-compile
+	build-step = borg-update-autoloads
 [submodule "speed-type"]
 	path = lib/speed-type
 	url = git@github.com:dakra/speed-type.git
@@ -392,6 +401,9 @@
 [submodule "treepy"]
 	path = lib/treepy
 	url = git@github.com:volrath/treepy.el
+[submodule "tw-aws"]
+	path = lib/tw-aws
+	url = git@github.com:dakra/tw-aws.git
 [submodule "undo-fu-session"]
 	path = lib/undo-fu-session
 	url = https://codeberg.org/ideasman42/emacs-undo-fu-session
