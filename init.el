@@ -275,6 +275,24 @@
         (list (no-littering-expand-var-file-name (concat "tree-sitter-grammars/"
                                                          (symbol-name system-type))))))
 
+
+(use-package display-line-numbers
+  ;; :hook ((prog-mode . display-line-numbers-mode))
+  :commands (display-line-numbers-in-prog-mode-toggle)
+  :config
+  (defun display-line-numbers-in-prog-mode-toggle ()
+    "Toggle `display-line-numbers-mode' for all current and future prog-mode buffers."
+    (interactive)
+    (let ((enable? (not (memq #'display-line-numbers-mode prog-mode-hook))))
+      (if enable?
+          (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+        (remove-hook 'prog-mode-hook #'display-line-numbers-mode))
+      (dolist (buf (buffer-list))
+        (with-current-buffer buf
+          (when (derived-mode-p 'prog-mode)
+            (display-line-numbers-mode (if enable? 1 -1)))))
+      (message "%s line numbers in prog-mode buffers" (if enable? "Showing" "Hiding")))))
+
 (use-package subword
   :hook ((python-mode yaml-ts-mode conf-mode go-mode go-ts-mode clojure-mode cider-repl-mode
                       java-mode java-ts-mode cds-mode js-mode js-ts-mode) . subword-mode))
@@ -782,8 +800,8 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
          ("C-k"  . ghostel-send-C-k-and-kill)
          ("M-d"  . ghostel-send-M-d-and-kill)
          ("M-<backspace>" . ghostel-backward-kill-word)
-         ;; ;; I'm used to go up/down the shell history with M-n/p from eshell
-         ;; ;; Simulate this behavior in ghostel by sending C-p and C-n
+         ;; I'm used to go up/down the shell history with M-n/p from eshell
+         ;; Simulate this behavior in ghostel by sending C-p and C-n
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          :map project-prefix-map
@@ -833,6 +851,9 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 
 (use-package keepassxc
   :hook ((after-init . keepassxc-auth-source-enable)))
+
+(use-package brew
+  :defer t)
 
 ;; I don't need markdown-mode anymore but lots of packages depend on it
 ;; (forge, lsp-mode, lsp-java, claude-code, copilot, eca)
@@ -1901,6 +1922,7 @@ With prefix ARG, also insert time in HH:MM format."
   (setq avy-timeout-seconds 0.2))
 
 (use-package flash
+  :hook ((flash-after-jump . ghostel-maybe-leave-input))
   :bind ("C-;" . flash-jump-or-treesitter)
   :config
   (defun flash-jump-or-treesitter (treesitter?)
@@ -2896,6 +2918,36 @@ finding the executable with variable `exec-path'."
 
 (use-package docker-compose-mode
   :mode ("docker-compose[^/]*\\.ya?ml\\'"))
+
+;; SQL
+
+(use-package sql
+  :hook (sql-interactive-mode . toggle-truncate-lines)
+  :config
+  ;; Don't display the SQLi buffer after `sql-send-*' commands.
+  ;; Often I have the SQL buffer open on a different frame (/monitor) and
+  ;; can check the result there
+  (setq sql-display-sqli-buffer-function nil))
+
+(use-package snowflake
+  :defer t
+  :config
+  (setq snowflake-display-repl-buffer-function #'snowflake-display-unless-visible))
+
+(use-package sql-indent
+  :hook ((sql-mode sql-interactive-mode) . sqlind-minor-mode))
+;;:config (setq-default sqlind-basic-offset 4)
+
+(use-package sqlup-mode
+  :hook (sql-mode sql-interactive-mode redis-mode)
+  :config
+  ;; Don't capitalize keywords that are quoted
+  ;; https://github.com/Trevoke/sqlup-mode.el/issues/69
+  (modify-syntax-entry ?\" "\"" sql-mode-syntax-table)
+  (modify-syntax-entry ?` "\"" sql-mode-syntax-table)
+
+  ;; Don't capitalize some SQL keywords that I also use as column names
+  (setq sqlup-blacklist '("id" "name" "names" "type")))
 
 (use-package windmove
   :bind (("s-i" . aerospace-windmove-up)

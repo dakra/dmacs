@@ -22,6 +22,9 @@
 [submodule "borg"]
 	path = lib/borg
 	url = git@github.com:emacscollective/borg.git
+[submodule "brew"]
+	path = lib/brew
+	url = git@github.com:dakra/brew.el.git
 [submodule "bui"]
 	path = lib/bui
 	url = git@github.com:alezost/bui.el
@@ -361,6 +364,9 @@
 [submodule "smartparens"]
 	path = lib/smartparens
 	url = git@github.com:Fuco1/smartparens
+[submodule "snowflake"]
+	path = lib/snowflake
+	url = git@github.com:dakra/snowflake.el.git
 [submodule "sodium"]
 	path = lib/sodium
 	url = git@github.com:dakra/sodium.el.git
@@ -373,6 +379,12 @@
 [submodule "spinner"]
 	path = lib/spinner
 	url = git@github.com:Malabarba/spinner.el
+[submodule "sql-indent"]
+	path = lib/sql-indent
+	url = https://github.com/alex-hhh/emacs-sql-indent
+[submodule "sqlup-mode"]
+	path = lib/sqlup-mode
+	url = https://github.com/Trevoke/sqlup-mode.el
 [submodule "symbol-overlay"]
 	path = lib/symbol-overlay
 	url = git@github.com:wolray/symbol-overlay
@@ -401,9 +413,6 @@
 [submodule "treepy"]
 	path = lib/treepy
 	url = git@github.com:volrath/treepy.el
-[submodule "tw-aws"]
-	path = lib/tw-aws
-	url = git@github.com:dakra/tw-aws.git
 [submodule "undo-fu-session"]
 	path = lib/undo-fu-session
 	url = https://codeberg.org/ideasman42/emacs-undo-fu-session
