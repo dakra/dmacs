@@ -153,6 +153,9 @@
 [submodule "forge"]
 	path = lib/forge
 	url = git@github.com:magit/forge
+[submodule "forge-azure"]
+	path = lib/forge-azure
+	url = git@github.com:dakra/forge-azure.git
 [submodule "form-feed"]
 	path = lib/form-feed
 	url = https://depp.brause.cc/form-feed.git

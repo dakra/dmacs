@@ -1,4 +1,6 @@
-((magit-commit
+((forge-dispatch
+  (forge-merge . 3))
+ (magit-commit
   (magit:--gpg-sign . 4)
   (magit-commit-absorb . 4)
   (magit-commit-reshelve . 4))
@@ -15,6 +17,7 @@
   (magit-log:--until . 2)
   (magit-log:--since . 2))
  (magit-merge
+  (forge-merge . 3)
   (magit-merge:--strategy-option . 2))
  (magit-push
   (transient:magit-push:--follow-tags . 2)))

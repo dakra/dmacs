@@ -1618,6 +1618,11 @@ With prefix ARG, also insert time in HH:MM format."
   ;; Don't pull notifications as it blocks Emacs for a long time
   (setq forge-pull-notifications nil))
 
+(use-package forge-azure
+  :after (forge)
+  :config
+  (setq forge-azure-auto-complete t))
+
 (use-package diff-hl
   :hook (((prog-mode conf-mode vc-dir-mode ledger-mode yaml-ts-mode toml-ts-mode markdown-ts-mode) . turn-on-diff-hl-mode)
          (magit-pre-refresh  . diff-hl-magit-pre-refresh)
