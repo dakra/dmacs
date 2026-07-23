@@ -135,9 +135,9 @@
 [submodule "epkg"]
 	path = lib/epkg
 	url = git@github.com:emacscollective/epkg.git
-[submodule "expand-region"]
-	path = lib/expand-region
-	url = git@github.com:magnars/expand-region.el
+[submodule "expreg"]
+	path = lib/expreg
+	url = https://github.com/casouri/expreg
 [submodule "extmap"]
 	path = lib/extmap
 	url = git@github.com:doublep/extmap

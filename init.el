@@ -1938,19 +1938,18 @@ Otherwise execute `flash-jump'."
         (flash-treesitter)
       (flash-jump))))
 
-(use-package expand-region
+(use-package expreg
   :bind (([remap set-mark-command] . set-mark-or-expand-region))
   :config
   ;; Idea from the `smart-region' package, but a simpler version.
   (defun set-mark-or-expand-region (arg)
     "This function initially acts like `set-mark', but when there is a
-selectred region active it calls `er/expand-region'.
+selected region active it calls `expreg-expand'.
 So you can press it once to activate a region and multiple times in a
 row to expand the region as necessary."
     (interactive "P")
     (if (region-active-p)
-        (call-interactively #'er/expand-region)
-      (setq this-command 'set-mark-command)
+        (call-interactively #'expreg-expand)
       (call-interactively 'set-mark-command))))
 
 (use-package selected
