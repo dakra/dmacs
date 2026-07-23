@@ -463,6 +463,40 @@
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer))
 
+(use-package erc
+  :config
+  (setq erc-lurker-hide-list '("PART" "QUIT" "JOIN"))
+  (setq erc-autojoin-channels-alist '(("Libera.Chat"
+                                       "#emacs"
+                                       "#clojure")))
+  (setq erc-server "chat.sr.ht")
+  (setq erc-email-userid "dakra/irc.libera.chat")
+  (setq erc-nick "dakra")
+  (setq erc-user-full-name user-full-name)
+  (setq erc-prompt-for-password nil)
+  (setq erc-interpret-mirc-color t)
+
+  (add-to-list 'erc-modules 'notifications)
+  (add-to-list 'erc-modules 'spelling)
+  (erc-update-modules)
+  (erc-track-minor-mode 1)
+  (erc-track-mode 1))
+
+;; (use-package erc-hl-nicks
+;;   :after erc)
+
+(use-package erc-track
+  :after erc
+  :config
+  (setq erc-track-exclude-types '("JOIN" "NICK" "QUIT" "MODE" "333" "353")))
+
+(use-package erc-services
+  :after erc
+  :config
+  (setq erc-prompt-for-nickserv-password nil)
+  (setq erc-nickserv-passwords
+        `((irc.libera.chat (("dakra" . ,(auth-source-pick-first-password :host "irc.libera.chat" :login erc-nick)))))))
+
 (use-package project
   :bind-keymap (("s-p"   . project-prefix-map)  ; projectile-command-map
                 ("C-c p" . project-prefix-map))
@@ -3132,7 +3166,51 @@ if there is no window on the down."
                             (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|"
                                       "CANCELLED(c@/!)" "MEETING")))
 
-  (set-face-attribute 'org-ellipsis nil :inherit 'default :box nil))
+  (defun my/org-slugify (s)
+    "Lowercase S, collapse runs of non-alphanumerics to single hyphens, trim.
+Return \"image\" when nothing usable remains."
+    (let ((slug (replace-regexp-in-string
+                 "^-+\\|-+$" ""
+                 (replace-regexp-in-string "[^[:alnum:]]+" "-" (downcase s)))))
+      (if (string-empty-p slug) "image" slug)))
+
+  (defun my/org-yank-image-dir ()
+    "Directory for images yanked into the current buffer: data/<file-basename>/."
+    (concat "data/" (file-name-base (or (buffer-file-name) "unfiled"))))
+
+  (defun my/org-yank-image-filename ()
+    "Name a yanked image after the current heading, plus a timestamp."
+    (let ((heading (if (org-before-first-heading-p)
+                       "image"
+                     (org-get-heading t t t t))))
+      (format "%s-%s"
+              (my/org-slugify heading)
+              (format-time-string "%Y-%m-%d--%H-%M-%S"))))
+
+  (defun my/org-yank-media-relative-link (orig-fun mimetype data)
+    "Rewrite the absolute file: link that `org--image-yank-media-handler' inserts.
+Only touches the non-attach save methods, whose link has no description.
+Also previews the just-inserted image so it shows without a manual toggle."
+    (let ((beg (point-marker)))
+      (funcall orig-fun mimetype data)
+      (let ((end (point-marker)))
+        (unless (eq org-yank-image-save-method 'attach)
+          (save-excursion
+            (save-match-data
+              (goto-char beg)
+              (when (re-search-forward "\\[\\[file:\\([^]]+\\)\\]\\]" end t)
+                (replace-match
+                 (concat "[[file:" (file-relative-name (match-string 1) default-directory) "]]")
+                 t t)))))
+        (org-link-preview-region nil nil beg end))))
+
+  (set-face-attribute 'org-ellipsis nil :inherit 'default :box nil)
+
+  ;; Yank/drop images into data/<org-file>/ named after the current heading,
+  ;; inserting a bare (description-less, so it previews inline) relative link.
+  (setq org-yank-image-save-method #'my/org-yank-image-dir
+        org-yank-image-file-name-function #'my/org-yank-image-filename)
+  (advice-add 'org--image-yank-media-handler :around #'my/org-yank-media-relative-link))
 
 (use-package org-duration
   :defer t
