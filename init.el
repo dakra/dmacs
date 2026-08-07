@@ -591,6 +591,12 @@ created a dedicated process for the project."
          ("C-c C-d" . dired-dragon-popup)
          ("C-c C-e" . dired-toggle-read-only))
   :config
+  (when (eq system-type 'darwin)
+    (setq insert-directory-program "gls"))
+
+  ;; dired list size in human-readable format and list directories first
+  (setq dired-listing-switches "-AGhlv --group-directories-first --time-style=long-iso")
+
   ;; Allow drag and drop out of dired into other apps (e.g. browser)
   (setq dired-mouse-drag-files t)
   ;; Open directories in same buffer
@@ -2646,8 +2652,14 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 ;;   ;; Especially when using with ejc-sql and e.g. Athena queries
 ;;   (setq nrepl-sync-request-timeout 90))
 
+(use-package dart-ts-mode
+  :defer t)
+
 (use-package eglot
-  :hook ((python-ts-mode . eglot-ensure))
+  :hook (((dart-ts-mode python-ts-mode typescript-ts-mode) . eglot-ensure)
+         (eglot-managed-mode . (lambda ()
+                                 (eglot-inlay-hints-mode -1)
+                                 (flycheck-eglot-mode))))
   :defer t
   :config
   ;; XXX Check https://zubanls.com/blog/ for updates (no auto imports, docstrings yet)
@@ -2656,6 +2668,12 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   (add-to-list 'eglot-server-programs
                '((python-mode python-ts-mode)
                  . ("uv" "tool" "run" "--from" "basedpyright" "basedpyright-langserver" "--stdio")))
+
+  (add-to-list 'eglot-server-programs
+               '(dart-ts-mode . ("dart" "language-server" "--client-id" "emacs.eglot-dart")))
+
+  (add-to-list 'eglot-server-programs
+               '((typescript-ts-mode js-mode js-ts-mode js2-mode) . ("tsc" "--lsp" "--stdio")))
 
   (setq eglot-extend-to-xref t
         eglot-autoshutdown t))
@@ -3137,6 +3155,7 @@ if there is no window on the down."
         org-special-ctrl-a/e t
         org-insert-heading-respect-content t
         org-startup-with-inline-images t
+        org-image-max-width 1024  ;; Inlined images max 1024px wide
         org-imenu-depth 5
         org-special-ctrl-a/e t
         org-special-ctrl-k t

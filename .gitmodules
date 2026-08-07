@@ -82,6 +82,9 @@
 [submodule "dape"]
 	path = lib/dape
 	url = https://github.com/svaante/dape
+[submodule "dart-ts-mode"]
+	path = lib/dart-ts-mode
+	url = git@github.com:50ways2sayhard/dart-ts-mode.git
 [submodule "dash"]
 	path = lib/dash
 	url = git@github.com:magnars/dash.el
