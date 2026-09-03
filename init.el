@@ -517,6 +517,9 @@
   ;; Ignore clj-kondo and cljs-runtime folder by default
   (setq project-vc-ignores '(".clj-kondo/" "cljs-runtime/"))
 
+  ;; Treat submodules as separate projects
+  (setq project-vc-merge-submodules nil)
+
   (defun project-edit-dir-locals ()
     "Open buffer with .dir-locals.el for current project."
     (interactive)
@@ -845,7 +848,7 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
          :map project-prefix-map
-         ("m" . ghostel-project)
+         ;; ("m" . ghostel-project)
          ("M" . ghostel-project-list-buffers))
   :config
   (defun ghostel-send-C-k-and-kill ()
@@ -872,6 +875,14 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
   (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
   (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
+
+(use-package consult-ghostel
+  :after (ghostel consult)
+  :bind (("C-x m" . consult-ghostel)
+         :map project-prefix-map
+         ("m" . consult-ghostel-project)
+         :map ghostel-semi-char-mode-map
+         ("C-c h" . consult-ghostel-history)))
 
 (use-package ghostel-eshell
   :hook (eshell-load . ghostel-eshell-visual-command-mode))
@@ -917,7 +928,10 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 
 (use-package markdown-ts-mode
   :demand t
+  :mode ("\\.md\\'" "\\.mdx\\'" "\\.markdown\\'")
   :config
+  (require 'markdown-ts-mode-x)
+
   (setq markdown-ts-inline-images t)
   ;; Add some more languages
   (dolist (x '((ini  conf-mode)
@@ -2086,6 +2100,7 @@ mark the string and call `edit-indirect-region' with it."
   :hook ((emacs-lisp-mode lisp-mode hy-mode clojure-mode cider-repl-mode sql-mode) . rainbow-delimiters-mode))
 
 (use-package form-feed
+  :disabled t  ;; replaced by whitespace
   :hook (prog-mode . form-feed-init)
   :config
   (defun form-feed-init ()
@@ -2095,6 +2110,16 @@ mark the string and call `edit-indirect-region' with it."
     (add-to-list 'form-feed--font-lock-keywords
                  `(,(concat comment-start-skip "-\\{40,\\}") 0 form-feed--font-lock-face t))
     (form-feed-mode)))
+
+(use-package whitespace
+  :hook (prog-mode . my-page-delimiter-init)
+  :config
+  (defun my-page-delimiter-init ()
+    (when comment-start-skip
+      (setq-local page-delimiter
+                  (concat "^\\(?:\f\\|[ \t]*\\(?:" comment-start-skip
+                          "\\)[=-]\\{40,\\}[ \t]*$\\)")))
+    (whitespace-page-delimiters-mode)))
 
 (use-package ipinfo
   :defer t)
@@ -2656,7 +2681,7 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :defer t)
 
 (use-package eglot
-  :hook (((dart-ts-mode python-ts-mode typescript-ts-mode) . eglot-ensure)
+  :hook (((dart-ts-mode python-ts-mode typescript-ts-mode zig-ts-mode) . eglot-ensure)
          (eglot-managed-mode . (lambda ()
                                  (eglot-inlay-hints-mode -1)
                                  (flycheck-eglot-mode))))
@@ -2944,6 +2969,8 @@ finding the executable with variable `exec-path'."
   :config
   (setq python-pytest-executable "uv run pytest"))
 
+(use-package gdscript-mode
+  :defer t)
 
 (use-package web-mode
   :mode ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.tpl\\'" "\\.blade\\.php\\'" "\\.jsp\\'" "\\.as[cp]x\\'"

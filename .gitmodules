@@ -162,9 +162,14 @@
 [submodule "form-feed"]
 	path = lib/form-feed
 	url = https://depp.brause.cc/form-feed.git
+[submodule "gdscript-mode"]
+	path = lib/gdscript-mode
+	url = https://github.com/godotengine/emacs-gdscript-mode
 [submodule "ghostel"]
 	path = lib/ghostel
 	url = git@github.com:dakra/ghostel.git
+	load-path = lisp
+	load-path = extensions/consult-ghostel
 	build-step = borg-update-autoloads
 	build-step = borg-compile
 	build-step = borg-maketexi
