@@ -125,6 +125,7 @@
         dap-tooltip-mouse-motion
         delete-window
         describe-key
+        dired-unmark-all-marks
         embark-prefix-help-command
         end-of-buffer
         exwm-windmove-down

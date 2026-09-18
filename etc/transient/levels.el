@@ -20,4 +20,6 @@
   (forge-merge . 3)
   (magit-merge:--strategy-option . 2))
  (magit-push
-  (transient:magit-push:--follow-tags . 2)))
+  (transient:magit-push:--follow-tags . 2))
+ (smear-cursor-menu
+  (t . 5)))

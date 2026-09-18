@@ -387,6 +387,13 @@
   :config
   (setq dumb-jump-selector 'completing-read))
 
+(use-package smear-cursor
+  :unless noninteractive
+  :hook (after-init . smear-cursor-mode)
+  :config
+  (when (featurep 'ns)
+    (setq smear-cursor-backend 'ns)))
+
 (use-package gumshoe
   :hook (after-init . global-gumshoe-mode)
   :bind (("C-x SPC" . gumshoe-backtrack)
@@ -1596,7 +1603,9 @@ Just call it 8 times in a row should be enough to always show the file."
 
   ;; Don't override date for extend or reword
   (setq magit-commit-extend-override-date nil
-        magit-commit-reword-override-date nil)
+        magit-commit-reword-override-date nil
+        ;; Most recently updated branches first when reading a ref
+        magit-list-refs-sortby "-committerdate")
 
   ;; Always show recent/unpushed/unpulled commits
   (setq magit-section-initial-visibility-alist '((unpushed . show)
