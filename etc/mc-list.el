@@ -39,6 +39,7 @@
         end-of-defun
         eval-last-sexp
         forward-sexp
+        ghostel-line-mode-self-insert
         grep-context-less-around-point
         grep-context-more-around-point
         haml-electric-backspace

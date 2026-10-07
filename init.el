@@ -1,4 +1,4 @@
-;;; init.el --- user-init-file                    -*- lexical-binding: t -*-
+;;; init.el --- user-init-file                    -*- lexical-binding: t; byte-compile-warnings: (not free-vars unresolved noruntime) -*-
 
 (defvar before-user-init-time (current-time)
   "Value of `current-time' when Emacs begins loading `user-init-file'.")
@@ -398,12 +398,12 @@
   :hook (after-init . global-gumshoe-mode)
   :bind (("C-x SPC" . gumshoe-backtrack)
          ("C-x C-SPC" . gumshoe-buf-backtrack)
-         ("C-x M-SPC" . global-gumshoe-backtracking-mode-forward)
-         :map global-gumshoe-backtracking-mode-map
-         ("p" . global-gumshoe-backtracking-mode-back)
-         ("n" . global-gumshoe-backtracking-mode-forward)
-         ("SPC" . global-gumshoe-backtracking-mode-back)
-         ("C-SPC" . global-gumshoe-backtracking-mode-forward))
+         ("C-x M-SPC" . gumshoe-backtracking-forward)
+         :map gumshoe-backtracking-mode-map
+         ("p" . gumshoe-backtracking-back)
+         ("n" . gumshoe-backtracking-forward)
+         ("SPC" . gumshoe-backtracking-back)
+         ("C-SPC" . gumshoe-backtracking-forward))
   :config
   (setq gumshoe-ignored-major-modes
         '( fundamental-mode minibuffer-mode treemacs-mode
@@ -681,6 +681,8 @@ created a dedicated process for the project."
   ;; From https://emacs.stackexchange.com/a/18569/15023.
   (setq eshell-history-size 8192
         eshell-save-history-on-exit nil)
+  (defvar eshell-history-ring)
+  (defvar eshell-history-file-name)
   (defun eshell-append-history ()
     "Call `eshell-write-history' with the `append' parameter set to `t'."
     (when eshell-history-ring
@@ -745,33 +747,13 @@ go to \"/sudo:remotehost:/etc\" instead of just \"/etc\" on localhost."
               ("M-K" . windmove-swap-states-down)
               ("M-I" . windmove-swap-states-up)
               ("M-L" . windmove-swap-states-right))
-  :config
-  (defun eat-compile (command name)
-    (let ((buf (pop-to-buffer name '((display-buffer-no-window)
-                                     (inhibit-same-window . t))))
-          (eat-mode-hook nil)
-          (eat-kill-buffer-on-exit nil))
-      (with-current-buffer buf
-        (delete-region (point-min) (point-max))
-        (eat-exec buf name "bash" nil (list "-ilc" command))
-        (setq eat--synchronize-scroll-function #'eat--synchronize-scroll)
-        (eat-emacs-mode)
-        (compilation-minor-mode))))
-
-  (setq eat-kill-buffer-on-exit t))
+  :config (setq eat-kill-buffer-on-exit t))
 
 (use-package vterm
   :defer t
   :bind (:map vterm-mode-map
               ("C-y" . vterm-yank)
-              ("M-y" . vterm-yank-pop)
-              ("C-k" . vterm-send-C-k-and-kill)
-              ("M-d" . vterm-send-M-d-and-kill)
-              ("M-DEL" . vterm-backward-kill-word)
-              ;; I'm used to go up/down the shell history with M-n/p from eshell
-              ;; Simulate this behavior in vterm
-              ("M-p" . vterm-send-C-p)
-              ("M-n" . vterm-send-C-n))
+              ("M-y" . vterm-yank-pop))
   :hook (vterm-mode . -vterm-init)
   :config
   (defun -vterm-init ()
@@ -780,59 +762,9 @@ And disable hl-line-mode which causes a flicker on prompt when typing."
     (whole-line-or-region-local-mode -1)
     (hl-line-mode 'toggle))
 
-  (defun vterm-send-C-p ()
-    "Sends C-p to the libvterm."
-    (interactive)
-    (vterm-send-key "p" nil nil t))
-
-  (defun vterm-send-C-n ()
-    "Sends C-n to the libvterm."
-    (interactive)
-    (vterm-send-key "n" nil nil t))
-
   ;; Kill dead vterm buffers
   (setq vterm-kill-buffer-on-exit t
         vterm-max-scrollback 100000)
-
-  ;; Run a shell command in vterm with compilation-minor-mode
-  (defun vterm-compile (command &optional name)
-    (interactive
-     (list
-      (let ((command (eval compile-command)))
-        (if (or compilation-read-command current-prefix-arg)
-            (compilation-read-command command)
-          command))
-      (consp current-prefix-arg)))
-    (let ((buffer (generate-new-buffer (or name "*vterm*"))))
-      (with-current-buffer buffer
-        (let ((vterm-shell command)
-              (vterm-kill-buffer-on-exit nil)
-              (vterm-mode-hook nil)
-              (next-error-function 'vterm-next-error-function))
-          (vterm-mode)
-          (compilation-minor-mode))
-        (pop-to-buffer buffer))))
-
-  (defun vterm-send-C-k-and-kill ()
-    "Send `C-k' to libvterm.
-Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
-    (interactive)
-    (kill-ring-save (point) (line-end-position))
-    (vterm-send-key "k" nil nil t))
-
-  (defun vterm-send-M-d-and-kill ()
-    "Send `M-d' to libvterm.
-Like normal Emacs `M-d'.  Kill word and put content in kill-ring."
-    (interactive)
-    (kill-ring-save (point) (save-excursion (forward-word) (point)))
-    (vterm-send-key "d" nil t nil))
-
-  (defun vterm-backward-kill-word ()
-    "Send `M-DEL' to libvterm.
-Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
-    (interactive)
-    (kill-ring-save (save-excursion (backward-word) (point)) (point))
-    (vterm-send-key "DEL" nil t nil))
 
   ;; Allow vterm to invoke some elisp functions
   (setq vterm-eval-cmds '(("dired-other-window" dired-other-window)
@@ -843,7 +775,7 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
 (use-package ghostel
-  :bind (("C-x m" . ghostel)
+  :bind (;;("C-x m" . ghostel)
          :map ghostel-semi-char-mode-map
          ("<f7>" . org-clock-goto)
          ("C-s"  . consult-line)
@@ -853,10 +785,7 @@ Like normal Emacs `M-d'.  Kill a word backward and put content in kill-ring."
          ;; I'm used to go up/down the shell history with M-n/p from eshell
          ;; Simulate this behavior in ghostel by sending C-p and C-n
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
-         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl")))
-         :map project-prefix-map
-         ;; ("m" . ghostel-project)
-         ("M" . ghostel-project-list-buffers))
+         ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl"))))
   :config
   (defun ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel.
@@ -879,17 +808,17 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
     (ghostel-send-key "backspace" "alt"))
 
-  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t)
-  (add-to-list 'project-switch-commands '(ghostel-project-list-buffers "Ghostel buffers") t)
-  (add-to-list 'ghostel-eval-cmds '("magit-status-setup-buffer" magit-status-setup-buffer)))
+  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t))
 
 (use-package consult-ghostel
-  :after (ghostel consult)
+  :hook (after-init . consult-ghostel-mode)
   :bind (("C-x m" . consult-ghostel)
          :map project-prefix-map
          ("m" . consult-ghostel-project)
          :map ghostel-semi-char-mode-map
-         ("C-c h" . consult-ghostel-history)))
+         ("C-c h" . consult-ghostel-history))
+  :config
+  (add-to-list 'project-switch-commands '(consult-ghostel-project "Ghostel buffers") t))
 
 (use-package ghostel-eshell
   :hook (eshell-load . ghostel-eshell-visual-command-mode))
@@ -1293,7 +1222,8 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
               ("M-w" . pdf-view-kill-ring-save))
   :config
   (defun pdf-view-init ()
-    "Initialize pdf-tools view like enabline TOC functions or use dark theme at night."
+    "Initialize pdf-tools view.
+Enable TOC functions and use a dark theme at night."
 
     ;; Use dark theme when opening PDFs at night time
     (let ((hour (string-to-number (format-time-string "%H"))))
@@ -1567,6 +1497,10 @@ Just call it 8 times in a row should be enough to always show the file."
                          (match-end 0)
                          'font-lock-face 'magit-keyword))))
 
+(use-package vc-hooks
+  :config
+  (setq vc-handled-backends '(Git)))
+
 (use-package ediff
   ;; Always expand files before diffing (especially org files)
   :hook ((ediff-prepare-buffer-hook . outline-show-all))
@@ -1688,7 +1622,6 @@ With prefix ARG, also insert time in HH:MM format."
 
 (use-package diff-hl
   :hook (((prog-mode conf-mode vc-dir-mode ledger-mode yaml-ts-mode toml-ts-mode markdown-ts-mode) . turn-on-diff-hl-mode)
-         (magit-pre-refresh  . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :bind (:map diff-hl-mode-map
               ("C-x v s" . diff-hl-show-hunk)
@@ -1768,8 +1701,8 @@ With prefix ARG, also insert time in HH:MM format."
         transient-display-buffer-action '(display-buffer-below-selected (dedicated . t)
                                                                         (inhibit-same-window . t)))
 
-  (defun transient-help-toggle (text toggle)
-    (if (bound-and-true-p toggle)
+  (defun transient-help-toggle (text var)
+    (if (if (boundp var) (symbol-value var) (and (fboundp var) (funcall var)))
         (format "[x] %s" text)
       (format "[ ] %s" text)))
 
@@ -2005,12 +1938,12 @@ Otherwise execute `flash-jump'."
   :bind (([remap set-mark-command] . set-mark-or-expand-region))
   :config
   ;; Idea from the `smart-region' package, but a simpler version.
-  (defun set-mark-or-expand-region (arg)
+  (defun set-mark-or-expand-region ()
     "This function initially acts like `set-mark', but when there is a
 selected region active it calls `expreg-expand'.
 So you can press it once to activate a region and multiple times in a
 row to expand the region as necessary."
-    (interactive "P")
+    (interactive)
     (if (region-active-p)
         (call-interactively #'expreg-expand)
       (call-interactively 'set-mark-command))))
@@ -2078,7 +2011,7 @@ row to expand the region as necessary."
   (defun edit-indirect-dwim (beg end &optional display-buffer)
     "DWIM version of edit-indirect-region.
 When region is selected, behave like `edit-indirect-region'
-but when no region is selected and the cursor is in a 'string' syntax
+but when no region is selected and the cursor is in a `string' syntax
 mark the string and call `edit-indirect-region' with it."
     (interactive
      (if (or (use-region-p) (not transient-mark-mode))
@@ -2195,15 +2128,15 @@ mark the string and call `edit-indirect-region' with it."
          ("D" . my-move-to-trash)
          ("M" . mu4e-headers-mark-all-unread-read) ; Mark all as read
          :map mu4e-search-minor-mode-map
-         ("P" . mu4e-view-headers-prev)
+         ("P" . mu4e-headers-prev)
          :map mu4e-view-mode-map
          ;; ("A" . mu4e-view-attachment-action)
          ;; ("M-o" . ace-link-mu4e)
          ;; ("o" . ace-link-mu4e)
          ("n" . mu4e-scroll-up)
          ("p" . mu4e-scroll-down)
-         ("N" . mu4e-view-headers-next)
-         ("P" . mu4e-view-headers-prev)
+         ("N" . mu4e-headers-next)
+         ("P" . mu4e-headers-prev)
          ("J" . mu4e-move-to-junk)
          ("d" . my-move-to-trash)
          ("D" . my-move-to-trash))
@@ -2253,8 +2186,7 @@ mark the string and call `edit-indirect-region' with it."
 
   ;; Show additional user-agent header
   (setq-default mu4e-view-fields
-                '(:from :to :cc :subject :flags :date :maildir :user-agent :mailing-list
-                        :tags :attachments :signature :decryption))
+                '(:from :to :cc :subject :flags :date :maildir :user-agent :mailing-list :tags))
 
   ;; Don't show related messages by default.
   ;; Activate with 'a s' (mu4e action - show thread) on demand.
@@ -2317,7 +2249,8 @@ mark the string and call `edit-indirect-region' with it."
   (setq message-kill-buffer-on-exit t)
 
   (defun dakra-mu4e-update-index (&optional alert?)
-    "Like `mu4e-update-index' but also update modeline and optionally send an alert message."
+    "Like `mu4e-update-index' but also update the modeline.
+Send an alert message when ALERT? is non-nil."
     (mu4e-update-index)
     (mu4e--modeline-update)
     (when alert?
@@ -2406,7 +2339,7 @@ Should be added to `message-send-hook'."
 
 (use-package clojure-mode
   :bind (:map clojure-mode-map
-              ("C-M-;" . clojure-toggle-ignore))
+              ("C-M-;" . clojure-toggle-discard))
   :config
   ;; Eval top level forms inside comment forms instead of the comment form itself
   (setq clojure-toplevel-inside-comment-form t)
@@ -2433,9 +2366,9 @@ Should be added to `message-send-hook'."
    ;; Automatically download source artifacts for 3rd-party Java classes
    cider-download-java-sources t
    ;; Only show cider eval results as overlay and not in the minibuffer
-   cider-use-overlays t
+   cider-eval-result-display 'overlay
    ;; Use `moon' spinner that looks nice and doesn't take as much space as the progress bar
-   cider-eval-spinner-type 'moon
+   cider-spinner-type 'moon
    ;; Store more items in repl history (default 500)
    cider-repl-history-size 2000
    ;; When loading the buffer (C-c C-k) save first without asking
@@ -2448,11 +2381,8 @@ Should be added to `message-send-hook'."
    cider-invert-insert-eval-p t
    ;; Show error as overlay instead of the buffer (buffer is generated anyway in case it's needed)
    cider-show-error-buffer 'except-in-repl
-   ;; If we set `cider-show-error-buffer' to non-nil,
-   ;; don't focus error buffer when error is thrown
-   cider-auto-select-error-buffer nil
-   ;; Don't focus inspector after evaluating something
-   cider-inspector-auto-select-buffer nil
+   ;; Don't focus the error buffer or the inspector when they pop up
+   cider-auto-select-buffer '(test-report doc cheatsheet log-frameworks)
    ;; Don't show tooltip with mouse hover
    cider-use-tooltips nil
    ;; Display context dependent info in the eldoc where possible.
@@ -2466,7 +2396,7 @@ Should be added to `message-send-hook'."
    cider-ns-code-reload-tool 'clj-reload)
 
   ;; I basically never connect to a remote host nrepl, so skip the host question on connect
-  (defun cider--completing-read-host (hosts)
+  (defun cider--completing-read-host (_hosts)
     '("localhost"))
 
   ;; Display cider-scratch buffer in the same window
@@ -2513,7 +2443,7 @@ the *cider-result* buffer."
                  (propertize ";; output cleared\n" 'font-lock-face 'font-lock-comment-face)))))))))
 
   (defun cider-maybe-clojuredocs (&optional arg)
-    "Like `cider-doc' but call `cider-clojuredocs' when invoked with prefix arg in `clojure-mode'."
+    "Like `cider-doc' but call `cider-clojuredocs' with prefix ARG in `clojure-mode'."
     (interactive "P")
     (if (and arg (or (eq major-mode 'clojure-mode)
                      (eq major-mode 'clojurec-mode)
@@ -2622,27 +2552,18 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
     (save-buffer)
     (clerk-show))
 
-  (define-minor-mode clerk-mode
-    "A mode that calls `clerk-show' after save and adds a keybinding to `<M-return>'."
-    :lighter " clerk"
-    :keymap `((,(kbd "<M-return>") . clerk-save-and-show)
-              (,(kbd "<C-c t>") . clerk-tap-table))
-    (if clerk-mode
-        (add-hook 'after-save-hook #'clerk-show 100 t)
-      (remove-hook 'after-save-hook #'clerk-show t)))
-
   ;; jack-in for babashka
   ;; Code mostly from corgi: https://github.com/lambdaisland/corgi-packages/blob/main/corgi-clojure/corgi-clojure.el#L192-L211
   (defun cider-jack-in-babashka (&optional project-dir)
-    "Start a utility CIDER REPL backed by Babashka, not related to a specific project."
+    "Start a utility CIDER REPL backed by Babashka in PROJECT-DIR."
     (interactive)
     (let ((project-dir (or project-dir (project-root (project-current t)))))
       (nrepl-start-server-process
        project-dir
        "bb --nrepl-server 0"
-       (lambda (server-buffer)
+       (lambda (buf)
          (cider-nrepl-connect
-          (list :repl-buffer server-buffer
+          (list :repl-buffer buf
                 :repl-type 'clj
                 :host (plist-get nrepl-endpoint :host)
                 :port (plist-get nrepl-endpoint :port)
@@ -2652,6 +2573,15 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
                                       (setq-local cljr-suppress-no-project-warning t
                                                   cljr-suppress-middleware-warnings t)
                                       (rename-buffer "*babashka-repl*")))))))))
+
+(define-minor-mode clerk-mode
+  "Call `clerk-show' after save and bind `<M-return>' to `clerk-save-and-show'."
+  :lighter " clerk"
+  :keymap `((,(kbd "<M-return>") . clerk-save-and-show)
+            (,(kbd "C-c t") . clerk-tap-table))
+  (if clerk-mode
+      (add-hook 'after-save-hook #'clerk-show 100 t)
+    (remove-hook 'after-save-hook #'clerk-show t)))
 
 (use-package clj-refactor
   :hook (clojure-mode . clj-refactor-mode)
@@ -2709,7 +2639,11 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   (add-to-list 'eglot-server-programs
                '((typescript-ts-mode js-mode js-ts-mode js2-mode) . ("tsc" "--lsp" "--stdio")))
 
+  (add-to-list 'eglot-ignored-server-capabilities :documentOnTypeFormattingProvider)
+
   (setq eglot-extend-to-xref t
+        eglot-sync-connect nil
+        eglot-events-buffer-config '(:size 0 :format short)
         eglot-autoshutdown t))
 
 (use-package dape
@@ -3369,7 +3303,8 @@ Also previews the just-inserted image so it shows without a manual toggle."
       (apply oldfun args)))
   (advice-add 'org-capture-place-template :around 'org-capture-place-template-dont-delete-windows)
 
-  (setq org-capture-bookmark nil   ; Do *NOT* bookmark to the last location when capturing
+  ;; Do *NOT* bookmark to the last location when capturing
+  (setq org-bookmark-names-plist '(:last-refile "org-refile-last-stored")
         org-reverse-note-order t)  ; Capture/refile new items to the top of the list
 
   ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
@@ -3400,7 +3335,7 @@ Also previews the just-inserted image so it shows without a manual toggle."
 
 (use-package ob
   :after org
-  :hook ((org-babel-after-execute . org-display-inline-images))
+  :hook ((org-babel-after-execute . org-link-preview-region))
   :config
   ;; don't prompt me to confirm every time I want to evaluate a block
   (setq org-confirm-babel-evaluate nil)
@@ -3456,7 +3391,7 @@ Also previews the just-inserted image so it shows without a manual toggle."
   ;; Alternative is `current-window' to don't mess with window layout at all
   (setq org-src-window-setup 'split-window-below)
 
-  (setq org-edit-src-content-indentation 0)
+  (setq org-src-content-indentation 0)
 
   ;; Add 'conf-mode' to org-babel
   (add-to-list 'org-src-lang-modes '("ini" . conf))
