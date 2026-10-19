@@ -1209,7 +1209,11 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
                                   multiple-cursors-mode
                                   mu4e-modeline-mode)))
 
+(use-package reader
+  :defer t)
+
 (use-package pdf-tools
+  :disabled t  ; use emacs-reader instead
   ;; manually update
   ;; after each update we have to call:
   ;; Install pdf-tools but don't ask or raise error (otherwise daemon mode will wait for input)
