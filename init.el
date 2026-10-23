@@ -775,7 +775,9 @@ And disable hl-line-mode which causes a flicker on prompt when typing."
                           ("vterm-clear-scrollback" vterm-clear-scrollback))))
 
 (use-package ghostel
+  :hook (after-init . ghostel-status-indicator-mode)
   :bind (;;("C-x m" . ghostel)
+         ([remap async-shell-command] . ghostel-shell-command)
          :map ghostel-semi-char-mode-map
          ("<f7>" . org-clock-goto)
          ("C-s"  . consult-line)
@@ -806,9 +808,7 @@ Like normal Emacs `M-d'.  Kill word and put content in kill-ring."
 Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
     (interactive)
     (kill-ring-save (save-excursion (backward-word) (point)) (point))
-    (ghostel-send-key "backspace" "alt"))
-
-  (add-to-list 'project-switch-commands '(ghostel-project "Ghostel") t))
+    (ghostel-send-key "backspace" "alt")))
 
 (use-package consult-ghostel
   :hook (after-init . consult-ghostel-mode)
@@ -826,8 +826,27 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 (use-package ghostel-compile
   :hook (after-init . ghostel-compile-global-mode))
 
+(use-package ghostel-shell-command
+  :hook (after-init . ghostel-shell-command-global-mode))
+
 (use-package ghostel-comint
   :hook (after-init . ghostel-comint-global-mode))
+
+(use-package ghostel-ai
+  :hook (ghostel-mode . ghostel-ai-mode)
+  :config
+  (setq ghostel-ai-typesafe-api-key (lambda () (auth-source-pick-first-password :host "api.typesafe.ai")))
+  (setq ghostel-ai-gptel-model 'claude-sonnet-5.5))
+
+(use-package macos-notifications
+  :config
+  (defun macos-notifications-ghostel-notify (title body)
+    (macos-notifications-notify
+     :title (if (string-empty-p title) (buffer-name) title)
+     :body body
+     :sound t
+     :on-action (macos-notifications-show-buffer)))
+  (setq ghostel-notification-functions '(macos-notifications-ghostel-notify)))
 
 (use-package plstore
   :config
@@ -1292,16 +1311,15 @@ Enable TOC functions and use a dark theme at night."
   ;; :hook (gptel-mode . (visual-line-mode visual-fill-column-mode))
   :config
   (gptel-make-gemini "Gemini" :key gptel-api-key :stream t)  ;;  :models '(gemini-2.5-pro)
-  (gptel-make-gh-copilot "Copilot")  ;;  :models '(gpt-4.1)
+  (gptel-make-gh-copilot "Copilot")
 
   (setq gptel-default-mode 'org-mode
         gptel-track-media t
-        gptel-model 'claude-opus-4-6
+        gptel-model 'claude-opus-5-5
         gptel-prompt-prefix-alist '((markdown-ts-mode . "# ") (org-mode . "* ") (text-mode . "# "))
         gptel-backend (gptel-make-anthropic "Claude"
                         :stream t
-                        :key gptel-api-key
-                        :models '(claude-opus-4-6 claude-sonnet-4-5-20250929 claude-haiku-4-5-20251001))))
+                        :key gptel-api-key)))
 
 (use-package gptel-agent
   :after gptel
@@ -2624,7 +2642,9 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
   :defer t)
 
 (use-package eglot
-  :hook (((dart-ts-mode python-ts-mode typescript-ts-mode zig-ts-mode) . eglot-ensure)
+  :hook (((
+           dart-ts-mode python-ts-mode typescript-ts-mode zig-ts-mode
+           markdown-ts-mode mu4e-compose-mode) . eglot-ensure)
          (eglot-managed-mode . (lambda ()
                                  (eglot-inlay-hints-mode -1)
                                  (flycheck-eglot-mode))))
@@ -2642,6 +2662,9 @@ If invoked with WIDE-P, make the chart ::clerk/width :wide"
 
   (add-to-list 'eglot-server-programs
                '((typescript-ts-mode js-mode js-ts-mode js2-mode) . ("tsc" "--lsp" "--stdio")))
+
+  (add-to-list 'eglot-server-programs
+               '((org-mode markdown-ts-mode mu4e-compose-mode) . ("harper-ls" "--stdio")))
 
   (add-to-list 'eglot-ignored-server-capabilities :documentOnTypeFormattingProvider)
 
@@ -2919,7 +2942,11 @@ finding the executable with variable `exec-path'."
 (use-package gdscript-mode
   :defer t)
 
+(use-package mhtml-ts-mode
+  :defer t)
+
 (use-package web-mode
+  :disabled t  ; try mhtml-ts-mode
   :mode ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.tpl\\'" "\\.blade\\.php\\'" "\\.jsp\\'" "\\.as[cp]x\\'"
          "\\.erb\\'" "\\.html.?\\'" "/\\(views\\|html\\|theme\\|templates\\)/.*\\.php\\'"
          "\\.jinja2?\\'" "\\.mako\\'" "\\.vue\\'" "_template\\.txt" "\\.ftl\\'")

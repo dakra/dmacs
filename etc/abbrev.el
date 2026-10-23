@@ -1,7 +1,6 @@
 ;;-*-coding: utf-8;-*-
 (define-abbrev-table 'global-abbrev-table
-  '(
-    ("abaendern" "abändern")
+  '(("abaendern" "abändern")
     ("abgeaendert" "abgeändert")
     ("abgeaenderte" "abgeänderte")
     ("abgeklaert" "abgeklärt")
@@ -361,6 +360,11 @@
     ("fluesse" "flüsse")
     ("fluessig" "flüssig")
     ("fluessigkeit" "flüssigkeit")
+    ("foerdern" "fördern")
+    ("foerderstunde" "förderstunde")
+    ("foerderstundes" "förderstunden")
+    ("foerderung" "förderung")
+    ("foerderungen" "förderungen")
     ("fremdwaehrung" "fremdwährung")
     ("fremdwaehrungen" "fremdwährungen")
     ("froehnen" "fröhnen")
@@ -1435,6 +1439,8 @@
     ("zurueckgezahlter" "zurückgezahlter")
     ("zurueckrollen" "zurückrollen")
     ("zurueckzahlen" "zurückzahlen")
+    ("zusaetzlich" "zusätzlich")
+    ("zusaetzlichen" "zusätzlichen")
     ("zusammenfuegen" "zusammenfügen")
     ("zusammengefuegt" "zusammengefügt")
     ("zusammengehoeren" "zusammengehören")
@@ -1452,5 +1458,4 @@
     ("zwickmuehle" "zwickmühle")
     ("zwoelf" "zwölf")
     ("zwoelfte" "zwölfte")
-    ("zwoelfter" "zwölfter")
-    ))
+    ("zwoelfter" "zwölfter")))

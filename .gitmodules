@@ -175,6 +175,9 @@
 	build-step = borg-maketexi
 	build-step = borg-makeinfo
 	build-step = make build
+[submodule "ghostel-ai"]
+	path = lib/ghostel-ai
+	url = git@github.com:dakra/ghostel-ai.git
 [submodule "ghub"]
 	path = lib/ghub
 	url = git@github.com:magit/ghub
@@ -267,6 +270,12 @@
 [submodule "lsp-ui"]
 	path = lib/lsp-ui
 	url = git@github.com:emacs-lsp/lsp-ui
+[submodule "macos-notifications"]
+	path = lib/macos-notifications
+	url = git@github.com:dakra/macos-notifications.git
+	build-step = make
+	build-step = borg-compile
+	build-step = borg-update-autoloads
 [submodule "magit"]
 	path = lib/magit
 	url = git@github.com:magit/magit
