@@ -840,13 +840,51 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 
 (use-package macos-notifications
   :config
-  (defun macos-notifications-ghostel-notify (title body)
-    (macos-notifications-notify
-     :title (if (string-empty-p title) (buffer-name) title)
-     :body body
-     :sound t
-     :on-action (macos-notifications-show-buffer)))
-  (setq ghostel-notification-functions '(macos-notifications-ghostel-notify)))
+  (defvar-local my-ghostel-status-notifications nil
+    "Alist of (RECORD-ID . NOTIFICATION-ID) for the status notifications shown.")
+
+  (defun my-ghostel-status-notify (id old new)
+    "Notify for record ID changing from OLD to NEW, one notification per record.
+Any record entering `blocked' or `error' notifies, `done' only the root.
+A later report in the same state, such as the summary Claude Code adds
+after `done', updates the notification in place; a state change or the
+record's removal closes it.  The root's permission prompts get
+Allow/Deny buttons and a reply field."
+    (let* ((root (equal id ""))
+           (state (plist-get new :state))
+           (nid (alist-get id my-ghostel-status-notifications nil nil #'equal))
+           (same (and nid (eq state (plist-get old :state)))))
+      (when (and nid (not same))
+        (macos-notifications-close nid)
+        (setf (alist-get id my-ghostel-status-notifications nil t #'equal) nil))
+      (when (or same
+                (and (ghostel-status-attention-p old new)
+                     (or root (memq state '(blocked error)))))
+        (let ((buf (current-buffer))
+              (show (macos-notifications-show-buffer))
+              (permission (and root (eq (plist-get new :kind) 'permission))))
+          (setf (alist-get id my-ghostel-status-notifications nil nil #'equal)
+                (macos-notifications-notify
+                 :replaces-id (and same nid)
+                 :title (or (plist-get new :title) (ghostel-status-app id)
+                            (buffer-name))
+                 :body (or (plist-get new :msg) (symbol-name state))
+                 :actions (and permission '("allow" "Allow" "deny" "Deny"))
+                 :reply (and root "Tell Claude…")
+                 :on-action (lambda (nid key)
+                              (with-current-buffer buf
+                                (pcase key
+                                  ("allow" (ghostel-send-key "return"))
+                                  ("deny" (ghostel-send-key "escape"))
+                                  (_ (funcall show nid key)))))
+                 :on-reply (lambda (_nid text)
+                             (with-current-buffer buf
+                               (when permission (ghostel-send-key "escape"))
+                               (ghostel-send-string text)
+                               (ghostel-send-key "return")))))))))
+
+  (remove-hook 'ghostel-program-status-functions #'ghostel-status-notify)
+  (add-hook 'ghostel-program-status-functions #'my-ghostel-status-notify))
 
 (use-package plstore
   :config
@@ -982,16 +1020,51 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 (use-package vertico-multiform
   :after vertico
   :config
-  (setq vertico-multiform-commands
-        '((consult-xref buffer)
-          (consult-line buffer)
-          (consult-buffer buffer)
-          (consult-org-heading buffer)
-          (consult-imenu buffer)
-          (consult-project-buffer buffer)
-          (consult-mu-dynamic buffer)
-          (consult-project-extra-find buffer)))
+  ;; Frame-centered posframe for the commands below, window-bottom posframe
+  ;; for everything else.
+  (let ((frame '(posframe (:not buffer)
+                 (vertico-posframe-poshandler . posframe-poshandler-frame-bottom-center)
+                 (vertico-count . 16))))
+    (setq vertico-multiform-commands
+          (append
+           (mapcar (lambda (cmd) (cons cmd frame))
+                   '(execute-extended-command
+                     consult-ghostel
+                     consult-ghostel-project))
+           '((t posframe (:not buffer)
+                (vertico-posframe-poshandler . posframe-poshandler-window-bottom-center)
+                (vertico-count . 16))))))
   (vertico-multiform-mode))
+
+(use-package vertico-posframe
+  :after vertico-multiform
+  :config
+  (setq vertico-posframe-parameters
+        '((alpha-background . 0.7)
+          (ns-background-blur . 1)
+          (ns-alpha-elements ns-alpha-all)
+          (left-fringe . 4)
+          (right-fringe . 4)))
+
+  (defvar my/vertico-posframe-window-width 0.95
+    "Fraction of the window width used by window-positioned posframes.")
+
+  (defvar my/vertico-posframe-frame-width 0.8
+    "Fraction of the frame width used by frame-positioned posframes.")
+
+  (defun my/vertico-posframe-get-size (buffer)
+    "Like `vertico-posframe-get-size', but sized relative to the window
+or frame the posframe is positioned in"
+    (let* ((size (vertico-posframe-get-size buffer))
+           (windowp (string-prefix-p "posframe-poshandler-window-"
+                                     (symbol-name (buffer-local-value
+                                                   'vertico-posframe-poshandler buffer))))
+           (w (round (if windowp
+                         (* my/vertico-posframe-window-width
+                            (window-width (selected-window)))
+                       (* my/vertico-posframe-frame-width (frame-width))))))
+      (plist-put (plist-put size :width w) :min-width w)))
+  (setq vertico-posframe-size-function #'my/vertico-posframe-get-size))
 
 (use-package orderless
   :init
@@ -1228,11 +1301,11 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
                                   multiple-cursors-mode
                                   mu4e-modeline-mode)))
 
-(use-package reader
+(use-package emureader
   :defer t)
 
 (use-package pdf-tools
-  :disabled t  ; use emacs-reader instead
+  :disabled t  ; use emureader instead
   ;; manually update
   ;; after each update we have to call:
   ;; Install pdf-tools but don't ask or raise error (otherwise daemon mode will wait for input)
@@ -1567,13 +1640,19 @@ Just call it 8 times in a row should be enough to always show the file."
   (setq magit-section-initial-visibility-alist '((unpushed . show)
                                                  (unpulled . show)))
 
-  ;; Show submodules section to magit status
+  ;; Show submodules section in magit status
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
                           'append)
 
-  ;; Show ignored files section to magit status
+  ;; Show git worktrees section in magit status
+  (magit-add-section-hook 'magit-status-sections-hook
+                          #'magit-insert-worktrees
+                          'magit-insert-stashes
+                          'append)
+
+  ;; Show ignored files section in magit status
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-ignored-files
                           'magit-insert-untracked-files
@@ -1595,6 +1674,9 @@ Just call it 8 times in a row should be enough to always show the file."
 
   ;; Wrap excessively long summary lines (doesn't wrap the body)
   (setq magit-revision-fill-summary-line 100)
+
+  ;; Show exact +N -M counts per file in diffs
+  (setq magit-diff-show-numstat t)
 
   ;; Don't change my window layout after quitting magit
   ;; Often I invoke magit and then do a lot of things in other windows
@@ -2181,6 +2263,7 @@ mark the string and call `edit-indirect-region' with it."
         mail-envelope-from 'header)
   :config
   (require 'mu4e-contrib)  ;; Define some extra commands like mark-all-unread-read
+  (require 'mu4e-icalendar)  ;; Accept/Decline buttons for calendar invites
 
   ;; Display the main window in the current window instead of making it full screen
   (add-to-list

@@ -132,6 +132,9 @@
 [submodule "embark"]
 	path = lib/embark
 	url = git@github.com:oantolin/embark
+[submodule "emureader"]
+	path = lib/emureader
+	url = https://codeberg.org/MonadicSheep/emureader.git
 [submodule "envrc"]
 	path = lib/envrc
 	url = https://github.com/purcell/envrc
@@ -366,9 +369,6 @@
 [submodule "rainbow-delimiters"]
 	path = lib/rainbow-delimiters
 	url = git@github.com:Fanael/rainbow-delimiters
-[submodule "reader"]
-	path = lib/reader
-	url = https://codeberg.org/MonadicSheep/emacs-reader.git
 [submodule "request"]
 	path = lib/request
 	url = git@github.com:tkf/emacs-request
@@ -453,6 +453,9 @@
 	url = git@github.com:minad/vertico
 	load-path = .
 	load-path = extensions
+[submodule "vertico-posframe"]
+	path = lib/vertico-posframe
+	url = https://github.com/tumashu/vertico-posframe
 [submodule "visual-fill-column"]
 	path = lib/visual-fill-column
 	url = https://codeberg.org/joostkremers/visual-fill-column
