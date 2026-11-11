@@ -181,6 +181,9 @@
 [submodule "ghostel-ai"]
 	path = lib/ghostel-ai
 	url = git@github.com:dakra/ghostel-ai.git
+[submodule "ghostel-tmux"]
+	path = lib/ghostel-tmux
+	url = git@github.com:dakra/ghostel-tmux.git
 [submodule "ghub"]
 	path = lib/ghub
 	url = git@github.com:magit/ghub
@@ -372,6 +375,11 @@
 [submodule "request"]
 	path = lib/request
 	url = git@github.com:tkf/emacs-request
+[submodule "rexel"]
+	path = lib/rexel
+	url = git@github.com:dakra/rexel.git
+	load-path = lisp
+	load-path = extensions/consult-rexel
 [submodule "s"]
 	path = lib/s
 	url = git@github.com:magnars/s.el

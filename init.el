@@ -388,6 +388,7 @@
   (setq dumb-jump-selector 'completing-read))
 
 (use-package smear-cursor
+  :disabled t
   :unless noninteractive
   :hook (after-init . smear-cursor-mode)
   :config
@@ -395,6 +396,7 @@
     (setq smear-cursor-backend 'ns)))
 
 (use-package gumshoe
+  :disabled t
   :hook (after-init . global-gumshoe-mode)
   :bind (("C-x SPC" . gumshoe-backtrack)
          ("C-x C-SPC" . gumshoe-buf-backtrack)
@@ -789,6 +791,9 @@ And disable hl-line-mode which causes a flicker on prompt when typing."
          ("M-p" . (lambda () (interactive) (ghostel-send-key "p" "ctrl")))
          ("M-n" . (lambda () (interactive) (ghostel-send-key "n" "ctrl"))))
   :config
+
+  (setq ghostel-status-auto-acknowledge 'seen)
+
   (defun ghostel-send-C-k-and-kill ()
     "Send `C-k' to ghostel.
 Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
@@ -812,7 +817,7 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
 
 (use-package consult-ghostel
   :hook (after-init . consult-ghostel-mode)
-  :bind (("C-x m" . consult-ghostel)
+  :bind (;; ("C-x m" . consult-ghostel)
          :map project-prefix-map
          ("m" . consult-ghostel-project)
          :map ghostel-semi-char-mode-map
@@ -837,6 +842,27 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   :config
   (setq ghostel-ai-typesafe-api-key (lambda () (auth-source-pick-first-password :host "api.typesafe.ai")))
   (setq ghostel-ai-gptel-model 'claude-sonnet-5.5))
+
+(use-package ghostel-tmux
+  :after (ghostel)
+  :config
+  (ghostel-tmux-takeover-mode))
+
+(use-package rexel
+  :bind-keymap ("C-c C-r" . rexel-prefix-map)
+  :config
+  (setq rexel-default-session-function #'rexel-project-session-label))
+
+(use-package consult-rexel
+  :hook (after-init . consult-rexel-mode)
+  :bind (("C-x m" . consult-rexel)
+         :map project-prefix-map
+         ("r" . consult-rexel-project)
+         :map rexel-prefix-map
+         ("r" . consult-rexel)
+         ("t" . consult-rexel-tab))
+  :config
+  (add-to-list 'project-switch-commands '(consult-rexel-project "Rexel") t))
 
 (use-package macos-notifications
   :config
