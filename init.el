@@ -395,6 +395,11 @@
   (when (featurep 'ns)
     (setq smear-cursor-backend 'ns)))
 
+(use-package gpu
+  :config
+  (setq gpu-cursor-animation 'smear
+        gpu-cursor-effects-while-typing t))
+
 (use-package gumshoe
   :disabled t
   :hook (after-init . global-gumshoe-mode)
@@ -579,9 +584,13 @@ created a dedicated process for the project."
     (interactive)
     (run-python (python-shell-calculate-command) 'project t))
 
+  (dolist (cmd '(project-find-regexp project-vc-dir project-any-command))
+    (setq project-switch-commands (assq-delete-all cmd project-switch-commands)))
+
   ;; Don't show a dispatch menu when switching projects but always choose project buffer/file
   ;;(setq project-switch-commands #'consult-project-extra-find)
-  )
+
+  (setf (car (assq 'project-find-dir project-switch-commands)) 'project-dired))
 
 (use-package ibuffer-project
   :hook (ibuffer . ibuffer-project-set-filter-groups)
@@ -607,7 +616,7 @@ created a dedicated process for the project."
     (setq insert-directory-program "gls"))
 
   ;; dired list size in human-readable format and list directories first
-  (setq dired-listing-switches "-AGhlv --group-directories-first --time-style=long-iso")
+  (setq dired-listing-switches "-Ghlva --group-directories-first --time-style=long-iso")
 
   ;; Allow drag and drop out of dired into other apps (e.g. browser)
   (setq dired-mouse-drag-files t)
@@ -924,6 +933,19 @@ Allow/Deny buttons and a reply field."
 
 (use-package brew
   :defer t)
+
+(use-package tramp
+  :config
+  (setq tramp-default-method "rpc"))
+
+;; Only used by tramp-rpn
+(use-package msgpack
+  :defer t)
+
+(use-package tramp-rpc
+  :defer t
+  :config
+  (setq tramp-rpc-deploy-git-build-policy 'build))
 
 ;; I don't need markdown-mode anymore but lots of packages depend on it
 ;; (forge, lsp-mode, lsp-java, claude-code, copilot, eca)

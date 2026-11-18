@@ -304,6 +304,9 @@
 [submodule "monet"]
 	path = lib/monet
 	url = git@github.com:stevemolitor/monet.git
+[submodule "msgpack"]
+	path = lib/msgpack
+	url = https://github.com/xuchunyang/msgpack.el
 [submodule "mu4e"]
 	path = lib/mu4e
 	url = https://github.com/djcb/mu
@@ -434,6 +437,12 @@
 [submodule "terraform-mode"]
 	path = lib/terraform-mode
 	url = https://github.com/hcl-emacs/terraform-mode
+[submodule "tramp-rpc"]
+	path = lib/tramp-rpc
+	url = git@github.com:ArthurHeymans/emacs-tramp-rpc.git
+	build-step = borg-update-autoloads
+	build-step = borg-compile
+	build-step = "TC=$HOME/.rustup/toolchains/stable-aarch64-apple-darwin/bin; CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER=rust-lld RUSTC=$TC/rustc $TC/cargo build --release --target x86_64-unknown-linux-musl"
 [submodule "transient"]
 	path = lib/transient
 	url = git@github.com:magit/transient
