@@ -247,6 +247,12 @@
 [submodule "keepassxc"]
 	path = lib/keepassxc
 	url = git@github.com:dakra/keepassxc.el.git
+[submodule "ladybird"]
+	path = lib/ladybird
+	url = git@github.com:dakra/ladybird.el.git
+	build-step = borg-update-autoloads
+	build-step = borg-compile
+	build-step = make build
 [submodule "ligature"]
 	path = lib/ligature
 	url = git@github.com:mickeynp/ligature.el

@@ -350,6 +350,10 @@
   :config
   (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
 
+;; Associate more files with conf-mode
+(use-package conf-mode
+  :mode ("mbsyncrc\\'" "msmtprc\\'" "pylintrc\\'" "\\.cnf\\'"
+         "\\.env\\'" "\\.ini\\.\\(tmpl\\|sample\\|j2\\)\\'" "\\.service\\'"))
 (use-package envrc
   :hook (after-init . envrc-global-mode))
 
@@ -398,7 +402,9 @@
 (use-package gpu
   :config
   (setq gpu-cursor-animation 'smear
-        gpu-cursor-effects-while-typing t))
+        gpu-cursor-effects-while-typing t
+        gpu-window-border-width 2
+        gpu-window-border-color "#30586c"))
 
 (use-package gumshoe
   :disabled t
@@ -873,6 +879,9 @@ Like normal Emacs `M-d'.  Kill a word backwards and put content in kill-ring."
   :config
   (add-to-list 'project-switch-commands '(consult-rexel-project "Rexel") t))
 
+(use-package ladybird
+  :bind (("C-c C-l" . ladybird)))
+
 (use-package macos-notifications
   :config
   (defvar-local my-ghostel-status-notifications nil
@@ -1301,7 +1310,8 @@ or frame the posframe is positioned in"
 
 (use-package dimmer  ;; Visually highlight the selected buffer
   :unless noninteractive
-  :hook (after-init . dimmer-mode)
+  :disabled t  ;; Makes redisplay slow with too many face changes
+  ;;:hook (after-init . dimmer-mode)
   :config
   ;; Don't dim hydra, transient buffers or minibuffers
   (setq dimmer-buffer-exclusion-regexps '(" \\*\\(LV\\|transient\\)\\*"
@@ -1430,6 +1440,7 @@ Enable TOC functions and use a dark theme at night."
 
 (use-package gptel
   ;; :hook (gptel-mode . (visual-line-mode visual-fill-column-mode))
+  :defer t
   :config
   (gptel-make-gemini "Gemini" :key gptel-api-key :stream t)  ;;  :models '(gemini-2.5-pro)
   (gptel-make-gh-copilot "Copilot")
@@ -1817,7 +1828,7 @@ With prefix ARG, also insert time in HH:MM format."
   :defer t)
 
 (use-package just
-  :defer t)
+  :bind (("C-c j" . just-run)))
 
 (use-package speed-type
   :defer t)
@@ -2340,6 +2351,18 @@ mark the string and call `edit-indirect-region' with it."
   ;; Show additional user-agent header
   (setq-default mu4e-view-fields
                 '(:from :to :cc :subject :flags :date :maildir :user-agent :mailing-list :tags))
+
+  ;; Always load remote images in HTML mails
+  (setq mu4e-view-remote-image-policy 'allow-all)
+
+  (defun dakra-mu4e-action-view-in-ladybird (msg)
+    "Show MSG in a new Ladybird page buffer."
+    (let ((browse-url-browser-function
+           (lambda (url &rest _) (ladybird-browse-url url t))))
+      (mu4e-action-view-in-browser msg)))
+
+  (add-to-list 'mu4e-view-actions
+               '("ladybird" . dakra-mu4e-action-view-in-ladybird) t)
 
   ;; Don't show related messages by default.
   ;; Activate with 'a s' (mu4e action - show thread) on demand.
@@ -2998,6 +3021,9 @@ finding the executable with variable `exec-path'."
 (use-package dap-java
   :after dap-mode)
 
+(use-package typescript-ts-mode
+  :mode ("\\.ts\\'" "\\.tsx\\'" "\\.mts\\'"))
+
 (use-package json-ts-mode
   :mode ("\\.json\\'" "\\.avsc\\'"))
 
@@ -3161,7 +3187,7 @@ if there is no window on the left."
              (windmove-find-other-window 'left arg))
         (progn
           (windmove-do-window-select 'left arg)
-          (dimmer-process-all)
+          ;;(dimmer-process-all)
           (beacon-blink))
       ;; No window to the left
       (aerospace-command "focus left --boundaries all-monitors-outer-frame")))
@@ -3174,7 +3200,7 @@ if there is no window on the right."
              (windmove-find-other-window 'right arg))
         (progn
           (windmove-do-window-select 'right arg)
-          (dimmer-process-all)
+          ;;(dimmer-process-all)
           (beacon-blink))
       ;; No window to the right
       (aerospace-command "focus right --boundaries all-monitors-outer-frame")))
@@ -3187,7 +3213,7 @@ if there is no window on the up."
              (windmove-find-other-window 'up arg))
         (progn
           (windmove-do-window-select 'up arg)
-          (dimmer-process-all)
+          ;; (dimmer-process-all)
           (beacon-blink))
       ;; No window to the up
       (aerospace-command "focus up --boundaries all-monitors-outer-frame")))
@@ -3204,7 +3230,7 @@ if there is no window on the down."
                         (minibuffer-window-active-p other-window))))
           (progn
             (windmove-do-window-select 'down arg)
-            (dimmer-process-all)
+            ;; (dimmer-process-all)
             (beacon-blink))
         ;; No window to the down
         (aerospace-command "focus down --boundaries all-monitors-outer-frame"))))
